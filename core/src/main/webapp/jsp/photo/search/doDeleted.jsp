@@ -1,0 +1,1 @@
+<b>Foto apagada com sucesso!</b>

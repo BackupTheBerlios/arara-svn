@@ -69,9 +69,97 @@
       <scope>compile</scope>
     </dependency>
     
+    <dependency>
+      <groupId>javazoom</groupId>
+      <artifactId>javazoom</artifactId>
+      <version>1.0</version>      
+      <scope>compile</scope>
+    </dependency>
+    
+
+    <dependency>
+      <groupId>cos</groupId>
+      <artifactId>cos</artifactId>
+      <version>1.0</version>      
+      <scope>compile</scope>
+    </dependency>    
   </dependencies>
   
+  <developers>
+    <developer>
+      <id>1</id>
+      <name>Jefferson</name>
+      <email/>
+      <url/>
+      <organization/>
+      <organizationUrl/>
+      <roles/>
+      <timezone/>
+      <properties/>
+    </developer>
+    <developer>
+      <id>2</id>
+      <name>Rafael</name>
+      <email/>
+      <url/>
+      <organization/>
+      <organizationUrl/>
+      <roles/>
+      <timezone/>
+      <properties/>
+    </developer>
+  </developers>
+
+  <contributors>
+    <contributor>
+      <name/>
+      <email/>
+      <url/>
+      <organization/>
+      <organizationUrl/>
+      <roles/>
+      <timezone/>
+      <properties/>
+    </contributor>
+  </contributors>
   
+  <licenses>
+    <license>
+      <name>GPL</name>
+      <url/>
+      <distribution/>
+      <comments/>
+    </license>
+  </licenses>
+
+  <organization>
+    <name>INDRIX</name>
+    <url>http://www.indrix.net</url>
+  </organization>
+  
+  
+ <build>  
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-eclipse-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <configuration>
+          <locales>en</locales>
+        </configuration>
+      </plugin>
+    </plugins>
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+         <artifactId>wagon-ftp</artifactId>
+      </extension>
+    </extensions>    
+  </build>    
   
   <reporting>
     <plugins>
@@ -79,26 +167,23 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
       </plugin>
-  <!--       
+
+<!--
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
       </plugin>
-   --> 
+
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>surefire-report-maven-plugin</artifactId>
       </plugin>      
-
+-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
       </plugin>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-eclise-plugin</artifactId>
-      </plugin>
       
     </plugins>
   </reporting>
@@ -107,14 +192,24 @@
   <distributionManagement>
     <site>
    	<id>site-repository</id>
-    	<url>sftp://ftp.indrix.net/public_html/projects/birds</url>
+    	<url>scpexe://ftp.berlios.de/pub/arara</url>
     </site>
   </distributionManagement>  
 
 
    <scm>
-    <connection>scm:svn:svn://localhost/indrix</connection>
-    <developerConnection>scm:svn:svn://localhost/indrix</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/maven/components/trunk</url>
+    <connection>scm:svn:svn://svn.berlios.de/arara/core</connection>
+    <developerConnection>svn+ssh://svn.berlios.de/svnroot/repos/arara/</developerConnection>
+    <url>http://svn.berlios.de/wsvn/arara</url>
   </scm>
+  
+  <repositories>
+    <repository>
+      <id>my-repo1</id>
+      <name>Arara custom repo</name>
+      <url>http://arara.berlios.de/extralib</url>
+    </repository>
+  </repositories>
+  
 </project>
+

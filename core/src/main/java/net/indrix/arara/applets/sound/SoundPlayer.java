@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.applets.sound;
+package net.indrix.arara.applets.sound;
 
 import java.awt.BorderLayout;
 import java.awt.Button;
@@ -59,9 +59,9 @@ public class SoundPlayer extends PlayerApplet {
                 stop();
             }
         });
-        
+
         this.setBackground(new Color(166, 210, 210));
-        
+
         Panel buttons = new Panel();
         buttons.setLayout(new FlowLayout());
         buttons.add(play);
@@ -74,7 +74,7 @@ public class SoundPlayer extends PlayerApplet {
 
     /**
      * Creates and returns a new ByteArrayInputStream
-     * 
+     *
      * @return a new ByteArrayInputStream
      */
 	private InputStream getInputStream() {
@@ -102,7 +102,7 @@ public class SoundPlayer extends PlayerApplet {
 			}
             // read the lenght of the string that contains the size of the sound
 			byte size = (byte) inputStream.read();
-            
+
             // read the bytes of the string that represents the size of the sound
 			byte string[] = new byte[size];
 			inputStream.read(string, 0, size);

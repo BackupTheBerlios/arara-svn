@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.vo;
+package net.indrix.arara.vo;
 
 /**
  * @author Jeff
@@ -16,7 +16,7 @@ public class State {
     private int id;
     private String acronym;
     private String description;
-    
+
 	/**
 	 * @return
 	 */

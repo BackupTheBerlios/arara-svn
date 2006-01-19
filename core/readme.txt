@@ -15,7 +15,7 @@ mvn clean
 mvn eclipse:eclipse
 
 mvn compile
-
+mvn package
 
 mvn site
-mvn site-deploy
+mvn site:deploy

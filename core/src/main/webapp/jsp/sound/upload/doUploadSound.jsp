@@ -5,11 +5,18 @@
        document.uploadForm.action = "<c:url value="/servlet/retrieveSpecies?toPage=/jsp/sound/upload/uploadSound.jsp&data=SOUND"/>"; 
        document.uploadForm.submit(); 
     } 
+
+    function stateSelected() { 
+       document.uploadForm.action = "<c:url value="/servlet/retrieveCitiesToState?toPage=/jsp/sound/upload/uploadSound.jsp&data=SOUND"/>"; 
+       document.uploadForm.submit(); 
+    } 
 </script> 
 
 
 <c:set var="selectedFamilyId" value="${uploadSoundBean.selectedFamilyId}"/>
 <c:set var="selectedSpecieId" value="${uploadSoundBean.selectedSpecieId}"/>
+<c:set var="selectedStateId" value="${uploadSoundBean.selectedStateId}"/>
+<c:set var="selectedCityId" value="${uploadSoundBean.selectedCityId}"/>
 
 <form name="uploadForm" method="post" 
       action="<c:url value="/servlet/uploadSound"/>"
@@ -77,16 +84,30 @@
   </tr>
 
   <tr> 
-    <td width="15%"><b>Cidade</b></td>
-    <td width="85%"> 
-        <input type="text" name="city" value="${lastUploadBean.city}" size="64" maxlength="64">
-        <b>Estado</b> <select name="stateId">
-          <c:forEach items="${stateList}" var="state">
-		      <option value="${state.id}">${state.acronym}</option>
+    <td width="15%"><b>Estado</b></td>
+    <td width="85%">     
+        <select name="stateId" onChange="stateSelected()>
+          <c:forEach items="${stateList}" var="stateBean">        
+			<c:if test="${selectedStateId != null && selectedStateId == stateBean.value}">
+		      <option selected value="${stateBean.value}">${stateBean.label}</option>
+		    </c:if>
+			<c:if test="${selectedStateId == null || selectedStateId != stateBean.value}">
+		      <option value="${stateBean.value}">${stateBean.label}</option>
+		    </c:if>		      
           </c:forEach>
-        </select>
-        
-    </td>
+        </select>  
+		<b>Cidade</b>
+        <select name="cityId">
+          <c:forEach items="${cityList}" var="cityBean">
+			<c:if test="${selectedCityId != null && selectedCityId == cityBean.value}">
+		      <option selected value="${cityBean.value}">${cityBean.label}</option>
+		    </c:if>
+			<c:if test="${selectedCityId == null || selectedCityId != cityBean.value}">
+		      <option value="${cityBean.value}">${cityBean.label}</option>
+		    </c:if>		      
+          </c:forEach>
+        </select>  
+	</td>      
   </tr>
 
 

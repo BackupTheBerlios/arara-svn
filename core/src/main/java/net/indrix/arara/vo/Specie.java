@@ -4,7 +4,7 @@
  * Created on 6 de Fevereiro de 2005, 00:35
  */
 
-package net.indrix.vo;
+package net.indrix.arara.vo;
 
 import java.util.ArrayList;
 import java.util.Iterator;

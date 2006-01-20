@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.model;
+package net.indrix.arara.model;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,15 +13,15 @@ import java.util.List;
 import javax.mail.SendFailedException;
 import javax.mail.internet.AddressException;
 
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.dao.UserDAO;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.dao.UserDAO;
+import net.indrix.arara.vo.User;
 import net.indrix.tools.email.MailClass;
 import net.indrix.tools.email.MessageComposer;
 import net.indrix.tools.email.MessageFormatException;
 import net.indrix.tools.email.NoRecipientException;
 import net.indrix.tools.email.WrongNumberOfValuesException;
 import net.indrix.utils.PropertiesManager;
-import net.indrix.vo.User;
 
 import org.apache.log4j.Logger;
 

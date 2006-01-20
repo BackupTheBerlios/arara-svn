@@ -4,14 +4,13 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.model;
+package net.indrix.arara.model;
 
 import java.sql.SQLException;
 
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.dao.SoundDAO;
-import net.indrix.model.exceptions.SoundProcessingException;
-import net.indrix.vo.Sound;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.dao.SoundDAO;
+import net.indrix.arara.vo.Sound;
 
 /**
  * @author Jeff

@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.model;
+package net.indrix.arara.model;
 
 /**
  * This class is contains the width value for the thumbnail. The InitServlet is responsible

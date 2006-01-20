@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.model;
+package net.indrix.arara.model;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,21 +15,21 @@ import java.util.List;
 import javax.mail.SendFailedException;
 import javax.mail.internet.AddressException;
 
-import net.indrix.dao.CommentsDAO;
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.dao.PhotoDAO;
-import net.indrix.dao.PhotoIdentificationDAO;
-import net.indrix.dao.SpecieDAO;
+import net.indrix.arara.dao.CommentsDAO;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.dao.PhotoDAO;
+import net.indrix.arara.dao.PhotoIdentificationDAO;
+import net.indrix.arara.dao.SpecieDAO;
+import net.indrix.arara.vo.Comment;
+import net.indrix.arara.vo.Photo;
+import net.indrix.arara.vo.Specie;
+import net.indrix.arara.vo.User;
 import net.indrix.tools.email.MailClass;
 import net.indrix.tools.email.MessageComposer;
 import net.indrix.tools.email.MessageFormatException;
 import net.indrix.tools.email.NoRecipientException;
 import net.indrix.tools.email.WrongNumberOfValuesException;
 import net.indrix.utils.PropertiesManager;
-import net.indrix.vo.Comment;
-import net.indrix.vo.Photo;
-import net.indrix.vo.Specie;
-import net.indrix.vo.User;
 
 import org.apache.log4j.Logger;
 

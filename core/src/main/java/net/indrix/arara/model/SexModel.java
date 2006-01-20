@@ -4,14 +4,14 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.model;
+package net.indrix.arara.model;
 
 import java.util.Iterator;
 import java.util.List;
 
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.dao.SexDAO;
-import net.indrix.vo.Sex;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.dao.SexDAO;
+import net.indrix.arara.vo.Sex;
 
 /**
  * @author Jeff

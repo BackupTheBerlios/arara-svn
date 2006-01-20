@@ -4,11 +4,11 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.model;
+package net.indrix.arara.model;
+
+import net.indrix.tools.crypt.VigenereCipherImpl;
 
 import org.apache.log4j.Logger;
-
-import net.indrix.tools.crypt.*;
 
 /**
  * @author Jeff

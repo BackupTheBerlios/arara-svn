@@ -4,7 +4,7 @@
  * To change the template for this generated file go to 
  * Window>Preferences>Java>Code Generation>Code and Comments 
  */
-package net.indrix.vo;
+package net.indrix.arara.vo;
 
 import java.util.Date;
 import java.util.Iterator;
@@ -22,6 +22,7 @@ public class Photo {
 	private Specie specie;
 	private Date date;
 	private String location;
+    private City city;
 	private String camera;
 	private String lens;
 	private String film;
@@ -164,6 +165,13 @@ public class Photo {
 		return sex;
 	}
 
+    /**
+     * @return
+     */
+    public City getCity() {
+        return city;
+    }
+
 	/** 
 	 * Setter method for the id attribute
 	 * 
@@ -291,6 +299,13 @@ public class Photo {
 	}
 
     /**
+     * @param city
+     */
+    public void setCity(City city) {
+        this.city = city;
+    }
+
+    /**
      * Verify if for this photo, there is a sound associated, that is, a sound for the same sex
      * and age
      * 
@@ -356,4 +371,5 @@ public class Photo {
 
 		return buffer.toString();
 	}
+
 }

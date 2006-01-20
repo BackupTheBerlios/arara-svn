@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.servlets.photo.upload;
+package net.indrix.arara.servlets.photo.upload;
 
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -32,7 +32,7 @@ import org.apache.log4j.Logger;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public abstract class AbstractUploadPhotoServlet
-	extends net.indrix.servlets.AbstractUploadServlet {
+	extends net.indrix.arara.servlets.AbstractServlet {
 
 	/**
 	 * Logger object to be used by this class

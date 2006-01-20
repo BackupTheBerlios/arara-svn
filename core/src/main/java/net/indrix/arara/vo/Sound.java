@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.vo;
+package net.indrix.arara.vo;
 
 import java.util.Date;
 
@@ -24,8 +24,7 @@ public class Sound {
     private Age age;
     private Sex sex;
     private String location;
-    private String city;
-    private State state;
+    private City city;
     private String comment;
             
     public Sound(){
@@ -33,6 +32,7 @@ public class Sound {
         sound = new SoundFile();
         age = new Age();
         sex = new Sex();
+        city = new City();
     }
     
 	/**
@@ -188,7 +188,7 @@ public class Sound {
 	/**
 	 * @return
 	 */
-	public String getCity() {
+	public City getCity() {
 		return city;
 	}
 
@@ -200,17 +200,10 @@ public class Sound {
 	}
 
 	/**
-	 * @return
-	 */
-	public State getState() {
-		return state;
-	}
-
-	/**
 	 * @param string
 	 */
-	public void setCity(String string) {
-		city = string;
+	public void setCity(City city) {
+		this.city = city;
 	}
 
 	/**
@@ -218,13 +211,6 @@ public class Sound {
 	 */
 	public void setLocation(String string) {
 		location = string;
-	}
-
-	/**
-	 * @param state
-	 */
-	public void setState(State state) {
-		this.state = state;
 	}
 
 }

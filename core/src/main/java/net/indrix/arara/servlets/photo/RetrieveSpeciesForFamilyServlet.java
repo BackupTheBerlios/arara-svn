@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.servlets.photo;
+package net.indrix.arara.servlets.photo;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,17 +19,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.indrix.bean.UploadBean;
-import net.indrix.bean.UploadPhotoBean;
-import net.indrix.bean.UploadSoundBean;
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.dao.SpecieDAO;
-import net.indrix.servlets.ServletConstants;
-import net.indrix.servlets.UploadConstants;
-import net.indrix.servlets.photo.upload.AbstractUploadPhotoServlet;
-import net.indrix.utils.LabelValueBean;
-import net.indrix.vo.Family;
-import net.indrix.vo.Specie;
+import net.indrix.arara.servlets.AbstractServlet;
+import net.indrix.arara.bean.UploadBean;
+import net.indrix.arara.bean.UploadPhotoBean;
+import net.indrix.arara.bean.UploadSoundBean;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.dao.SpecieDAO;
+import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.servlets.UploadConstants;
+import net.indrix.arara.servlets.photo.upload.AbstractUploadPhotoServlet;
+import net.indrix.arara.utils.LabelValueBean;
+import net.indrix.arara.vo.Family;
+import net.indrix.arara.vo.Specie;
 
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.log4j.Logger;
@@ -40,7 +41,7 @@ import org.apache.log4j.Logger;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class RetrieveSpeciesForFamilyServlet extends AbstractUploadPhotoServlet {
+public class RetrieveSpeciesForFamilyServlet extends AbstractServlet {
 	/**
 	 * Logger object to be used by this servlet to log statements
 	 */

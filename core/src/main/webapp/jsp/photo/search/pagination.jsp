@@ -1,5 +1,5 @@
 <%@ taglib uri="/core" prefix="c"%>
-<%@ page import="net.indrix.servlets.*"%>
+<%@ page import="net.indrix.arara.servlets.*"%>
 
 <tr bgcolor="#339966">
 <td align="center">

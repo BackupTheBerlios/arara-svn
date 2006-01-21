@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.servlets.sound;
+package net.indrix.arara.servlets.sound;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -19,18 +19,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.indrix.bean.UploadSoundBean;
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.model.AgeModel;
-import net.indrix.model.SexModel;
-import net.indrix.model.StatesModel;
-import net.indrix.model.UploadSound;
-import net.indrix.model.exceptions.SoundProcessingException;
-import net.indrix.servlets.ServletConstants;
-import net.indrix.servlets.UploadConstants;
-import net.indrix.servlets.photo.exceptions.InvalidFileException;
-import net.indrix.vo.Sound;
-import net.indrix.vo.User;
+import net.indrix.arara.bean.UploadSoundBean;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.model.AgeModel;
+import net.indrix.arara.model.CityModel;
+import net.indrix.arara.model.SexModel;
+import net.indrix.arara.model.UploadSound;
+import net.indrix.arara.model.exceptions.SoundProcessingException;
+import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.servlets.UploadConstants;
+import net.indrix.arara.servlets.photo.exceptions.InvalidFileException;
+import net.indrix.arara.vo.City;
+import net.indrix.arara.vo.Sound;
+import net.indrix.arara.vo.User;
 
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.log4j.Logger;
@@ -43,13 +44,13 @@ import org.apache.log4j.Logger;
  */
 public class UploadSoundServlet extends AbstractUploadServlet {
 	private static final int MAX_SOUND_SIZE = 500000;
-    private static final String MAX_SOUND_SIZE_STR = "500Kb";
+	private static final String MAX_SOUND_SIZE_STR = "500Kb";
 
 	static Logger logger = Logger.getLogger("net.indrix.aves");
 
-    public void init(){
-        logger.debug("Initializing UploadSoundServlet...");
-    }    
+	public void init() {
+		logger.debug("Initializing UploadSoundServlet...");
+	}
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
 		throws ServletException, IOException {
@@ -70,25 +71,27 @@ public class UploadSoundServlet extends AbstractUploadServlet {
 			Map data = null;
 			try {
 				data = parseMultiPartFormData(req);
-				UploadSoundBean bean = (UploadSoundBean) session.getAttribute(UploadSoundConstants.UPLOAD_BEAN);
+				UploadSoundBean bean =
+					(UploadSoundBean) session.getAttribute(UploadSoundConstants.UPLOAD_BEAN);
 				logger.debug("Calling updateBean");
 				if (updateBean(data, bean, errors)) {
 					logger.debug("bean updated " + bean);
 					try {
 						Sound sound = createSound(bean, user);
-                        // set upload data to session
-                        session.setAttribute(UploadSoundConstants.LAST_UPLOAD_BEAN, bean);
+						// set upload data to session
+						session.setAttribute(UploadSoundConstants.LAST_UPLOAD_BEAN, bean);
 						if (sound.getSound().getFileSize() > MAX_SOUND_SIZE) {
-                            logger.debug("photo with size = " + sound.getSound().getFileSize());
-                            errors.add(UploadSoundConstants.INVALID_FILE_SIZE + MAX_SOUND_SIZE_STR);                            
+							logger.debug("photo with size = " + sound.getSound().getFileSize());
+							errors.add(UploadSoundConstants.INVALID_FILE_SIZE + MAX_SOUND_SIZE_STR);
 						} else {
-                            logger.debug("Calling addSoundToDatabase " + sound);
-                            addSoundToDatabase(sound);
-                            logger.debug("Sound added to database");
-                            // next page
-                            nextPage = ServletConstants.UPLOAD_SOUND_SUCCESS_PAGE;
-                            
-                            loggerActions.info("User " + user.getLogin() + " has uploaded one sound.");                            
+							logger.debug("Calling addSoundToDatabase " + sound);
+							addSoundToDatabase(sound);
+							logger.debug("Sound added to database");
+							// next page
+							nextPage = ServletConstants.UPLOAD_SOUND_SUCCESS_PAGE;
+
+							loggerActions.info(
+								"User " + user.getLogin() + " has uploaded one sound.");
 						}
 					} catch (InvalidFileException e1) {
 						logger.debug("InvalidFileException.....");
@@ -146,19 +149,17 @@ public class UploadSoundServlet extends AbstractUploadServlet {
 	 * @param data
 	 * @return
 	 */
-	private Sound createSound(UploadSoundBean bean, User user)
-		throws InvalidFileException {
+	private Sound createSound(UploadSoundBean bean, User user) throws InvalidFileException {
 		Sound sound = new Sound();
-        sound.setUser(user);
-        sound.setSpecie(createSpecie(bean.getSelectedSpecieId(), bean.getSelectedFamilyId()));
-        sound.getSound().setFileSize(Integer.parseInt(bean.getFileSize()));
-        sound.getSound().setFilename(bean.getFilename());
-        sound.setAge(AgeModel.getAge(Integer.parseInt(bean.getSelectedAgeId())));
-        sound.setSex(SexModel.getSex(Integer.parseInt(bean.getSelectedSexId())));
-        sound.setLocation(bean.getLocation());
-        sound.setCity(bean.getCity());
-        sound.setState(StatesModel.getState(Integer.parseInt(bean.getStateId())));
-        sound.setComment(bean.getComment());
+		sound.setUser(user);
+		sound.setSpecie(createSpecie(bean.getSelectedSpecieId(), bean.getSelectedFamilyId()));
+		sound.getSound().setFileSize(Integer.parseInt(bean.getFileSize()));
+		sound.getSound().setFilename(bean.getFilename());
+		sound.setAge(AgeModel.getAge(Integer.parseInt(bean.getSelectedAgeId())));
+		sound.setSex(SexModel.getSex(Integer.parseInt(bean.getSelectedSexId())));
+		sound.setLocation(bean.getLocation());
+		sound.setCity(getCity(bean.getCityId()));
+		sound.setComment(bean.getComment());
 		try {
 			sound.getSound().setSound(bean.getFileItem().getInputStream());
 		} catch (IOException e) {
@@ -166,5 +167,24 @@ public class UploadSoundServlet extends AbstractUploadServlet {
 			throw new InvalidFileException();
 		}
 		return sound;
+	}
+
+	/**
+	 * @param string
+	 * @return
+	 */
+	private City getCity(String string) {
+		CityModel model = new CityModel();
+        City city = null;
+		try {
+			city = model.getCity(Integer.parseInt(string));
+		} catch (NumberFormatException e) {
+			logger.debug("UploadSoundServlet.getCity: invalid cityId " + string);
+		} catch (DatabaseDownException e) {
+            logger.debug("UploadSoundServlet.getCity: DatabaseDownException", e);
+		} catch (SQLException e) {
+            logger.debug("UploadSoundServlet.getCity: SQLException", e);
+		}
+        return city;
 	}
 }

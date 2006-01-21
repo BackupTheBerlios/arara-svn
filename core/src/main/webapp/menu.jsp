@@ -1,4 +1,4 @@
-<%@ page import="net.indrix.vo.User"%>
+<%@ page import="net.indrix.arara.vo.User"%>
 <% User user = (User)session.getAttribute("user"); %>
 
       <% if (user == null) {

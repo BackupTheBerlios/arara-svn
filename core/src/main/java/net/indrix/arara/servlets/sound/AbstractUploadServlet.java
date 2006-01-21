@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.servlets.sound;
+package net.indrix.arara.servlets.sound;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -19,11 +19,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
-import net.indrix.bean.UploadSoundBean;
-import net.indrix.servlets.UploadConstants;
-import net.indrix.utils.PropertiesManager;
-import net.indrix.vo.Family;
-import net.indrix.vo.Specie;
+import net.indrix.arara.bean.UploadSoundBean;
+import net.indrix.arara.servlets.UploadConstants;
+import net.indrix.arara.utils.PropertiesManager;
+import net.indrix.arara.vo.Family;
+import net.indrix.arara.vo.Specie;
 
 import org.apache.commons.fileupload.DefaultFileItemFactory;
 import org.apache.commons.fileupload.FileItem;
@@ -114,7 +114,7 @@ public class AbstractUploadServlet extends HttpServlet {
 		}
         bean.setFileItem(fileItem);
         bean.setLocation((String) data.get(UploadSoundConstants.LOCATION));
-        bean.setCity((String) data.get(UploadSoundConstants.CITY));
+        bean.setCityId((String) data.get(UploadSoundConstants.CITY_ID));
         bean.setStateId((String) data.get(UploadSoundConstants.STATE_ID));
         bean.setComment((String) data.get(UploadSoundConstants.COMMENT));
         bean.setSelectedAgeId((String) data.get(UploadSoundConstants.AGE_ID));

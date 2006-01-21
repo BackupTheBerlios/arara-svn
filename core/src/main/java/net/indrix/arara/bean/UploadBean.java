@@ -22,13 +22,17 @@ public class UploadBean {
     protected String selectedFamilyId;
     protected List specieList;
     protected String selectedSpecieId;
+    
     protected String filename;
     protected String fileSize;
     protected FileItem fileItem;    
     protected String selectedAgeId;
     protected String selectedSexId;
     protected String location;
+    
+    protected List citiesList;
     protected String cityId;
+    protected List statesList;
     protected String stateId;
     protected String selectedCityId;
     protected String selectedStateId;
@@ -242,6 +246,34 @@ public class UploadBean {
      */
     public void setSelectedStateId(String string) {
         selectedStateId = string;
+    }
+
+    /**
+     * @return
+     */
+    public List getCitiesList() {
+        return citiesList;
+    }
+
+    /**
+     * @return
+     */
+    public List getStatesList() {
+        return statesList;
+    }
+
+    /**
+     * @param list
+     */
+    public void setCitiesList(List list) {
+        citiesList = list;
+    }
+
+    /**
+     * @param list
+     */
+    public void setStatesList(List list) {
+        statesList = list;
     }
 
 

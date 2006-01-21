@@ -25,7 +25,7 @@ public interface PhotoConstants {
     public static final String SEX_ID_COLUMN = "sex_id";
     public static final String DATE_COLUMN = "date";
     public static final String LOCATION_COLUMN = "place";
-    public static final String CITY_ID = "city_id";
+    public static final String CITY_ID_COLUMN = "city_id";
     public static final String CAMERA_COLUMN = "camera";
     public static final String LENS_COLUMN = "lens";
     public static final String FILM_COLUMN = "film";

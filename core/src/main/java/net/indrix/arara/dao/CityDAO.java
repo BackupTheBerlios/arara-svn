@@ -13,9 +13,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.indrix.model.StatesModel;
-import net.indrix.vo.City;
-import net.indrix.vo.State;
+import net.indrix.arara.model.StatesModel;
+import net.indrix.arara.vo.City;
+import net.indrix.arara.vo.State;
 
 import org.apache.log4j.Logger;
 
@@ -32,10 +32,15 @@ public class CityDAO {
     private static final String INSERT = "Insert into city (state_id, name) values (?, ?)";
 
     /**
-     * SQL statement to retrieve all states
+     * SQL statement to retrieve all cities
      */
     private static final String SELECT_ALL = "Select * from city order by name";
 
+    /**
+     * SQL statement to retrieve the city with the given id
+     */
+    private static final String SELECT_BY_ID = "Select * from city where id = ? order by name";
+    
     /**
      * SQL statement to retrieve all states for a given state
      */
@@ -132,6 +137,52 @@ public class CityDAO {
         }
         logger.debug("StatesDAO.retrieve : finishing method...");
         return list;
+    }
+
+    /**
+     * This method retrieves a <code>Specie</code> object based on its id
+     * 
+     * @param id The id of the <code>Specie</code>
+     * 
+     * @return a <code>Specie</code> object 
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    public City retrieve(int id) throws DatabaseDownException, SQLException {
+        logger.debug("CityDAO.retrieve : entering method...");
+        Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        City city = null;
+        try {
+            logger.debug("CityDAO.retrieve : running SQL " + SELECT_ALL);
+            stmt = conn.prepareStatement(SELECT_ALL);
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                id = rs.getInt("id");
+                int stateId = rs.getInt("state_id");
+                String name = rs.getString("name");
+                city = new City();
+                city.setId(id);
+                city.setName(name);
+                city.setState(StatesModel.getState(stateId));
+            }
+        } catch (SQLException e) {
+            logger.debug("SQLException !", e);
+        } finally {
+            closeResultSet(rs);
+            closeStatement(stmt);
+            try {
+                conn.close();
+            } catch (SQLException e1) {
+                throw new DatabaseDownException();
+            }
+        }
+        logger.debug("CityDAO.retrieve : finishing method...");
+        return city;
     }
 
     /**

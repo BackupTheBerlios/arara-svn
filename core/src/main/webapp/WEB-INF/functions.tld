@@ -12,49 +12,49 @@
 
   <function>
     <name>thumbnailHeight</name>
-    <function-class>net.indrix.utils.jsp.Thumbnail</function-class>
+    <function-class>net.indrix.arara.utils.jsp.Thumbnail</function-class>
     <function-signature>int getHeight(int, int ,int)</function-signature>
   </function>
 
   <function>
     <name>thumbnailWidth</name>
-    <function-class>net.indrix.utils.jsp.Thumbnail</function-class>
+    <function-class>net.indrix.arara.utils.jsp.Thumbnail</function-class>
     <function-signature>int getWidth(int, int ,int)</function-signature>
   </function>
 
   <function>
     <name>dateAsString</name>
-    <function-class>net.indrix.utils.jsp.Date</function-class>
+    <function-class>net.indrix.arara.utils.jsp.Date</function-class>
     <function-signature>java.lang.String getDate(java.util.Date)</function-signature>
   </function>
 
   <function>
     <name>dateTimeAsString</name>
-    <function-class>net.indrix.utils.jsp.Date</function-class>
+    <function-class>net.indrix.arara.utils.jsp.Date</function-class>
     <function-signature>java.lang.String getDateTime(java.util.Date)</function-signature>
   </function>
 
   <function>
     <name>numberOfPhotos</name>
-    <function-class>net.indrix.utils.jsp.Statistics</function-class>
+    <function-class>net.indrix.arara.utils.jsp.Statistics</function-class>
     <function-signature>int getNumberOfPhotos()</function-signature>
   </function>
 
   <function>
     <name>numberOfFamilies</name>
-    <function-class>net.indrix.utils.jsp.Statistics</function-class>
+    <function-class>net.indrix.arara.utils.jsp.Statistics</function-class>
     <function-signature>int getNumberOfFamilies()</function-signature>
   </function>
 
   <function>
     <name>numberOfSpecies</name>
-    <function-class>net.indrix.utils.jsp.Statistics</function-class>
+    <function-class>net.indrix.arara.utils.jsp.Statistics</function-class>
     <function-signature>int getNumberOfSpecies()</function-signature>
   </function>
 
   <function>
     <name>numberOfUsers</name>
-    <function-class>net.indrix.utils.jsp.Statistics</function-class>
+    <function-class>net.indrix.arara.utils.jsp.Statistics</function-class>
     <function-signature>int getNumberOfUsers()</function-signature>
   </function>
 

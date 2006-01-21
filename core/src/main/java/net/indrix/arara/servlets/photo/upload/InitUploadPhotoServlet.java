@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.servlets.photo.upload;
+package net.indrix.arara.servlets.photo.upload;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,11 +17,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import net.indrix.arara.model.StatesModel;
+import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.servlets.ServletUtil;
+import net.indrix.arara.servlets.photo.RetrieveFamiliesServlet;
+import net.indrix.arara.vo.User;
 
-import net.indrix.servlets.ServletConstants;
-import net.indrix.servlets.photo.RetrieveFamiliesServlet;
-import net.indrix.vo.User;
+import org.apache.log4j.Logger;
 
 /**
  * @author Jefferson
@@ -45,7 +47,7 @@ public class InitUploadPhotoServlet extends RetrieveFamiliesServlet {
 			// put errors in request 
 			req.setAttribute(ServletConstants.ERRORS_KEY, errors);
 			nextPage = ServletConstants.LOGIN_PAGE;
-            
+                      
             RequestDispatcher dispatcher = null;
             ServletContext context = this.getServletContext();
             dispatcher = context.getRequestDispatcher(nextPage);
@@ -53,6 +55,10 @@ public class InitUploadPhotoServlet extends RetrieveFamiliesServlet {
             dispatcher.forward(req, res);
             
 		} else {
+            // put states on request
+            List list = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
+            req.setAttribute(ServletConstants.STATES_KEY, list);
+                        
             super.doGet(req, res);
 		}
 	}

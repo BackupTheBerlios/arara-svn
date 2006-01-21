@@ -7,6 +7,7 @@
 package net.indrix.arara.model;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 import net.indrix.arara.dao.CityDAO;
@@ -41,4 +42,20 @@ public class CityModel {
 		}
 		return city;
 	}
+
+    /**
+     * Retrieve the list of cities for the given state id
+     * 
+     * @param id the state id
+     * 
+     * @return The list of cities for the given state id
+     * 
+     * @throws DatabaseDownException if database is down
+     */
+	public List retrieveCitiesForState(int id) throws DatabaseDownException {
+		CityDAO dao = new CityDAO();
+		List list = dao.retrieve();
+		return list;
+	}
+
 }

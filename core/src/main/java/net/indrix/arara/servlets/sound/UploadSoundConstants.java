@@ -4,7 +4,9 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.servlets.sound;
+package net.indrix.arara.servlets.sound;
+
+import net.indrix.arara.servlets.UploadConstants;
 
 /**
  * @author Jefferson
@@ -12,7 +14,7 @@ package net.indrix.servlets.sound;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class UploadSoundConstants extends net.indrix.servlets.UploadConstants {
+public class UploadSoundConstants extends UploadConstants {
 	/**
 	 * constants containing the names of the attributes submmited by the GUI.
 	 */
@@ -22,7 +24,7 @@ public class UploadSoundConstants extends net.indrix.servlets.UploadConstants {
     public static final String AGE_ID = "ageId";
     public static final String SEX_ID = "sexId";
     public static final String LOCATION = "location";
-    public static final String CITY = "city";
+    public static final String CITY_ID = "cityId";
     public static final String STATE_ID = "stateId";
     public static final String COMMENT = "comment";
     

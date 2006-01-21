@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.dao;
+package net.indrix.arara.dao;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,13 +12,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import net.indrix.model.AgeModel;
-import net.indrix.model.SexModel;
-import net.indrix.vo.Family;
-import net.indrix.vo.ImageFile;
-import net.indrix.vo.Photo;
-import net.indrix.vo.Specie;
-import net.indrix.vo.User;
+import net.indrix.arara.model.AgeModel;
+import net.indrix.arara.model.SexModel;
+import net.indrix.arara.vo.City;
+import net.indrix.arara.vo.Family;
+import net.indrix.arara.vo.ImageFile;
+import net.indrix.arara.vo.Photo;
+import net.indrix.arara.vo.Specie;
+import net.indrix.arara.vo.User;
 
 /**
  * @author Jefferson_Angelica
@@ -27,32 +28,32 @@ import net.indrix.vo.User;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class PhotoDAO extends AbstractDAO implements PhotoConstants {
-    /**
-     * SQL to insert a new photo into database
-     */
+	/**
+	 * SQL to insert a new photo into database
+	 */
 	private static final String INSERT =
 		"INSERT INTO photo "
-			+ "(user_id, date, place, camera, lens, film, "
+			+ "(user_id, date, place, city_id, camera, lens, film, "
 			+ "image, w, h, smallImage, sW, sH, specie_id, specie_family_id, post_date, comment, imageSize, smallImageSize, age_id, sex_id) "
-			+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    /**
-     * SQL for updating a photo
-     */
-    public static final String UPDATE =
-        "UPDATE photo set camera = ?, lens = ?, film = ?, date = ?, place = ?, comment = ?, specie_id = ?, sex_id = ?, age_id = ? "
-            + "WHERE id = ?";
+	/**
+	 * SQL for updating a photo
+	 */
+	public static final String UPDATE =
+		"UPDATE photo set camera = ?, lens = ?, film = ?, date = ?, place = ?, city_id = ?, comment = ?, specie_id = ?, sex_id = ?, age_id = ? "
+			+ "WHERE id = ?";
 
-    /**
-     * SQL for deleting a photo object
-     */
-    private static final String DELETE_BY_ID = "DELETE FROM photo WHERE id = ?";
+	/**
+	 * SQL for deleting a photo object
+	 */
+	private static final String DELETE_BY_ID = "DELETE FROM photo WHERE id = ?";
 
-    /**
-     * SQL to select a photo by a given ID
-     */
+	/**
+	 * SQL to select a photo by a given ID
+	 */
 	private static final String SELECT_BY_ID =
-		"SELECT p.id, p.date, p.place, p.camera, p.lens, p.film, "
+		"SELECT p.id, p.date, p.place, p.city_id, p.camera, p.lens, p.film, "
 			+ "p.image, p.w, p.h, p.imageSize, p.smallImage, p.sW, p.sH, p.smallImageSize, p.comment,"
 			+ "s.id s_id, s.name s_name, "
 			+ "f.id f_id, f.name f_name, f.subFamilyName f_sub_name, "
@@ -60,11 +61,11 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
 			+ "from photo p, specie s, family f, user u "
 			+ "where p.id=? and p.specie_id = s.id and p.specie_family_id = f.id and p.user_id=u.id";
 
-    /**
-     * SQL to select photos by a given specie ID 
-     */
+	/**
+	 * SQL to select photos by a given specie ID 
+	 */
 	private static final String SELECT_BY_SPECIE_ID =
-		"SELECT p.id, p.date, p.place, p.camera, p.lens, p.film, "
+		"SELECT p.id, p.date, p.place, p.city_id, p.camera, p.lens, p.film, "
 			+ "p.w, p.h, p.imageSize, p.smallImage, p.sW, p.sH, p.smallImageSize, p.comment,"
 			+ "p.specie_family_id, s.id s_id, s.name s_name, "
 			+ "f.id f_id, f.name f_name, f.subFamilyName f_sub_name, "
@@ -72,11 +73,11 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
 			+ "from photo p, specie s, family f, user u "
 			+ "where p.specie_id=? and p.specie_id = s.id and p.specie_family_id = f.id and p.user_id=u.id";
 
-    /**
-     * SQL to select photos by a given family ID 
-     */
+	/**
+	 * SQL to select photos by a given family ID 
+	 */
 	private static final String SELECT_BY_FAMILY_ID =
-		"SELECT p.id, p.date, p.place, p.camera, p.lens, p.film, "
+		"SELECT p.id, p.date, p.place, p.city_id, p.camera, p.lens, p.film, "
 			+ "p.w, p.h, p.imageSize, p.smallImage, p.sW, p.sH, p.smallImageSize, p.comment,"
 			+ "p.specie_family_id, s.id s_id, s.name s_name, "
 			+ "f.id f_id, f.name f_name, f.subFamilyName f_sub_name, "
@@ -84,35 +85,35 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
 			+ "from photo p, specie s, family f, user u "
 			+ "where p.specie_family_id=? and p.specie_id = s.id and p.specie_family_id = f.id and p.user_id=u.id";
 
-    /**
-     * SQL to select photos by a given common name ID 
-     */
-    private static final String SELECT_BY_COMMON_NAME_ID =
-        "SELECT p.id, p.date, p.place, p.camera, p.lens, p.film, "
-            + "p.w, p.h, p.imageSize, p.smallImage, p.sW, p.sH, p.smallImageSize, p.comment,"
-            + "p.specie_family_id, s.id s_id, s.name s_name, "
-            + "f.id f_id, f.name f_name, f.subFamilyName f_sub_name, "
-            + "p.user_id, p.age_id, p.sex_id "
-            + "from photo p, specie s, family f, specie_has_common_name shcn, user u "
-            + "where shcn.common_name_id = ? and  p.specie_id=shcn.specie_id and p.specie_id = s.id and p.specie_family_id = f.id and p.user_id=u.id";
+	/**
+	 * SQL to select photos by a given common name ID 
+	 */
+	private static final String SELECT_BY_COMMON_NAME_ID =
+		"SELECT p.id, p.date, p.place, p.city_id, p.camera, p.lens, p.film, "
+			+ "p.w, p.h, p.imageSize, p.smallImage, p.sW, p.sH, p.smallImageSize, p.comment,"
+			+ "p.specie_family_id, s.id s_id, s.name s_name, "
+			+ "f.id f_id, f.name f_name, f.subFamilyName f_sub_name, "
+			+ "p.user_id, p.age_id, p.sex_id "
+			+ "from photo p, specie s, family f, specie_has_common_name shcn, user u "
+			+ "where shcn.common_name_id = ? and  p.specie_id=shcn.specie_id and p.specie_id = s.id and p.specie_family_id = f.id and p.user_id=u.id";
 
-    /**
-     * SQL to select photos by a given user ID 
-     */
-    private static final String SELECT_BY_USER =
-        "SELECT p.id, p.date, p.place, p.camera, p.lens, p.film, "
-            + "p.w, p.h, p.imageSize, p.smallImage, p.sW, p.sH, p.smallImageSize, p.comment, "
-            + "p.specie_family_id, s.id s_id, s.name s_name, "
-            + "f.id f_id, f.name f_name, f.subFamilyName f_sub_name, "
-            + "p.user_id, p.age_id, p.sex_id "
-            + "from photo p, specie s, family f, user u "
-            + "where p.user_id=? and p.specie_id = s.id and p.specie_family_id = f.id and p.user_id=u.id";
+	/**
+	 * SQL to select photos by a given user ID 
+	 */
+	private static final String SELECT_BY_USER =
+		"SELECT p.id, p.date, p.place, p.city_id, p.camera, p.lens, p.film, "
+			+ "p.w, p.h, p.imageSize, p.smallImage, p.sW, p.sH, p.smallImageSize, p.comment, "
+			+ "p.specie_family_id, s.id s_id, s.name s_name, "
+			+ "f.id f_id, f.name f_name, f.subFamilyName f_sub_name, "
+			+ "p.user_id, p.age_id, p.sex_id "
+			+ "from photo p, specie s, family f, user u "
+			+ "where p.user_id=? and p.specie_id = s.id and p.specie_family_id = f.id and p.user_id=u.id";
 
-    /**
-     * SQL to select all photos  
-     */
+	/**
+	 * SQL to select all photos  
+	 */
 	private static final String SELECT_ALL =
-		"SELECT p.id, p.date, p.place, p.camera, p.lens, p.film, "
+		"SELECT p.id, p.date, p.place, p.city_id, p.camera, p.lens, p.film, "
 			+ "p.w, p.h, p.imageSize, p.smallImage, p.sW, p.sH, p.smallImageSize, p.comment,"
 			+ "s.id s_id, s.name s_name, "
 			+ "f.id f_id, f.name f_name, f.subFamilyName f_sub_name, "
@@ -120,13 +121,6 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
 			+ "from photo p, specie s, family f, user u "
 			+ "where p.specie_id = s.id and p.specie_family_id = f.id and p.user_id=u.id "
 			+ "order by f_name";
-
-    /**
-     * DAO objects used to retrieve information related to photo object
-     */
-	private UserDAO userDAO = new UserDAO();
-	private SpecieDAO specieDAO = new SpecieDAO();
-	private SoundDAO soundDAO = new SoundDAO();
 
 	/**
 	 * This method retrieves a <code>Photo</code> object based on its id
@@ -198,22 +192,22 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
 		return list;
 	}
 
-    /**
-     * This method retrieves a <code>List</code> object with <code>Photo</code> objects, 
-     * based on the id of the common name
-     * 
-     * @param id The id of the <code>List</code>
-     * 
-     * @return a <code>List</code> object with <code>Photo</code> objects, 
-     * based on the id of the common name 
-     * 
-     * @throws DatabaseDownException If the database is down
-     * @throws SQLException If some SQL Exception occurs
-     */
-    public List retrieveForCommonName(int id) throws DatabaseDownException, SQLException {
-        List list = super.retrieveObjects(id, SELECT_BY_COMMON_NAME_ID);
-        return list;
-    }
+	/**
+	 * This method retrieves a <code>List</code> object with <code>Photo</code> objects, 
+	 * based on the id of the common name
+	 * 
+	 * @param id The id of the <code>List</code>
+	 * 
+	 * @return a <code>List</code> object with <code>Photo</code> objects, 
+	 * based on the id of the common name 
+	 * 
+	 * @throws DatabaseDownException If the database is down
+	 * @throws SQLException If some SQL Exception occurs
+	 */
+	public List retrieveForCommonName(int id) throws DatabaseDownException, SQLException {
+		List list = super.retrieveObjects(id, SELECT_BY_COMMON_NAME_ID);
+		return list;
+	}
 
 	/**
 	 * This method retrieves a <code>List</code> object with <code>Photo</code> objects, 
@@ -277,35 +271,24 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
 		smallImage.setWidth(rs.getInt(SMALL_IMAGE_W));
 		smallImage.setHeight(rs.getInt(SMALL_IMAGE_H));
 		smallImage.setImageSize(rs.getInt(SMALL_IMAGE_SIZE));
-        
-        // retrieve age from model
-        int id = rs.getInt(AGE_ID_COLUMN);       
-        photo.setAge(AgeModel.getAge(id));
-        
-        // retrieve sex from model
-        id = rs.getInt(SEX_ID_COLUMN);
-        photo.setSex(SexModel.getSex(id));
-        
-		try {
-            UserDAO userDao = new UserDAO();
-            User user = userDao.retrieve(rs.getInt(USER_ID_COLUMN));
-            photo.setUser(user);
-		} catch (DatabaseDownException e) {
-			logger.error("PhotoDAO.createObject : Could not retrieve user for photo " + photo, e);
-			throw new SQLException("Error retrieving user for photo " + photo);
-		} catch (SQLException e) {
-			logger.error("PhotoDAO.createObject : Could not retrieve user for photo " + photo, e);
-			throw e;
-		}
-		try {
-			photo.setSpecie(getSpecie(rs));
-		} catch (DatabaseDownException e) {
-			logger.error("PhotoDAO.createObject : Could not retrieve specie for photo " + photo, e);
-			throw new SQLException("Error retrieving specie for photo " + photo);
-		} catch (SQLException e) {
-			logger.error("PhotoDAO.createObject : Could not retrieve specie for photo " + photo, e);
-			throw e;
-		}
+
+		City city = getCityObject(rs.getInt(CITY_ID_COLUMN), photo);
+		photo.setCity(city);
+
+		// retrieve age from model
+		int id = rs.getInt(AGE_ID_COLUMN);
+		photo.setAge(AgeModel.getAge(id));
+
+		// retrieve sex from model
+		id = rs.getInt(SEX_ID_COLUMN);
+		photo.setSex(SexModel.getSex(id));
+
+		User user = getUserObject(rs.getInt(USER_ID_COLUMN), photo);
+		photo.setUser(user);
+
+		Specie specie = getSpecieObject(rs, photo);
+		photo.setSpecie(specie);
+
 		photo.setComment(rs.getString(COMMENT_COLUMN));
 		return photo;
 	}
@@ -341,63 +324,22 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
 		smallImage.setHeight(rs.getInt(SMALL_IMAGE_H));
 		smallImage.setImageSize(rs.getInt(SMALL_IMAGE_SIZE));
 
-        // retrieve age from model
-        int id = rs.getInt(AGE_ID_COLUMN);       
-        photo.setAge(AgeModel.getAge(id));
-        
-        // retrieve sex from model
-        id = rs.getInt(SEX_ID_COLUMN);
-        photo.setSex(SexModel.getSex(id));
+		// retrieve age from model
+		int id = rs.getInt(AGE_ID_COLUMN);
+		photo.setAge(AgeModel.getAge(id));
 
-		try {
-            UserDAO userDao = new UserDAO();
-            User user = userDao.retrieve(rs.getInt(USER_ID_COLUMN));
-            photo.setUser(user);
-		} catch (DatabaseDownException e) {
-			logger.error("PhotoDAO.createObject : Could not retrieve user for photo " + photo, e);
-			throw new SQLException("Error retrieving user for photo " + photo);
-		} catch (SQLException e) {
-			logger.error("PhotoDAO.createObject : Could not retrieve user for photo " + photo, e);
-			throw e;
-		}
-		try {
-			photo.setSpecie(getSpecie(rs));
-		} catch (DatabaseDownException e) {
-			logger.error("PhotoDAO.createObject : Could not retrieve specie for photo " + photo, e);
-			throw new SQLException("Error retrieving specie for photo " + photo);
-		} catch (SQLException e) {
-			logger.error("PhotoDAO.createObject : Could not retrieve specie for photo " + photo, e);
-			throw e;
-		}
+		// retrieve sex from model
+		id = rs.getInt(SEX_ID_COLUMN);
+		photo.setSex(SexModel.getSex(id));
+
+        User user = getUserObject(rs.getInt(USER_ID_COLUMN), photo);
+        photo.setUser(user);
+
+        Specie specie = getSpecieObject(rs, photo);
+        photo.setSpecie(specie);
+
 		photo.setComment(rs.getString(COMMENT_COLUMN));
 		return photo;
-	}
-
-	/**
-	 * @param rs
-	 * @return
-	 */
-	private Specie getSpecie(ResultSet rs) throws DatabaseDownException, SQLException {
-		Specie s = new Specie();
-		s.setId(rs.getInt(SPECIE_ID_COLUMN));
-		s.setName(rs.getString(SPECIE_NAME_COLUMN));
-		Family f = new Family();
-		f.setId(rs.getInt(FAMILY_ID_COLUMN));
-		f.setName(rs.getString(FAMILY_NAME_COLUMN));
-		f.setSubFamilyName(rs.getString(FAMILY_SUB_NAME_COLUMN));
-		s.setFamily(f);
-
-		// retrieve common names for specie
-		CommonNameDAO dao = new CommonNameDAO();
-		dao.retrieveForSpecie(s);
-
-		// retrieve sound information for specie
-		List list = soundDAO.retrieveForSpecie(s.getId());
-		s.setSoundAvailable(!list.isEmpty());
-        if (s.isSoundAvailable()){
-            s.setSounds(list);
-        }
-		return s;
 	}
 
 	/**
@@ -427,37 +369,38 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
 		logger.debug("Date: " + photo.getDate());
 		stmt.setString(3, photo.getLocation());
 		logger.debug("Location: " + photo.getLocation());
-		stmt.setString(4, photo.getCamera());
+		stmt.setInt(4, photo.getCity().getId());
+        logger.debug("City:" + photo.getCity());
+        stmt.setString(5, photo.getCamera());
 		logger.debug("Camera: " + photo.getCamera());
-		stmt.setString(5, photo.getLens());
+		stmt.setString(6, photo.getLens());
 		logger.debug("Lens: " + photo.getLens());
-		stmt.setString(6, photo.getFilm());
+		stmt.setString(7, photo.getFilm());
 		logger.debug("Film: " + photo.getFilm());
-		stmt.setBinaryStream(7, image.getImage(), image.getImageSize());
-		stmt.setInt(8, image.getWidth());
-		stmt.setInt(9, image.getHeight());
+		stmt.setBinaryStream(8, image.getImage(), image.getImageSize());
+		stmt.setInt(9, image.getWidth());
+		stmt.setInt(10, image.getHeight());
 		logger.debug("Size: " + image.getWidth() + "," + image.getHeight());
-		stmt.setBinaryStream(10, smallImage.getImage(), smallImage.getImageSize());
-		stmt.setInt(11, smallImage.getWidth());
-		stmt.setInt(12, smallImage.getHeight());
+		stmt.setBinaryStream(11, smallImage.getImage(), smallImage.getImageSize());
+		stmt.setInt(12, smallImage.getWidth());
+		stmt.setInt(13, smallImage.getHeight());
 		logger.debug("Small size: " + smallImage.getWidth() + "," + smallImage.getHeight());
-		stmt.setInt(13, photo.getSpecie().getId());
+		stmt.setInt(14, photo.getSpecie().getId());
 		logger.debug("Specie: " + photo.getSpecie().getId() + " | " + photo.getSpecie().getName());
-		stmt.setInt(14, photo.getSpecie().getFamily().getId());
+		stmt.setInt(15, photo.getSpecie().getFamily().getId());
 		logger.debug(
 			"Family: "
 				+ photo.getSpecie().getFamily().getId()
 				+ " | "
 				+ photo.getSpecie().getFamily().getName());
-        stmt.setTimestamp(15, getTimestamp(getSQLDate()));
+		stmt.setTimestamp(16, getTimestamp(getSQLDate()));
 		logger.debug("Post date: " + photo.getDate());
-		stmt.setString(16, photo.getComment());
+		stmt.setString(17, photo.getComment());
 		logger.debug("Comment : " + photo.getComment());
-		stmt.setInt(17, photo.getRealImage().getImageSize());
-		stmt.setInt(18, photo.getSmallImage().getImageSize());
-        stmt.setInt(19, photo.getAge().getId());
-        stmt.setInt(20, photo.getSex().getId());
-        
+		stmt.setInt(18, photo.getRealImage().getImageSize());
+		stmt.setInt(19, photo.getSmallImage().getImageSize());
+		stmt.setInt(20, photo.getAge().getId());
+		stmt.setInt(21, photo.getSex().getId());
 	}
 
 	/**
@@ -478,48 +421,133 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
 		stmt.setString(3, photo.getFilm());
 		stmt.setDate(4, getSQLDate(photo.getDate()));
 		stmt.setString(5, photo.getLocation());
-		stmt.setString(6, photo.getComment());
-		stmt.setInt(7, photo.getSpecie().getId());
-        stmt.setInt(8, photo.getSex().getId());
-        stmt.setInt(9, photo.getAge().getId());
-        stmt.setInt(10, photo.getId());
+        stmt.setInt(6, photo.getCity().getId());
+		stmt.setString(7, photo.getComment());
+		stmt.setInt(8, photo.getSpecie().getId());
+		stmt.setInt(9, photo.getSex().getId());
+		stmt.setInt(10, photo.getAge().getId());
+		stmt.setInt(11, photo.getId());
 		logger.debug("PhotoDAO.setStatementValuesForUpdate: Exiting method");
 	}
 
-    /**
-     * This method returns the SQL statement to insert a new object into database
-     * 
-     * @return The insert SQL statement
-     */
-    protected String getInsertSQL() {
-        return INSERT;
-    }
+	/**
+	 * This method returns the SQL statement to insert a new object into database
+	 * 
+	 * @return The insert SQL statement
+	 */
+	protected String getInsertSQL() {
+		return INSERT;
+	}
 
-    /**
-     * This method returns the SQL statement to delete an object from database
-     * 
-     * @return The delete SQL statement
-     */
-    protected String getDeleteSQL() {
-        return DELETE_BY_ID;
-    }
+	/**
+	 * This method returns the SQL statement to delete an object from database
+	 * 
+	 * @return The delete SQL statement
+	 */
+	protected String getDeleteSQL() {
+		return DELETE_BY_ID;
+	}
 
-    /**
-      * This method returns the SQL statement to update an object in the database
-      * 
-      * @return The update SQL statement
-      */
-     protected String getUpdateSQL() {  
-         return UPDATE;
-     }    
+	/**
+	  * This method returns the SQL statement to update an object in the database
+	  * 
+	  * @return The update SQL statement
+	  */
+	protected String getUpdateSQL() {
+		return UPDATE;
+	}
 
-    /**
-     * This method returns the SQL statement to select all object from database
-     * 
-     * @return the SelectALL sql
-     */
-    protected String getSelectAllSQL() {
-        return SELECT_ALL;
-    }
-     
+	/**
+	 * This method returns the SQL statement to select all object from database
+	 * 
+	 * @return the SelectALL sql
+	 */
+	protected String getSelectAllSQL() {
+		return SELECT_ALL;
+	}
+
+	/**
+	 * @param rs
+	 * @return
+	 */
+	private Specie getSpecieObject(ResultSet rs, Photo photo) throws SQLException {
+		Specie s = new Specie();
+		s.setId(rs.getInt(SPECIE_ID_COLUMN));
+		s.setName(rs.getString(SPECIE_NAME_COLUMN));
+		Family f = new Family();
+		f.setId(rs.getInt(FAMILY_ID_COLUMN));
+		f.setName(rs.getString(FAMILY_NAME_COLUMN));
+		f.setSubFamilyName(rs.getString(FAMILY_SUB_NAME_COLUMN));
+		s.setFamily(f);
+
+		// retrieve common names for specie
+		CommonNameDAO dao = new CommonNameDAO();
+		try {
+			dao.retrieveForSpecie(s);
+		} catch (DatabaseDownException e) {
+			logger.error("PhotoDAO.getSpecieObject : Could not retrieve city for photo " + photo, e);
+			throw new SQLException("Error retrieving user for city " + photo);
+		} catch (SQLException e) {
+			logger.error("PhotoDAO.getSpecieObject : Could not retrieve user for city " + photo, e);
+			throw e;
+		};
+
+		// retrieve sound information for specie
+		SoundDAO soundDAO = new SoundDAO();
+		List list;
+		try {
+			list = soundDAO.retrieveForSpecie(s.getId());
+		} catch (DatabaseDownException e) {
+			logger.error("PhotoDAO.getSpecieObject : Could not retrieve city for photo " + photo, e);
+			throw new SQLException("Error retrieving user for city " + photo);
+		} catch (SQLException e) {
+			logger.error("PhotoDAO.getSpecieObject : Could not retrieve user for city " + photo, e);
+			throw e;
+		};
+		s.setSoundAvailable(!list.isEmpty());
+		if (s.isSoundAvailable()) {
+			s.setSounds(list);
+		}
+		return s;
+	}
+
+	/**
+	 * @param i
+	 * @return
+	 */
+	private City getCityObject(int cityId, Photo photo) throws SQLException {
+		City city = null;
+		try {
+			CityDAO cityDAO = new CityDAO();
+			city = cityDAO.retrieve(cityId);
+		} catch (DatabaseDownException e) {
+			logger.error("PhotoDAO.createObject : Could not retrieve city for photo " + photo, e);
+			throw new SQLException("Error retrieving user for city " + photo);
+		} catch (SQLException e) {
+			logger.error("PhotoDAO.createObject : Could not retrieve user for city " + photo, e);
+			throw e;
+		};
+		return city;
+	}
+
+	/**
+	 * @param i
+	 * @return
+	 */
+	private User getUserObject(int userId, Photo photo) throws SQLException {
+		User user = null;
+		try {
+			UserDAO userDao = new UserDAO();
+			user = userDao.retrieve(userId);
+			photo.setUser(user);
+		} catch (DatabaseDownException e) {
+			logger.error("PhotoDAO.createObject : Could not retrieve user for photo " + photo, e);
+			throw new SQLException("Error retrieving user for photo " + photo);
+		} catch (SQLException e) {
+			logger.error("PhotoDAO.createObject : Could not retrieve user for photo " + photo, e);
+			throw e;
+		}
+		return user;
+	}
+
 }

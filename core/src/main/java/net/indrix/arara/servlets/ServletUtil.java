@@ -4,16 +4,17 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.servlets;
+package net.indrix.arara.servlets;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.indrix.utils.LabelValueBean;
-import net.indrix.vo.CommonName;
-import net.indrix.vo.Family;
-import net.indrix.vo.Specie;
+import net.indrix.arara.utils.LabelValueBean;
+import net.indrix.arara.vo.CommonName;
+import net.indrix.arara.vo.Family;
+import net.indrix.arara.vo.Specie;
+import net.indrix.arara.vo.State;
 
 import org.apache.log4j.Logger;
 
@@ -74,6 +75,24 @@ public class ServletUtil {
             CommonName c = (CommonName)it.next();
             String label = c.getName();
             LabelValueBean bean = new LabelValueBean(label, c.getId());
+            newList.add(bean);
+            logger.debug("adding bean to list " + bean);
+        }
+        newList.add(0, new LabelValueBean("", ""));
+        return newList;
+    }
+
+    /**
+     * @param list
+     * @return
+     */
+    public static List statesDataAsLabelValueBean(List list) {
+        List newList = new ArrayList();
+        Iterator it = list.iterator();
+        while (it.hasNext()){
+            State state = (State)it.next();
+            String label = state.getAcronym();
+            LabelValueBean bean = new LabelValueBean(label, state.getId());
             newList.add(bean);
             logger.debug("adding bean to list " + bean);
         }

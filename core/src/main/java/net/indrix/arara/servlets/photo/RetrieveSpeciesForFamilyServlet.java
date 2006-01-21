@@ -8,7 +8,6 @@ package net.indrix.arara.servlets.photo;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -19,18 +18,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.indrix.arara.servlets.AbstractServlet;
 import net.indrix.arara.bean.UploadBean;
 import net.indrix.arara.bean.UploadPhotoBean;
 import net.indrix.arara.bean.UploadSoundBean;
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.dao.SpecieDAO;
+import net.indrix.arara.model.StatesModel;
+import net.indrix.arara.servlets.AbstractServlet;
 import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.servlets.ServletUtil;
 import net.indrix.arara.servlets.UploadConstants;
-import net.indrix.arara.servlets.photo.upload.AbstractUploadPhotoServlet;
-import net.indrix.arara.utils.LabelValueBean;
 import net.indrix.arara.vo.Family;
-import net.indrix.arara.vo.Specie;
 
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.log4j.Logger;
@@ -79,6 +77,11 @@ public class RetrieveSpeciesForFamilyServlet extends AbstractServlet {
 						logger.debug("Setting specie list in request");
 						logger.debug("Setting data in request");
 						handleList(list, session, familyId, dataToBeUploaded);
+                        
+                        // put states on request
+                        List listOfStates = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
+                        req.setAttribute(ServletConstants.STATES_KEY, listOfStates);
+                        
 					} else {
 						logger.debug("Specie list not found...");
 						erros.add(ServletConstants.DATABASE_ERROR);
@@ -126,27 +129,12 @@ public class RetrieveSpeciesForFamilyServlet extends AbstractServlet {
         uploadBean.setSelectedFamilyId(familyId);
 	}
 
-	/**
-	 * @param list
-	 * @return
-	 */
-	private static List dataAsLabelValueBean(List list) {
-		List newList = new ArrayList();
-		Iterator it = list.iterator();
-		while (it.hasNext()) {
-			Specie f = (Specie) it.next();
-			LabelValueBean bean = new LabelValueBean(f.getName(), f.getId());
-			newList.add(bean);
-		}
-		return newList;
-	}
-
 	private static List retrieveSpecieListForFamilyId(String familyId)
 		throws DatabaseDownException {
 		SpecieDAO dao = new SpecieDAO();
 		Family family = new Family();
 		family.setId(Integer.parseInt(familyId));
-		List list = dataAsLabelValueBean(dao.retrieveForFamily(family));
+		List list = ServletUtil.specieDataAsLabelValueBean(dao.retrieveForFamily(family));
 		return list;
 	}
 }

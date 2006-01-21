@@ -18,7 +18,7 @@
      <c:set var="newLine" value="${false}"/>
      <tr>
    </c:if>
-   <td align="right">
+   <td align="left">
    		  <c:if test="${photo.soundAvailable == true}">
    		    
        		<img src="/teste/jsp/images/sound.gif" width="20" height="20"
@@ -38,11 +38,14 @@
         <font size="2" face="Verdana"><br><a href="<c:url value="/servlet/searchPhotosBySpecie?specieId=${photo.specie.id}&action=BEGIN"/>">
    	  	  Espécie:${photo.specie.name}
         </a></font>
+        <font size="2" face="Verdana"><br><a href="<c:url value="/servlet/searchPhotosBySpecie?specieId=${photo.specie.id}&action=BEGIN"/>">
+   	  	  Nome comum:${photo.specie.commonNameString}
+        </a></font>
         <font size="2" face="Verdana"><br><a href="<c:url value="/servlet/searchPhotosByUser?userId=${photo.user.id}&action=BEGIN"/>">
    		  Usuário:${photo.user.login}
         </a></font>
    </td>
-   <c:if test="${index > 3}">
+   <c:if test="${index > 2}">
        <c:set var="index" value="${0}"/>
        <c:set var="newLine" value="${true}"/>
        </tr>

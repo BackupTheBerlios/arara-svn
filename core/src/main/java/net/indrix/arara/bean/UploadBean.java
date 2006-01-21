@@ -28,8 +28,10 @@ public class UploadBean {
     protected String selectedAgeId;
     protected String selectedSexId;
     protected String location;
-    protected String city;
+    protected String cityId;
     protected String stateId;
+    protected String selectedCityId;
+    protected String selectedStateId;
     protected String comment;
     
 	/**
@@ -175,8 +177,8 @@ public class UploadBean {
     /**
      * @return
      */
-    public String getCity() {
-        return city;
+    public String getCityId() {
+        return cityId;
     }
 
     /**
@@ -196,8 +198,8 @@ public class UploadBean {
     /**
      * @param string
      */
-    public void setCity(String string) {
-        city = string;
+    public void setCityId(String string) {
+        cityId = string;
     }
 
     /**
@@ -214,6 +216,34 @@ public class UploadBean {
         stateId = string;
     }
 
+    /**
+     * @return
+     */
+    public String getSelectedCityId() {
+        return selectedCityId;
+    }
+
+    /**
+     * @return
+     */
+    public String getSelectedStateId() {
+        return selectedStateId;
+    }
+
+    /**
+     * @param string
+     */
+    public void setSelectedCityId(String string) {
+        selectedCityId = string;
+    }
+
+    /**
+     * @param string
+     */
+    public void setSelectedStateId(String string) {
+        selectedStateId = string;
+    }
+
 
     public String toString(){
         StringBuffer buffer = new StringBuffer("[");
@@ -226,5 +256,5 @@ public class UploadBean {
         buffer.append(fileSize);
         buffer.append("]");
         return buffer.toString();
-    }
+    }    
 }

@@ -15,9 +15,9 @@ import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.model.PhotoModel;
-import net.indrix.vo.Photo;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.model.PhotoModel;
+import net.indrix.arara.vo.Photo;
 
 /**
  * @author Jefferson_Angelica

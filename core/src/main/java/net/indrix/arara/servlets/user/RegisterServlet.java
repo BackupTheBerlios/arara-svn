@@ -21,10 +21,10 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.model.UserModel;
-import net.indrix.servlets.ServletConstants;
-import net.indrix.vo.User;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.model.UserModel;
+import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.vo.User;
 
 /**
  * @author alunos

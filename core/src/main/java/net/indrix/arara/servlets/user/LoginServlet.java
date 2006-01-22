@@ -19,11 +19,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.model.UserModel;
-import net.indrix.model.UserNotFoundException;
-import net.indrix.servlets.ServletConstants;
-import net.indrix.vo.User;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.model.UserModel;
+import net.indrix.arara.model.UserNotFoundException;
+import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.vo.User;
 
 import org.apache.log4j.Logger;
 /**

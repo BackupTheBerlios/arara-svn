@@ -18,11 +18,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.model.SoundModel;
-import net.indrix.servlets.PaginationController;
-import net.indrix.servlets.ServletConstants;
-import net.indrix.vo.User;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.model.SoundModel;
+import net.indrix.arara.servlets.PaginationController;
+import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.vo.User;
 
 /**
  * @author Jefferson

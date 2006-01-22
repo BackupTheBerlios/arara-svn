@@ -23,14 +23,14 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.dao.SpecieDAO;
-import net.indrix.dao.UserDAO;
-import net.indrix.model.UploadPhoto;
-import net.indrix.model.exceptions.ImageProcessingException;
-import net.indrix.vo.Photo;
-import net.indrix.vo.Specie;
-import net.indrix.vo.User;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.dao.SpecieDAO;
+import net.indrix.arara.dao.UserDAO;
+import net.indrix.arara.model.UploadPhoto;
+import net.indrix.arara.model.exceptions.ImageProcessingException;
+import net.indrix.arara.vo.Photo;
+import net.indrix.arara.vo.Specie;
+import net.indrix.arara.vo.User;
 
 /**
  * @author Jefferson_Angelica

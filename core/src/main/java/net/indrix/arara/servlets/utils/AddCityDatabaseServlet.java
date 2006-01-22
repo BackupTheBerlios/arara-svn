@@ -17,11 +17,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.indrix.dao.CityDAO;
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.model.StatesModel;
-import net.indrix.vo.City;
-import net.indrix.vo.State;
+import net.indrix.arara.dao.CityDAO;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.model.StatesModel;
+import net.indrix.arara.vo.City;
+import net.indrix.arara.vo.State;
 
 import org.apache.log4j.Logger;
 

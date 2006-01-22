@@ -12,10 +12,10 @@ import java.io.FileNotFoundException;
 
 import javax.swing.JOptionPane;
 
-import net.indrix.model.UploadPhoto;
-import net.indrix.model.exceptions.ImageProcessingException;
-import net.indrix.vo.ImageFile;
-import net.indrix.vo.Photo;
+import net.indrix.arara.model.UploadPhoto;
+import net.indrix.arara.model.exceptions.ImageProcessingException;
+import net.indrix.arara.vo.ImageFile;
+import net.indrix.arara.vo.Photo;
 
 /**
  * @author Jeff

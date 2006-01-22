@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.dao;
+package net.indrix.arara.dao;
 
 /**
  * @author Jefferson_Angelica

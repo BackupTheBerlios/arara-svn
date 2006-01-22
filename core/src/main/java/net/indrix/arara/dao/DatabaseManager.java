@@ -1,4 +1,4 @@
-package net.indrix.dao;
+package net.indrix.arara.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

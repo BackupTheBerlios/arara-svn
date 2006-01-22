@@ -9,10 +9,10 @@ package net.indrix.arara.mains;
 import javax.mail.SendFailedException;
 import javax.mail.internet.AddressException;
 
-import net.indrix.tools.email.MailClass;
-import net.indrix.tools.email.MessageFormatException;
-import net.indrix.tools.email.NoRecipientException;
-import net.indrix.utils.PropertiesManager;
+import net.indrix.arara.tools.email.MailClass;
+import net.indrix.arara.tools.email.MessageFormatException;
+import net.indrix.arara.tools.email.NoRecipientException;
+import net.indrix.arara.utils.PropertiesManager;
 
 /**
  * @author Jeff

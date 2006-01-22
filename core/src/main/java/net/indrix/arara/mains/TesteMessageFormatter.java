@@ -8,9 +8,9 @@ package net.indrix.arara.mains;
 
 import java.util.ArrayList;
 
-import net.indrix.tools.email.MessageComposer;
-import net.indrix.tools.email.WrongNumberOfValuesException;
-import net.indrix.utils.PropertiesManager;
+import net.indrix.arara.tools.email.MessageComposer;
+import net.indrix.arara.tools.email.WrongNumberOfValuesException;
+import net.indrix.arara.utils.PropertiesManager;
 
 /**
  * @author Jeff

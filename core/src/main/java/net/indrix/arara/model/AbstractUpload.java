@@ -6,7 +6,7 @@
  */
 package net.indrix.arara.model;
 
-import net.indrix.utils.PropertiesManager;
+import net.indrix.arara.utils.PropertiesManager;
 
 /**
  * @author Jeff

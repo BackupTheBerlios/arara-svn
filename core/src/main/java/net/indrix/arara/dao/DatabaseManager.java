@@ -9,8 +9,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import net.indrix.utils.PropertiesManager;
-import net.indrix.utils.SO;
+import net.indrix.arara.utils.PropertiesManager;
+import net.indrix.arara.utils.SO;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.log4j.Logger;

@@ -14,9 +14,9 @@ import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import net.indrix.tools.email.MailClass;
-import net.indrix.tools.email.MessageFormatException;
-import net.indrix.tools.email.NoRecipientException;
+import net.indrix.arara.tools.email.MailClass;
+import net.indrix.arara.tools.email.MessageFormatException;
+import net.indrix.arara.tools.email.NoRecipientException;
 
 public class ExemploMail extends HttpServlet {
 

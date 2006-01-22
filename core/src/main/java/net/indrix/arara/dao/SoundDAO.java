@@ -138,7 +138,7 @@ public class SoundDAO extends AbstractDAO {
 	}
 
 	/**
-	 * @see net.indrix.dao.AbstractDAO#createObject(java.sql.ResultSet)
+	 * @see net.indrix.arara.dao.AbstractDAO#createObject(java.sql.ResultSet)
 	 */
 	protected Object createObject(ResultSet rs) throws SQLException {
 		Sound sound = new Sound();
@@ -196,7 +196,7 @@ public class SoundDAO extends AbstractDAO {
 	}
 
 	/**
-	 * @see net.indrix.dao.AbstractDAO#setStatementValues(java.sql.PreparedStatement, java.lang.Object)
+	 * @see net.indrix.arara.dao.AbstractDAO#setStatementValues(java.sql.PreparedStatement, java.lang.Object)
 	 */
 	protected void setStatementValues(PreparedStatement stmt, Object object) throws SQLException {
 		Sound sound = (Sound) object;
@@ -214,14 +214,14 @@ public class SoundDAO extends AbstractDAO {
 	}
 
 	/**
-	 * @see net.indrix.dao.AbstractDAO#setStatementValuesForUpdate(java.sql.PreparedStatement, java.lang.Object)
+	 * @see net.indrix.arara.dao.AbstractDAO#setStatementValuesForUpdate(java.sql.PreparedStatement, java.lang.Object)
 	 */
 	protected void setStatementValuesForUpdate(PreparedStatement stmt, Object object)
 		throws SQLException {
 	}
 
 	/**
-	 * @see net.indrix.dao.AbstractDAO#setObjectId(int, java.lang.Object)
+	 * @see net.indrix.arara.dao.AbstractDAO#setObjectId(int, java.lang.Object)
 	 */
 	protected void setObjectId(int id, Object object) throws SQLException {
 		Sound sound = (Sound) object;

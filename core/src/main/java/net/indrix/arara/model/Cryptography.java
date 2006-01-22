@@ -6,7 +6,7 @@
  */
 package net.indrix.arara.model;
 
-import net.indrix.tools.crypt.VigenereCipherImpl;
+import net.indrix.arara.tools.crypt.VigenereCipherImpl;
 
 import org.apache.log4j.Logger;
 

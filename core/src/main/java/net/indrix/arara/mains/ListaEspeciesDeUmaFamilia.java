@@ -10,11 +10,11 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.dao.FamilyDAO;
-import net.indrix.dao.SpecieDAO;
-import net.indrix.vo.Family;
-import net.indrix.vo.Specie;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.dao.FamilyDAO;
+import net.indrix.arara.dao.SpecieDAO;
+import net.indrix.arara.vo.Family;
+import net.indrix.arara.vo.Specie;
 
 /**
  * @author Jefferson_Angelica

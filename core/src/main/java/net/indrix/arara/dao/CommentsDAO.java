@@ -15,9 +15,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import net.indrix.vo.Comment;
-import net.indrix.vo.Photo;
-import net.indrix.vo.User;
+import net.indrix.arara.vo.Comment;
+import net.indrix.arara.vo.Photo;
+import net.indrix.arara.vo.User;
 
 /**
  * @author Jeff

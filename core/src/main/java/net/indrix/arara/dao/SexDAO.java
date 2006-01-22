@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.indrix.vo.Sex;
+import net.indrix.arara.vo.Sex;
 
 import org.apache.log4j.Logger;
 

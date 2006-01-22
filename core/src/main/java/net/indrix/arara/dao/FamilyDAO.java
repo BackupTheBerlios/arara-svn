@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import net.indrix.vo.Family;
+import net.indrix.arara.vo.Family;
 
 /**
  * @author Jefferson_Angelica

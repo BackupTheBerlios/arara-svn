@@ -14,12 +14,12 @@ import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
-import net.indrix.dao.CommonNameDAO;
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.dao.FamilyDAO;
-import net.indrix.dao.SpecieDAO;
-import net.indrix.vo.Family;
-import net.indrix.vo.Specie;
+import net.indrix.arara.dao.CommonNameDAO;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.dao.FamilyDAO;
+import net.indrix.arara.dao.SpecieDAO;
+import net.indrix.arara.vo.Family;
+import net.indrix.arara.vo.Specie;
 
 /**
  * @author Jefferson_Angelica

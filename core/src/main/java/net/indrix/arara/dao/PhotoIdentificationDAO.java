@@ -11,10 +11,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import net.indrix.vo.ImageFile;
-import net.indrix.vo.Photo;
-import net.indrix.vo.Specie;
-import net.indrix.vo.User;
+import net.indrix.arara.vo.ImageFile;
+import net.indrix.arara.vo.Photo;
+import net.indrix.arara.vo.Specie;
+import net.indrix.arara.vo.User;
 
 /**
  * @author Jeff

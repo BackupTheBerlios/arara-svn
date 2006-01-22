@@ -28,9 +28,9 @@ import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.servlets.ServletUtil;
 import net.indrix.arara.servlets.UploadConstants;
 
-import net.indrix.utils.jsp.Date;
-import net.indrix.vo.Family;
-import net.indrix.vo.Photo;
+import net.indrix.arara.utils.jsp.Date;
+import net.indrix.arara.vo.Family;
+import net.indrix.arara.vo.Photo;
 
 import org.apache.log4j.Logger;
 /*

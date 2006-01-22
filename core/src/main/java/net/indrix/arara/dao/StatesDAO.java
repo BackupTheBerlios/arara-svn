@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.indrix.vo.State;
+import net.indrix.arara.vo.State;
 
 import org.apache.log4j.Logger;
 

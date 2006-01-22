@@ -14,9 +14,9 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.dao.PhotoDAO;
-import net.indrix.vo.Photo;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.dao.PhotoDAO;
+import net.indrix.arara.vo.Photo;
 
 /**
  * @author Jefferson_Angelica

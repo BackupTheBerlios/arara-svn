@@ -22,15 +22,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import net.indrix.dao.CommonNameDAO;
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.dao.FamilyDAO;
-import net.indrix.dao.SpecieCommonNameDAO;
-import net.indrix.dao.SpecieDAO;
-import net.indrix.utils.PropertiesManager;
-import net.indrix.vo.CommonName;
-import net.indrix.vo.Family;
-import net.indrix.vo.Specie;
+import net.indrix.arara.dao.CommonNameDAO;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.dao.FamilyDAO;
+import net.indrix.arara.dao.SpecieCommonNameDAO;
+import net.indrix.arara.dao.SpecieDAO;
+import net.indrix.arara.utils.PropertiesManager;
+import net.indrix.arara.vo.CommonName;
+import net.indrix.arara.vo.Family;
+import net.indrix.arara.vo.Specie;
 
 /**
  * @author Jeff

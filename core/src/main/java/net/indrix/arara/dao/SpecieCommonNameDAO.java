@@ -10,8 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import net.indrix.vo.CommonName;
-import net.indrix.vo.Specie;
+import net.indrix.arara.vo.CommonName;
+import net.indrix.arara.vo.Specie;
 
 /**
  * @author Jeff

@@ -7,9 +7,9 @@ import javax.swing.JOptionPane;
 
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.dao.SoundDAO;
-import net.indrix.vo.Sound;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.dao.SoundDAO;
+import net.indrix.arara.vo.Sound;
 
 /*
  * Created on 11/12/2005

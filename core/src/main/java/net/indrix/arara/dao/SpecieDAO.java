@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.indrix.vo.CommonName;
-import net.indrix.vo.Family;
-import net.indrix.vo.Specie;
+import net.indrix.arara.vo.CommonName;
+import net.indrix.arara.vo.Family;
+import net.indrix.arara.vo.Specie;
 
 /**
  * @author Jefferson_Angelica

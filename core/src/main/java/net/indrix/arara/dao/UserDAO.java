@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import net.indrix.vo.User;
+import net.indrix.arara.vo.User;
 
 public class UserDAO extends AbstractDAO {
 	public static final String ID_COLUMN = "id";

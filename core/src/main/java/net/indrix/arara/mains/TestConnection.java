@@ -8,9 +8,9 @@ package net.indrix.arara.mains;
 
 import java.sql.SQLException;
 
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.dao.UserDAO;
-import net.indrix.vo.User;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.dao.UserDAO;
+import net.indrix.arara.vo.User;
 
 /**
  * @author Jefferson

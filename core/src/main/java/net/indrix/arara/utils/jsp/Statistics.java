@@ -28,7 +28,7 @@ public class Statistics {
     public static int getNumberOfPhotos(){
         int n = 0;
         try {
-			net.indrix.vo.Statistics s = StatisticsModel.retrieveStatistics();
+			net.indrix.arara.vo.Statistics s = StatisticsModel.retrieveStatistics();
             n = s.getNumberOfPhotos();
 		} catch (DatabaseDownException e) {
             logger.error("Statistics.getNumberOfPhotos: DatabaseDownException ", e);
@@ -41,7 +41,7 @@ public class Statistics {
     public static int getNumberOfFamilies(){
         int n = 0;
         try {
-            net.indrix.vo.Statistics s = StatisticsModel.retrieveStatistics();
+            net.indrix.arara.vo.Statistics s = StatisticsModel.retrieveStatistics();
             n = s.getNumberOfFamilies();
         } catch (DatabaseDownException e) {
             logger.error("Statistics.getNumberOfFamilies: DatabaseDownException ", e);
@@ -54,7 +54,7 @@ public class Statistics {
     public static int getNumberOfSpecies(){
         int n = 0;
         try {
-            net.indrix.vo.Statistics s = StatisticsModel.retrieveStatistics();
+            net.indrix.arara.vo.Statistics s = StatisticsModel.retrieveStatistics();
             n = s.getNumberOfSpecies();
         } catch (DatabaseDownException e) {
             logger.error("Statistics.getNumberOfFamilies: DatabaseDownException ", e);
@@ -68,7 +68,7 @@ public class Statistics {
         // set n as 30 as a default value
         int n = 30;
         try {
-            net.indrix.vo.Statistics s = StatisticsModel.retrieveStatistics();
+            net.indrix.arara.vo.Statistics s = StatisticsModel.retrieveStatistics();
             n = s.getNumberOfUsers();
         } catch (DatabaseDownException e) {
             logger.error("Statistics.getNumberOfPhotos: DatabaseDownException ", e);

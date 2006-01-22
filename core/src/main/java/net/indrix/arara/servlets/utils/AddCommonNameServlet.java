@@ -18,12 +18,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.indrix.dao.CommonNameDAO;
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.dao.SpecieCommonNameDAO;
-import net.indrix.dao.SpecieDAO;
-import net.indrix.vo.CommonName;
-import net.indrix.vo.Specie;
+import net.indrix.arara.dao.CommonNameDAO;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.dao.SpecieCommonNameDAO;
+import net.indrix.arara.dao.SpecieDAO;
+import net.indrix.arara.vo.CommonName;
+import net.indrix.arara.vo.Specie;
 
 import org.apache.log4j.Logger;
 

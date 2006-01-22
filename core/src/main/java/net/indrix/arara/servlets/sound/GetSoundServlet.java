@@ -21,10 +21,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.dao.SoundDAO;
-import net.indrix.servlets.ServletConstants;
-import net.indrix.vo.Sound;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.dao.SoundDAO;
+import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.vo.Sound;
 
 import org.apache.log4j.Logger;
 

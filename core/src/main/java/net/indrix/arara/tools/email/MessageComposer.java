@@ -1,4 +1,4 @@
-package net.indrix.tools.email;
+package net.indrix.arara.tools.email;
 
 import java.util.List;
 import java.util.Vector;

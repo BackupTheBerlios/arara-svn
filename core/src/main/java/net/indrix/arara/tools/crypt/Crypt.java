@@ -1,4 +1,4 @@
-package net.indrix.tools.crypt;
+package net.indrix.arara.tools.crypt;
 
 public interface Crypt {
 

@@ -16,12 +16,12 @@ import javax.mail.internet.AddressException;
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.dao.UserDAO;
 import net.indrix.arara.vo.User;
-import net.indrix.tools.email.MailClass;
-import net.indrix.tools.email.MessageComposer;
-import net.indrix.tools.email.MessageFormatException;
-import net.indrix.tools.email.NoRecipientException;
-import net.indrix.tools.email.WrongNumberOfValuesException;
-import net.indrix.utils.PropertiesManager;
+import net.indrix.arara.tools.email.MailClass;
+import net.indrix.arara.tools.email.MessageComposer;
+import net.indrix.arara.tools.email.MessageFormatException;
+import net.indrix.arara.tools.email.NoRecipientException;
+import net.indrix.arara.tools.email.WrongNumberOfValuesException;
+import net.indrix.arara.utils.PropertiesManager;
 
 import org.apache.log4j.Logger;
 

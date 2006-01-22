@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.servlets.admin;
+package net.indrix.arara.servlets.admin;
 
 import java.io.IOException;
 
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.indrix.utils.PropertiesManager;
+import net.indrix.arara.utils.PropertiesManager;
 
 import org.apache.log4j.Logger;
 

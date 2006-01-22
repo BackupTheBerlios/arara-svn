@@ -4,14 +4,14 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.servlets;
+package net.indrix.arara.servlets;
 
 import javax.servlet.http.HttpServlet;
 
-import net.indrix.model.AgeModel;
-import net.indrix.model.PhotoUtil;
-import net.indrix.model.SexModel;
-import net.indrix.model.StatesModel;
+import net.indrix.arara.model.AgeModel;
+import net.indrix.arara.model.PhotoUtil;
+import net.indrix.arara.model.SexModel;
+import net.indrix.arara.model.StatesModel;
 
 import org.apache.log4j.Logger;
 

@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.servlets.photo;
+package net.indrix.arara.servlets.photo;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,9 +23,9 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.dao.PhotoDAO;
-import net.indrix.vo.Photo;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.dao.PhotoDAO;
+import net.indrix.arara.vo.Photo;
 
 /**
  * @author Jefferson

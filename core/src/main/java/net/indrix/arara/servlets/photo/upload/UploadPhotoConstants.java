@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.servlets.photo.upload;
+package net.indrix.arara.servlets.photo.upload;
 
 /**
  * @author Jefferson
@@ -12,7 +12,7 @@ package net.indrix.servlets.photo.upload;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class UploadPhotoConstants extends net.indrix.servlets.UploadConstants{
+public class UploadPhotoConstants extends net.indrix.arara.servlets.UploadConstants{
     
     public static final String UPLOAD_BEAN = "uploadPhotoBean";
     public static final String EDIT_BEAN = "editBean";

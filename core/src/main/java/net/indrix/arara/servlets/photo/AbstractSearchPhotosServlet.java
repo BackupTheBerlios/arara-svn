@@ -4,14 +4,14 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.servlets.photo;
+package net.indrix.arara.servlets.photo;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
 
-import net.indrix.servlets.PaginationController;
-import net.indrix.servlets.ServletConstants;
-import net.indrix.utils.PropertiesManager;
+import net.indrix.arara.servlets.PaginationController;
+import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.utils.PropertiesManager;
 
 import org.apache.log4j.Logger;
 

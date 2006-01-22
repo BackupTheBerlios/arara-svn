@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.servlets.photo.upload;
+package net.indrix.arara.servlets.photo.upload;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -19,9 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.model.PhotoModel;
-import net.indrix.servlets.ServletConstants;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.model.PhotoModel;
+import net.indrix.arara.servlets.ServletConstants;
 
 import org.apache.log4j.Logger;
 

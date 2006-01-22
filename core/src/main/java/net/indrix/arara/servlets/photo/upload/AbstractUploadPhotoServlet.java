@@ -13,14 +13,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import net.indrix.bean.UploadPhotoBean;
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.model.exceptions.ImageProcessingException;
-import net.indrix.servlets.ServletConstants;
-import net.indrix.servlets.UploadConstants;
-import net.indrix.vo.Family;
-import net.indrix.vo.Photo;
-import net.indrix.vo.Specie;
+import net.indrix.arara.bean.UploadPhotoBean;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.model.exceptions.ImageProcessingException;
+import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.servlets.UploadConstants;
+import net.indrix.arara.vo.Family;
+import net.indrix.arara.vo.Photo;
+import net.indrix.arara.vo.Specie;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.log4j.Logger;

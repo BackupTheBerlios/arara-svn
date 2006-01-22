@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.servlets.photo.upload;
+package net.indrix.arara.servlets.photo.upload;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -17,18 +17,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.indrix.bean.UploadPhotoBean;
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.model.UploadPhoto;
-import net.indrix.model.exceptions.ImageProcessingException;
-import net.indrix.servlets.ServletConstants;
-import net.indrix.servlets.UploadConstants;
-import net.indrix.servlets.photo.exceptions.InvalidFileException;
-import net.indrix.vo.Age;
-import net.indrix.vo.Photo;
-import net.indrix.vo.Sex;
-import net.indrix.vo.Specie;
-import net.indrix.vo.User;
+import net.indrix.arara.bean.UploadPhotoBean;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.model.UploadPhoto;
+import net.indrix.arara.model.exceptions.ImageProcessingException;
+import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.servlets.UploadConstants;
+import net.indrix.arara.servlets.photo.exceptions.InvalidFileException;
+import net.indrix.arara.vo.Age;
+import net.indrix.arara.vo.Photo;
+import net.indrix.arara.vo.Sex;
+import net.indrix.arara.vo.Specie;
+import net.indrix.arara.vo.User;
 
 /**
  * @author Jeff

@@ -19,14 +19,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.indrix.bean.UploadBean;
-import net.indrix.bean.UploadPhotoBean;
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.dao.FamilyDAO;
-import net.indrix.dao.SpecieDAO;
-import net.indrix.servlets.ServletConstants;
-import net.indrix.servlets.ServletUtil;
-import net.indrix.servlets.UploadConstants;
+import net.indrix.arara.bean.UploadBean;
+import net.indrix.arara.bean.UploadPhotoBean;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.dao.FamilyDAO;
+import net.indrix.arara.dao.SpecieDAO;
+import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.servlets.ServletUtil;
+import net.indrix.arara.servlets.UploadConstants;
 
 import net.indrix.utils.jsp.Date;
 import net.indrix.vo.Family;

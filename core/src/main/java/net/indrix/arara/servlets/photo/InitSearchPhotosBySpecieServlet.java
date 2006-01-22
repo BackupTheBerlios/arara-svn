@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.servlets.photo;
+package net.indrix.arara.servlets.photo;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -17,13 +17,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.indrix.bean.UploadPhotoBean;
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.dao.SpecieDAO;
-import net.indrix.servlets.ServletConstants;
-import net.indrix.servlets.UploadConstants;
-import net.indrix.utils.LabelValueBean;
-import net.indrix.vo.Specie;
+import net.indrix.arara.bean.UploadPhotoBean;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.dao.SpecieDAO;
+import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.servlets.UploadConstants;
+import net.indrix.arara.utils.LabelValueBean;
+import net.indrix.arara.vo.Specie;
 
 /**
  * @author Jeff

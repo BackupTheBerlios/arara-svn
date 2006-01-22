@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.servlets.log4j;
+package net.indrix.arara.servlets.log4j;
 
 import javax.servlet.http.HttpServlet;
 

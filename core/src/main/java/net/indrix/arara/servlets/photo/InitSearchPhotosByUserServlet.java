@@ -4,9 +4,9 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.servlets.photo;
+package net.indrix.arara.servlets.photo;
 
-import net.indrix.servlets.ServletConstants;
+import net.indrix.arara.servlets.ServletConstants;
 
 /**
  * @author Jeff

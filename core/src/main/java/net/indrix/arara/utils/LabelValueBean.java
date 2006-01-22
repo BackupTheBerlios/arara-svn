@@ -1,4 +1,4 @@
-package net.indrix.utils;
+package net.indrix.arara.utils;
 
 public class LabelValueBean {
 

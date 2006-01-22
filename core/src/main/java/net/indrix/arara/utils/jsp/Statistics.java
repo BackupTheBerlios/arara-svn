@@ -4,14 +4,14 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package net.indrix.utils.jsp;
+package net.indrix.arara.utils.jsp;
 
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
-import net.indrix.dao.DatabaseDownException;
-import net.indrix.model.StatisticsModel;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.model.StatisticsModel;
 
 /**
  * @author Jeff

@@ -1,4 +1,4 @@
-package net.indrix.mains;
+package net.indrix.arara.mains;
 
 import java.io.InputStream;
 import java.sql.SQLException;

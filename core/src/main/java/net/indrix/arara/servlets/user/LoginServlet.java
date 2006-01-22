@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-package net.indrix.servlets.user;
+package net.indrix.arara.servlets.user;
 
 import java.io.IOException;
 import java.sql.SQLException;

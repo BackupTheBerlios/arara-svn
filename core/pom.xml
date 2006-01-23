@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.indrix.arara</groupId>
   <artifactId>arara</artifactId>
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>Indrix - Arara</name>
   <url>http://www.aves.com.br</url>

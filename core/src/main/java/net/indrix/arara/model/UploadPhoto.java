@@ -40,6 +40,7 @@ import net.indrix.arara.tools.email.MessageFormatException;
 import net.indrix.arara.tools.email.NoRecipientException;
 import net.indrix.arara.tools.email.WrongNumberOfValuesException;
 import net.indrix.arara.utils.PropertiesManager;
+import net.indrix.arara.model.exceptions.ImageProcessingException;
 
 import org.apache.log4j.Logger;
 

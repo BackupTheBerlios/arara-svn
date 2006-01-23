@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.dao.SoundDAO;
 import net.indrix.arara.vo.Sound;
+import net.indrix.arara.model.exceptions.SoundProcessingException;
 
 /**
  * @author Jeff

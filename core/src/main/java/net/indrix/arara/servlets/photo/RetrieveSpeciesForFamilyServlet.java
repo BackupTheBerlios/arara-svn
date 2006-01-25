@@ -23,11 +23,13 @@ import net.indrix.arara.bean.UploadPhotoBean;
 import net.indrix.arara.bean.UploadSoundBean;
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.dao.SpecieDAO;
-import net.indrix.arara.model.StatesModel;
 import net.indrix.arara.servlets.AbstractServlet;
 import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.servlets.ServletUtil;
 import net.indrix.arara.servlets.UploadConstants;
+import net.indrix.arara.servlets.common.BeanManager;
+import net.indrix.arara.servlets.common.PhotoBeanManager;
+import net.indrix.arara.servlets.photo.upload.UploadPhotoConstants;
 import net.indrix.arara.vo.Family;
 
 import org.apache.commons.fileupload.FileUploadException;
@@ -50,18 +52,17 @@ public class RetrieveSpeciesForFamilyServlet extends AbstractServlet {
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
 		throws ServletException, IOException {
-		List erros = new ArrayList();
+		List errors = new ArrayList();
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
 		String nextPage = req.getParameter("toPage");
-		String dataToBeUploaded = req.getParameter("data");
 		HttpSession session = req.getSession();
 		Map data = null;
 		try {
 			data = parseMultiPartFormData(req);
 			String familyId = (String) data.get(ServletConstants.FAMILY_ID);
 			if ((familyId == null) || (familyId.equals(""))) {
-				erros.add(ServletConstants.SELECT_FAMILY_ERROR);
+				errors.add(ServletConstants.SELECT_FAMILY_ERROR);
 				UploadPhotoBean uploadBean =
 					(UploadPhotoBean) session.getAttribute(UploadConstants.UPLOAD_PHOTO_BEAN);
 				uploadBean.setSelectedFamilyId(null);
@@ -76,25 +77,21 @@ public class RetrieveSpeciesForFamilyServlet extends AbstractServlet {
 					if ((list != null) && (!list.isEmpty())) {
 						logger.debug("Setting specie list in request");
 						logger.debug("Setting data in request");
-						handleList(list, session, familyId, dataToBeUploaded);
-                        
-                        // put states on request
-                        List listOfStates = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
-                        req.setAttribute(ServletConstants.STATES_KEY, listOfStates);
-                        
+						handleList(list, data, req, errors);
+
 					} else {
 						logger.debug("Specie list not found...");
-						erros.add(ServletConstants.DATABASE_ERROR);
+						errors.add(ServletConstants.DATABASE_ERROR);
 						nextPage = ServletConstants.INITIAL_PAGE;
 					}
 				} catch (DatabaseDownException e) {
-					erros.add(ServletConstants.DATABASE_ERROR);
+					errors.add(ServletConstants.DATABASE_ERROR);
 					nextPage = ServletConstants.INITIAL_PAGE;
 				}
 			}
-			if (!erros.isEmpty()) {
+			if (!errors.isEmpty()) {
 				// coloca erros no request para registrar.jsp processar e apresentar mensagem de erro
-				req.setAttribute(ServletConstants.ERRORS_KEY, erros);
+				req.setAttribute(ServletConstants.ERRORS_KEY, errors);
 			}
 		} catch (ServletException e) {
 			e.printStackTrace();
@@ -113,20 +110,50 @@ public class RetrieveSpeciesForFamilyServlet extends AbstractServlet {
 	 */
 	private void handleList(
 		List list,
-		HttpSession session,
-		String familyId,
-		String dataToBeUploaded) {
-           
-        UploadBean uploadBean = null;
+		Map data,
+        HttpServletRequest req,
+		List errors) {
+
+        HttpSession session = req.getSession();
+        String dataToBeUploaded = req.getParameter("data");
+        String action = req.getParameter("action");
+        String beanKey = null;      
+		UploadBean uploadBean = null;
 		if (PHOTO.equals(dataToBeUploaded)) {
-			uploadBean =
-				(UploadPhotoBean) session.getAttribute(UploadConstants.UPLOAD_PHOTO_BEAN);
-		} else if (SOUND.equals(dataToBeUploaded)){
-            uploadBean =
-                (UploadSoundBean) session.getAttribute(UploadConstants.UPLOAD_SOUND_BEAN);
+            if ((action == null) || (UploadConstants.UPLOAD_ACTION.equals(action))){
+                logger.debug("RetrieveCitiesForStateServlet.handleList : uploading photo");
+                beanKey = UploadConstants.UPLOAD_PHOTO_BEAN;
+            } else if (UploadConstants.EDIT_ACTION.equals(action)){
+                logger.debug("RetrieveCitiesForStateServlet.handleList : editing photo");
+                beanKey = UploadPhotoConstants.EDIT_BEAN;
+            }
+
+			uploadBean = (UploadPhotoBean) session.getAttribute(beanKey);
+			if (uploadBean == null) {
+				uploadBean = new UploadPhotoBean();
+				session.setAttribute(beanKey, uploadBean);
+			}
+			PhotoBeanManager manager = new PhotoBeanManager();
+			manager.updateBean(data, (UploadPhotoBean) uploadBean, errors, false);
+
+		} else if (SOUND.equals(dataToBeUploaded)) {
+            if ((action == null) || (UploadConstants.UPLOAD_ACTION.equals(action))){
+                logger.debug("RetrieveCitiesForStateServlet.handleList : uploading sound");
+                beanKey = UploadConstants.UPLOAD_SOUND_BEAN;
+            } 
+
+			uploadBean = (UploadSoundBean) session.getAttribute(beanKey);
+			if (uploadBean == null) {
+				uploadBean = new UploadSoundBean();
+				session.setAttribute(beanKey, uploadBean);
+			}
+            BeanManager manager = new BeanManager();
+            manager.updateBean(data, (UploadSoundBean) uploadBean, errors, false);
 		}
-        uploadBean.setSpecieList(list);
-        uploadBean.setSelectedFamilyId(familyId);
+		uploadBean.setSpecieList(list);
+		String familyId = (String) data.get(ServletConstants.FAMILY_ID);
+		uploadBean.setSelectedFamilyId(familyId);
+        logger.debug("RetrieveCitiesForStateServlet.handleList : setting selectedFamilyId " + familyId);
 	}
 
 	private static List retrieveSpecieListForFamilyId(String familyId)

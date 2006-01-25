@@ -24,6 +24,9 @@ public class UploadConstants {
     public static final String UPLOAD_PHOTO_BEAN = "uploadPhotoBean";
     public static final String UPLOAD_SOUND_BEAN = "uploadSoundBean";
 
+    public static final String UPLOAD_ACTION = "UPLOAD";
+    public static final String EDIT_ACTION = "EDIT";
+
     // Errors
     public static final String FILE_REQUIRED = "Arquivo é campo obrigatório.";
     public static final String INVALID_FILE = "Arquivo inválido.";

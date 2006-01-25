@@ -19,7 +19,9 @@ public class ServletConstants {
     public static final String FAMILY_ID = "familyId";
     public static final String SPECIE_ID = "specieId";
     public static final String AGE_ID = "ageId";
-    public static final String SEX_ID = "sexId";   
+    public static final String SEX_ID = "sexId";  
+    public static final String CITY_ID = "cityId";
+    public static final String STATE_ID = "stateId";
     public static final String USER_ID = "userId";
     public static final String COMMON_NAME_ID = "commonNameId";
     public static final String CAMERA = "camera";
@@ -46,6 +48,7 @@ public class ServletConstants {
     public static final String AGE_KEY = "ageList";
     public static final String SEX_KEY = "sexList";
     public static final String STATES_KEY = "stateList";
+    public static final String CITIES_KEY = "citiesList";
 
     public static final String IDENTIFICATION_KEY = "identification";
     

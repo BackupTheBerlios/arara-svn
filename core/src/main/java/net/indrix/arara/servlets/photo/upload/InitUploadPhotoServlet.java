@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import net.indrix.arara.bean.UploadBean;
+import net.indrix.arara.bean.UploadPhotoBean;
 import net.indrix.arara.model.StatesModel;
 import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.servlets.ServletUtil;
@@ -32,8 +34,8 @@ import org.apache.log4j.Logger;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class InitUploadPhotoServlet extends RetrieveFamiliesServlet {
-    static Logger logger = Logger.getLogger("net.indrix.aves");
-        
+	static Logger logger = Logger.getLogger("net.indrix.aves");
+
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
 		throws ServletException, IOException {
 		String nextPage = null;
@@ -47,20 +49,32 @@ public class InitUploadPhotoServlet extends RetrieveFamiliesServlet {
 			// put errors in request 
 			req.setAttribute(ServletConstants.ERRORS_KEY, errors);
 			nextPage = ServletConstants.LOGIN_PAGE;
-                      
-            RequestDispatcher dispatcher = null;
-            ServletContext context = this.getServletContext();
-            dispatcher = context.getRequestDispatcher(nextPage);
-            logger.debug("Dispatching to " + nextPage);
-            dispatcher.forward(req, res);
-            
+
+			RequestDispatcher dispatcher = null;
+			ServletContext context = this.getServletContext();
+			dispatcher = context.getRequestDispatcher(nextPage);
+			logger.debug("Dispatching to " + nextPage);
+			dispatcher.forward(req, res);
+
 		} else {
-            // put states on request
-            List list = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
-            req.setAttribute(ServletConstants.STATES_KEY, list);
-                        
-            super.doGet(req, res);
+			// put states on request
+			List list = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
+
+			// reset upload data bean
+			UploadBean uploadBean =
+				(UploadPhotoBean) session.getAttribute(UploadPhotoConstants.UPLOAD_PHOTO_BEAN);
+			if (uploadBean == null) {
+				uploadBean = new UploadPhotoBean();
+				session.setAttribute(UploadPhotoConstants.UPLOAD_PHOTO_BEAN, uploadBean);
+			}
+            uploadBean.setStatesList(list);
+            uploadBean.setCitiesList(null);            
+			uploadBean.setSelectedAgeId(null);
+			uploadBean.setSelectedCityId(null);
+			uploadBean.setSelectedSexId(null);
+			uploadBean.setSelectedStateId(null);
 		}
+		super.doGet(req, res);
 	}
 
 	/**
@@ -69,5 +83,4 @@ public class InitUploadPhotoServlet extends RetrieveFamiliesServlet {
 	protected String getNextPage() {
 		return ServletConstants.UPLOAD_PAGE;
 	}
-
 }

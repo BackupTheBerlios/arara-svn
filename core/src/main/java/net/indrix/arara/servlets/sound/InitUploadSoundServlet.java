@@ -17,12 +17,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import net.indrix.arara.bean.UploadBean;
 import net.indrix.arara.bean.UploadSoundBean;
 import net.indrix.arara.model.StatesModel;
 import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.servlets.ServletUtil;
 import net.indrix.arara.servlets.UploadConstants;
 import net.indrix.arara.servlets.photo.RetrieveFamiliesServlet;
+import net.indrix.arara.servlets.photo.upload.UploadPhotoConstants;
 import net.indrix.arara.vo.User;
 
 import org.apache.log4j.Logger;
@@ -59,7 +61,20 @@ public class InitUploadSoundServlet extends RetrieveFamiliesServlet {
 		} else {
             // put states on request
             List list = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
-            req.setAttribute(ServletConstants.STATES_KEY, list);
+
+            // reset upload data bean
+            UploadBean uploadBean =
+                (UploadSoundBean) session.getAttribute(UploadPhotoConstants.UPLOAD_SOUND_BEAN);
+            if (uploadBean == null) {
+                uploadBean = new UploadSoundBean();
+                session.setAttribute(UploadPhotoConstants.UPLOAD_SOUND_BEAN, uploadBean);
+            }
+            uploadBean.setStatesList(list);
+            uploadBean.setCitiesList(null);
+            uploadBean.setSelectedAgeId(null);
+            uploadBean.setSelectedCityId(null);
+            uploadBean.setSelectedSexId(null);
+            uploadBean.setSelectedStateId(null);
             
             super.doGet(req, res);
 		}

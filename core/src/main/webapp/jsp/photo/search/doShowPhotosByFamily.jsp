@@ -11,7 +11,7 @@
     <td width="10%"><b>Família</b></td>
     <td width="90%"> 
         <select name="familyId">
-          <c:forEach items="${uploadBean.familyList}" var="familyBean">
+          <c:forEach items="${uploadPhotoBean.familyList}" var="familyBean">
 			<c:if test="${selectedFamilyId != null && selectedFamilyId == familyBean.value}">
 		      <option selected value="${familyBean.value}">${familyBean.label}</option>
 		    </c:if>

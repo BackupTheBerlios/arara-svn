@@ -3,14 +3,14 @@
 <SCRIPT language="JavaScript"> 
     function familySelected() { 
        document.initShowPhotosBySpecieForm.method = "POST"; 
-       document.initShowPhotosBySpecieForm.action = "<c:url value="/servlet/retrieveSpecies?toPage=/jsp/photo/search/showPhotosBySpecie.jsp"/>"; 
+       document.initShowPhotosBySpecieForm.action = "<c:url value="/servlet/retrieveSpecies?toPage=/jsp/photo/search/showPhotosBySpecie.jsp&data=PHOTO"/>"; 
        document.initShowPhotosBySpecieForm.submit(); 
     } 
 </script> 
 
 
-<c:set var="selectedFamilyId" value="${uploadBean.selectedFamilyId}"/>
-<c:set var="selectedSpecieId" value="${uploadBean.selectedSpecieId}"/>
+<c:set var="selectedFamilyId" value="${uploadPhotoBean.selectedFamilyId}"/>
+<c:set var="selectedSpecieId" value="${uploadPhotoBean.selectedSpecieId}"/>
 
 <form name="initShowPhotosBySpecieForm" method="get" 
       action="<c:url value="/servlet/searchPhotosBySpecie"/>"
@@ -21,7 +21,7 @@
     <td width="15%"><b>Família</b></td>
     <td width="85%"> 
         <select name="familyId" onChange="familySelected()">
-          <c:forEach items="${uploadBean.familyList}" var="familyBean">
+          <c:forEach items="${uploadPhotoBean.familyList}" var="familyBean">
 			<c:if test="${selectedFamilyId != null && selectedFamilyId == familyBean.value}">
 		      <option selected value="${familyBean.value}">${familyBean.label}</option>
 		    </c:if>
@@ -36,7 +36,7 @@
     <td width="15%"><b>Espécie</b></td>
     <td width="85%"> 
         <select name="specieId">
-        <c:forEach items="${uploadBean.specieList}" var="specieBean">
+        <c:forEach items="${uploadPhotoBean.specieList}" var="specieBean">
 			<c:if test="${selectedSpecieId != null && selectedSpecieId == specieBean.value}">
 		      <option selected value="${specieBean.value}">${specieBean.label}</option>
 		    </c:if>

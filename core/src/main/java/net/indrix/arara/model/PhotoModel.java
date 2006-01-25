@@ -20,16 +20,16 @@ import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.dao.PhotoDAO;
 import net.indrix.arara.dao.PhotoIdentificationDAO;
 import net.indrix.arara.dao.SpecieDAO;
-import net.indrix.arara.vo.Comment;
-import net.indrix.arara.vo.Photo;
-import net.indrix.arara.vo.Specie;
-import net.indrix.arara.vo.User;
 import net.indrix.arara.tools.email.MailClass;
 import net.indrix.arara.tools.email.MessageComposer;
 import net.indrix.arara.tools.email.MessageFormatException;
 import net.indrix.arara.tools.email.NoRecipientException;
 import net.indrix.arara.tools.email.WrongNumberOfValuesException;
 import net.indrix.arara.utils.PropertiesManager;
+import net.indrix.arara.vo.Comment;
+import net.indrix.arara.vo.Photo;
+import net.indrix.arara.vo.Specie;
+import net.indrix.arara.vo.User;
 
 import org.apache.log4j.Logger;
 

@@ -41,7 +41,7 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
 	 * SQL for updating a photo
 	 */
 	public static final String UPDATE =
-		"UPDATE photo set camera = ?, lens = ?, film = ?, date = ?, place = ?, city_id = ?, comment = ?, specie_id = ?, sex_id = ?, age_id = ? "
+		"UPDATE photo set camera = ?, lens = ?, film = ?, date = ?, place = ?, city_id = ?, comment = ?, specie_id = ?, specie_family_id = ?, sex_id = ?, age_id = ? "
 			+ "WHERE id = ?";
 
 	/**
@@ -324,6 +324,9 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
 		smallImage.setHeight(rs.getInt(SMALL_IMAGE_H));
 		smallImage.setImageSize(rs.getInt(SMALL_IMAGE_SIZE));
 
+        City city = getCityObject(rs.getInt(CITY_ID_COLUMN), photo);
+        photo.setCity(city);
+
 		// retrieve age from model
 		int id = rs.getInt(AGE_ID_COLUMN);
 		photo.setAge(AgeModel.getAge(id));
@@ -424,9 +427,10 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
         stmt.setInt(6, photo.getCity().getId());
 		stmt.setString(7, photo.getComment());
 		stmt.setInt(8, photo.getSpecie().getId());
-		stmt.setInt(9, photo.getSex().getId());
-		stmt.setInt(10, photo.getAge().getId());
-		stmt.setInt(11, photo.getId());
+        stmt.setInt(9, photo.getSpecie().getFamily().getId());
+		stmt.setInt(10, photo.getSex().getId());
+		stmt.setInt(11, photo.getAge().getId());
+		stmt.setInt(12, photo.getId());
 		logger.debug("PhotoDAO.setStatementValuesForUpdate: Exiting method");
 	}
 

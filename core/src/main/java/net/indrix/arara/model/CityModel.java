@@ -7,8 +7,12 @@
 package net.indrix.arara.model;
 
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.log4j.Logger;
 
 import net.indrix.arara.dao.CityDAO;
 import net.indrix.arara.dao.DatabaseDownException;
@@ -21,10 +25,15 @@ import net.indrix.arara.vo.City;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class CityModel {
+    /**
+     * Logger object
+     */
+    static Logger logger = Logger.getLogger("net.indrix.aves");
+
 	/**
 	 * keep some cities on memory 
 	 */
-	private static Map cities;
+	private static Map cities = new HashMap();
 
 	/**
 	 * This method retrieves an <code>City</code> object from list
@@ -54,8 +63,30 @@ public class CityModel {
      */
 	public List retrieveCitiesForState(int id) throws DatabaseDownException {
 		CityDAO dao = new CityDAO();
-		List list = dao.retrieve();
+		List list = dao.retrieveForState(id);
 		return list;
 	}
 
+    /**
+     * @param list
+     * @param string
+     * @return
+     */
+    public static City getCity(List list, String string) {
+        Iterator it = list.iterator();
+        boolean found = false;
+        City city = null;
+        while (it.hasNext() && (!found)) {
+            city = (City) it.next();
+            if (city.getId() == Integer.parseInt(string)) {
+                logger.debug("City found " + city);
+                found = true;
+            }
+        }
+        if (!found){
+            logger.debug("COULD NOT FIND CITY " + string);
+        }
+        return city;
+    }
+    
 }

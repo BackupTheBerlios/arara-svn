@@ -108,7 +108,7 @@ public class CityDAO {
         ResultSet rs = null;
 
         try {
-            logger.debug("StatesDAO.retrieve : running SQL " + SELECT_ALL);
+            logger.debug("CityDAO.retrieve : running SQL " + SELECT_ALL);
             stmt = conn.prepareStatement(SELECT_ALL);
             rs = stmt.executeQuery();
 
@@ -135,7 +135,7 @@ public class CityDAO {
                 throw new DatabaseDownException();
             }
         }
-        logger.debug("StatesDAO.retrieve : finishing method...");
+        logger.debug("CityDAO.retrieve : finishing method...");
         return list;
     }
 
@@ -156,8 +156,8 @@ public class CityDAO {
         ResultSet rs = null;
         City city = null;
         try {
-            logger.debug("CityDAO.retrieve : running SQL " + SELECT_ALL);
-            stmt = conn.prepareStatement(SELECT_ALL);
+            logger.debug("CityDAO.retrieve : running SQL " + SELECT_BY_ID);
+            stmt = conn.prepareStatement(SELECT_BY_ID);
             stmt.setInt(1, id);
             rs = stmt.executeQuery();
 
@@ -200,7 +200,7 @@ public class CityDAO {
         ResultSet rs = null;
 
         try {
-            logger.debug("CityDAO.retrieveForState : running SQL " + SELECT_FOR_STATE);
+            logger.debug("CityDAO.retrieveForState : running SQL " + SELECT_FOR_STATE + " : " + id);
             stmt = conn.prepareStatement(SELECT_FOR_STATE);
             stmt.setInt(1, id);
             rs = stmt.executeQuery();
@@ -215,7 +215,6 @@ public class CityDAO {
                 city.setState(StatesModel.getState(stateId));
 
                 list.add(city);
-                logger.debug("Adding city: " + city);
             }
         } catch (SQLException e) {
             logger.debug("SQLException !", e);

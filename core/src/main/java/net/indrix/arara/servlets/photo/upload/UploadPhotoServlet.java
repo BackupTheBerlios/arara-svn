@@ -23,6 +23,7 @@ import javax.servlet.http.HttpSession;
 import net.indrix.arara.bean.UploadPhotoBean;
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.model.AgeModel;
+import net.indrix.arara.model.CityModel;
 import net.indrix.arara.model.SexModel;
 import net.indrix.arara.model.UploadPhoto;
 import net.indrix.arara.model.exceptions.ImageProcessingException;
@@ -81,8 +82,6 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 					logger.debug("bean updated " + photoBean);
 					try {
 						Photo photo = createPhoto(photoBean, user);
-						// set upload data to session
-						session.setAttribute(UploadPhotoConstants.LAST_UPLOAD_BEAN, photoBean);
 						if (photo.getRealImage().getImageSize() > MAX_PHOTO_SIZE) {
 							logger.debug(
 								"photo with size = " + photo.getRealImage().getImageSize());
@@ -174,6 +173,7 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 		photo.setLens(bean.getLens());
 		photo.setFilm(bean.getFilm());
 		photo.setLocation(bean.getLocation());
+		photo.setCity(CityModel.getCity(bean.getCitiesList(), bean.getSelectedCityId()));
 		photo.setDate(createDate(bean.getDate()));
 		photo.getRealImage().setImageSize(Integer.parseInt(bean.getFileSize()));
 		try {

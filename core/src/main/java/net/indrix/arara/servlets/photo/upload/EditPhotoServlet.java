@@ -22,9 +22,11 @@ import javax.servlet.http.HttpSession;
 
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.model.AgeModel;
+import net.indrix.arara.model.CityModel;
 import net.indrix.arara.model.PhotoModel;
 import net.indrix.arara.model.SexModel;
 import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.vo.City;
 import net.indrix.arara.vo.Photo;
 import net.indrix.arara.vo.User;
 
@@ -135,23 +137,36 @@ public class EditPhotoServlet extends AbstractUploadPhotoServlet {
 	 * @return A new Photo object
 	 */
 	private void updatePhoto(Map data, Photo photo)
-		throws ParseException {
-        photo.getSpecie().setId(getSpecieId((String) data.get(ServletConstants.SPECIE_ID)));
+		throws ParseException, NumberFormatException, DatabaseDownException, SQLException {
+        photo.getSpecie().getFamily().setId(getId((String) data.get(ServletConstants.FAMILY_ID)));
+        photo.getSpecie().setId(getId((String) data.get(ServletConstants.SPECIE_ID)));
         photo.setAge(AgeModel.getAge(Integer.parseInt((String) data.get(ServletConstants.AGE_ID))));
         photo.setSex(SexModel.getSex(Integer.parseInt((String) data.get(ServletConstants.SEX_ID))));       
 		photo.setCamera((String) data.get(ServletConstants.CAMERA));
 		photo.setLens((String) data.get(ServletConstants.LENS));
 		photo.setFilm((String) data.get(ServletConstants.FILM));
 		photo.setLocation((String) data.get(ServletConstants.LOCATION));
+        photo.setCity(getCity((String) data.get(ServletConstants.CITY_ID)));
 		photo.setDate(createDate((String) data.get(ServletConstants.DATE)));
         photo.setComment((String) data.get(ServletConstants.COMMENT));       
+	}
+
+	/**
+	 * @param cityId
+	 * @return
+	 */
+	private City getCity(String cityId) throws NumberFormatException, DatabaseDownException, SQLException {
+		City city = null;
+        CityModel model = new CityModel();
+        city = model.getCity(Integer.parseInt(cityId));
+		return city;
 	}
 
 	/**
 	 * @param string
 	 * @return
 	 */
-	private int getSpecieId(String string) {
+	private int getId(String string) {
 		return Integer.parseInt(string);
 	}
 

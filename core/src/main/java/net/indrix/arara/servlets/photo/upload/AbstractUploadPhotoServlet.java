@@ -16,13 +16,12 @@ import java.util.Map;
 import net.indrix.arara.bean.UploadPhotoBean;
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.model.exceptions.ImageProcessingException;
-import net.indrix.arara.servlets.ServletConstants;
-import net.indrix.arara.servlets.UploadConstants;
+import net.indrix.arara.servlets.AbstractServlet;
+import net.indrix.arara.servlets.common.PhotoBeanManager;
 import net.indrix.arara.vo.Family;
 import net.indrix.arara.vo.Photo;
 import net.indrix.arara.vo.Specie;
 
-import org.apache.commons.fileupload.FileItem;
 import org.apache.log4j.Logger;
 
 /**
@@ -32,7 +31,7 @@ import org.apache.log4j.Logger;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public abstract class AbstractUploadPhotoServlet
-	extends net.indrix.arara.servlets.AbstractServlet {
+	extends AbstractServlet {
 
 	/**
 	 * Logger object to be used by this class
@@ -47,8 +46,8 @@ public abstract class AbstractUploadPhotoServlet
 	protected boolean updateBean(Map data, UploadPhotoBean bean, List errors) {
 		boolean status = false;
 
-		updateBirdData(data, bean, errors);
-		updatePhotoData(data, bean, errors);
+        PhotoBeanManager manager = new PhotoBeanManager();
+        manager.updateBean(data, bean, errors, true);
 
 		if (!errors.isEmpty()) {
 			status = false;
@@ -56,50 +55,6 @@ public abstract class AbstractUploadPhotoServlet
 			status = true;
 		}
 		return status;
-	}
-
-	/**
-	 * This method updates in the bean data related to the photo
-	 * @param data
-	 * @param bean
-	 * @param errors
-	 */
-	protected void updatePhotoData(Map data, UploadPhotoBean bean, List errors) {
-		logger.debug("Updating photo data...");
-		logger.debug(bean);
-		logger.debug(data);
-		bean.setCamera((String) data.get(ServletConstants.CAMERA));
-		bean.setLens((String) data.get(ServletConstants.LENS));
-		bean.setFilm((String) data.get(ServletConstants.FILM));
-		bean.setLocation((String) data.get(ServletConstants.LOCATION));
-		bean.setDate((String) data.get(ServletConstants.DATE));
-		bean.setFilename((String) data.get(UploadConstants.FILE_NAME));
-		bean.setFileSize((String) data.get(UploadConstants.FILE_SIZE));
-		bean.setComment((String) data.get(ServletConstants.COMMENT));
-		FileItem fileItem = (FileItem) data.get(UploadConstants.FILE_ITEM);
-		if (fileItem == null) {
-			errors.add(UploadConstants.FILE_REQUIRED);
-		}
-		bean.setFileItem(fileItem);
-	}
-
-	/**
-	 * This method updates in the bean data related to the bird
-	 * @param data
-	 * @param bean
-	 * @param errors
-	 */
-	protected void updateBirdData(Map data, UploadPhotoBean bean, List errors) {
-		logger.debug("Updating bird data...");
-		String familyId = (String) data.get(ServletConstants.FAMILY_ID);
-		String specieId = (String) data.get(ServletConstants.SPECIE_ID);
-		if ((specieId == null) || (specieId.trim().equals(""))) {
-			errors.add(UploadPhotoConstants.SPECIE_REQUIRED);
-		}
-		bean.setSelectedFamilyId(familyId);
-		bean.setSelectedSpecieId(specieId);
-		bean.setSelectedAgeId((String) data.get(ServletConstants.AGE_ID));
-		bean.setSelectedSexId((String) data.get(ServletConstants.SEX_ID));
 	}
 
 	/** 

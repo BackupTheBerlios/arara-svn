@@ -16,7 +16,11 @@ public class State {
     private int id;
     private String acronym;
     private String description;
-
+    
+    public State(){
+        id = -1;
+    }
+    
 	/**
 	 * @return
 	 */

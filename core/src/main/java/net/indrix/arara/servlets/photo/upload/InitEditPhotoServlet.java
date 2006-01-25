@@ -4,12 +4,6 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-/*
- * Created on 02/09/2005
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
 package net.indrix.arara.servlets.photo.upload;
 
 import java.io.IOException;
@@ -31,6 +25,8 @@ import net.indrix.arara.bean.UploadPhotoBean;
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.dao.FamilyDAO;
 import net.indrix.arara.dao.SpecieDAO;
+import net.indrix.arara.model.CityModel;
+import net.indrix.arara.model.StatesModel;
 import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.servlets.ServletUtil;
 import net.indrix.arara.servlets.UploadConstants;
@@ -66,10 +62,21 @@ public class InitEditPhotoServlet extends HttpServlet {
 		HttpSession session = req.getSession();
 		Photo photo = (Photo) session.getAttribute(ServletConstants.CURRENT_PHOTO);
 		if (photo != null) {
-            UploadPhotoBean bean = new UploadPhotoBean();
+			logger.debug("InitEditPhotoServlet.doGet: photo found..." + photo);
+			UploadPhotoBean bean = new UploadPhotoBean();
+			logger.debug("InitEditPhotoServlet.doGet: calling updateBean method...");
 			updateBean(bean, photo, req);
+			logger.debug("InitEditPhotoServlet.doGet: bean updated: " + bean);
+			logger.debug("InitEditPhotoServlet.doGet: setting bean (EDIT_BEAN key) in session...");
 			session.setAttribute(UploadPhotoConstants.EDIT_BEAN, bean);
 			nextPage = ServletConstants.EDIT_PAGE;
+
+			// put states on request
+			List list = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
+			logger.debug("InitEditPhotoServlet.doGet: setting states in bean");
+			bean.setStatesList(list);
+		} else {
+			logger.debug("InitEditPhotoServlet.doGet : photo == null");
 		}
 		dispatcher = context.getRequestDispatcher(nextPage);
 		logger.debug("Dispatching to " + nextPage);
@@ -82,16 +89,38 @@ public class InitEditPhotoServlet extends HttpServlet {
 	 * @param photo
 	 */
 	private void updateBean(UploadPhotoBean bean, Photo photo, HttpServletRequest req) {
-        bean.setFamilyList(getFamilyList(req));
-        bean.setSelectedFamilyId("" + photo.getSpecie().getFamily().getId());
-        bean.setSpecieList(getSpecieList(req, photo.getSpecie().getFamily().getId()));
-        bean.setSelectedSpecieId("" + photo.getSpecie().getId());
+		bean.setFamilyList(getFamilyList(req));
+		bean.setSelectedFamilyId("" + photo.getSpecie().getFamily().getId());
+		bean.setSpecieList(getSpecieList(photo.getSpecie().getFamily().getId()));
+		bean.setSelectedSpecieId("" + photo.getSpecie().getId());
 		bean.setCamera(photo.getCamera());
 		bean.setLens(photo.getLens());
-        bean.setLocation(photo.getLocation());
+		bean.setLocation(photo.getLocation());
 		bean.setFilm(photo.getFilm());
 		bean.setDate(Date.getDate(photo.getDate()));
-        bean.setComment(photo.getComment());
+		bean.setComment(photo.getComment());
+		bean.setSelectedStateId(getId(photo.getCity().getState().getId()));
+		bean.setSelectedCityId(getId(photo.getCity().getId()));
+        bean.setCitiesList(getCitiesList(photo.getCity().getState().getId()));
+		bean.setSelectedAgeId(getId(photo.getAge().getId()));
+		bean.setSelectedSexId(getId(photo.getSex().getId()));
+	}
+
+	/**
+	 * @param photo
+	 * @return
+	 */
+	private String getId(int id) {
+		return Integer.toString(id);
+	}
+
+	/**
+	 * @param photo
+	 * @return
+	 */
+	private String getStateId(Photo photo) {
+		int id = photo.getCity().getState().getId();
+		return Integer.toString(id);
 	}
 
 	/**
@@ -99,17 +128,22 @@ public class InitEditPhotoServlet extends HttpServlet {
 	 * @return
 	 */
 	private List getFamilyList(HttpServletRequest req) {
+		logger.debug("InitEditPhotoServlet.getFamilyList: entering method");
 		HttpSession session = req.getSession();
 		UploadBean bean = (UploadBean) session.getAttribute(UploadConstants.UPLOAD_PHOTO_BEAN);
 		List familyList = null;
 		if (bean == null) {
+			logger.debug("InitEditPhotoServlet.getFamilyList: bean from session is NULL...");
 			FamilyDAO dao = new FamilyDAO();
 			try {
+				logger.debug("InitEditPhotoServlet.getFamilyList: calling dao.retrieve");
 				List list = dao.retrieve();
 				familyList = ServletUtil.familyDataAsLabelValueBean(list);
 			} catch (DatabaseDownException e) {
+				logger.debug("InitEditPhotoServlet.getFamilyList: could not retrieve list", e);
 				familyList = null;
 			} catch (SQLException e) {
+				logger.debug("InitEditPhotoServlet.getFamilyList: could not retrieve list", e);
 				familyList = null;
 			}
 
@@ -123,24 +157,36 @@ public class InitEditPhotoServlet extends HttpServlet {
 	 * @param req
 	 * @return
 	 */
-	private List getSpecieList(HttpServletRequest req, int id) {
-		HttpSession session = req.getSession();
-		UploadBean bean = (UploadBean) session.getAttribute(UploadPhotoConstants.UPLOAD_BEAN);
+	private List getSpecieList(int id) {
 		List specieList = null;
-		if (bean == null) {
-			SpecieDAO dao = new SpecieDAO();
-			Family f = new Family();
-			f.setId(id);
-			try {
-                List list = dao.retrieveForFamily(f);
-				specieList = ServletUtil.specieDataAsLabelValueBean(list);
-			} catch (DatabaseDownException e) {
-                specieList = null;
-			}
-		} else {
-			specieList = bean.getSpecieList();
+		SpecieDAO dao = new SpecieDAO();
+		Family f = new Family();
+		f.setId(id);
+		try {
+			List list = dao.retrieveForFamily(f);
+			specieList = ServletUtil.specieDataAsLabelValueBean(list);
+		} catch (DatabaseDownException e) {
+            logger.error("Could not retrieve list of species for family id " + id, e);
+			specieList = null;
 		}
 		return specieList;
 	}
-}
 
+    /**
+     * @param id
+     * @return
+     */
+    private List getCitiesList(int id) {
+        CityModel model = new CityModel();
+        List list = null;
+        try {
+			list = model.retrieveCitiesForState(id);
+		} catch (DatabaseDownException e) {
+            logger.error("Could not retrieve list of cities for state id " + id, e);
+			list = null;
+		}
+        return list;
+    }
+
+
+}

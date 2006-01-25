@@ -58,7 +58,6 @@ public class ServletUtil {
             Specie s = (Specie)it.next();
             LabelValueBean bean = new LabelValueBean(s.getName(), s.getId());
             newList.add(bean);
-            logger.debug("adding bean to list " + bean);
         }
         newList.add(0, new LabelValueBean("", ""));
         return newList;
@@ -76,7 +75,6 @@ public class ServletUtil {
             String label = c.getName();
             LabelValueBean bean = new LabelValueBean(label, c.getId());
             newList.add(bean);
-            logger.debug("adding bean to list " + bean);
         }
         newList.add(0, new LabelValueBean("", ""));
         return newList;
@@ -94,10 +92,8 @@ public class ServletUtil {
             String label = state.getAcronym();
             LabelValueBean bean = new LabelValueBean(label, state.getId());
             newList.add(bean);
-            logger.debug("adding bean to list " + bean);
         }
         newList.add(0, new LabelValueBean("", ""));
         return newList;
     }
-
 }

@@ -2,14 +2,24 @@
 
 <SCRIPT language="JavaScript"> 
     function familySelected() { 
-       document.editForm.action = "<c:url value="/servlet/retrieveSpecies?toPage=/jsp/upload/uploadPhoto.jsp"/>"; 
+       document.editForm.action = "<c:url value="/servlet/retrieveSpecies?toPage=/jsp/photo/upload/editPhoto.jsp&data=PHOTO&action=EDIT"/>"; 
        document.editForm.submit(); 
     } 
+
+    function stateSelected() { 
+       document.editForm.action = "<c:url value="/servlet/retrieveCitiesForState?toPage=/jsp/photo/upload/editPhoto.jsp&data=PHOTO&action=EDIT"/>"; 
+       document.editForm.submit(); 
+    } 
+    
 </script> 
 
 
 <c:set var="selectedFamilyId" value="${editBean.selectedFamilyId}"/>
 <c:set var="selectedSpecieId" value="${editBean.selectedSpecieId}"/>
+<c:set var="selectedStateId" value="${editBean.selectedStateId}"/>
+<c:set var="selectedCityId" value="${editBean.selectedCityId}"/>
+<c:set var="selectedAgeId" value="${editBean.selectedAgeId}"/>
+<c:set var="selectedSexId" value="${editBean.selectedSexId}"/>
 
 <form name="editForm" method="post" 
       action="<c:url value="/servlet/editPhoto"/>"
@@ -19,7 +29,7 @@
   <tr> 
     <td width="15%"><b>Família</b></td>
     <td width="85%"> 
-        <select disabled name="familyId" onChange="familySelected()">
+        <select name="familyId" onChange="familySelected()">
           <c:forEach items="${editBean.familyList}" var="familyBean">
 			<c:if test="${selectedFamilyId != null && selectedFamilyId == familyBean.value}">
 		      <option selected value="${familyBean.value}">${familyBean.label}</option>
@@ -93,6 +103,34 @@
         <input type="text" name="location" value="${editBean.location}" size="64" maxlength="64">
     </td>
   </tr>
+
+  <tr> 
+    <td width="15%"><b>Estado</b></td>
+    <td width="85%">     
+        <select name="stateId" onChange="stateSelected()">
+          <c:forEach items="${editBean.statesList}" var="stateBean">        
+			<c:if test="${selectedStateId != null && selectedStateId == stateBean.value}">
+		      <option selected value="${stateBean.value}">${stateBean.label}</option>
+		    </c:if>
+			<c:if test="${selectedStateId == null || selectedStateId != stateBean.value}">
+		      <option value="${stateBean.value}">${stateBean.label}</option>
+		    </c:if>		      
+          </c:forEach>
+        </select>  
+		<b>Cidade</b>
+        <select name="cityId">
+          <c:forEach items="${editBean.citiesList}" var="city">
+			<c:if test="${selectedCityId != null && selectedCityId == city.id}">
+		      <option selected value="${city.id}">${city.name}</option>
+		    </c:if>
+			<c:if test="${selectedCityId == null || selectedCityId != cityBean.value}">
+		      <option value="${city.id}">${city.name}</option>
+		    </c:if>		      
+          </c:forEach>
+        </select>  
+	</td>      
+  </tr>
+  
   <tr>
     <td width="15%"><b>Data</b></td>
     <td width="85%">

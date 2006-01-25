@@ -41,24 +41,16 @@ public class StatisticsModel {
 		StatisticsDAO dao = new StatisticsDAO();
 
         // retrieve number of photos
-        logger.debug("StatisticsModel.retrieveStatistics: retrieving # of photos");
 		int photos = dao.numberOfPhotos();
-        logger.debug("StatisticsModel.retrieveStatistics: # of photos = " + photos);
         
         // retrieve number of families      
-        logger.debug("StatisticsModel.retrieveStatistics: retrieving # of families");
 		int families = dao.numberOfFamilies();
-        logger.debug("StatisticsModel.retrieveStatistics: # of families = " + families);
 
         // retrieve number of species      
-        logger.debug("StatisticsModel.retrieveStatistics: retrieving # of species");
         int species = dao.numberOfSpecies();
-        logger.debug("StatisticsModel.retrieveStatistics: # of species = " + species);
         
         // retrieve number of users
-        logger.debug("StatisticsModel.retrieveStatistics: retrieving # of users");
         int users = dao.numberOfUsers();
-        logger.debug("StatisticsModel.retrieveStatistics: # of users = " + users);
                 
 		s = new Statistics();
 		s.setNumberOfPhotos(photos);

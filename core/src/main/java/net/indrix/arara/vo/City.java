@@ -18,6 +18,10 @@ public class City {
     private State state;
     private String name;
     
+    public City(){
+        state = new State();
+        id = -1;
+    }
     
 	/**
 	 * @return

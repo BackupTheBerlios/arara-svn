@@ -39,6 +39,7 @@ public class Photo {
 		id = -1;
 		age = new Age();
 		sex = new Sex();
+        city = new City();
 	}
 
 	/** 
@@ -302,6 +303,9 @@ public class Photo {
      * @param city
      */
     public void setCity(City city) {
+        if (city == null){
+            city = new City();
+        }
         this.city = city;
     }
 
@@ -348,10 +352,14 @@ public class Photo {
 		}
 
 		if (specie != null) {
+            buffer.append(specie.getId());
+            buffer.append(",");
 			buffer.append(specie.getName());
 			buffer.append(",");
 
 			if (specie.getFamily() != null) {
+                buffer.append(specie.getFamily().getId());
+                buffer.append(",");
 				buffer.append(specie.getFamily().getName());
 				buffer.append(",");
 			}
@@ -371,5 +379,4 @@ public class Photo {
 
 		return buffer.toString();
 	}
-
 }

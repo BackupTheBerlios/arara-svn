@@ -6,13 +6,15 @@
  */
 package net.indrix.arara.servlets.photo.upload;
 
+import net.indrix.arara.servlets.UploadConstants;
+
 /**
  * @author Jefferson
  *
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class UploadPhotoConstants extends net.indrix.arara.servlets.UploadConstants{
+public class UploadPhotoConstants extends UploadConstants {
     
     public static final String UPLOAD_BEAN = "uploadPhotoBean";
     public static final String EDIT_BEAN = "editBean";

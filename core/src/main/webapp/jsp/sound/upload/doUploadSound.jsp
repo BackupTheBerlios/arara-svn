@@ -2,12 +2,12 @@
 
 <SCRIPT language="JavaScript"> 
     function familySelected() { 
-       document.uploadForm.action = "<c:url value="/servlet/retrieveSpecies?toPage=/jsp/sound/upload/uploadSound.jsp&data=SOUND"/>"; 
+       document.uploadForm.action = "<c:url value="/servlet/retrieveSpecies?toPage=/jsp/sound/upload/uploadSound.jsp&data=SOUND&action=UPLOAD"/>"; 
        document.uploadForm.submit(); 
     } 
 
     function stateSelected() { 
-       document.uploadForm.action = "<c:url value="/servlet/retrieveCitiesToState?toPage=/jsp/sound/upload/uploadSound.jsp&data=SOUND"/>"; 
+       document.uploadForm.action = "<c:url value="/servlet/retrieveCitiesForState?toPage=/jsp/sound/upload/uploadSound.jsp&data=SOUND&action=UPLOAD"/>"; 
        document.uploadForm.submit(); 
     } 
 </script> 
@@ -86,8 +86,8 @@
   <tr> 
     <td width="15%"><b>Estado</b></td>
     <td width="85%">     
-        <select name="stateId" onChange="stateSelected()>
-          <c:forEach items="${stateList}" var="stateBean">        
+        <select name="stateId" onChange="stateSelected()">
+          <c:forEach items="${uploadSoundBean.statesList}" var="stateBean">        
 			<c:if test="${selectedStateId != null && selectedStateId == stateBean.value}">
 		      <option selected value="${stateBean.value}">${stateBean.label}</option>
 		    </c:if>
@@ -98,18 +98,17 @@
         </select>  
 		<b>Cidade</b>
         <select name="cityId">
-          <c:forEach items="${cityList}" var="cityBean">
-			<c:if test="${selectedCityId != null && selectedCityId == cityBean.value}">
-		      <option selected value="${cityBean.value}">${cityBean.label}</option>
+          <c:forEach items="${uploadSoundBean.citiesList}" var="city">
+			<c:if test="${selectedCityId != null && selectedCityId == city.id}">
+		      <option selected value="${city.id}">${city.name}</option>
 		    </c:if>
 			<c:if test="${selectedCityId == null || selectedCityId != cityBean.value}">
-		      <option value="${cityBean.value}">${cityBean.label}</option>
+		      <option value="${city.id}">${city.name}</option>
 		    </c:if>		      
           </c:forEach>
         </select>  
 	</td>      
   </tr>
-
 
   <tr>
     <td width="15%"><b>Comentário</b></td>

@@ -1,6 +1,7 @@
 <%@ taglib tagdir="/WEB-INF/tags" prefix="img"%>
 <%@ taglib uri="/core" prefix="c"%>
-<%@ taglib uri="functions" prefix="f"%>
+<%@ taglib uri="/fmt" prefix="fmt"%>
+<%@ taglib uri="commonFunctions" prefix="f"%>
 
 <c:set var="w" value="${120}"/>
 
@@ -11,4 +12,4 @@
 		   	  	align="bottom"/>
         </a>
 
-<br><b>Foto atualizada com sucesso.</b>
+<br><b><fmt:message key="edit.success"/></b>

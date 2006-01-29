@@ -1,4 +1,5 @@
 <%@ taglib uri="/core" prefix="c"%>
+<%@ taglib uri="/fmt" prefix="fmt"%>
 
 <SCRIPT language="JavaScript"> 
     function familySelected() { 
@@ -27,7 +28,7 @@
       
   <table width="100%" border="0" cellspacing="2" bgcolor="#A6D2D2">
   <tr> 
-    <td width="15%"><b>Família</b></td>
+    <td width="15%"><b><fmt:message key="family"/></b></td>
     <td width="85%"> 
         <select name="familyId" onChange="familySelected()">
           <c:forEach items="${editBean.familyList}" var="familyBean">
@@ -42,7 +43,7 @@
     </td>
   </tr>
   <tr> 
-    <td width="15%"><b>Espécie</b></td>
+    <td width="15%"><b><fmt:message key="specie"/></b></td>
     <td width="85%"> 
         <select name="specieId">
         <c:forEach items="${editBean.specieList}" var="specieBean">
@@ -58,7 +59,7 @@
   </tr>
 
   <tr> 
-    <td width="15%"><b>Idade</b></td>
+    <td width="15%"><b><fmt:message key="specie.age"/></b></td>
     <td width="85%"> 
         <select name="ageId">
           <c:forEach items="${ageList}" var="age">
@@ -69,7 +70,7 @@
   </tr>
 
   <tr> 
-    <td width="15%"><b>Sexo</b></td>
+    <td width="15%"><b><fmt:message key="specie.sex"/></b></td>
     <td width="85%"> 
         <select name="sexId">
           <c:forEach items="${sexList}" var="sex">
@@ -80,32 +81,32 @@
   </tr>
 
   <tr> 
-    <td width="15%"><b>Camera</b></td>
+    <td width="15%"><b><fmt:message key="photo.camera"/></b></td>
     <td width="85%"> 
         <input type="text" name="camera" value="${editBean.camera}" size="64" maxlength="64">
     </td>
   </tr>
   <tr> 
-    <td width="15%"><b>Lente</b></td>
+    <td width="15%"><b><fmt:message key="photo.len"/></b></td>
     <td width="85%"> 
         <input type="text" name="lens" value="${editBean.lens}" size="64" maxlength="64">
     </td>
   </tr>
   <tr> 
-    <td width="15%"><b>Filme</b></td>
+    <td width="15%"><b><fmt:message key="photo.film"/></b></td>
     <td width="85%"> 
         <input type="text" name="film" value="${editBean.film}" size="64" maxlength="64">
     </td>
   </tr>
   <tr> 
-    <td width="15%"><b>Local</b></td>
+    <td width="15%"><b><fmt:message key="photo.location"/></b></td>
     <td width="85%"> 
         <input type="text" name="location" value="${editBean.location}" size="64" maxlength="64">
     </td>
   </tr>
 
   <tr> 
-    <td width="15%"><b>Estado</b></td>
+    <td width="15%"><b><fmt:message key="state"/></b></td>
     <td width="85%">     
         <select name="stateId" onChange="stateSelected()">
           <c:forEach items="${editBean.statesList}" var="stateBean">        
@@ -117,7 +118,7 @@
 		    </c:if>		      
           </c:forEach>
         </select>  
-		<b>Cidade</b>
+		<b><fmt:message key="city"/></b>
         <select name="cityId">
           <c:forEach items="${editBean.citiesList}" var="city">
 			<c:if test="${selectedCityId != null && selectedCityId == city.id}">
@@ -132,13 +133,13 @@
   </tr>
   
   <tr>
-    <td width="15%"><b>Data</b></td>
+    <td width="15%"><b><fmt:message key="photo.date"/></b></td>
     <td width="85%">
         <input type="text" name="date" value="${editBean.date}" size="16" maxlength="16">
     </td>
   </tr>
   <tr>
-    <td width="15%"><b>Comentário do Autor</b></td>
+    <td width="15%"><b><fmt:message key="photo.author.comment"/></b></td>
     <td width="85%">
         <textarea rows="5" cols="70" name="comment">${editBean.comment}</textarea>
     </td>
@@ -150,7 +151,7 @@
       <td width="15%"></td>
       <td> 
         <div align="left">
-            <input type="SUBMIT" value="Enviar">
+            <input type="SUBMIT" value="<fmt:message key="photo.submit"/>">
         </div>
       </td>
     </tr>

@@ -1,2 +1,3 @@
-Erro no logout.
-<br>Sua sessão expirou ou você não estava logado.
+<%@ taglib uri="/fmt" prefix="fmt"%>
+
+<fmt:message key="user.logout.error"/>

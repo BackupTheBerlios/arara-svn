@@ -1,22 +1,23 @@
 <%@ taglib uri="/core" prefix="c"%>
+<%@ taglib uri="/fmt" prefix="fmt"%>
 
 <div align="center"></div>
 <table width="100%" border="0" cellspacing="2" bgcolor="#A6D2D2">
   <tr>
       
     <td width="15%"> 
-      <div align="left"><b>Seu registro foi feito com sussesso.</b></div><br>
-      <b>Dados</b>
-      <b>Nome:</b> ${user.name}<br>
-      <b>Login:</b> ${user.login}<br>
-      <b>Email:</b>${user.email}<br>
+      <div align="left"><b><fmt:message key="user.name"/></b></div><br>
+      <b><fmt:message key="user.registered.data"/></b>
+      <b><fmt:message key="user.name"/>:</b> ${user.name}<br>
+      <b><fmt:message key="user.login"/>:</b> ${user.login}<br>
+      <b><fmt:message key="user.email"/>:</b>${user.email}<br>
       <br>
       <c:if test="${user.emailOnNewPhoto == true}">
-      <br>Você escolheu ser notificado por email quando uma nova foto for inserida no site.
+      <br><fmt:message key="user.registered.emailOnNewPhoto"/>
       </c:if>
 
       <c:if test="${user.emailOnNewSound == true}">
-      <br>Você escolheu ser notificado por email quando um novo som for inserido no site.
+      <br><fmt:message key="user.registered.emailOnNewPhoto"/>
       </c:if>
     </td>
     </tr>

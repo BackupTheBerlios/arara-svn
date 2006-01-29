@@ -6,8 +6,8 @@
   <tr>
       
     <td width="15%"> 
-      <div align="left"><b><fmt:message key="user.name"/></b></div><br>
-      <b><fmt:message key="user.registered.data"/></b>
+      <div align="left"><b><fmt:message key="user.registered.success"/></b></div><br>
+      <b><fmt:message key="user.registered.data"/></b><br>
       <b><fmt:message key="user.name"/>:</b> ${user.name}<br>
       <b><fmt:message key="user.login"/>:</b> ${user.login}<br>
       <b><fmt:message key="user.email"/>:</b>${user.email}<br>

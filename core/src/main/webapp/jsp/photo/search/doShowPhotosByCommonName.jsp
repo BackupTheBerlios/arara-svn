@@ -1,11 +1,12 @@
 <%@ taglib uri="/core" prefix="c"%>
+<%@ taglib uri="/fmt" prefix="fmt"%>
 
 <form name="showPhotosByCommonNameForm" method="get" 
       action="<c:url value="/servlet/searchPhotosByCommonName"/>">
       
   <table width="100%" border="0" cellspacing="2" bgcolor="#A6D2D2">
   <tr> 
-    <td width="10%"><b>Nome comum:</b></td>
+    <td width="10%"><b><fmt:message key="common.name"/></b></td>
     <td width="90%"> 
         <select name="commonNameId">
           <c:forEach items="${commonNameList}" var="cnBean">

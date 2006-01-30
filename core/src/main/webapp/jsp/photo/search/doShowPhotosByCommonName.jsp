@@ -19,7 +19,7 @@
   
   <table width="100%" border="0" cellspacing="2" align="center" bgcolor="#A6D2D2">
   <tr>
-      <td width="10%"></td>
+      <td width="20%"></td>
       <td> 
         <div align="left">
             <input type="SUBMIT" value="<fmt:message key="button.submit.send"/>">

@@ -1,5 +1,6 @@
 <%@ taglib uri="/core" prefix="c"%>
-<%@ taglib uri="functions" prefix="f"%>
+<%@ taglib uri="/fmt" prefix="fmt"%>
+<%@ taglib uri="commonFunctions" prefix="f"%>
 
 <table width="100%" border="0" cellspacing="2" height="100%">
 <tr>
@@ -7,7 +8,7 @@
 <table width="100%" border="0" cellspacing="2" height="100%">
 
 <c:if test="${empty listOfPhotos}">
-   <br><h3>Não há fotos para a opção selecionada.</h3>
+   <br><h3><fmt:message key="show.all.photos.not.found"/></h3>
 </c:if>
 <c:set var="index" value="${0}"/>
 <c:set var="newLine" value="${true}"/>
@@ -32,18 +33,18 @@
                 height="${f:thumbnailHeight(w, photo.smallImage.width, photo.smallImage.height)}" 
 		   	  	align="bottom"/>
         </a>
-        <font size="2" face="Verdana"><br><a href="<c:url value="/servlet/searchPhotosByFamily?familyId=${photo.specie.family.id}&action=BEGIN"/>">
-   		  Família:${photo.specie.family.name}
+        <font size="2" face="Verdana"><br><fmt:message key="family"/>:
+          <a href="<c:url value="/servlet/searchPhotosByFamily?familyId=${photo.specie.family.id}&action=BEGIN"/>">${photo.specie.family.name}
           </a></font>
-        <font size="2" face="Verdana"><br><a href="<c:url value="/servlet/searchPhotosBySpecie?specieId=${photo.specie.id}&action=BEGIN"/>">
-   	  	  Espécie:${photo.specie.name}
-        </a></font>
-        <font size="2" face="Verdana"><br><a href="<c:url value="/servlet/searchPhotosBySpecie?specieId=${photo.specie.id}&action=BEGIN"/>">
-   	  	  Nome comum:${photo.specie.commonNameString}
-        </a></font>
-        <font size="2" face="Verdana"><br><a href="<c:url value="/servlet/searchPhotosByUser?userId=${photo.user.id}&action=BEGIN"/>">
-   		  Usuário:${photo.user.login}
-        </a></font>
+        <font size="2" face="Verdana"><br><fmt:message key="specie"/>:
+          <a href="<c:url value="/servlet/searchPhotosBySpecie?specieId=${photo.specie.id}&action=BEGIN"/>">${photo.specie.name}
+          </a></font>
+        <font size="2" face="Verdana"><br><fmt:message key="common.name"/>:
+          <a href="<c:url value="/servlet/searchPhotosBySpecie?specieId=${photo.specie.id}&action=BEGIN"/>">${photo.specie.commonNameString}
+          </a></font>
+        <font size="2" face="Verdana"><br><fmt:message key="user.title"/>:
+          <a href="<c:url value="/servlet/searchPhotosByUser?userId=${photo.user.id}&action=BEGIN"/>">${photo.user.login}
+          </a></font>
    </td>
    <c:if test="${index > 2}">
        <c:set var="index" value="${0}"/>

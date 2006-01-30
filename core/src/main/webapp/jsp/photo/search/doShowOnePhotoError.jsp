@@ -1,1 +1,3 @@
-A foto que você tentou acessar não consta mais do banco de dados.
+<%@ taglib uri="/fmt" prefix="fmt"%>
+<fmt:message key="show.one.photo.error"/>
+

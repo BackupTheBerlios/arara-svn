@@ -1,6 +1,8 @@
 <%@ taglib uri="/core" prefix="c"%>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="img"%>
-<%@ taglib uri="functions" prefix="f"%>
+<%@ taglib uri="/fmt" prefix="fmt"%>
+<%@ taglib uri="commonFunctions" prefix="f"%>
+
 <form name="commentForm" method="post" 
       action="<c:url value="/servlet/commentPhoto"/>"
 >
@@ -19,7 +21,7 @@
 	</td>
   </tr>
   <tr>
-    <td><b>Comentário</b></td>
+    <td><b><fmt:message key="comment.title"/></b></td>
   </tr>
   <tr>
     <td>
@@ -32,7 +34,7 @@
   <tr>
       <td> 
         <div align="left">
-            <input type="SUBMIT" value="Enviar">
+            <input type="SUBMIT" value="<fmt:message key="comment.submit"/>">
         </div>
       </td>
     </tr>

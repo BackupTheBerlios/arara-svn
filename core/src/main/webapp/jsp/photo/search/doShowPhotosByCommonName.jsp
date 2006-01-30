@@ -6,8 +6,8 @@
       
   <table width="100%" border="0" cellspacing="2" bgcolor="#A6D2D2">
   <tr> 
-    <td width="10%"><b><fmt:message key="common.name"/></b></td>
-    <td width="90%"> 
+    <td width="20%"><b><fmt:message key="common.name"/></b></td>
+    <td width="80%"> 
         <select name="commonNameId">
           <c:forEach items="${commonNameList}" var="cnBean">
 	      	<option value="${cnBean.value}">${cnBean.label}</option>
@@ -22,7 +22,7 @@
       <td width="10%"></td>
       <td> 
         <div align="left">
-            <input type="SUBMIT" value="Enviar">
+            <input type="SUBMIT" value="<fmt:message key="button.submit.send"/>">
         </div>
       </td>
     </tr>

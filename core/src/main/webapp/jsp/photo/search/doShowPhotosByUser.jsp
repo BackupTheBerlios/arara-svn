@@ -1,11 +1,12 @@
 <%@ taglib uri="/core" prefix="c"%>
+<%@ taglib uri="/fmt" prefix="fmt"%>
 
 <form name="showPhotosByUserForm" method="get" 
       action="<c:url value="/servlet/searchPhotosByUser"/>">
       
   <table width="100%" border="0" cellspacing="2" bgcolor="#A6D2D2">
   <tr> 
-    <td width="10%"><b>Usuário</b></td>
+    <td width="10%"><b><fmt:message key="user.title"/></b></td>
     <td width="90%"> 
         <select name="userId">
           <c:forEach items="${userList}" var="userBean">
@@ -21,7 +22,7 @@
       <td width="10%"></td>
       <td> 
         <div align="left">
-            <input type="SUBMIT" value="Enviar">
+            <input type="SUBMIT" value="<fmt:message key="button.submit.send"/>">
         </div>
       </td>
     </tr>

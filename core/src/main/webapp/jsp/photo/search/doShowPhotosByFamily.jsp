@@ -1,4 +1,5 @@
 <%@ taglib uri="/core" prefix="c"%>
+<%@ taglib uri="/fmt" prefix="fmt"%>
 
 <c:set var="selectedFamilyId" value="${uploadBean.selectedFamilyId}"/>
 <c:set var="selectedSpecieId" value="${uploadBean.selectedSpecieId}"/>
@@ -8,7 +9,7 @@
       
   <table width="100%" border="0" cellspacing="2" bgcolor="#A6D2D2">
   <tr> 
-    <td width="10%"><b>Família</b></td>
+    <td width="10%"><b><fmt:message key="family"/></b></td>
     <td width="90%"> 
         <select name="familyId">
           <c:forEach items="${uploadPhotoBean.familyList}" var="familyBean">
@@ -29,7 +30,7 @@
       <td width="10%"></td>
       <td> 
         <div align="left">
-            <input type="SUBMIT" value="Enviar">
+            <input type="SUBMIT" value="<fmt:message key="button.submit.send"/>">
         </div>
       </td>
     </tr>

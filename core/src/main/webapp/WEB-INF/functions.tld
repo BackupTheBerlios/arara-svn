@@ -11,6 +11,12 @@
   <uri>functions</uri>
 
   <function>
+    <name>scaledHeight</name>
+    <function-class>net.indrix.arara.utils.jsp.Thumbnail</function-class>
+    <function-signature>int getScaledHeight(int, int ,int)</function-signature>
+  </function>
+
+  <function>
     <name>thumbnailHeight</name>
     <function-class>net.indrix.arara.utils.jsp.Thumbnail</function-class>
     <function-signature>int getHeight(int, int ,int)</function-signature>
@@ -23,7 +29,7 @@
   </function>
 
   <function>
-    <name>dateAsString</name>
+    <name>dateString</name>
     <function-class>net.indrix.arara.utils.jsp.Date</function-class>
     <function-signature>java.lang.String getDate(java.util.Date)</function-signature>
   </function>

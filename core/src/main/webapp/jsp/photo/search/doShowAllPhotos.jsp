@@ -1,6 +1,6 @@
 <%@ taglib uri="/core" prefix="c"%>
 <%@ taglib uri="/fmt" prefix="fmt"%>
-<%@ taglib uri="commonFunctions" prefix="f"%>
+<%@ taglib uri="functions" prefix="f"%>
 
 <table width="100%" border="0" cellspacing="2" height="100%">
 <tr>

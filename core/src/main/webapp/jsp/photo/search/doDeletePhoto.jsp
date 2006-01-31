@@ -1,7 +1,7 @@
 <%@ taglib tagdir="/WEB-INF/tags" prefix="img"%>
 <%@ taglib uri="/core" prefix="c"%>
 <%@ taglib uri="/fmt" prefix="fmt"%>
-<%@ taglib uri="commonFunctions" prefix="f"%>
+<%@ taglib uri="functions" prefix="f"%>
 
 <c:set var="w" value="${240}"/>
 <table width="240" >

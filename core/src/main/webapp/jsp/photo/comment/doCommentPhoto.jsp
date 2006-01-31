@@ -1,7 +1,7 @@
 <%@ taglib uri="/core" prefix="c"%>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="img"%>
 <%@ taglib uri="/fmt" prefix="fmt"%>
-<%@ taglib uri="commonFunctions" prefix="f"%>
+<%@ taglib uri="functions" prefix="f"%>
 
 <form name="commentForm" method="post" 
       action="<c:url value="/servlet/commentPhoto"/>"

@@ -8,14 +8,18 @@
 	<c:set var="width" value="${600}"/>
 </c:if>
 
+<c:set var="w" value="${currentPhoto.realImage.width}"/>
 <c:if test="${currentPhoto.realImage.width > width}">
 	<c:set var="w" value="${width}"/>
+	<c:set var="h" value="${f:scaledHeight(w, currentPhoto.realImage.width, currentPhoto.realImage.height)}"/>	
 </c:if>
+
 <c:if test="${currentPhoto.realImage.width <= width}">
 	<c:set var="w" value="${currentPhoto.realImage.width}"/>
+	<c:set var="h" value="${currentPhoto.realImage.height}"/>	
 </c:if>
 
 <img src="<c:url value="/servlet/getPhoto?photoId=${currentPhoto.id}"/>" 
-     width="${f:thumbnailWidth(w, currentPhoto.realImage.width, currentPhoto.realImage.height)}" 
-     height="${f:thumbnailHeight(w, currentPhoto.realImage.width, currentPhoto.realImage.height)}" 
+     width="${w}" 
+     height="${h}" 
      align="bottom"/>

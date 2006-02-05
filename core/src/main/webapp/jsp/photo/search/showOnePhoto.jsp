@@ -20,7 +20,7 @@ function abrir_nova_janela(pagina){
     </td>
   </tr>
   <tr> 
-    <td width="16%" align="left" valign="top" bgcolor="#339966"> 
+    <td width="17%" align="left" valign="top" bgcolor="#339966"> 
     	<c:import url="/menu.jsp">
     		<c:param name="submenu" value="changePhoto"/>
     		<c:param name="photoId" value="${currentPhoto.id}"/>
@@ -28,7 +28,7 @@ function abrir_nova_janela(pagina){
     		<c:param name="currentPage" value="showOnePhoto"/>
     	</c:import>
     </td>
-    <td width="84%"> 
+    <td width="83%"> 
     	<c:import url="/jsp/photo/search/doShowOnePhoto.jsp">
     	</c:import>
     </td>
@@ -41,4 +41,5 @@ function abrir_nova_janela(pagina){
 </table>
 </body>
 </html>
+
 

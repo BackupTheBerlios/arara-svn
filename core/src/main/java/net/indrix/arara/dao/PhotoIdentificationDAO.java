@@ -27,8 +27,8 @@ public class PhotoIdentificationDAO extends AbstractDAO implements PhotoConstant
 		"INSERT INTO photo_identify "
 			+ "(user_id, date, place, camera, lens, film, "
 			+ "image, w, h, smallImage, sW, sH, post_date, "
-			+ "comment, imageSize, smallImageSize) "
-			+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			+ "comment, imageSize, smallImageSize, city_id) "
+			+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     /**
      * SQL for retrieving all objects from database
@@ -154,6 +154,7 @@ public class PhotoIdentificationDAO extends AbstractDAO implements PhotoConstant
 		logger.debug("Comment : " + photo.getComment());
 		stmt.setInt(15, photo.getRealImage().getImageSize());
 		stmt.setInt(16, photo.getSmallImage().getImageSize());
+        stmt.setInt(17, photo.getCity().getId());
 	}
 
 	/* (non-Javadoc)

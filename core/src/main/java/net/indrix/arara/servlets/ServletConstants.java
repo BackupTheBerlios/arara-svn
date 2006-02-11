@@ -89,7 +89,8 @@ public class ServletConstants {
     // PHOTOS
     public static final String UPLOAD_PAGE = "/jsp/photo/upload/uploadPhoto.jsp";
     public static final String UPLOAD_SUCCESS_PAGE = "/jsp/photo/upload/uploadSuccess.jsp";
-    public static final String UPLOAD_IDENTIFY_SUCCESS_PAGE = "/jsp/photo/upload/uploadIdentifySuccess.jsp";
+    public static final String UPLOAD_IDENTIFICATION_PAGE = "/jsp/photo/upload/uploadPhotoIdentify.jsp";
+    public static final String UPLOAD_IDENTIFICATION_SUCCESS_PAGE = "/jsp/photo/upload/uploadIdentifySuccess.jsp";
     public static final String EDIT_PAGE = "/jsp/photo/upload/editPhoto.jsp";
     public static final String EDIT_SUCCESS_PAGE = "/jsp/photo/upload/editSuccess.jsp";
 

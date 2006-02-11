@@ -19,10 +19,13 @@ import javax.servlet.http.HttpSession;
 
 import net.indrix.arara.bean.UploadPhotoBean;
 import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.model.CityModel;
 import net.indrix.arara.model.UploadPhoto;
 import net.indrix.arara.model.exceptions.ImageProcessingException;
 import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.servlets.UploadConstants;
+import net.indrix.arara.servlets.common.PhotoBeanManager;
+import net.indrix.arara.servlets.common.PhotoForIdentificationBeanManager;
 import net.indrix.arara.servlets.photo.exceptions.InvalidFileException;
 import net.indrix.arara.vo.Age;
 import net.indrix.arara.vo.Photo;
@@ -56,6 +59,15 @@ public class UploadPhotoIdentifyServlet extends UploadPhotoServlet {
         super.doPost(req, res);
 	}
 
+    /**
+     * Return the bean manager to be used
+     * 
+     * @return a new BeanManager instance
+     */
+    protected PhotoBeanManager getBeanManager() {
+        return new PhotoForIdentificationBeanManager();
+    }
+
     /** 
      * @param photo 
      */
@@ -81,6 +93,7 @@ public class UploadPhotoIdentifyServlet extends UploadPhotoServlet {
 		photo.setLens(bean.getLens());
 		photo.setFilm(bean.getFilm());
 		photo.setLocation(bean.getLocation());
+        photo.setCity(CityModel.getCity(bean.getCitiesList(), bean.getSelectedCityId()));       
 		photo.setDate(createDate(bean.getDate()));
 		photo.getRealImage().setImageSize(Integer.parseInt(bean.getFileSize()));
 		try {
@@ -103,6 +116,6 @@ public class UploadPhotoIdentifyServlet extends UploadPhotoServlet {
 	}
 
     protected String getSuccessPage() {
-        return ServletConstants.UPLOAD_IDENTIFY_SUCCESS_PAGE;
+        return ServletConstants.UPLOAD_IDENTIFICATION_SUCCESS_PAGE;
     }
 }

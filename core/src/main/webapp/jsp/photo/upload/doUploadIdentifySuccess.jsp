@@ -10,4 +10,4 @@
                 height="${f:thumbnailHeight(w, currentPhoto.smallImage.width, currentPhoto.smallImage.height)}" 
 		   	  	align="bottom"/>
 
-<br><b><fmt:message key="upload.photo.identify.success"/></b>
+<br><b><fmt:message key="photo.upload.identify.success"/></b>

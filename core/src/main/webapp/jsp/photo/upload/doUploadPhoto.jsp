@@ -108,7 +108,7 @@
   <tr> 
     <td width="15%"><b><fmt:message key="photo.location"/></b></td>
     <td width="85%"> 
-        <input type="text" name="location" value="${uploadPhotoBean.location}" size="64" maxlength="64">
+        <input type="text" name="location" value="${uploadPhotoBean.location}" size="256" maxlength="256">
     </td>
   </tr>
   

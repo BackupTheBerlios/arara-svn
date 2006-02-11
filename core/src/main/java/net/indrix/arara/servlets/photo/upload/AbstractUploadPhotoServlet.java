@@ -46,7 +46,7 @@ public abstract class AbstractUploadPhotoServlet
 	protected boolean updateBean(Map data, UploadPhotoBean bean, List errors) {
 		boolean status = false;
 
-        PhotoBeanManager manager = new PhotoBeanManager();
+        PhotoBeanManager manager = getBeanManager();
         manager.updateBean(data, bean, errors, true);
 
 		if (!errors.isEmpty()) {
@@ -55,6 +55,15 @@ public abstract class AbstractUploadPhotoServlet
 			status = true;
 		}
 		return status;
+	}
+
+    /**
+     * Return the bean manager to be used
+     * 
+     * @return a new BeanManager instance
+     */
+	protected PhotoBeanManager getBeanManager() {
+		return new PhotoBeanManager();
 	}
 
 	/** 

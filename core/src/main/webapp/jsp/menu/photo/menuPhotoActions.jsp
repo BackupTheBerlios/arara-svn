@@ -10,7 +10,7 @@
     </tr>
     <tr> 
       <td><font size="2" face="Verdana">
-      	&nbsp;&nbsp;&nbsp;<a href="<c:url value="/jsp/photo/upload/uploadPhotoIdentify.jsp"/>"><fmt:message key="menu.photos.send.identification"/>
+      	&nbsp;&nbsp;&nbsp;<a href="<c:url value="/servlet/initUploadPhotosForIdentification"/>"><fmt:message key="menu.photos.send.identification"/>
       	</a>
       </font></td>
     </tr>

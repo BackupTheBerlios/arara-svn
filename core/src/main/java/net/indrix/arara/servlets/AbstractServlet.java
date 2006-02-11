@@ -7,6 +7,7 @@
 package net.indrix.arara.servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import net.indrix.arara.utils.PropertiesManager;
 
@@ -31,11 +33,11 @@ import org.apache.log4j.Logger;
  */
 public class AbstractServlet extends HttpServlet {
 
-    /**
-     * Logger object to be used by this class
-     */
-    protected static Logger logger = Logger.getLogger("net.indrix.aves");
- 
+	/**
+	 * Logger object to be used by this class
+	 */
+	protected static Logger logger = Logger.getLogger("net.indrix.aves");
+
 	protected HashMap parseMultiPartFormData(HttpServletRequest request)
 		throws ServletException, IOException, FileUploadException {
 		logger.debug(" - Entering parseMultiPartFormData(HttpServletRequest)");
@@ -82,5 +84,28 @@ public class AbstractServlet extends HttpServlet {
 			logger.debug("DATA IS EMPTY");
 		}
 		return aData;
+	}
+
+    /**
+     * This method sends the user to the login page
+     * 
+     * @param req The http request object
+     * @param res The http response object
+     * 
+     * @return The next page to send the user to
+     * @throws ServletException if any servlet error occurs
+     * @throws IOException if any IO error occurs
+     */
+	protected String userNotLogged(HttpServletRequest req, HttpServletResponse res)
+		throws ServletException, IOException {
+		List errors = new ArrayList();
+
+		logger.debug("errors is not null.");
+		errors.add(ServletConstants.USER_NOT_LOGGED);
+		// put errors in request 
+		req.setAttribute(ServletConstants.ERRORS_KEY, errors);
+
+		String nextPage = ServletConstants.LOGIN_PAGE;
+        return nextPage;
 	}
 }

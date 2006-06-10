@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+    version="2.0">
+    
+  <description>Functions</description>
+  <display-name>Functions</display-name>
+  <tlib-version>1.2</tlib-version>
+  <uri>functions</uri>
+
+  <function>
+    <name>scaledHeight</name>
+    <function-class>net.indrix.arara.utils.jsp.Thumbnail</function-class>
+    <function-signature>int getScaledHeight(int, int ,int)</function-signature>
+  </function>
+
+  <function>
+    <name>thumbnailHeight</name>
+    <function-class>net.indrix.arara.utils.jsp.Thumbnail</function-class>
+    <function-signature>int getHeight(int, int ,int)</function-signature>
+  </function>
+
+  <function>
+    <name>thumbnailWidth</name>
+    <function-class>net.indrix.arara.utils.jsp.Thumbnail</function-class>
+    <function-signature>int getWidth(int, int ,int)</function-signature>
+  </function>
+
+  <function>
+    <name>dateString</name>
+    <function-class>net.indrix.arara.utils.jsp.Date</function-class>
+    <function-signature>java.lang.String getDate(java.util.Date)</function-signature>
+  </function>
+
+  <function>
+    <name>dateTimeAsString</name>
+    <function-class>net.indrix.arara.utils.jsp.Date</function-class>
+    <function-signature>java.lang.String getDateTime(java.util.Date)</function-signature>
+  </function>
+
+  <function>
+    <name>numberOfPhotos</name>
+    <function-class>net.indrix.arara.utils.jsp.Statistics</function-class>
+    <function-signature>int getNumberOfPhotos()</function-signature>
+  </function>
+
+  <function>
+    <name>numberOfFamilies</name>
+    <function-class>net.indrix.arara.utils.jsp.Statistics</function-class>
+    <function-signature>int getNumberOfFamilies()</function-signature>
+  </function>
+
+  <function>
+    <name>numberOfSpecies</name>
+    <function-class>net.indrix.arara.utils.jsp.Statistics</function-class>
+    <function-signature>int getNumberOfSpecies()</function-signature>
+  </function>
+
+  <function>
+    <name>numberOfUsers</name>
+    <function-class>net.indrix.arara.utils.jsp.Statistics</function-class>
+    <function-signature>int getNumberOfUsers()</function-signature>
+  </function>
+
+</taglib>

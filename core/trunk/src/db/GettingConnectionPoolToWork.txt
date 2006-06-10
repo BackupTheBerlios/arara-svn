@@ -1,0 +1,36 @@
+1. Create the Data Source in the tomcat admin page
+    <ResourceParams name="aves">
+      <parameter>
+        <name>url</name>
+        <value>jdbc:mysql://localhost/passaros</value>
+      </parameter>
+      <parameter>
+        <name>password</name>
+        <value>jeff</value>
+      </parameter>
+      <parameter>
+        <name>maxActive</name>
+        <value>10</value>
+      </parameter>
+      <parameter>
+        <name>maxWait</name>
+        <value>5000</value>
+      </parameter>
+      <parameter>
+        <name>driverClassName</name>
+        <value>com.mysql.jdbc.Driver</value>
+      </parameter>
+      <parameter>
+        <name>username</name>
+        <value>jeff</value>
+      </parameter>
+      <parameter>
+        <name>maxIdle</name>
+        <value>2</value>
+      </parameter>
+    </ResourceParams>
+
+2. Edit ...\conf\Catalina\localhost\aves.xml to add
+	<ResourceLink global="aves" name="aves" type="javax.sql.DataSource"/>
+3. Copy ...connector.jar to ...\common\lib
+4. Start tomcat

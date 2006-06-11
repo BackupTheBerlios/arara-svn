@@ -7,6 +7,7 @@
   <version>1.0-SNAPSHOT</version>
   <name>Indrix - Arara</name>
   <url>http://www.aves.com.br</url>
+  <description>The goal of this project is to provide a easy way for manager the species like brazilian birds, to share photos or visualize photos from other authors.</description> 
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -104,10 +105,13 @@
       <id>1</id>
       <name>Jefferson</name>
       <email/>
+      <roles>      
+	      <role>Project Manager</role>
+    	  <role>Architect</role>      
+	  </roles>    	        
       <url/>
       <organization/>
       <organizationUrl/>
-      <roles/>
       <timezone/>
       <properties/>
     </developer>
@@ -115,10 +119,13 @@
       <id>2</id>
       <name>Rafael</name>
       <email/>
+      <roles>
+	      <role>Developer</role>
+	      <role>Site Manager</role>      
+      </roles>	            
       <url/>
       <organization>Indrix</organization>
       <organizationUrl>http://www.indrix.net</organizationUrl>
-      <roles/>
       <timezone/>
       <properties/>
     </developer>
@@ -232,6 +239,26 @@
     <artifactId>maven-clover-plugin</artifactId>
   </plugin>
       
+    <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jxr-maven-plugin</artifactId>
+    </plugin>   
+            
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>changes-maven-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>changelog-maven-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>taglist-maven-plugin</artifactId>
+      </plugin>
+            
     </plugins>
   </reporting>
   
@@ -254,7 +281,34 @@
     <developerConnection>svn+ssh://svn.berlios.de/svnroot/repos/arara/</developerConnection>
     <url>http://svn.berlios.de/wsvn/arara</url>
   </scm>
-  
+
+   <issueManagement>
+      <system>Berlios</system>
+      <url>http://developer.berlios.de/feature/?group_id=5593</url>
+   </issueManagement> 
+
+<!-- 
+   <ciManagement>
+      <system>Continuum</system>
+      <url>http://localhost/continuum</url>
+      <notifiers>
+         <notifier>
+            <type>mail</type>
+            <address>arara@localhost</address>
+         </notifier>
+      </notifiers>
+   </ciManagement>
+ -->
+   <mailingLists>
+     <mailingList>
+       <name>Arara project mailing list</name>
+       <subscribe>arara-users@lists.berlios.de</subscribe>
+       <unsubscribe>arara-users@lists.berlios.de</unsubscribe>
+      <post>arara-users@lists.berlios.de</post>
+      <archive>https://developer.berlios.de/mail/?group_id=5593</archive>
+     </mailingList>
+   </mailingLists> 
+        
   <repositories>
     <repository>
       <id>my-repo1</id>

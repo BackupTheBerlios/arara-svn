@@ -3,7 +3,7 @@
 	<groupId>net.indrix.arara</groupId>
 	<artifactId>arara</artifactId>
 	<packaging>war</packaging>
-	<version>1.0</version>
+	<version>1.1-SNAPSHOT</version>
 	<name>Indrix-Arara</name>
 	<url>http://www.aves.com.br</url>
 	<description>
@@ -230,9 +230,9 @@
 		</repository>
 	</distributionManagement>
 	<scm>
-		<connection>scm:svn:https://indrix@svn.berlios.de/svnroot/repos/arara/core/tags/arara-1.0</connection>
-		<developerConnection>scm:svn:https://indrix@svn.berlios.de/svnroot/repos/arara/core/tags/arara-1.0</developerConnection>
-		<url>http://svn.berlios.de/wsvn/arara/tags/arara-1.0</url>
+		<connection>scm:svn:https://indrix@svn.berlios.de/svnroot/repos/arara/core/trunk</connection>
+		<developerConnection>scm:svn:https://indrix@svn.berlios.de/svnroot/repos/arara/core/trunk</developerConnection>
+		<url>http://svn.berlios.de/wsvn/arara</url>
 	</scm>
 	<issueManagement>
 		<system>Berlios</system>

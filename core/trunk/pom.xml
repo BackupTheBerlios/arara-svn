@@ -258,6 +258,15 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>taglist-maven-plugin</artifactId>
       </plugin>
+
+      <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <tagBase>
+			scm:svn:https://indrix@svn.berlios.de/svnroot/repos/arara/core/tags
+          </tagBase>
+        </configuration>
+      </plugin>
             
     </plugins>
   </reporting>
@@ -277,8 +286,8 @@
 
 
    <scm>
-    <connection>scm:svn:svn://svn.berlios.de/arara/core</connection>
-    <developerConnection>svn+ssh://svn.berlios.de/svnroot/repos/arara/</developerConnection>
+    <connection>scm:svn:https://indrix@svn.berlios.de/svnroot/repos/arara/core/trunk</connection>
+    <developerConnection>scm:svn:https://indrix@svn.berlios.de/svnroot/repos/arara/core/trunk</developerConnection>
     <url>http://svn.berlios.de/wsvn/arara</url>
   </scm>
 

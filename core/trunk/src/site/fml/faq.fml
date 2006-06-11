@@ -1,4 +1,4 @@
-<?xml version="1.0"?> 
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <faqs title="About the Arara application"> 
   <part id="about"> 
     <faq> 
@@ -9,16 +9,13 @@
         </p> 
       </answer> 
     </faq> 
-
     <faq> 
-      <question> Can I help ?< /question> 
+      <question> Can I help ?</question> 
       <answer> 
         <p> 
-          Yes, send a email to us.
+          Yes, send a email to us (arara-users@lists.berlios.de) and see How to Start.
         </p> 
       </answer> 
     </faq> 
   </part> 
 </faqs> 
-
-

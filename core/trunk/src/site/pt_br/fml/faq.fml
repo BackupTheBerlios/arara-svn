@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<faqs title="Sobre a aplicação Arara"> 
+  <part id="sobre"> 
+    <faq> 
+      <question> O que é Arara ?</question> 
+      <answer> 
+        <p> 
+          O objetivo deste projeto é disponibilizar um meio fácil para que interessados em várias espécies possam compartilhar suas fotos, ou visualizar fotos de outros autores.
+        </p> 
+      </answer> 
+    </faq> 
+    <faq> 
+      <question> Eu posso ajudar ?</question> 
+      <answer> 
+        <p> 
+          Sim, mande um email para nós (arara-users@lists.berlios.de) e veja  tópico Como Começar.
+        </p> 
+      </answer> 
+    </faq> 
+  </part> 
+</faqs> 

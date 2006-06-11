@@ -21,10 +21,12 @@
 
     <menu name="Arara">
       <item name="Introduction" href="index.html"/>
+      <item name="How to Start" href="howtostart.html"/>      
+      <item name="FAQs" href="faq.html"/>
+      <item name="Best Practices" href="best-practices.html"/>            
       <item name="Download" href="http://developer.berlios.de/project/showfiles.php?group_id=5593"/>
-      <item name="FAQs" href="faqs.html"/>
       <item name="Road Map" href="http://developer.berlios.de/feature/?group_id=5593" />
-      <item name="Developer" href="http://developer.berlios.de/projects/arara/" />      
+      <item name="Developer Site" href="http://developer.berlios.de/projects/arara/" />      
     </menu>
 
     ${reports}

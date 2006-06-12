@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+   <document> 
+     <properties> 
+       <author email="arara-users@lists.berlios.de">Equipe Indrix</author> 
+       <title> Project Arara</title> 
+     </properties> 
+     <body> 
+       <section name="Introduction"> 
+         <p> 
+         Este projeto utiliza o Maven 2 para gerar o site.
+         </p> 
+          <subsection name="Comunicação da equipe"> 
+          <p>A comunicação da equipe é essencial para qualquer projeto. 
+          Algumas ferramentas úteis para isto:
+         <ul>
+           <li>Javadoc</li>
+           <li>Qualidade</li>
+           <ul>
+             <li>Analise do código com Checkstyle e/ou PMD</li>
+             <li>Relatórios de Testes</li>
+            </ul>
+           </ul>
+            </p> 
+          </subsection> 
+       </section> 
+       <section name="Compilar"> 
+         <p> 
+         Dicas de como compilar
+         </p> 
+          <subsection name="Compilar"> 
+          mvn compile
+          </subsection> 
+          <subsection name="War"> 
+          mvn war:war
+          </subsection> 
+          <subsection name="Site"> 
+          <p>mvn site</p>
+          <p>mvn site:deploy</p>
+          </subsection> 
+          <subsection name="Release"> 
+          <p>mvn release:prepare</p>
+          <p>mvn release:perform</p>
+          </subsection> 
+          <subsection name="Eclipse"> 
+          mvn eclipse:eclipse
+          </subsection> 
+       </section>       
+     </body> 
+   </document> 
+
+

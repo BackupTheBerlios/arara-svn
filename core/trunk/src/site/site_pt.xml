@@ -20,10 +20,10 @@
     </links>
 
     <menu name="Arara">
-      <item name="Introducao" href="pt/index.html"/>
-      <item name="Como começar" href="pt/howtostart.html"/>      
-      <item name="Melhores Práticas" href="pt/best-practices.html"/>            
-      <item name="Perguntas e Respostas" href="pt/faq.html"/>
+      <item name="Introdução" href="index.html"/>
+      <item name="Como começar" href="howtostart.html"/>      
+      <item name="Melhores Práticas" href="best-practices.html"/>            
+      <item name="Perguntas e Respostas" href="faq.html"/>
       <item name="Download" href="http://developer.berlios.de/project/showfiles.php?group_id=5593"/>
       <item name="Futuro" href="http://developer.berlios.de/feature/?group_id=5593" />
       <item name="Site do Desenvolvedor" href="http://developer.berlios.de/projects/arara/" />

@@ -5,27 +5,30 @@
                                     ------
                                      2006
 
-INtrodução
+Introdução
 
-Este manual explica como iniciar This manual explain how to start work in Arara project.
+  Este manual explica como iniciar o trabalho no projeto Arara.
 
-* Download das ferramentas
+Download das ferramentas
 
-Java
-http://www.java.com
+* Java 1.5
 
-Eclipse
-http://www.java.com
+  http://www.javasoft.com
 
-Maven
-http://www.java.com
+* Eclipse 3.1.2
 
-* Steps
+  http://www.eclipse.org
 
-      [[1]] Inscrever no site
+* Maven 2.0.4
+
+  http://maven.apache.org
+
+Steps
+
+      [[1]] Inscrever no site http://developer.berlios.de/
       
       [[2]] Configurar as ferramentas
 
-INDRIX Copyright \251.
+  INDRIX Copyright \251.
 
 ~~Commented out.

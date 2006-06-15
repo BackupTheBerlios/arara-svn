@@ -61,9 +61,9 @@
 		   		</c:if>
 		   </td>
 		   <c:if test="${index > 2}">
-		       <c:set var="index" value="${0}"/>
-		       <c:set var="newLine" value="${true}"/>
-		       </tr>
+			   <c:set var="index" value="${0}"/>
+			   <c:set var="newLine" value="${true}"/>
+			   </tr>
 		   </c:if>
 		</c:forEach>
 	</table>

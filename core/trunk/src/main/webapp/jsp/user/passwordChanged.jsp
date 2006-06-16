@@ -2,6 +2,6 @@
 
 
 <c:import url="/frame.jsp">
-	<c:param name="pageToShow" value="/jsp/user/doPasswordChanged.jsp"/>
+	<c:param name="pageToShow" value="/jsp/user/doPasswordChanged.jsp" />
 </c:import>
 

@@ -2,7 +2,7 @@
 
 
 <c:import url="/frame.jsp">
-	<c:param name="pageToShow" value="/jsp/user/doLogout.jsp"/>
+	<c:param name="pageToShow" value="/jsp/user/doLogout.jsp" />
 </c:import>
 
 

@@ -2,7 +2,8 @@
 
 
 <c:import url="/frame.jsp">
-	<c:param name="pageToShow" value="/jsp/photo/upload/doUploadSuccess.jsp"/>
+	<c:param name="pageToShow"
+		value="/jsp/photo/upload/doUploadSuccess.jsp" />
 </c:import>
 
 

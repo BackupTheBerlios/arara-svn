@@ -2,7 +2,8 @@
 
 
 <c:import url="/frame.jsp">
-	<c:param name="pageToShow" value="/jsp/photo/comment/doCommentPhoto.jsp"/>
+	<c:param name="pageToShow"
+		value="/jsp/photo/comment/doCommentPhoto.jsp" />
 </c:import>
 
 

@@ -12,7 +12,8 @@ http://maven.apache.org/guides/mini/guide-ide-eclipse.html
 mvn -Declipse.workspace=<path-to-eclipse-workspace> eclipse:add-maven-repo 
 
 mvn clean
-mvn eclipse:eclipse
+mvn -Dwtpversion=1.0 eclipse:eclipse
+(mvn eclipse:eclipse)
 
 mvn compile
 mvn package

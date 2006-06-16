@@ -2,6 +2,6 @@
 
 
 <c:import url="/frame.jsp">
-	<c:param name="pageToShow" value="/jsp/author/doAuthor.jsp"/>
+	<c:param name="pageToShow" value="/jsp/author/doAuthor.jsp" />
 </c:import>
 

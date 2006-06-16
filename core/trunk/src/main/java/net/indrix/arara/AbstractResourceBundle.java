@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Jeff
- * 
+ *
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
@@ -27,7 +27,7 @@ public abstract class AbstractResourceBundle {
 	protected static Logger logger = Logger.getLogger("net.indrix.aves");
 
 	/**
-	 * The map with locales as key, HashMap objects as values
+	 * The map with locales as key, HashMap objects as values.
 	 */
 	private static Map bundles = new HashMap();
 
@@ -52,7 +52,7 @@ public abstract class AbstractResourceBundle {
 	 * 
 	 * @return The value corresponding to the key
 	 */
-	public String getString(String key, Locale l) { 
+	public String getString(String key, Locale l) {
 
 		Map map = (Map) bundles.get(l);
 		if (map == null) {

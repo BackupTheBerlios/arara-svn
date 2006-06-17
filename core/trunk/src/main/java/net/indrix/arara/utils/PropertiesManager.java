@@ -89,11 +89,17 @@ public class PropertiesManager {
 	private static void loadPropertiesFromFile() {
 		String file = getFileToUse();
 		try {
-			InputStream input = PropertiesManager.class
-					.getResourceAsStream(file);
+//			java.net.URL url = PropertiesManager.class.getResource(file);
+//			java.io.FileInputStream input = new java.io.FileInputStream(url.getFile());
+//			InputStream input = PropertiesManager.class.getResource(file);
+			
+			ClassLoader cl = PropertiesManager.class.getClassLoader();
+			InputStream input = cl.getResourceAsStream(file);
+			
 			logger.debug("InputStream = " + input);
 			properties = new Properties();
 			properties.load(input);
+			
 		} catch (IOException e) {
 			logger.error("Error reading property", e);
 		}

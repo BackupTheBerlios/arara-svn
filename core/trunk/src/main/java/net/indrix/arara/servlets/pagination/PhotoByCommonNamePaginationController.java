@@ -13,12 +13,13 @@ import net.indrix.arara.dao.DatabaseDownException;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class PhotoByCommonNamePaginationController extends PhotoPaginationController {
-     
+public class PhotoByCommonNamePaginationController extends
+		PhotoPaginationController {
+
 	/**
 	 * @param photosPerPage
 	 * @param identification
@@ -27,12 +28,12 @@ public class PhotoByCommonNamePaginationController extends PhotoPaginationContro
 		super(photosPerPage, false);
 	}
 
-    /**
-     * @see net.indrix.arara.servlets.pagination.PaginationController#retrieveAllData()
-     */
-    protected List retrieveAllData() throws DatabaseDownException, SQLException {
-        List listOfPhotos = null;
-        listOfPhotos = model.retrievePhotoIDsForCommonName(id);
-        return listOfPhotos;
-    }
+	/**
+	 * @see net.indrix.arara.servlets.pagination.PaginationController#retrieveAllData()
+	 */
+	protected List retrieveAllData() throws DatabaseDownException, SQLException {
+		List listOfPhotos = null;
+		listOfPhotos = model.retrievePhotoIDsForCommonName(id);
+		return listOfPhotos;
+	}
 }

@@ -8,71 +8,73 @@ package net.indrix.arara.vo;
 
 /**
  * @author Jefferson_Angelica
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class Family {
-    private int id;
-    private String name;
-    private String subFamilyName;
+	private int id;
 
-    public Family() {
-        id = -1;
-        name = null;
-    }
+	private String name;
 
-    /**
-     * @return
-     */
-    public int getId() {
-        return id;
-    }
+	private String subFamilyName;
 
-    /**
-     * @return
-     */
-    public String getName() {
-        return name;
-    }
+	public Family() {
+		id = -1;
+		name = null;
+	}
 
-    /**
-     * @param i
-     */
-    public void setId(int i) {
-        id = i;
-    }
+	/**
+	 * @return
+	 */
+	public int getId() {
+		return id;
+	}
 
-    /**
-     * @param string
-     */
-    public void setName(String string) {
-        name = string;
-    }
+	/**
+	 * @return
+	 */
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * @return
-     */
-    public String getSubFamilyName() {
-        return subFamilyName;
-    }
+	/**
+	 * @param i
+	 */
+	public void setId(int i) {
+		id = i;
+	}
 
-    /**
-     * @param string
-     */
-    public void setSubFamilyName(String string) {
-        subFamilyName = string;
-    }
-    
-    public String getNameToShow(){
-        String s = name;
-        if (subFamilyName != null){
-            s += " - " + subFamilyName;
-        }
-        return s;
-    }
+	/**
+	 * @param string
+	 */
+	public void setName(String string) {
+		name = string;
+	}
 
-    public String toString() {
-        return "[" + id + " - " + name + " - " + subFamilyName  + "]";
-    }
+	/**
+	 * @return
+	 */
+	public String getSubFamilyName() {
+		return subFamilyName;
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setSubFamilyName(String string) {
+		subFamilyName = string;
+	}
+
+	public String getNameToShow() {
+		String s = name;
+		if (subFamilyName != null) {
+			s += " - " + subFamilyName;
+		}
+		return s;
+	}
+
+	public String toString() {
+		return "[" + id + " - " + name + " - " + subFamilyName + "]";
+	}
 }

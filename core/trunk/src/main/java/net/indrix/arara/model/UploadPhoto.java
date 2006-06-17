@@ -31,24 +31,27 @@ import net.indrix.arara.vo.ImageFile;
 import net.indrix.arara.vo.Photo;
 import net.indrix.arara.vo.Specie;
 
-/** 
- * @author wjs085 
+/**
+ * @author wjs085
  * 
- * To change the template for this generated type comment go to 
- * Window>Preferences>Java>Code Generation>Code and Comments 
+ * To change the template for this generated type comment go to
+ * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class UploadPhoto extends AbstractUpload {
 	/**
-	 * The default width value, in case the value from properties could not be read
+	 * The default width value, in case the value from properties could not be
+	 * read
 	 */
 	public static final int W = 240;
+
 	/**
 	 * the width for the thumbnail
 	 */
-	private static final int wForSmallPhoto = setSmallWidth(PhotoUtil.getSmallWidth());
+	private static final int wForSmallPhoto = setSmallWidth(PhotoUtil
+			.getSmallWidth());
 
-	public void uploadPhoto(Photo photo)
-		throws DatabaseDownException, SQLException, ImageProcessingException {
+	public void uploadPhoto(Photo photo) throws DatabaseDownException,
+			SQLException, ImageProcessingException {
 
 		logger.debug("Calling createSmallPhoto with " + photo);
 		createSmallPhoto(photo);
@@ -58,33 +61,35 @@ public class UploadPhoto extends AbstractUpload {
 			logger.debug("Calling insert in DAO object");
 			dao.insert(photo);
 
-			// retrieve data from database, so all data will be loaded           
+			// retrieve data from database, so all data will be loaded
 			SpecieDAO sDao = new SpecieDAO();
 			Specie s = sDao.retrieve(photo.getSpecie().getId());
 			photo.setSpecie(s);
 
 			// send email to users
 			logger.debug("Sending email");
-            PhotoEmailSender emailSender = new PhotoEmailSender(photo);
-            emailSender.sendEmail();
+			PhotoEmailSender emailSender = new PhotoEmailSender(photo);
+			emailSender.sendEmail();
 		} else {
-			throw new ImageProcessingException("Real image or thumbnail is wrong" + photo);
+			throw new ImageProcessingException(
+					"Real image or thumbnail is wrong" + photo);
 		}
 	}
 
 	/**
-	 * This method verifies if the image was successfully uploaded, and that the thumbnail was
-	 * successfully created
+	 * This method verifies if the image was successfully uploaded, and that the
+	 * thumbnail was successfully created
 	 * 
-	 * @param photo The photo to be checked
+	 * @param photo
+	 *            The photo to be checked
 	 * 
 	 * @return true if the photo is ok, false otherwise
 	 */
 	private boolean isPhotoValid(Photo photo) {
 		return (photo.getRealImage().getWidth() > 0)
-			&& (photo.getRealImage().getHeight() > 0)
-			&& (photo.getSmallImage().getWidth() > 0)
-			&& (photo.getSmallImage().getHeight() > 0);
+				&& (photo.getRealImage().getHeight() > 0)
+				&& (photo.getSmallImage().getWidth() > 0)
+				&& (photo.getSmallImage().getHeight() > 0);
 	}
 
 	/**
@@ -101,13 +106,15 @@ public class UploadPhoto extends AbstractUpload {
 	/**
 	 * This method creates the thumbnail picture for the given photo object
 	 * 
-	 * @param photo The object with the real image
+	 * @param photo
+	 *            The object with the real image
 	 * 
 	 * @return the path for the temporary file created
 	 * 
 	 * @throws ImageProcessingException
 	 */
-	public static void createSmallPhoto(Photo photo) throws ImageProcessingException {
+	public static void createSmallPhoto(Photo photo)
+			throws ImageProcessingException {
 		String path = null;
 		ImageFile realimage = photo.getRealImage();
 		ImageFile smallImage = photo.getSmallImage();
@@ -129,7 +136,8 @@ public class UploadPhoto extends AbstractUpload {
 			ByteArrayInputStream inp = new ByteArrayInputStream(bytes);
 			realimage.setImage(inp);
 		} catch (IOException e) {
-			throw new ImageProcessingException("Error creating byte[] from InputStream");
+			throw new ImageProcessingException(
+					"Error creating byte[] from InputStream");
 		}
 
 		logger.debug("Creating ImageIcon");
@@ -159,10 +167,12 @@ public class UploadPhoto extends AbstractUpload {
 				smallImage.setImage(inputStream);
 				smallImage.setImageSize((int) newFile.length());
 			} catch (IOException e1) {
-				throw new ImageProcessingException("Error creating FileInputStream for smallImage...");
+				throw new ImageProcessingException(
+						"Error creating FileInputStream for smallImage...");
 			}
 		} catch (IOException e2) {
-			throw new ImageProcessingException("Error saving smallImage in a file...");
+			throw new ImageProcessingException(
+					"Error saving smallImage in a file...");
 		}
 
 		logger.debug("Deleting temporary file " + path);
@@ -172,22 +182,25 @@ public class UploadPhoto extends AbstractUpload {
 
 	/**
 	 * This method creates an thumbnail image for the given image
-	 *  
-	 * @param image The source image, for which a thumbnail will be created
-	 * @param w the new width for the thumbnail
-	 * @param h the new height for the thumbnail
+	 * 
+	 * @param image
+	 *            The source image, for which a thumbnail will be created
+	 * @param w
+	 *            the new width for the thumbnail
+	 * @param h
+	 *            the new height for the thumbnail
 	 * 
 	 * @return a <code>RenderedImage</code> object for the thumbnail
 	 */
 	private static RenderedImage createThumbnail(Image image, int w, int h) {
 		// Create a buffered image in which to draw
-		BufferedImage bufferedImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+		BufferedImage bufferedImage = new BufferedImage(w, h,
+				BufferedImage.TYPE_INT_RGB);
 
 		// Create a graphics contents on the buffered image
 		Graphics2D g2d = bufferedImage.createGraphics();
-		g2d.setRenderingHint(
-			RenderingHints.KEY_INTERPOLATION,
-			RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		// Draw graphics
 		g2d.drawImage(image, 0, 0, w, h, null);
 
@@ -201,8 +214,10 @@ public class UploadPhoto extends AbstractUpload {
 	 * @param photo
 	 */
 	public void uploadPhotoForIdentification(Photo photo)
-		throws DatabaseDownException, SQLException, ImageProcessingException {
-		logger.debug("UploadPhoto.uploadPhotoForIdentification : entering method");
+			throws DatabaseDownException, SQLException,
+			ImageProcessingException {
+		logger
+				.debug("UploadPhoto.uploadPhotoForIdentification : entering method");
 		logger.debug("Calling createSmallPhoto with " + photo);
 		createSmallPhoto(photo);
 
@@ -211,17 +226,19 @@ public class UploadPhoto extends AbstractUpload {
 			logger.debug("Calling insert in PhotoIdentificationDAO object");
 			dao.insert(photo);
 
-			// retrieve data from database, so all data will be loaded           
-			//SpecieDAO sDao = new SpecieDAO();
-			//Specie s = sDao.retrieve(photo.getSpecie().getId());
+			// retrieve data from database, so all data will be loaded
+			// SpecieDAO sDao = new SpecieDAO();
+			// Specie s = sDao.retrieve(photo.getSpecie().getId());
 			photo.setSpecie(new Specie());
 
 			// send email to users
 			logger.debug("Sending emails for identification...");
-            IdentificationPhotoEmailSender emailSender = new IdentificationPhotoEmailSender(photo);
-            emailSender.sendEmail();
+			IdentificationPhotoEmailSender emailSender = new IdentificationPhotoEmailSender(
+					photo);
+			emailSender.sendEmail();
 		} else {
-			throw new ImageProcessingException("Real image or thumbnail is wrong" + photo);
+			throw new ImageProcessingException(
+					"Real image or thumbnail is wrong" + photo);
 		}
 	}
 }

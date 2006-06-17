@@ -19,19 +19,20 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class ReloadPropertiesFile extends HttpServlet {
-    /**
-     * The logger object to log messages
-     */
-    static Logger logger = Logger.getLogger("net.indrix.aves");
-    
-    public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        logger.debug("ReloadPropertiesFile.doGet called");
-        PropertiesManager.reLoad();
-        logger.debug("properties reloaded");
-    }
+	/**
+	 * The logger object to log messages
+	 */
+	static Logger logger = Logger.getLogger("net.indrix.aves");
+
+	public void doGet(HttpServletRequest req, HttpServletResponse res)
+			throws ServletException, IOException {
+		logger.debug("ReloadPropertiesFile.doGet called");
+		PropertiesManager.reLoad();
+		logger.debug("properties reloaded");
+	}
 }

@@ -14,92 +14,95 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class PropertiesManager {
-    /**
-     * File of properties for WIN system
-     */
-    private static String WIN_PROPERTIES_FILE = "files_win.properties";
+	/**
+	 * File of properties for WIN system
+	 */
+	private static String WIN_PROPERTIES_FILE = "files_win.properties";
 
-    /**
-     * File of properties for LINUX system
-     */
-    private static String LINUX_PROPERTIES_FILE = "files_linux.properties";
+	/**
+	 * File of properties for LINUX system
+	 */
+	private static String LINUX_PROPERTIES_FILE = "files_linux.properties";
 
-    /**
-     * The temporary folder where images will be created
-     */
-    public static String TEMP_FOLDER = "temp.folder";
+	/**
+	 * The temporary folder where images will be created
+	 */
+	public static String TEMP_FOLDER = "temp.folder";
 
-    /**
-     * The properties
-     */
-    public static Properties properties = null;
-    
-    /**
-     * Logger object to be used by this class
-     */
-    protected static Logger logger = Logger.getLogger("net.indrix.aves");
+	/**
+	 * The properties
+	 */
+	public static Properties properties = null;
 
-    /**
-     * @return
-     */
-    private static String getFileToUse() {
-        String file = null;
-        if (SO.getSO() == SO.WIN) {
-            file = WIN_PROPERTIES_FILE;
-        } else {
-            file = LINUX_PROPERTIES_FILE;
-        }
-        return file;
-    }
+	/**
+	 * Logger object to be used by this class
+	 */
+	protected static Logger logger = Logger.getLogger("net.indrix.aves");
 
-    /**
-     * This method returns the given property from properties file
-     * 
-     * @param property The property to be retrieved
-     * 
-     * @return the value associated with the property
-     */
-    public static String getProperty(String property) {
-        
-        String propertyValue = null;
-        logger.debug("Loading property " + property);
-        if (properties == null){
+	/**
+	 * @return
+	 */
+	private static String getFileToUse() {
+		String file = null;
+		if (SO.getSO() == SO.WIN) {
+			file = WIN_PROPERTIES_FILE;
+		} else {
+			file = LINUX_PROPERTIES_FILE;
+		}
+		return file;
+	}
+
+	/**
+	 * This method returns the given property from properties file
+	 * 
+	 * @param property
+	 *            The property to be retrieved
+	 * 
+	 * @return the value associated with the property
+	 */
+	public static String getProperty(String property) {
+
+		String propertyValue = null;
+		logger.debug("Loading property " + property);
+		if (properties == null) {
 			loadPropertiesFromFile();
-        }
-        propertyValue = (String) properties.get(property);
-        if (propertyValue == null){
-            loadPropertiesFromFile();
-        }
-        logger.debug("Property retrieved with value " + propertyValue);
+		}
+		propertyValue = (String) properties.get(property);
+		if (propertyValue == null) {
+			loadPropertiesFromFile();
+		}
+		logger.debug("Property retrieved with value " + propertyValue);
 
-        return propertyValue;
-    }
+		return propertyValue;
+	}
 
-    /**
-     * This method loads the file that contains the properties 
-     * @param property
-     */
+	/**
+	 * This method loads the file that contains the properties
+	 * 
+	 * @param property
+	 */
 	private static void loadPropertiesFromFile() {
 		String file = getFileToUse();
 		try {
-		    InputStream input = PropertiesManager.class.getResourceAsStream(file);
-		    logger.debug("InputStream = " + input);
-		    properties = new Properties();
-		    properties.load(input);
+			InputStream input = PropertiesManager.class
+					.getResourceAsStream(file);
+			logger.debug("InputStream = " + input);
+			properties = new Properties();
+			properties.load(input);
 		} catch (IOException e) {
-		    logger.error("Error reading property", e);
+			logger.error("Error reading property", e);
 		}
 	}
 
-    /**
-     * This method reloads the files of properties
-     */
-    public static void reLoad(){
-        loadPropertiesFromFile();
-    }
+	/**
+	 * This method reloads the files of properties
+	 */
+	public static void reLoad() {
+		loadPropertiesFromFile();
+	}
 }

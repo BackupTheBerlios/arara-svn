@@ -20,25 +20,26 @@ import net.indrix.arara.vo.Sound;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class TestSound {
 
-	public static void main(String[] args) throws NumberFormatException, DatabaseDownException, SQLException {
-        String specieId = JOptionPane.showInputDialog(null, "Specie Id");
-        SoundDAO dao = new SoundDAO();
-        Sound sound = dao.retrieveSoundForSpecie(Integer.parseInt(specieId));
-        System.out.println("Sound retrieved..." + sound);
-        InputStream input = sound.getSound().getSound();
-        
+	public static void main(String[] args) throws NumberFormatException,
+			DatabaseDownException, SQLException {
+		String specieId = JOptionPane.showInputDialog(null, "Specie Id");
+		SoundDAO dao = new SoundDAO();
+		Sound sound = dao.retrieveSoundForSpecie(Integer.parseInt(specieId));
+		System.out.println("Sound retrieved..." + sound);
+		InputStream input = sound.getSound().getSound();
+
 		try {
-            Player player = new Player(input);
-            player.play();
+			Player player = new Player(input);
+			player.play();
 		} catch (JavaLayerException e) {
 			e.printStackTrace();
 		}
-        
+
 	}
 }

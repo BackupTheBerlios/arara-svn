@@ -12,32 +12,46 @@ import org.apache.commons.fileupload.FileItem;
 
 /**
  * @author Jefferson
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class UploadBean {
 
-    protected List familyList;
-    protected String selectedFamilyId;
-    protected List specieList;
-    protected String selectedSpecieId;
-    
-    protected String filename;
-    protected String fileSize;
-    protected FileItem fileItem;    
-    protected String selectedAgeId;
-    protected String selectedSexId;
-    protected String location;
-    
-    protected List citiesList;
-    protected String cityId;
-    protected List statesList;
-    protected String stateId;
-    protected String selectedCityId;
-    protected String selectedStateId;
-    protected String comment;
-    
+	protected List familyList;
+
+	protected String selectedFamilyId;
+
+	protected List specieList;
+
+	protected String selectedSpecieId;
+
+	protected String filename;
+
+	protected String fileSize;
+
+	protected FileItem fileItem;
+
+	protected String selectedAgeId;
+
+	protected String selectedSexId;
+
+	protected String location;
+
+	protected List citiesList;
+
+	protected String cityId;
+
+	protected List statesList;
+
+	protected String stateId;
+
+	protected String selectedCityId;
+
+	protected String selectedStateId;
+
+	protected String comment;
+
 	/**
 	 * @return
 	 */
@@ -73,26 +87,26 @@ public class UploadBean {
 		return specieList;
 	}
 
-    /**
-     * @return
-     */
-    public FileItem getFileItem() {
-        return fileItem;
-    }
+	/**
+	 * @return
+	 */
+	public FileItem getFileItem() {
+		return fileItem;
+	}
 
-    /**
-     * @return
-     */
-    public String getFileSize() {
-        return fileSize;
-    }
+	/**
+	 * @return
+	 */
+	public String getFileSize() {
+		return fileSize;
+	}
 
-    /**
-     * @return
-     */
-    public String getComment() {
-        return comment;
-    }
+	/**
+	 * @return
+	 */
+	public String getComment() {
+		return comment;
+	}
 
 	/**
 	 * @param list
@@ -101,19 +115,19 @@ public class UploadBean {
 		familyList = list;
 	}
 
-    /**
-     * @return
-     */
-    public String getSelectedAgeId() {
-        return selectedAgeId;
-    }
+	/**
+	 * @return
+	 */
+	public String getSelectedAgeId() {
+		return selectedAgeId;
+	}
 
-    /**
-     * @return
-     */
-    public String getSelectedSexId() {
-        return selectedSexId;
-    }
+	/**
+	 * @return
+	 */
+	public String getSelectedSexId() {
+		return selectedSexId;
+	}
 
 	/**
 	 * @param string
@@ -143,19 +157,19 @@ public class UploadBean {
 		specieList = list;
 	}
 
-    /**
-     * @param i
-     */
-    public void setSelectedAgeId(String i) {
-        selectedAgeId = i;
-    }
+	/**
+	 * @param i
+	 */
+	public void setSelectedAgeId(String i) {
+		selectedAgeId = i;
+	}
 
-    /**
-     * @param i
-     */
-    public void setSelectedSexId(String i) {
-        selectedSexId = i;
-    }
+	/**
+	 * @param i
+	 */
+	public void setSelectedSexId(String i) {
+		selectedSexId = i;
+	}
 
 	/**
 	 * @param item
@@ -171,122 +185,121 @@ public class UploadBean {
 		fileSize = string;
 	}
 
-    /**
-     * @param string
-     */
-    public void setComment(String string) {
-        comment = string;
-    }
+	/**
+	 * @param string
+	 */
+	public void setComment(String string) {
+		comment = string;
+	}
 
-    /**
-     * @return
-     */
-    public String getCityId() {
-        return cityId;
-    }
+	/**
+	 * @return
+	 */
+	public String getCityId() {
+		return cityId;
+	}
 
-    /**
-     * @return
-     */
-    public String getLocation() {
-        return location;
-    }
+	/**
+	 * @return
+	 */
+	public String getLocation() {
+		return location;
+	}
 
-    /**
-     * @return
-     */
-    public String getStateId() {
-        return stateId;
-    }
+	/**
+	 * @return
+	 */
+	public String getStateId() {
+		return stateId;
+	}
 
-    /**
-     * @param string
-     */
-    public void setCityId(String string) {
-        cityId = string;
-    }
+	/**
+	 * @param string
+	 */
+	public void setCityId(String string) {
+		cityId = string;
+	}
 
-    /**
-     * @param string
-     */
-    public void setLocation(String string) {
-        location = string;
-    }
+	/**
+	 * @param string
+	 */
+	public void setLocation(String string) {
+		location = string;
+	}
 
-    /**
-     * @param string
-     */
-    public void setStateId(String string) {
-        stateId = string;
-    }
+	/**
+	 * @param string
+	 */
+	public void setStateId(String string) {
+		stateId = string;
+	}
 
-    /**
-     * @return
-     */
-    public String getSelectedCityId() {
-        return selectedCityId;
-    }
+	/**
+	 * @return
+	 */
+	public String getSelectedCityId() {
+		return selectedCityId;
+	}
 
-    /**
-     * @return
-     */
-    public String getSelectedStateId() {
-        return selectedStateId;
-    }
+	/**
+	 * @return
+	 */
+	public String getSelectedStateId() {
+		return selectedStateId;
+	}
 
-    /**
-     * @param string
-     */
-    public void setSelectedCityId(String string) {
-        selectedCityId = string;
-    }
+	/**
+	 * @param string
+	 */
+	public void setSelectedCityId(String string) {
+		selectedCityId = string;
+	}
 
-    /**
-     * @param string
-     */
-    public void setSelectedStateId(String string) {
-        selectedStateId = string;
-    }
+	/**
+	 * @param string
+	 */
+	public void setSelectedStateId(String string) {
+		selectedStateId = string;
+	}
 
-    /**
-     * @return
-     */
-    public List getCitiesList() {
-        return citiesList;
-    }
+	/**
+	 * @return
+	 */
+	public List getCitiesList() {
+		return citiesList;
+	}
 
-    /**
-     * @return
-     */
-    public List getStatesList() {
-        return statesList;
-    }
+	/**
+	 * @return
+	 */
+	public List getStatesList() {
+		return statesList;
+	}
 
-    /**
-     * @param list
-     */
-    public void setCitiesList(List list) {
-        citiesList = list;
-    }
+	/**
+	 * @param list
+	 */
+	public void setCitiesList(List list) {
+		citiesList = list;
+	}
 
-    /**
-     * @param list
-     */
-    public void setStatesList(List list) {
-        statesList = list;
-    }
+	/**
+	 * @param list
+	 */
+	public void setStatesList(List list) {
+		statesList = list;
+	}
 
-
-    public String toString(){
-        StringBuffer buffer = new StringBuffer("[");
-        buffer.append(selectedFamilyId);
-        buffer.append(",");
-        buffer.append(selectedSpecieId);
-        buffer.append(",");
-        buffer.append(filename);
-        buffer.append(",");
-        buffer.append(fileSize);
-        buffer.append("]");
-        return buffer.toString();
-    }    
+	public String toString() {
+		StringBuffer buffer = new StringBuffer("[");
+		buffer.append(selectedFamilyId);
+		buffer.append(",");
+		buffer.append(selectedSpecieId);
+		buffer.append(",");
+		buffer.append(filename);
+		buffer.append(",");
+		buffer.append(fileSize);
+		buffer.append("]");
+		return buffer.toString();
+	}
 }

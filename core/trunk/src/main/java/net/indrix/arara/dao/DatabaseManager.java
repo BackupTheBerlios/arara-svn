@@ -16,10 +16,19 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.log4j.Logger;
 
 /**
- * <p>Title: worldcup</p>
- * <p>Description: Game e Bet</p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: Indrix.NET</p>
+ * <p>
+ * Title: worldcup
+ * </p>
+ * <p>
+ * Description: Game e Bet
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Indrix.NET
+ * </p>
+ * 
  * @author Jefferson Rodrigues and Rafael Cuba
  * @version 0.1
  */
@@ -27,8 +36,11 @@ import org.apache.log4j.Logger;
 public class DatabaseManager {
 
 	private static String site;
+
 	private static String database;
+
 	private static String user;
+
 	private static String password;
 
 	/**
@@ -60,9 +72,11 @@ public class DatabaseManager {
 	/**
 	 * This method returns a Connection from the pool
 	 * 
-	 * @return a <code>Connection</code> object 
+	 * @return a <code>Connection</code> object
 	 * 
-	 * @throws DatabaseDownException If no connection was retrieved by the <code>DriverManager</code>
+	 * @throws DatabaseDownException
+	 *             If no connection was retrieved by the
+	 *             <code>DriverManager</code>
 	 */
 	public static Connection getConnection() throws DatabaseDownException {
 		Connection c = null;
@@ -78,48 +92,52 @@ public class DatabaseManager {
 
 	/**
 	 * Retrieve the connection to the database
+	 * 
 	 * @return
 	 */
-	private static Connection retrieveConnection() throws NamingException, SQLException {
+	private static Connection retrieveConnection() throws NamingException,
+			SQLException {
 		Connection c = null;
 
 		if (SO.getSO() == SO.WIN) {
-//			if (eTeste()) {
-//				logger.error("Retrieving connection for WIN");
-//				c =
-//					DriverManager.getConnection(
-//						"jdbc:mysql://localhost/passaros?autoReconnect=true",
-//						"jeff",
-//						"jeff");
-//			} else {
-				Context initContext = new InitialContext();
-				Context envContext = (Context) initContext.lookup("java:/comp/env");
-				DataSource ds = (DataSource) envContext.lookup("aves");
-				c = ds.getConnection();
-//			}
+			// if (eTeste()) {
+			// logger.error("Retrieving connection for WIN");
+			// c =
+			// DriverManager.getConnection(
+			// "jdbc:mysql://localhost/passaros?autoReconnect=true",
+			// "jeff",
+			// "jeff");
+			// } else {
+			Context initContext = new InitialContext();
+			Context envContext = (Context) initContext.lookup("java:/comp/env");
+			DataSource ds = (DataSource) envContext.lookup("aves");
+			c = ds.getConnection();
+			// }
 		} else {
 			if (!initialized) {
-                logger.error("DatabaseManager.retrieveConnection : initializing...");
+				logger
+						.error("DatabaseManager.retrieveConnection : initializing...");
 				initialize();
 				initialized = true;
 			}
-			String url = "jdbc:mysql://" + site + "/" + database + "?autoReconnect=true";
+			String url = "jdbc:mysql://" + site + "/" + database
+					+ "?autoReconnect=true";
 			c = DriverManager.getConnection(url, user, password);
 		}
 		return c;
 
 	}
 
-//	/**
-//	 * @return
-//	 */
-//	private static boolean eTeste() {
-//		String property = System.getProperty("java.home");
-//        if ("C:\\Arquivos de programas\\Java\\j2re1.4.2_08".equals(property)){
-//            return true;
-//        }
-//		return false;
-//	}
+	// /**
+	// * @return
+	// */
+	// private static boolean eTeste() {
+	// String property = System.getProperty("java.home");
+	// if ("C:\\Arquivos de programas\\Java\\j2re1.4.2_08".equals(property)){
+	// return true;
+	// }
+	// return false;
+	// }
 
 	/**
 	 * 

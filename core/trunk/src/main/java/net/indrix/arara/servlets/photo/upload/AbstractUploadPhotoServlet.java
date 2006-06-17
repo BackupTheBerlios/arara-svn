@@ -26,18 +26,19 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Jefferson
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public abstract class AbstractUploadPhotoServlet
-	extends AbstractServlet {
+public abstract class AbstractUploadPhotoServlet extends AbstractServlet {
 
 	/**
 	 * Logger object to be used by this class
 	 */
 	protected static Logger logger = Logger.getLogger("net.indrix.aves");
-	protected static Logger loggerActions = Logger.getLogger("net.indrix.actions");
+
+	protected static Logger loggerActions = Logger
+			.getLogger("net.indrix.actions");
 
 	/**
 	 * @param data
@@ -46,8 +47,8 @@ public abstract class AbstractUploadPhotoServlet
 	protected boolean updateBean(Map data, UploadPhotoBean bean, List errors) {
 		boolean status = false;
 
-        PhotoBeanManager manager = getBeanManager();
-        manager.updateBean(data, bean, errors, true);
+		PhotoBeanManager manager = getBeanManager();
+		manager.updateBean(data, bean, errors, true);
 
 		if (!errors.isEmpty()) {
 			status = false;
@@ -57,20 +58,21 @@ public abstract class AbstractUploadPhotoServlet
 		return status;
 	}
 
-    /**
-     * Return the bean manager to be used
-     * 
-     * @return a new BeanManager instance
-     */
+	/**
+	 * Return the bean manager to be used
+	 * 
+	 * @return a new BeanManager instance
+	 */
 	protected PhotoBeanManager getBeanManager() {
 		return new PhotoBeanManager();
 	}
 
-	/** 
-	 * @param photo 
+	/**
+	 * @param photo
 	 */
 	protected void addPhotoToDatabase(Photo photo)
-		throws DatabaseDownException, SQLException, ImageProcessingException {
+			throws DatabaseDownException, SQLException,
+			ImageProcessingException {
 	}
 
 	/**

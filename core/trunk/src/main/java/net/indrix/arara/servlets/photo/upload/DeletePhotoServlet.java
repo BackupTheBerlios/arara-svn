@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
@@ -36,8 +36,9 @@ public class DeletePhotoServlet extends HttpServlet {
 	 * Logger object
 	 */
 	static Logger logger = Logger.getLogger("net.indrix.aves");
+
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
-		throws ServletException, IOException {
+			throws ServletException, IOException {
 		logger.debug("DeletePhotoServlet.doGet called...");
 
 		RequestDispatcher dispatcher = null;
@@ -53,7 +54,7 @@ public class DeletePhotoServlet extends HttpServlet {
 			int id = Integer.parseInt(photoId);
 			model.delete(id);
 			logger.debug("Photo deleted..." + photoId);
-                      
+
 			nextPage = ServletConstants.DELETED_PAGE;
 		} catch (DatabaseDownException e) {
 			logger.debug("DatabaseDownException.....");
@@ -64,7 +65,7 @@ public class DeletePhotoServlet extends HttpServlet {
 		}
 		if (!errors.isEmpty()) {
 			logger.debug("errors is not null.");
-			// put errors in request 
+			// put errors in request
 			req.setAttribute(ServletConstants.ERRORS_KEY, errors);
 			nextPage = ServletConstants.UPLOAD_PAGE;
 		}

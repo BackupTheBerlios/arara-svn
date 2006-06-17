@@ -10,14 +10,16 @@ import java.io.InputStream;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class SoundFile {
-    private InputStream sound;
-    private int fileSize;
-    private String filename;
+	private InputStream sound;
+
+	private int fileSize;
+
+	private String filename;
 
 	/**
 	 * @return
@@ -40,12 +42,12 @@ public class SoundFile {
 		return fileSize;
 	}
 
-    /**
-     * @param stream
-     */
-    public void setSound(InputStream stream) {
-        sound = stream;
-    }
+	/**
+	 * @param stream
+	 */
+	public void setSound(InputStream stream) {
+		sound = stream;
+	}
 
 	/**
 	 * @param string

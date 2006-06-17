@@ -1,6 +1,6 @@
 package net.indrix.arara.tools.crypt;
 
-import java.io.*;
+import java.io.UnsupportedEncodingException;
 
 /**
   Esta classe implementa o metodo de criptografia baseado na operaçao logica XOR.

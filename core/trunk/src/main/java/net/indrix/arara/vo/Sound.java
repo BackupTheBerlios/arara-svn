@@ -10,32 +10,42 @@ import java.util.Date;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class Sound {
 
-    private int id;
-    private Specie specie;
-    private SoundFile sound;
-    private Date postDate;
-    private User user;
-    private Age age;
-    private Sex sex;
-    private String location;
-    private City city;
-    private String comment;
-    private String relativePath;
-    
-    public Sound(){
-        id = -1;
-        sound = new SoundFile();
-        age = new Age();
-        sex = new Sex();
-        city = new City();
-    }
-    
+	private int id;
+
+	private Specie specie;
+
+	private SoundFile sound;
+
+	private Date postDate;
+
+	private User user;
+
+	private Age age;
+
+	private Sex sex;
+
+	private String location;
+
+	private City city;
+
+	private String comment;
+
+	private String relativePath;
+
+	public Sound() {
+		id = -1;
+		sound = new SoundFile();
+		age = new Age();
+		sex = new Sex();
+		city = new City();
+	}
+
 	/**
 	 * @return
 	 */
@@ -64,64 +74,64 @@ public class Sound {
 		return specie;
 	}
 
-    /**
-     * @return
-     */
-    public User getUser() {
-        return user;
-    }
+	/**
+	 * @return
+	 */
+	public User getUser() {
+		return user;
+	}
 
-    /**
-     * @return
-     */
-    public Age getAge() {
-        return age;
-    }
+	/**
+	 * @return
+	 */
+	public Age getAge() {
+		return age;
+	}
 
-    /**
-     * @return
-     */
-    public Sex getSex() {
-        return sex;
-    }
+	/**
+	 * @return
+	 */
+	public Sex getSex() {
+		return sex;
+	}
 
-    /**
-     * Getter method for the comment attribute
-     * 
-     * @return The comment attribute
-     */
-    public String getComment() {
-        return comment;
-    }
-    
-    /**
-     * @return
-     */
-    public City getCity() {
-        return city;
-    }
+	/**
+	 * Getter method for the comment attribute
+	 * 
+	 * @return The comment attribute
+	 */
+	public String getComment() {
+		return comment;
+	}
 
-    /**
-     * @return
-     */
-    public String getLocation() {
-        return location;
-    }
+	/**
+	 * @return
+	 */
+	public City getCity() {
+		return city;
+	}
 
-    /**
-     * @return
-     */
-    public String getRelativePath() {
-        return relativePath;
-    }
+	/**
+	 * @return
+	 */
+	public String getLocation() {
+		return location;
+	}
 
-    /**
-     * @return
-     */
-    public String getRelativePathAsLink() {
-        String path = relativePath.replace('\\', '/');
-        return path;
-    }
+	/**
+	 * @return
+	 */
+	public String getRelativePath() {
+		return relativePath;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getRelativePathAsLink() {
+		String path = relativePath.replace('\\', '/');
+		return path;
+	}
 
 	/**
 	 * @param i
@@ -150,6 +160,7 @@ public class Sound {
 	public void setSpecie(Specie specie) {
 		this.specie = specie;
 	}
+
 	/**
 	 * @param user
 	 */
@@ -170,69 +181,70 @@ public class Sound {
 	public void setSex(Sex sex) {
 		this.sex = sex;
 	}
-    
-    /**
-     * Setter method for the comment attribute
-     * 
-     * @param string The new value to the attribute
-     */
-    public void setComment(String string) {
-        comment = string;
-    }
 
-    /**
-     * @param string
-     */
-    public void setCity(City city) {
-        this.city = city;
-    }
+	/**
+	 * Setter method for the comment attribute
+	 * 
+	 * @param string
+	 *            The new value to the attribute
+	 */
+	public void setComment(String string) {
+		comment = string;
+	}
 
-    /**
-     * @param string
-     */
-    public void setLocation(String string) {
-        location = string;
-    }
+	/**
+	 * @param string
+	 */
+	public void setCity(City city) {
+		this.city = city;
+	}
 
-    /**
-     * @param string
-     */
-    public void setRelativePath(String string) {
-        relativePath = string;
-    }
- 
-    public String toString(){
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(id);
-        buffer.append(",");
+	/**
+	 * @param string
+	 */
+	public void setLocation(String string) {
+		location = string;
+	}
 
-        if (specie != null) {
-            buffer.append(specie.getId());
-            buffer.append(",");
-            buffer.append(specie.getName());
-            buffer.append(",");
+	/**
+	 * @param string
+	 */
+	public void setRelativePath(String string) {
+		relativePath = string;
+	}
 
-            if (specie.getFamily() != null) {
-                buffer.append(specie.getFamily().getName());
-                buffer.append(",");
-            }
-            
-            buffer.append(specie.getCommonNamesString());
-            buffer.append(",");
-        }
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(id);
+		buffer.append(",");
 
-        if (age != null){
-            buffer.append(age.getId() + " | " + age.getAge());
-            buffer.append(",");           
-        }
-       
-        if (sex != null){
-            buffer.append(sex.getId() + " | " + sex.getSex());
-            buffer.append(",");           
-        }
+		if (specie != null) {
+			buffer.append(specie.getId());
+			buffer.append(",");
+			buffer.append(specie.getName());
+			buffer.append(",");
 
-        buffer.append("]");
+			if (specie.getFamily() != null) {
+				buffer.append(specie.getFamily().getName());
+				buffer.append(",");
+			}
 
-        return buffer.toString();
-    }       
+			buffer.append(specie.getCommonNamesString());
+			buffer.append(",");
+		}
+
+		if (age != null) {
+			buffer.append(age.getId() + " | " + age.getAge());
+			buffer.append(",");
+		}
+
+		if (sex != null) {
+			buffer.append(sex.getId() + " | " + sex.getSex());
+			buffer.append(",");
+		}
+
+		buffer.append("]");
+
+		return buffer.toString();
+	}
 }

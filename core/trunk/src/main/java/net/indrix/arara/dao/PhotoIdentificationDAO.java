@@ -23,41 +23,38 @@ import net.indrix.arara.vo.User;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class PhotoIdentificationDAO extends AbstractDAO implements PhotoConstants {
-	private static final String INSERT_FOR_IDENTIFICATION =
-		"INSERT INTO photo"
+public class PhotoIdentificationDAO extends AbstractDAO implements
+		PhotoConstants {
+	private static final String INSERT_FOR_IDENTIFICATION = "INSERT INTO photo"
 			+ "(specie_id, specie_family_id, age_id, sex_id, user_id, date, place, camera, lens, film, "
 			+ "image, w, h, smallImage, sW, sH, post_date, "
 			+ "comment, imageSize, smallImageSize, city_id) "
 			+ "values (-1, -1, -1, -1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-	private static final String INSERT_IDENTIFICATION_FOR_PHOTO =
-		"INSERT INTO user_identifies_photo"
+	private static final String INSERT_IDENTIFICATION_FOR_PHOTO = "INSERT INTO user_identifies_photo"
 			+ "(user_id, photo_id, specie_id, sex_id, age_id, comment, date) "
 			+ "values (?, ?, ?, ?, ?, ?, ?)";
 
 	/**
-	 * SQL to select id of all photos  
+	 * SQL to select id of all photos
 	 */
-	private static final String SELECT_IDS_FOR_ALL =
-		"SELECT p.id " + "from photo p " + "where p.specie_id = -1";
+	private static final String SELECT_IDS_FOR_ALL = "SELECT p.id "
+			+ "from photo p " + "where p.specie_id = -1";
 
 	/**
 	 * This sql statement selects all comments for a given photo
 	 */
-	private static final String SELECT_IDENTIFICATIONS =
-		"SELECT id, specie_id s_id, user_id, photo_id, sex_id, age_id, comment, date "
+	private static final String SELECT_IDENTIFICATIONS = "SELECT id, specie_id s_id, user_id, photo_id, sex_id, age_id, comment, date "
 			+ "FROM user_identifies_photo where photo_id = ? order by date desc";
 
 	/**
 	 * This sql statement selects all users that had identified a given photo
 	 */
-	private static final String SELECT_USERS_FOR_IDENTIFICATION =
-		"SELECT distinct ui.user_id id, u.name, u.email, u.language "
+	private static final String SELECT_USERS_FOR_IDENTIFICATION = "SELECT distinct ui.user_id id, u.name, u.email, u.language "
 			+ "FROM user u, user_identifies_photo ui where ui.user_id = u.id and u.emailOnNewIdPhoto = 1 and ui.photo_id = ?";
 
 	/**
@@ -83,43 +80,54 @@ public class PhotoIdentificationDAO extends AbstractDAO implements PhotoConstant
 	/**
 	 * This method retrives the identifications for the given photo
 	 * 
-	 * @param photo The photo to have its identifications retrieved
+	 * @param photo
+	 *            The photo to have its identifications retrieved
 	 * 
 	 * @return A list of <code>PhotoIdentification</code> objects
 	 */
-	public List retrieveIdentifications(Photo photo) throws DatabaseDownException, SQLException {
+	public List retrieveIdentifications(Photo photo)
+			throws DatabaseDownException, SQLException {
 		this.photo = photo;
-		List list = super.retrieveObjects(photo.getId(), SELECT_IDENTIFICATIONS);
+		List list = super
+				.retrieveObjects(photo.getId(), SELECT_IDENTIFICATIONS);
 		return list;
 	}
 
 	/**
 	 * This method verifies wheter an Id exists
 	 * 
-	 * @param id The id of the photo
+	 * @param id
+	 *            The id of the photo
 	 * 
 	 * @return a VO object
 	 * 
-	 * @throws DatabaseDownException If the database is down
-	 * @throws SQLException If some SQL Exception occurs
+	 * @throws DatabaseDownException
+	 *             If the database is down
+	 * @throws SQLException
+	 *             If some SQL Exception occurs
 	 */
-	public boolean isPhotoForIdentification(int id) throws DatabaseDownException, SQLException {
+	public boolean isPhotoForIdentification(int id)
+			throws DatabaseDownException, SQLException {
 		return photoDao.isPhotoForIdentification(id);
 	}
 
 	/**
 	 * This method retrieves all users that had identified the given photo.
-	 *  
-	 * @param photoId The id of the photo with identifications
+	 * 
+	 * @param photoId
+	 *            The id of the photo with identifications
 	 * 
 	 * @return A list of <code>User</code> objects
 	 * 
-	 * @throws DatabaseDownException If the database is down
-	 * @throws SQLException If some SQL Exception occurs
+	 * @throws DatabaseDownException
+	 *             If the database is down
+	 * @throws SQLException
+	 *             If some SQL Exception occurs
 	 */
 	public List retrieveUsersForIdentification(int photoId)
-		throws DatabaseDownException, SQLException {
-		logger.info("PhotoIdentificationDAO.retrieveUsersForIdentification: entering method...");
+			throws DatabaseDownException, SQLException {
+		logger
+				.info("PhotoIdentificationDAO.retrieveUsersForIdentification: entering method...");
 		List list = new ArrayList();
 		Connection conn = DatabaseManager.getConnection();
 		PreparedStatement stmt = null;
@@ -137,13 +145,15 @@ public class PhotoIdentificationDAO extends AbstractDAO implements PhotoConstant
 				user.setId(rs.getInt(UserDAO.ID_COLUMN));
 				user.setName(rs.getString(UserDAO.NAME_COLUMN));
 				user.setEmail(rs.getString(UserDAO.EMAIL_COLUMN));
-                user.setLanguage(rs.getString(UserDAO.LANGUAGE_COLUMN));
+				user.setLanguage(rs.getString(UserDAO.LANGUAGE_COLUMN));
 				list.add(user);
 				logger.debug("Retrieved user " + user);
 			}
 		} catch (SQLException e) {
 			logger.error("AbstractDAO.retrieve : could not retrieve data ");
-			logger.error("Error in SQL : " + SELECT_USERS_FOR_IDENTIFICATION, e);
+			logger
+					.error("Error in SQL : " + SELECT_USERS_FOR_IDENTIFICATION,
+							e);
 			throw e;
 		} finally {
 			closeResultSet(rs);
@@ -154,9 +164,11 @@ public class PhotoIdentificationDAO extends AbstractDAO implements PhotoConstant
 	}
 
 	/**
-	 * This method creates a <code>Photo</code> object with the data from database
+	 * This method creates a <code>Photo</code> object with the data from
+	 * database
 	 * 
-	 * @param rs The <code>ResultSet<code> object to retrieve the data
+	 * @param rs
+	 *            The <code>ResultSet<code> object to retrieve the data
 	 * 
 	 * @return A new <code>Photo</code> object 
 	 * 
@@ -188,8 +200,10 @@ public class PhotoIdentificationDAO extends AbstractDAO implements PhotoConstant
 	/**
 	 * This method sets the id into the object
 	 * 
-	 * @param id The id value
-	 * @param object The object to set the id
+	 * @param id
+	 *            The id value
+	 * @param object
+	 *            The object to set the id
 	 */
 	protected void setObjectId(int id, Object object) throws SQLException {
 		PhotoIdentification identification = (PhotoIdentification) object;
@@ -197,12 +211,16 @@ public class PhotoIdentificationDAO extends AbstractDAO implements PhotoConstant
 	}
 
 	/**
-	 * This method set the values into statement, before running the SQL in insert method
+	 * This method set the values into statement, before running the SQL in
+	 * insert method
 	 * 
-	 * @param stmt   The statement to insert the values to sql
-	 * @param object The object to retrieve the values from
+	 * @param stmt
+	 *            The statement to insert the values to sql
+	 * @param object
+	 *            The object to retrieve the values from
 	 */
-	protected void setStatementValues(PreparedStatement stmt, Object object) throws SQLException {
+	protected void setStatementValues(PreparedStatement stmt, Object object)
+			throws SQLException {
 		PhotoIdentification identification = (PhotoIdentification) object;
 
 		stmt.setInt(1, identification.getUser().getId());
@@ -212,15 +230,17 @@ public class PhotoIdentificationDAO extends AbstractDAO implements PhotoConstant
 		stmt.setInt(5, identification.getAge().getId());
 		stmt.setString(6, identification.getComment());
 
-		logger.debug("Comment from identification:" + identification.getComment());
+		logger.debug("Comment from identification:"
+				+ identification.getComment());
 		stmt.setTimestamp(7, getTimestamp(getSQLDate()));
 	}
 
 	/**
-	 * @see net.indrix.dao.AbstractDAO#setStatementValuesForUpdate(java.sql.PreparedStatement, java.lang.Object)
+	 * @see net.indrix.dao.AbstractDAO#setStatementValuesForUpdate(java.sql.PreparedStatement,
+	 *      java.lang.Object)
 	 */
-	protected void setStatementValuesForUpdate(PreparedStatement stmt, Object object)
-		throws SQLException {
+	protected void setStatementValuesForUpdate(PreparedStatement stmt,
+			Object object) throws SQLException {
 	}
 
 	/**
@@ -232,14 +252,16 @@ public class PhotoIdentificationDAO extends AbstractDAO implements PhotoConstant
 		try {
 			specie = specieDao.retrieve(id);
 		} catch (DatabaseDownException e) {
-			logger.error(
-				"PhotoIdentificationDAO.createObject : Could not retrieve specie for identification...",
-				e);
+			logger
+					.error(
+							"PhotoIdentificationDAO.createObject : Could not retrieve specie for identification...",
+							e);
 			throw new SQLException("Error retrieving user for photo " + photo);
 		} catch (SQLException e) {
-			logger.error(
-				"PhotoIdentificationDAO.createObject : Could not retrieve specie for identification...",
-				e);
+			logger
+					.error(
+							"PhotoIdentificationDAO.createObject : Could not retrieve specie for identification...",
+							e);
 			throw e;
 		}
 		return specie;
@@ -253,23 +275,26 @@ public class PhotoIdentificationDAO extends AbstractDAO implements PhotoConstant
 		User user = null;
 		try {
 			user = userDao.retrieve(userId);
-			//photo.setUser(user);
+			// photo.setUser(user);
 		} catch (DatabaseDownException e) {
-			logger.error(
-				"PhotoIdentificationDAO.createObject : Could not retrieve user for identification...",
-				e);
+			logger
+					.error(
+							"PhotoIdentificationDAO.createObject : Could not retrieve user for identification...",
+							e);
 			throw new SQLException("Error retrieving user for photo " + photo);
 		} catch (SQLException e) {
-			logger.error(
-				"PhotoIdentificationDAO.createObject : Could not retrieve user for identification...",
-				e);
+			logger
+					.error(
+							"PhotoIdentificationDAO.createObject : Could not retrieve user for identification...",
+							e);
 			throw e;
 		}
 		return user;
 	}
 
 	/**
-	 * This method returns the SQL statement to insert a new object into database
+	 * This method returns the SQL statement to insert a new object into
+	 * database
 	 * 
 	 * @return The insert SQL statement
 	 */

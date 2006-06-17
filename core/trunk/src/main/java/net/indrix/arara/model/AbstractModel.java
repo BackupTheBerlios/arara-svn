@@ -10,13 +10,13 @@ import java.util.Locale;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public abstract class AbstractModel {
-    
-    private Locale locale;
+
+	private Locale locale;
 
 	/**
 	 * @return

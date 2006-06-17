@@ -9,9 +9,9 @@ package net.indrix.arara.servlets.sound.display;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
 
+import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.servlets.pagination.PaginationController;
 import net.indrix.arara.servlets.pagination.SoundPaginationController;
-import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.utils.PropertiesManager;
 
 import org.apache.log4j.Logger;

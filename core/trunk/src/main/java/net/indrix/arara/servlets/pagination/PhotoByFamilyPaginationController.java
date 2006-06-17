@@ -13,11 +13,12 @@ import net.indrix.arara.dao.DatabaseDownException;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class PhotoByFamilyPaginationController extends PhotoPaginationController {
+public class PhotoByFamilyPaginationController extends
+		PhotoPaginationController {
 
 	/**
 	 * @param photosPerPage

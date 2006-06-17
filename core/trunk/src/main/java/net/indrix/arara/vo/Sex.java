@@ -8,18 +8,19 @@ package net.indrix.arara.vo;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class Sex {
-    private int id;
-    private String sex;
-    
-    public Sex(){
-        id = -1;
-    }
-    
+	private int id;
+
+	private String sex;
+
+	public Sex() {
+		id = -1;
+	}
+
 	/**
 	 * @return
 	 */
@@ -48,8 +49,8 @@ public class Sex {
 		sex = string;
 	}
 
-    public String toString(){
-        return id + ", " + sex;
-    }
+	public String toString() {
+		return id + ", " + sex;
+	}
 
 }

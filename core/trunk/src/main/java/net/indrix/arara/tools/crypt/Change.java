@@ -1,10 +1,10 @@
 package net.indrix.arara.tools.crypt;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Connection;
 
-import net.indrix.arara.dao.*;
+import net.indrix.arara.dao.DatabaseManager;
 
 /**
  * <p>Title: worldcup</p>

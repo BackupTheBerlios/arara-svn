@@ -15,14 +15,15 @@ import net.indrix.arara.vo.Photo;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class PhotoPaginationController extends PaginationController {
 
 	private boolean identification;
-    protected int id;
+
+	protected int id;
 
 	/**
 	 * The model to use to retrieve data from database
@@ -38,10 +39,11 @@ public class PhotoPaginationController extends PaginationController {
 		this.identification = identification;
 	}
 
-    /**
-     * @see net.indrix.arara.servlets.pagination.PaginationController#retrieveDataForPage()
-     */
-	protected void retrieveDataForPage() throws DatabaseDownException, SQLException {
+	/**
+	 * @see net.indrix.arara.servlets.pagination.PaginationController#retrieveDataForPage()
+	 */
+	protected void retrieveDataForPage() throws DatabaseDownException,
+			SQLException {
 		int end = currentIndex + dataPerPage;
 		int size = listOfData.size();
 		logger.debug("CurrentIndex = " + currentIndex);
@@ -49,13 +51,16 @@ public class PhotoPaginationController extends PaginationController {
 		logger.debug("List size = " + size);
 		logger.debug("Adding photos...");
 		int i = 0;
-		for (i = currentIndex;(i < end) && (i < size); i++) {
+		for (i = currentIndex; (i < end) && (i < size); i++) {
 			int id = ((Integer) listOfData.get(i)).intValue();
 			Photo photo = null;
-			logger.debug("PaginationController.doAction: retrieving photo (thumbnail) " + id);
+			logger
+					.debug("PaginationController.doAction: retrieving photo (thumbnail) "
+							+ id);
 			photo = model.retrieveThumbnail(id);
 			if (photo != null) {
-				logger.debug("PaginationController.doAction: photo retrieved. Adding to list");
+				logger
+						.debug("PaginationController.doAction: photo retrieved. Adding to list");
 				viewOfList.add(photo);
 			} else {
 				logger.debug("PaginationController.doAction: photo not found");
@@ -70,14 +75,15 @@ public class PhotoPaginationController extends PaginationController {
 	 * @see net.indrix.arara.servlets.pagination.PaginationController#retrieveAllData()
 	 */
 	protected List retrieveAllData() throws DatabaseDownException, SQLException {
-        List listOfPhotos = null;
-        if (identification){
-            listOfPhotos = model.retrievePhotosForIdentification();
-        } else {
-            listOfPhotos = model.retrievePhotoIDs();
-        }
+		List listOfPhotos = null;
+		if (identification) {
+			listOfPhotos = model.retrievePhotosForIdentification();
+		} else {
+			listOfPhotos = model.retrievePhotoIDs();
+		}
 		return listOfPhotos;
 	}
+
 	/**
 	 * @return
 	 */

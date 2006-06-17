@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
@@ -38,7 +38,7 @@ public class SearchPhotosBySpecieServlet extends AbstractSearchPhotosServlet {
 	static Logger logger = Logger.getLogger("net.indrix.aves");
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
-		throws ServletException, IOException {
+			throws ServletException, IOException {
 
 		logger.debug("SearchPhotosBySpecieServlet.doGet starting...");
 		RequestDispatcher dispatcher = null;
@@ -56,26 +56,28 @@ public class SearchPhotosBySpecieServlet extends AbstractSearchPhotosServlet {
 		}
 
 		String action = req.getParameter(ServletConstants.ACTION);
-		logger.debug("SearchPhotosBySpecieServlet.doGet retrieved action " + action);
+		logger.debug("SearchPhotosBySpecieServlet.doGet retrieved action "
+				+ action);
 
 		PhotoModel model = new PhotoModel();
 		logger.debug("Calling retrieveForSpecie(" + specieId + ")");
 		List list = null;
-		PhotoPaginationController controller =
-			(PhotoPaginationController) getPaginationController(session,
-				false,
-				PAGINATION_FOR_ALL_SPECIE);
+		PhotoPaginationController controller = (PhotoPaginationController) getPaginationController(
+				session, false, PAGINATION_FOR_ALL_SPECIE);
 		controller.setId(specieId);
-        try {
-            list = controller.doAction(action);
-        } catch (InvalidControllerException e) {
-            try {
-                list = controller.doAction(ServletConstants.BEGIN);
-            } catch (InvalidControllerException e1) {
-                // this should never happend
-                logger.fatal("InvalidControllerException when doing BEGIN action...", e1);
-            }
-        }
+		try {
+			list = controller.doAction(action);
+		} catch (InvalidControllerException e) {
+			try {
+				list = controller.doAction(ServletConstants.BEGIN);
+			} catch (InvalidControllerException e1) {
+				// this should never happend
+				logger
+						.fatal(
+								"InvalidControllerException when doing BEGIN action...",
+								e1);
+			}
+		}
 
 		Iterator it = list.iterator();
 		while (it.hasNext()) {
@@ -87,19 +89,21 @@ public class SearchPhotosBySpecieServlet extends AbstractSearchPhotosServlet {
 		session.setAttribute(ServletConstants.PHOTOS_LIST, list);
 		nextPage = ServletConstants.ALL_PHOTOS_PAGE;
 
-        // adding the user id to request, so it can be sent back by view
-        req.setAttribute(ServletConstants.ID, specieIdStr);
+		// adding the user id to request, so it can be sent back by view
+		req.setAttribute(ServletConstants.ID, specieIdStr);
 		if (user != null) {
-			loggerActions.info("User " + user.getLogin() + " has selected photos by specie.");
+			loggerActions.info("User " + user.getLogin()
+					+ " has selected photos by specie.");
 		} else {
-            String ip = req.getRemoteAddr();               
-            Locale locale = req.getLocale();
-            loggerActions.info("Anonymous "+ " from IP " + ip + "(" + locale + ") has selected all photos by specie.");
+			String ip = req.getRemoteAddr();
+			Locale locale = req.getLocale();
+			loggerActions.info("Anonymous " + " from IP " + ip + "(" + locale
+					+ ") has selected all photos by specie.");
 		}
 
 		if (!errors.isEmpty()) {
 			logger.debug("errors is not null.");
-			// put errors in request 
+			// put errors in request
 			req.setAttribute(ServletConstants.ERRORS_KEY, errors);
 			nextPage = ServletConstants.UPLOAD_PAGE;
 		}

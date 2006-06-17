@@ -17,7 +17,7 @@ import net.indrix.arara.vo.Sound;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
@@ -29,8 +29,8 @@ public class UploadSound extends AbstractUpload {
 	/**
 	 * @param sound
 	 */
-	public void uploadSound(Sound sound)
-		throws DatabaseDownException, SQLException, SoundProcessingException {
+	public void uploadSound(Sound sound) throws DatabaseDownException,
+			SQLException, SoundProcessingException {
 		String filename = sound.getSound().getFilename();
 		if (!checkExtension(filename)) {
 			throw new SoundProcessingException("Invalid file extension");
@@ -41,17 +41,18 @@ public class UploadSound extends AbstractUpload {
 
 		try {
 			SoundFileManager manager = new SoundFileManager(sound);
-            manager.writeFile();
+			manager.writeFile();
 		} catch (FileNotFoundException e) {
 			dao.delete(sound.getId());
-            throw new SoundProcessingException("Could not write sound file...");
+			throw new SoundProcessingException("Could not write sound file...");
 		}
 	}
 
 	/**
 	 * This method verifies if the given file is valid
 	 * 
-	 * @param filename The file uploaded by user
+	 * @param filename
+	 *            The file uploaded by user
 	 * 
 	 * @return true if file extension is valid, false otherwise
 	 */

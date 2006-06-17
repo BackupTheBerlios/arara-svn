@@ -15,24 +15,29 @@ import net.indrix.arara.servlets.ServletConstants;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class PhotoBeanManager extends BeanManager {
-    protected void updateMediaData(Map data, UploadBean bean, List errors, boolean validate) {
-        logger.debug("PhotoBeanManager.updateMediaData: updating media data...");
-        updateMediaData(data, (UploadPhotoBean)bean, errors, validate);
-    }
+	protected void updateMediaData(Map data, UploadBean bean, List errors,
+			boolean validate) {
+		logger
+				.debug("PhotoBeanManager.updateMediaData: updating media data...");
+		updateMediaData(data, (UploadPhotoBean) bean, errors, validate);
+	}
 
 	/**
 	 * This method updates in the bean data related to the photo
+	 * 
 	 * @param data
 	 * @param bean
 	 * @param errors
 	 */
-	protected void updateMediaData(Map data, UploadPhotoBean bean, List errors, boolean validate) {
-        logger.debug("PhotoBeanManager.updateMediaData: updating media data...");
+	protected void updateMediaData(Map data, UploadPhotoBean bean, List errors,
+			boolean validate) {
+		logger
+				.debug("PhotoBeanManager.updateMediaData: updating media data...");
 		logger.debug(bean);
 		logger.debug(data);
 		bean.setCamera((String) data.get(ServletConstants.CAMERA));

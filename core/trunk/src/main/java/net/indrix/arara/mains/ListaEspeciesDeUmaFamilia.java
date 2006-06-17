@@ -18,13 +18,14 @@ import net.indrix.arara.vo.Specie;
 
 /**
  * @author Jefferson_Angelica
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class ListaEspeciesDeUmaFamilia {
-	public static void main(String args[]) throws DatabaseDownException, SQLException{
-		if (args.length == 0){
+	public static void main(String args[]) throws DatabaseDownException,
+			SQLException {
+		if (args.length == 0) {
 			System.out.println("ERRO NOS PARAMETROS");
 			System.exit(0);
 		}
@@ -32,12 +33,12 @@ public class ListaEspeciesDeUmaFamilia {
 		System.out.println("Data for " + familia);
 		FamilyDAO fDao = new FamilyDAO();
 		Family f = fDao.retrieve(familia);
-		
+
 		SpecieDAO sDao = new SpecieDAO();
 		List l = sDao.retrieveForFamily(f);
 		Iterator it = l.iterator();
-		while (it.hasNext()){
-			Specie s = (Specie)it.next();
+		while (it.hasNext()) {
+			Specie s = (Specie) it.next();
 			System.out.println(s);
 		}
 	}

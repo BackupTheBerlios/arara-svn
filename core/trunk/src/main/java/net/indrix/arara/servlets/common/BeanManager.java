@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
@@ -33,7 +33,8 @@ public class BeanManager {
 	 * @param data
 	 * @param bean
 	 */
-	public boolean updateBean(Map data, UploadBean bean, List errors, boolean validate) {
+	public boolean updateBean(Map data, UploadBean bean, List errors,
+			boolean validate) {
 		boolean status = false;
 
 		updateBirdData(data, bean, errors, validate);
@@ -49,11 +50,13 @@ public class BeanManager {
 
 	/**
 	 * This method updates in the bean data related to the bird
+	 * 
 	 * @param data
 	 * @param bean
 	 * @param errors
 	 */
-	protected void updateBirdData(Map data, UploadBean bean, List errors, boolean validate) {
+	protected void updateBirdData(Map data, UploadBean bean, List errors,
+			boolean validate) {
 		logger.debug("BeanManager.updateBirdData: updating bird data...");
 		String familyId = (String) data.get(ServletConstants.FAMILY_ID);
 		String specieId = (String) data.get(ServletConstants.SPECIE_ID);
@@ -63,12 +66,12 @@ public class BeanManager {
 			if ((specieId == null) || (specieId.trim().equals(""))) {
 				errors.add(UploadPhotoConstants.SPECIE_REQUIRED);
 			}
-            if ((stateId == null) || (stateId.trim().equals(""))) {
-                errors.add(UploadPhotoConstants.STATE_REQUIRED);
-            }
-            if ((cityId == null) || (cityId.trim().equals(""))) {
-                errors.add(UploadPhotoConstants.CITY_REQUIRED);
-            }
+			if ((stateId == null) || (stateId.trim().equals(""))) {
+				errors.add(UploadPhotoConstants.STATE_REQUIRED);
+			}
+			if ((cityId == null) || (cityId.trim().equals(""))) {
+				errors.add(UploadPhotoConstants.CITY_REQUIRED);
+			}
 		}
 		bean.setSelectedFamilyId(familyId);
 		bean.setSelectedSpecieId(specieId);
@@ -90,12 +93,14 @@ public class BeanManager {
 
 	/**
 	 * This method updates in the bean data related to the photo
+	 * 
 	 * @param data
 	 * @param bean
 	 * @param errors
 	 */
-	protected void updateMediaData(Map data, UploadBean bean, List errors, boolean validate) {
-        logger.debug("BeanManager.updateMediaData: updating media data...");
+	protected void updateMediaData(Map data, UploadBean bean, List errors,
+			boolean validate) {
+		logger.debug("BeanManager.updateMediaData: updating media data...");
 	}
 
 }

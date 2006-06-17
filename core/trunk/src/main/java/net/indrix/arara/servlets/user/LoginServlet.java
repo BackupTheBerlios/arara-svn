@@ -27,9 +27,10 @@ import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.vo.User;
 
 import org.apache.log4j.Logger;
+
 /**
  * @author alunos
- *
+ * 
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
@@ -38,27 +39,31 @@ public class LoginServlet extends HttpServlet {
 	 * Logger object to be used by this class
 	 */
 	protected static Logger logger = Logger.getLogger("net.indrix.aves");
-    protected static Logger loggerActions = Logger.getLogger("net.indrix.actions");
+
+	protected static Logger loggerActions = Logger
+			.getLogger("net.indrix.actions");
 
 	public void init() {
 		logger.debug("Initializing LoginServlet...");
 	}
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
-		throws ServletException, IOException {
+			throws ServletException, IOException {
 		List erros = new ArrayList();
 
 		String login = req.getParameter("login");
 		String password = req.getParameter("password");
-        String nextResource = req.getParameter("nextResource");
-        
-        logger.debug("Locale:" + req.getLocale());
-        ResourceBundle bundle = ResourceBundle.getBundle("Resources", req.getLocale());
-        if (bundle == null){
-            logger.debug("BUNDLE = NULL");
-        } else {
-            logger.debug("menu.common.home = " + bundle.getString("menu.common.home"));
-        }
+		String nextResource = req.getParameter("nextResource");
+
+		logger.debug("Locale:" + req.getLocale());
+		ResourceBundle bundle = ResourceBundle.getBundle("Resources", req
+				.getLocale());
+		if (bundle == null) {
+			logger.debug("BUNDLE = NULL");
+		} else {
+			logger.debug("menu.common.home = "
+					+ bundle.getString("menu.common.home"));
+		}
 
 		logger.debug("User is trying to login with data: " + login);
 
@@ -69,30 +74,31 @@ public class LoginServlet extends HttpServlet {
 		try {
 			UserModel l = new UserModel();
 			logger.debug("Validating user");
-            user = l.login(login, password);
+			user = l.login(login, password);
 			if (user != null) {
-                logger.debug("User validated " + user);
-                loggerActions.info("User " + login + " from IP " + req.getRemoteAddr() + " has logged in.");
+				logger.debug("User validated " + user);
+				loggerActions.info("User " + login + " from IP "
+						+ req.getRemoteAddr() + " has logged in.");
 				HttpSession session = req.getSession(true);
 				session.setAttribute(ServletConstants.USER_KEY, user);
 
 				req.setAttribute(ServletConstants.USER_KEY, user);
-                
-                if ((nextResource != null) && (nextResource.length() > 0)){
-                    nextPage = nextResource;
-                } else {
-                    nextPage = ServletConstants.INITIAL_PAGE;
-                }
-                logger.debug("Re-directing to " + nextPage);
+
+				if ((nextResource != null) && (nextResource.length() > 0)) {
+					nextPage = nextResource;
+				} else {
+					nextPage = ServletConstants.INITIAL_PAGE;
+				}
+				logger.debug("Re-directing to " + nextPage);
 			} else {
-                logger.debug("User NOT validated");
+				logger.debug("User NOT validated");
 				nextPage = ServletConstants.LOGIN_PAGE;
 				erros.add(ServletConstants.INVALID_PASSWORD);
 			}
 		} catch (UserNotFoundException e) {
-            logger.error("UserNotFoundException");
-            nextPage = ServletConstants.LOGIN_PAGE;
-            erros.add(ServletConstants.INVALID_USER);
+			logger.error("UserNotFoundException");
+			nextPage = ServletConstants.LOGIN_PAGE;
+			erros.add(ServletConstants.INVALID_USER);
 		} catch (DatabaseDownException e) {
 			logger.error("DatabaseDownException", e);
 			nextPage = ServletConstants.DATABASE_ERROR_PAGE;
@@ -102,7 +108,8 @@ public class LoginServlet extends HttpServlet {
 		}
 
 		if (!erros.isEmpty()) {
-			// coloca erros no request para registrar.jsp processar e apresentar mensagem de erro
+			// coloca erros no request para registrar.jsp processar e apresentar
+			// mensagem de erro
 			req.setAttribute(ServletConstants.ERRORS_KEY, erros);
 			req.setAttribute(ServletConstants.USER_KEY, user);
 		}

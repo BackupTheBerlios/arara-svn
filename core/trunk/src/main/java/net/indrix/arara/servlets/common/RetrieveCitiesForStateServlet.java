@@ -33,7 +33,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
@@ -44,15 +44,16 @@ public class RetrieveCitiesForStateServlet extends AbstractServlet {
 	private static Logger logger = Logger.getLogger("net.indrix.aves");
 
 	private static final String PHOTO = "PHOTO";
+
 	private static final String SOUND = "SOUND";
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
-		throws ServletException, IOException {
+			throws ServletException, IOException {
 		List errors = new ArrayList();
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
 		String nextPage = req.getParameter("toPage");
-        
+
 		HttpSession session = req.getSession();
 		Map data = null;
 		try {
@@ -60,8 +61,8 @@ public class RetrieveCitiesForStateServlet extends AbstractServlet {
 			String stateId = (String) data.get(ServletConstants.STATE_ID);
 			if ((stateId == null) || (stateId.equals(""))) {
 				errors.add(ServletConstants.SELECT_FAMILY_ERROR);
-				UploadPhotoBean uploadBean =
-					(UploadPhotoBean) session.getAttribute(UploadConstants.UPLOAD_PHOTO_BEAN);
+				UploadPhotoBean uploadBean = (UploadPhotoBean) session
+						.getAttribute(UploadConstants.UPLOAD_PHOTO_BEAN);
 				uploadBean.setSelectedFamilyId(null);
 				uploadBean.setSelectedSpecieId(null);
 				uploadBean.setSpecieList(null);
@@ -86,7 +87,8 @@ public class RetrieveCitiesForStateServlet extends AbstractServlet {
 				}
 			}
 			if (!errors.isEmpty()) {
-				// coloca erros no request para registrar.jsp processar e apresentar mensagem de erro
+				// coloca erros no request para registrar.jsp processar e
+				// apresentar mensagem de erro
 				req.setAttribute(ServletConstants.ERRORS_KEY, errors);
 			}
 		} catch (ServletException e) {
@@ -104,56 +106,64 @@ public class RetrieveCitiesForStateServlet extends AbstractServlet {
 	 * @param list
 	 * @param dataToBeUploaded
 	 */
-	private void handleList(
-		List list,
-		Map data,
-		HttpServletRequest req,
-		List errors) {
+	private void handleList(List list, Map data, HttpServletRequest req,
+			List errors) {
 
-        String dataToBeUploaded = req.getParameter("data");
-        String action = req.getParameter("action");
-        HttpSession session = req.getSession();
+		String dataToBeUploaded = req.getParameter("data");
+		String action = req.getParameter("action");
+		HttpSession session = req.getSession();
 
-        String beanKey = null;        
+		String beanKey = null;
 
-        UploadBean uploadBean = null;
-        if (PHOTO.equals(dataToBeUploaded)) {
-            if (UploadConstants.UPLOAD_ACTION.equals(action)){
-                logger.debug("RetrieveCitiesForStateServlet.handleList : uploading photo");
-                beanKey = UploadConstants.UPLOAD_PHOTO_BEAN;
-            } else if (UploadConstants.EDIT_ACTION.equals(action)){
-                logger.debug("RetrieveCitiesForStateServlet.handleList : editing photo");
-                beanKey = UploadPhotoConstants.EDIT_BEAN;
-            }
+		UploadBean uploadBean = null;
+		if (PHOTO.equals(dataToBeUploaded)) {
+			if (UploadConstants.UPLOAD_ACTION.equals(action)) {
+				logger
+						.debug("RetrieveCitiesForStateServlet.handleList : uploading photo");
+				beanKey = UploadConstants.UPLOAD_PHOTO_BEAN;
+			} else if (UploadConstants.EDIT_ACTION.equals(action)) {
+				logger
+						.debug("RetrieveCitiesForStateServlet.handleList : editing photo");
+				beanKey = UploadPhotoConstants.EDIT_BEAN;
+			}
 
-            uploadBean = (UploadPhotoBean) session.getAttribute(beanKey);
-            if (uploadBean == null) {
-                logger.debug("RetrieveCitiesForStateServlet.handleList : uploadBean is null. Creating a new one...");                
-                uploadBean = new UploadPhotoBean();
-                logger.debug("RetrieveCitiesForStateServlet.handleList : putting bean in session");
-                session.setAttribute(beanKey, uploadBean);
-            }
-            PhotoBeanManager manager = new PhotoBeanManager();
-            logger.debug("RetrieveCitiesForStateServlet.handleList : calling manager.updateBean... ");
-            manager.updateBean(data, (UploadPhotoBean) uploadBean, errors, false);
-        } else if (SOUND.equals(dataToBeUploaded)) {
-            if (UploadConstants.UPLOAD_ACTION.equals(action)){
-                logger.debug("RetrieveCitiesForStateServlet.handleList : uploading sound");
-                beanKey = UploadConstants.UPLOAD_SOUND_BEAN;
-            } 
+			uploadBean = (UploadPhotoBean) session.getAttribute(beanKey);
+			if (uploadBean == null) {
+				logger
+						.debug("RetrieveCitiesForStateServlet.handleList : uploadBean is null. Creating a new one...");
+				uploadBean = new UploadPhotoBean();
+				logger
+						.debug("RetrieveCitiesForStateServlet.handleList : putting bean in session");
+				session.setAttribute(beanKey, uploadBean);
+			}
+			PhotoBeanManager manager = new PhotoBeanManager();
+			logger
+					.debug("RetrieveCitiesForStateServlet.handleList : calling manager.updateBean... ");
+			manager.updateBean(data, (UploadPhotoBean) uploadBean, errors,
+					false);
+		} else if (SOUND.equals(dataToBeUploaded)) {
+			if (UploadConstants.UPLOAD_ACTION.equals(action)) {
+				logger
+						.debug("RetrieveCitiesForStateServlet.handleList : uploading sound");
+				beanKey = UploadConstants.UPLOAD_SOUND_BEAN;
+			}
 
-            uploadBean = (UploadSoundBean) session.getAttribute(beanKey);
-            if (uploadBean == null) {
-                logger.debug("RetrieveCitiesForStateServlet.handleList : uploadBean is null. Creating a new one...");                
-                uploadBean = new UploadSoundBean();
-                logger.debug("RetrieveCitiesForStateServlet.handleList : putting bean in session");
-                session.setAttribute(beanKey, uploadBean);
-            }
-            SoundBeanManager manager = new SoundBeanManager();
-            logger.debug("RetrieveCitiesForStateServlet.handleList : calling manager.updateBean... ");
-            manager.updateBean(data, (UploadSoundBean) uploadBean, errors, false);
-        }
-        uploadBean.setCitiesList(list);
+			uploadBean = (UploadSoundBean) session.getAttribute(beanKey);
+			if (uploadBean == null) {
+				logger
+						.debug("RetrieveCitiesForStateServlet.handleList : uploadBean is null. Creating a new one...");
+				uploadBean = new UploadSoundBean();
+				logger
+						.debug("RetrieveCitiesForStateServlet.handleList : putting bean in session");
+				session.setAttribute(beanKey, uploadBean);
+			}
+			SoundBeanManager manager = new SoundBeanManager();
+			logger
+					.debug("RetrieveCitiesForStateServlet.handleList : calling manager.updateBean... ");
+			manager.updateBean(data, (UploadSoundBean) uploadBean, errors,
+					false);
+		}
+		uploadBean.setCitiesList(list);
 
 	}
 
@@ -162,7 +172,7 @@ public class RetrieveCitiesForStateServlet extends AbstractServlet {
 	 * @return
 	 */
 	private List retrieveCityListForStateId(String stateId)
-		throws NumberFormatException, DatabaseDownException {
+			throws NumberFormatException, DatabaseDownException {
 		CityModel model = new CityModel();
 		List list = model.retrieveCitiesForState(Integer.parseInt(stateId));
 		return list;

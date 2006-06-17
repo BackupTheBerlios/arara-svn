@@ -13,49 +13,51 @@ import net.indrix.arara.vo.Sound;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class SoundFileManager extends AbstractFileManager {
-    private static final String FOLDER = "files" + File.separator + "sounds";
-    private static final String EXTENSION = ".mp3";
+	private static final String FOLDER = "files" + File.separator + "sounds";
 
-    /**
-     * The sound to be saved
-     */
-    private Sound sound;
-   
-    /**
-     * 
-     * @param sound
-     */
-    public SoundFileManager(Sound sound){
-        this.sound = sound;
-    }
-    
-	/** 
+	private static final String EXTENSION = ".mp3";
+
+	/**
+	 * The sound to be saved
+	 */
+	private Sound sound;
+
+	/**
+	 * 
+	 * @param sound
+	 */
+	public SoundFileManager(Sound sound) {
+		this.sound = sound;
+	}
+
+	/**
 	 * @see net.indrix.arara.model.file.FileManager#getFolder()
 	 */
 	public String getFolder() {
-        int familyId = sound.getSpecie().getFamily().getId();
-        int specieId = sound.getSpecie().getId();
-        String path = FOLDER + File.separator + familyId + File.separator + specieId;
-        return path;
+		int familyId = sound.getSpecie().getFamily().getId();
+		int specieId = sound.getSpecie().getId();
+		String path = FOLDER + File.separator + familyId + File.separator
+				+ specieId;
+		return path;
 	}
 
-    /**
-     * @see net.indrix.arara.model.file.AbstractFileManager#getFilename()
-     */
-    public String getFilename() {
-        String name = "" + sound.getId() + EXTENSION;
-        return name;
-    }
+	/**
+	 * @see net.indrix.arara.model.file.AbstractFileManager#getFilename()
+	 */
+	public String getFilename() {
+		String name = "" + sound.getId() + EXTENSION;
+		return name;
+	}
 
-    /**
-     * @see net.indrix.arara.model.file.AbstractFileManager#getInputStream()
-     */
-    public InputStream getInputStream() {
-        return sound.getSound().getSound();
-    }
+	/**
+	 * @see net.indrix.arara.model.file.AbstractFileManager#getInputStream()
+	 */
+	public InputStream getInputStream() {
+		return sound.getSound().getSound();
+	}
 }

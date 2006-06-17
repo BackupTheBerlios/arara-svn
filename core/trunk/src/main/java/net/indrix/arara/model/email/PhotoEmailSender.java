@@ -30,7 +30,7 @@ import net.indrix.arara.vo.User;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
@@ -43,23 +43,25 @@ public class PhotoEmailSender extends AbstractPhotoEmailSender {
 		super(photo);
 	}
 
-    /**
-     * @see net.indrix.arara.model.email.AbstractPhotoEmailSender#run()
-     */
-    public void run() {
+	/**
+	 * @see net.indrix.arara.model.email.AbstractPhotoEmailSender#run()
+	 */
+	public void run() {
 		UserModel userModel = new UserModel();
 		try {
-			logger.debug("UploadPhoto.sendEmail : Retrieving list of users to sent email to");
+			logger
+					.debug("UploadPhoto.sendEmail : Retrieving list of users to sent email to");
 			List list = userModel.retrieveForEmail();
 			if (!list.isEmpty()) {
 				Iterator it = list.iterator();
 				while (it.hasNext()) {
 					User user = (User) it.next();
-                    if (!user.equals(photo.getUser())){
-                        logger.debug(
-                            "UploadPhoto.sendEmail : sending email to user " + user.getLogin());
-                        sendEmailToUser(user, photo);
-                    }
+					if (!user.equals(photo.getUser())) {
+						logger
+								.debug("UploadPhoto.sendEmail : sending email to user "
+										+ user.getLogin());
+						sendEmailToUser(user, photo);
+					}
 				}
 			}
 		} catch (DatabaseDownException e1) {
@@ -74,12 +76,15 @@ public class PhotoEmailSender extends AbstractPhotoEmailSender {
 	/**
 	 * This method sends an email about a new photo to the given user
 	 * 
-	 * @param user The user to be notified
-	 * @param photo The new photo just added
+	 * @param user
+	 *            The user to be notified
+	 * @param photo
+	 *            The new photo just added
 	 */
 	private void sendEmailToUser(User user, Photo photo) {
 		Locale l = new Locale(user.getLanguage());
-		EmailResourceBundle bundle = (EmailResourceBundle) EmailResourceBundle.getInstance();
+		EmailResourceBundle bundle = (EmailResourceBundle) EmailResourceBundle
+				.getInstance();
 		String server = PropertiesManager.getProperty("email.server");
 		String fromAdd = PropertiesManager.getProperty("email.from");
 		String subject = bundle.getString("email.newPhoto.subject", l);
@@ -109,7 +114,8 @@ public class PhotoEmailSender extends AbstractPhotoEmailSender {
 			sender.sendMessage(false);
 			// true indicates to emailObject to send the message right now
 		} catch (MessageFormatException e) {
-			logger.error("exception -> MessageFormatException in sendEmail " + e);
+			logger.error("exception -> MessageFormatException in sendEmail "
+					+ e);
 		} catch (AddressException e) {
 			logger.error("exception -> AddressException in sendEmail " + e);
 		} catch (NoRecipientException e) {
@@ -124,8 +130,10 @@ public class PhotoEmailSender extends AbstractPhotoEmailSender {
 	/**
 	 * This method creates the message to be sent to user about a new photo
 	 * 
-	 * @param body The body text template
-	 * @param photo The new photo just added into database
+	 * @param body
+	 *            The body text template
+	 * @param photo
+	 *            The new photo just added into database
 	 * 
 	 * @return A string message with the content of the email
 	 */
@@ -133,12 +141,15 @@ public class PhotoEmailSender extends AbstractPhotoEmailSender {
 		String bodyFormatted = "";
 		ArrayList list = new ArrayList();
 		list.add(user.getName());
-		list.add(photo.getUser().getLogin() + " | " + photo.getUser().getName());
+		list
+				.add(photo.getUser().getLogin() + " | "
+						+ photo.getUser().getName());
 		String family = photo.getSpecie().getFamily().getName();
 		list.add(family);
 		String specie = photo.getSpecie().getName();
 		list.add(specie);
-		String url = "http://www.aves.brasil.nom.br/servlet/showOnePhoto?photoId=" + photo.getId();
+		String url = "http://www.aves.brasil.nom.br/servlet/showOnePhoto?photoId="
+				+ photo.getId();
 		list.add(url);
 
 		logger.debug(family + " | " + specie + " | " + url);

@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
@@ -28,19 +28,20 @@ public class StatesDAO {
 	 * SQL statement to retrieve all states
 	 */
 	private static final String SELECT_ALL = "Select * from states order by acronym";
-    
+
 	/**
 	 * Logger object to be used by this class
 	 */
 	protected static Logger logger = Logger.getLogger("net.indrix.aves");
 
-    /**
-     * Retrieve all states from database
-     * 
-     * @return a <code>List</code> object with <code>State</code>
-     * 
-     * @throws DatabaseDownException if database is down
-     */
+	/**
+	 * Retrieve all states from database
+	 * 
+	 * @return a <code>List</code> object with <code>State</code>
+	 * 
+	 * @throws DatabaseDownException
+	 *             if database is down
+	 */
 	public List retrieve() throws DatabaseDownException {
 		logger.debug("StatesDAO.retrieve : entering method...");
 		List list = new ArrayList();
@@ -83,7 +84,8 @@ public class StatesDAO {
 	/**
 	 * This method closes the given statement
 	 * 
-	 * @param stmt The <code>PreparedStatement</code> objec to be closed
+	 * @param stmt
+	 *            The <code>PreparedStatement</code> objec to be closed
 	 */
 	protected void closeStatement(PreparedStatement stmt) {
 		if (stmt != null) {
@@ -98,7 +100,8 @@ public class StatesDAO {
 	/**
 	 * This method closes the given result set
 	 * 
-	 * @param stmt The <code>ResultSet</code> objec to be closed
+	 * @param stmt
+	 *            The <code>ResultSet</code> objec to be closed
 	 */
 	protected void closeResultSet(ResultSet rs) {
 		if (rs != null) {

@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
@@ -39,7 +39,7 @@ public class UpdateServlet extends HttpServlet {
 	protected static Logger logger = Logger.getLogger("net.indrix.aves");
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
-		throws ServletException, IOException {
+			throws ServletException, IOException {
 		logger.debug("UpdateServlet.doPost called...");
 
 		List errors = new ArrayList();
@@ -49,9 +49,12 @@ public class UpdateServlet extends HttpServlet {
 		String email = req.getParameter("email");
 		String login = req.getParameter("login");
 		String language = req.getParameter("language");
-		boolean emailOnPhoto = "on".equals(req.getParameter("emailOnNewPhoto")) ? true : false;
-		boolean emailOnIdPhoto = "on".equals(req.getParameter("emailOnNewIdPhoto")) ? true : false;
-		boolean emailOnSound = "on".equals(req.getParameter("emailOnNewSound")) ? true : false;
+		boolean emailOnPhoto = "on".equals(req.getParameter("emailOnNewPhoto")) ? true
+				: false;
+		boolean emailOnIdPhoto = "on".equals(req
+				.getParameter("emailOnNewIdPhoto")) ? true : false;
+		boolean emailOnSound = "on".equals(req.getParameter("emailOnNewSound")) ? true
+				: false;
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
 		String msg = null;
@@ -85,13 +88,14 @@ public class UpdateServlet extends HttpServlet {
 		} else {
 			logger.debug("errors is null.");
 			errors.add(ServletConstants.USER_NOT_LOGGED);
-			// put errors in request 
+			// put errors in request
 			req.setAttribute(ServletConstants.ERRORS_KEY, errors);
 			nextPage = ServletConstants.LOGIN_PAGE;
 		}
 
 		if (!errors.isEmpty()) {
-			// coloca erros no request para registrar.jsp processar e apresentar mensagem de erro
+			// coloca erros no request para registrar.jsp processar e apresentar
+			// mensagem de erro
 			req.setAttribute(ServletConstants.ERRORS_KEY, errors);
 			req.setAttribute(ServletConstants.USER_KEY, null);
 

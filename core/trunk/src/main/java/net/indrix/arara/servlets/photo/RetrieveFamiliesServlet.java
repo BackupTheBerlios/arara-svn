@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Jefferson
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
@@ -39,7 +39,7 @@ public abstract class RetrieveFamiliesServlet extends AbstractServlet {
 	static Logger logger = Logger.getLogger("net.indrix.aves");
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
-		throws ServletException, IOException {
+			throws ServletException, IOException {
 		List erros = new ArrayList();
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
@@ -47,8 +47,10 @@ public abstract class RetrieveFamiliesServlet extends AbstractServlet {
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute(ServletConstants.USER_KEY);
 		if (testeUser() && (user == null)) {
-			logger.debug("InitUploadPhotoForIdentificationServlet.doGet : user is NOT logged...");
-			// The method userNotLogged takes care of user not logged trying to access options for
+			logger
+					.debug("InitUploadPhotoForIdentificationServlet.doGet : user is NOT logged...");
+			// The method userNotLogged takes care of user not logged trying to
+			// access options for
 			// logged users
 			nextPage = userNotLogged(req, res);
 		} else {
@@ -56,7 +58,8 @@ public abstract class RetrieveFamiliesServlet extends AbstractServlet {
 			FamilyDAO dao = new FamilyDAO();
 
 			try {
-				List list = ServletUtil.familyDataAsLabelValueBean(dao.retrieve());
+				List list = ServletUtil.familyDataAsLabelValueBean(dao
+						.retrieve());
 				if ((list != null) && (!list.isEmpty())) {
 					logger.debug("Setting data in request");
 
@@ -79,7 +82,8 @@ public abstract class RetrieveFamiliesServlet extends AbstractServlet {
 			}
 
 			if (!erros.isEmpty()) {
-				// coloca erros no request para registrar.jsp processar e apresentar mensagem de erro
+				// coloca erros no request para registrar.jsp processar e
+				// apresentar mensagem de erro
 				req.setAttribute(ServletConstants.ERRORS_KEY, erros);
 
 				// direciona usuário para página de registro novamente
@@ -91,23 +95,26 @@ public abstract class RetrieveFamiliesServlet extends AbstractServlet {
 	}
 
 	/**
-     * By default, user shall not be validated, since this is a search option
-     * 
+	 * By default, user shall not be validated, since this is a search option
+	 * 
 	 * @return false
 	 */
-    protected  boolean testeUser() {
+	protected boolean testeUser() {
 		return false;
 	}
 
 	/**
-	 * This method retrieves or creates a bean, set the list in it and put the bean to the session
+	 * This method retrieves or creates a bean, set the list in it and put the
+	 * bean to the session
 	 * 
-	 * @param session Session to store the bean
-	 * @param list The list retrieved from database
+	 * @param session
+	 *            Session to store the bean
+	 * @param list
+	 *            The list retrieved from database
 	 */
 	protected void handleListOfFamilies(HttpSession session, List list) {
-		UploadPhotoBean uploadBean =
-			(UploadPhotoBean) session.getAttribute(UploadConstants.UPLOAD_PHOTO_BEAN);
+		UploadPhotoBean uploadBean = (UploadPhotoBean) session
+				.getAttribute(UploadConstants.UPLOAD_PHOTO_BEAN);
 		if (uploadBean == null) {
 			uploadBean = new UploadPhotoBean();
 		}

@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Jefferson
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
@@ -41,7 +41,7 @@ public class GetPhotoServlet extends HttpServlet {
 	static Logger logger = Logger.getLogger("net.indrix.aves");
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
-		throws ServletException, IOException {
+			throws ServletException, IOException {
 		logger.debug("GetPhotoServlet.doGet called...");
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
@@ -72,9 +72,9 @@ public class GetPhotoServlet extends HttpServlet {
 		Photo photo = null;
 		try {
 			photo = model.retrieve(Integer.parseInt(photoId));
-			//                if (photo != null) {
-			//                    retrieveCommentsForPhoto(model, photo);
-			//                }
+			// if (photo != null) {
+			// retrieveCommentsForPhoto(model, photo);
+			// }
 			logger.debug("Photo retrieved = " + photo);
 		} catch (NumberFormatException e) {
 			logger.error("Could not parse photoId " + photoId);

@@ -10,89 +10,94 @@ import java.util.List;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class IdentifyPhotoBean {
-    protected List familyList;
-    protected String selectedFamilyId;
-    protected List specieList;
-    protected String selectedSpecieId;
-    protected String selectedAgeId;
-    protected String selectedSexId;
-    
-    protected String comment;
-    
-    /**
-     * @return
-     */
-    public List getFamilyList() {
-        return familyList;
-    }
+	protected List familyList;
 
-    /**
-     * @return
-     */
-    public String getSelectedFamilyId() {
-        return selectedFamilyId;
-    }
+	protected String selectedFamilyId;
 
-    /**
-     * @return
-     */
-    public String getSelectedSpecieId() {
-        return selectedSpecieId;
-    }
+	protected List specieList;
 
-    /**
-     * @return
-     */
-    public List getSpecieList() {
-        return specieList;
-    }
+	protected String selectedSpecieId;
 
-    /**
-     * @return
-     */
-    public String getComment() {
-        return comment;
-    }
+	protected String selectedAgeId;
 
-    /**
-     * @param list
-     */
-    public void setFamilyList(List list) {
-        familyList = list;
-    }
+	protected String selectedSexId;
 
-    /**
-     * @param string
-     */
-    public void setSelectedFamilyId(String string) {
-        selectedFamilyId = string;
-    }
+	protected String comment;
 
-    /**
-     * @param string
-     */
-    public void setSelectedSpecieId(String string) {
-        selectedSpecieId = string;
-    }
+	/**
+	 * @return
+	 */
+	public List getFamilyList() {
+		return familyList;
+	}
 
-    /**
-     * @param list
-     */
-    public void setSpecieList(List list) {
-        specieList = list;
-    }
+	/**
+	 * @return
+	 */
+	public String getSelectedFamilyId() {
+		return selectedFamilyId;
+	}
 
-    /**
-     * @param string
-     */
-    public void setComment(String string) {
-        comment = string;
-    }
+	/**
+	 * @return
+	 */
+	public String getSelectedSpecieId() {
+		return selectedSpecieId;
+	}
+
+	/**
+	 * @return
+	 */
+	public List getSpecieList() {
+		return specieList;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getComment() {
+		return comment;
+	}
+
+	/**
+	 * @param list
+	 */
+	public void setFamilyList(List list) {
+		familyList = list;
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setSelectedFamilyId(String string) {
+		selectedFamilyId = string;
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setSelectedSpecieId(String string) {
+		selectedSpecieId = string;
+	}
+
+	/**
+	 * @param list
+	 */
+	public void setSpecieList(List list) {
+		specieList = list;
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setComment(String string) {
+		comment = string;
+	}
 
 	/**
 	 * @return
@@ -122,13 +127,13 @@ public class IdentifyPhotoBean {
 		selectedSexId = string;
 	}
 
-    public String toString(){
-        StringBuffer buffer = new StringBuffer("[");
-        buffer.append(selectedFamilyId);
-        buffer.append(",");
-        buffer.append(selectedSpecieId);
-        buffer.append("]");
-        return buffer.toString();
-    }    
+	public String toString() {
+		StringBuffer buffer = new StringBuffer("[");
+		buffer.append(selectedFamilyId);
+		buffer.append(",");
+		buffer.append(selectedSpecieId);
+		buffer.append("]");
+		return buffer.toString();
+	}
 
 }

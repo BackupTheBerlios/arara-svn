@@ -13,19 +13,19 @@ import net.indrix.arara.vo.Photo;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class PhotoFileManager extends AbstractFileManager {
-    private static final String FOLDER = "files\\photos";
-    
-    private Photo photo;
-    
-    public PhotoFileManager(Photo photo){
-        this.photo = photo;
-    }
-    
+	private static final String FOLDER = "files\\photos";
+
+	private Photo photo;
+
+	public PhotoFileManager(Photo photo) {
+		this.photo = photo;
+	}
+
 	/**
 	 * @return
 	 */
@@ -48,15 +48,16 @@ public class PhotoFileManager extends AbstractFileManager {
 		return name;
 	}
 
-    /**
-     * @see net.indrix.arara.model.file.FileManager#getFolder()
-     */
-    public String getFolder() {
-        int familyId = photo.getSpecie().getFamily().getId();
-        int specieId = photo.getSpecie().getId();
-        String path = FOLDER + File.separator + familyId + File.separator + specieId;
-        return path;
-    }
+	/**
+	 * @see net.indrix.arara.model.file.FileManager#getFolder()
+	 */
+	public String getFolder() {
+		int familyId = photo.getSpecie().getFamily().getId();
+		int specieId = photo.getSpecie().getId();
+		String path = FOLDER + File.separator + familyId + File.separator
+				+ specieId;
+		return path;
+	}
 
 	/**
 	 * @see net.indrix.arara.model.file.AbstractFileManager#getInputStream()

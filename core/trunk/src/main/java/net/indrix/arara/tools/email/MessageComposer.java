@@ -4,8 +4,9 @@ import java.util.List;
 import java.util.Vector;
 
 /**
- * File: MessageComposer.java
- * Description: This class is responsible for formating messages.
+ * File: MessageComposer.java Description: This class is responsible for
+ * formating messages.
+ * 
  * @author Angelica Demarchi Munhoz de Oliveira e Silva
  * @version 1.0
  */
@@ -17,12 +18,12 @@ public class MessageComposer {
 	static final private String delimiter = "_$$$_";
 
 	/**
-	 * format the messages that are in the vector of messages replacing
-	 * the delimiters by the values in the vector of values.
-	 * This method returns a vector with the messages formated.
+	 * format the messages that are in the vector of messages replacing the
+	 * delimiters by the values in the vector of values. This method returns a
+	 * vector with the messages formated.
 	 */
 	static public Vector formatMessage(Vector messages, Vector values)
-		throws WrongNumberOfValuesException {
+			throws WrongNumberOfValuesException {
 		Vector returnValue = new Vector(1, 1);
 		int numberOfDelimiters = 0;
 		boolean delimiterFound;
@@ -43,12 +44,14 @@ public class MessageComposer {
 				endIndex = message.indexOf(delimiter);
 				if (endIndex != -1) {
 					firstPart = message.substring(0, endIndex);
-					message = message.substring(endIndex + delimiter.length(), message.length());
+					message = message.substring(endIndex + delimiter.length(),
+							message.length());
 					if (valueIndex < values.size()) {
-						formatedMessage =
-							formatedMessage + firstPart + values.elementAt(valueIndex);
+						formatedMessage = formatedMessage + firstPart
+								+ values.elementAt(valueIndex);
 					} else {
-						throw new WrongNumberOfValuesException("The number of delimiters in your messages is bigger than the number of the values.");
+						throw new WrongNumberOfValuesException(
+								"The number of delimiters in your messages is bigger than the number of the values.");
 					}
 					numberOfDelimiters++;
 					valueIndex++;
@@ -62,17 +65,18 @@ public class MessageComposer {
 			returnValue.add(formatedMessage);
 		}
 		if (numberOfDelimiters != values.size()) {
-			throw new WrongNumberOfValuesException("The number of values is bigger than the number of the delimiters in your messages.");
+			throw new WrongNumberOfValuesException(
+					"The number of values is bigger than the number of the delimiters in your messages.");
 		}
 		return returnValue;
 	}
 
 	/**
-	 * format the message replacing the delimiters by the values in
-	 * the vector of values. This method returns the message formated.
+	 * format the message replacing the delimiters by the values in the vector
+	 * of values. This method returns the message formated.
 	 */
 	static public String formatMessage(String message, List values)
-		throws WrongNumberOfValuesException {
+			throws WrongNumberOfValuesException {
 		int numberOfDelimiters = 0;
 		boolean delimiterFound = true;
 		String formatedMessage = "";
@@ -84,11 +88,14 @@ public class MessageComposer {
 			endIndex = message.indexOf(delimiter);
 			if (endIndex != -1) {
 				firstPart = message.substring(0, endIndex);
-				message = message.substring(endIndex + delimiter.length(), message.length());
+				message = message.substring(endIndex + delimiter.length(),
+						message.length());
 				if (valueIndex < values.size()) {
-					formatedMessage = formatedMessage + firstPart + values.get(valueIndex);
+					formatedMessage = formatedMessage + firstPart
+							+ values.get(valueIndex);
 				} else {
-					throw new WrongNumberOfValuesException("The number of delimiters in your message is bigger than the number of the values.");
+					throw new WrongNumberOfValuesException(
+							"The number of delimiters in your message is bigger than the number of the values.");
 				}
 				numberOfDelimiters++;
 				valueIndex++;
@@ -101,7 +108,8 @@ public class MessageComposer {
 		}
 
 		if (numberOfDelimiters != values.size()) {
-			throw new WrongNumberOfValuesException("The number of values is bigger than the number of the delimiters in your message.");
+			throw new WrongNumberOfValuesException(
+					"The number of values is bigger than the number of the delimiters in your message.");
 		}
 		return formatedMessage;
 	}

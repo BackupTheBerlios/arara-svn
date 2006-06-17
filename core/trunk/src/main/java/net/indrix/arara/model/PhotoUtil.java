@@ -7,15 +7,15 @@
 package net.indrix.arara.model;
 
 /**
- * This class is contains the width value for the thumbnail. The InitServlet is responsible
- * for setting the value
+ * This class is contains the width value for the thumbnail. The InitServlet is
+ * responsible for setting the value
  * 
  * @author Jeff
  */
 public class PhotoUtil {
 
-    private static int smallWidth;
-    
+	private static int smallWidth;
+
 	/**
 	 * @return
 	 */

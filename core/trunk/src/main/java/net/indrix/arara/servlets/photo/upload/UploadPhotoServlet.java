@@ -38,12 +38,13 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Jefferson
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 	private static final int MAX_PHOTO_SIZE = 250000;
+
 	private static final String MAX_PHOTO_SIZE_STR = "250Kb";
 
 	static Logger logger = Logger.getLogger("net.indrix.aves");
@@ -56,7 +57,7 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 	}
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
-		throws ServletException, IOException {
+			throws ServletException, IOException {
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
 		String nextPage = null;
@@ -67,15 +68,15 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 		if (user == null) {
 			logger.debug("errors is not null.");
 			errors.add(ServletConstants.USER_NOT_LOGGED);
-			// put errors in request 
+			// put errors in request
 			req.setAttribute(ServletConstants.ERRORS_KEY, errors);
 			nextPage = ServletConstants.LOGIN_PAGE;
 		} else {
 			Map data = null;
 			try {
 				data = parseMultiPartFormData(req);
-				UploadPhotoBean photoBean =
-					(UploadPhotoBean) session.getAttribute(UploadConstants.UPLOAD_PHOTO_BEAN);
+				UploadPhotoBean photoBean = (UploadPhotoBean) session
+						.getAttribute(UploadConstants.UPLOAD_PHOTO_BEAN);
 
 				logger.debug("Calling updateBean");
 				if (updateBean(data, photoBean, errors)) {
@@ -83,21 +84,23 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 					try {
 						Photo photo = createPhoto(photoBean, user);
 						if (photo.getRealImage().getImageSize() > MAX_PHOTO_SIZE) {
-							logger.debug(
-								"photo with size = " + photo.getRealImage().getImageSize());
+							logger.debug("photo with size = "
+									+ photo.getRealImage().getImageSize());
 							errors.add(UploadConstants.INVALID_FILE_SIZE);
 						} else {
 							logger.debug("Calling addPhotoToDatabase " + photo);
 							addPhotoToDatabase(photo);
 							logger.debug("Photo added to database");
-                                                      
+
 							// next page
 							nextPage = getSuccessPage();
 
-							session.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
+							session.setAttribute(
+									ServletConstants.CURRENT_PHOTO, photo);
 
-							loggerActions.info(
-								"User " + user.getLogin() + " from IP " + req.getRemoteAddr() + " has uploaded one photo.");
+							loggerActions.info("User " + user.getLogin()
+									+ " from IP " + req.getRemoteAddr()
+									+ " has uploaded one photo.");
 						}
 					} catch (ParseException e1) {
 						logger.debug("ParseException.....");
@@ -130,12 +133,12 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 		}
 
 		if (!errors.isEmpty()) {
-			// put errors in request 
+			// put errors in request
 			req.setAttribute(ServletConstants.ERRORS_KEY, errors);
 		}
 		if (!messages.isEmpty()) {
 			logger.debug("messages is not null.");
-			// put messages in request 
+			// put messages in request
 			req.setAttribute(ServletConstants.MESSAGES_KEY, messages);
 		}
 
@@ -145,11 +148,11 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 
 	}
 
-    /**
-     * Retrieve the next page to go
-     *  
-     * @return the next page to go
-     */
+	/**
+	 * Retrieve the next page to go
+	 * 
+	 * @return the next page to go
+	 */
 	protected String getNextPage() {
 		return ServletConstants.UPLOAD_PAGE;
 	}
@@ -158,11 +161,12 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 		return ServletConstants.UPLOAD_SUCCESS_PAGE;
 	}
 
-	/** 
-	 * @param photo 
+	/**
+	 * @param photo
 	 */
 	protected void addPhotoToDatabase(Photo photo)
-		throws DatabaseDownException, SQLException, ImageProcessingException {
+			throws DatabaseDownException, SQLException,
+			ImageProcessingException {
 		UploadPhoto dao = new UploadPhoto();
 		dao.uploadPhoto(photo);
 	}
@@ -172,18 +176,24 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 	 * @return
 	 */
 	protected Photo createPhoto(UploadPhotoBean bean, User user)
-		throws ParseException, InvalidFileException {
+			throws ParseException, InvalidFileException {
 		Photo photo = new Photo();
 		photo.setUser(user);
-		photo.setSpecie(createSpecie(bean.getSelectedSpecieId(), bean.getSelectedFamilyId()));
+		photo.setSpecie(createSpecie(bean.getSelectedSpecieId(), bean
+				.getSelectedFamilyId()));
 
-		photo.setAge(AgeModel.getAge(Integer.parseInt(bean.getSelectedAgeId())));
-		photo.setSex(SexModel.getSex(Integer.parseInt(bean.getSelectedSexId())));
+		photo
+				.setAge(AgeModel.getAge(Integer.parseInt(bean
+						.getSelectedAgeId())));
+		photo
+				.setSex(SexModel.getSex(Integer.parseInt(bean
+						.getSelectedSexId())));
 		photo.setCamera(bean.getCamera());
 		photo.setLens(bean.getLens());
 		photo.setFilm(bean.getFilm());
 		photo.setLocation(bean.getLocation());
-		photo.setCity(CityModel.getCity(bean.getCitiesList(), bean.getSelectedCityId()));
+		photo.setCity(CityModel.getCity(bean.getCitiesList(), bean
+				.getSelectedCityId()));
 		photo.setDate(createDate(bean.getDate()));
 		photo.getRealImage().setImageSize(Integer.parseInt(bean.getFileSize()));
 		try {

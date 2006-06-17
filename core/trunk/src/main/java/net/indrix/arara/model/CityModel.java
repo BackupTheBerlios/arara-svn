@@ -12,11 +12,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import net.indrix.arara.dao.CityDAO;
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.vo.City;
+
+import org.apache.log4j.Logger;
 
 /**
  * @author Jeff

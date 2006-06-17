@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
@@ -38,17 +38,20 @@ public class SendPasswordServlet extends HttpServlet {
 	 * The logger object to log messages
 	 */
 	static Logger logger = Logger.getLogger("net.indrix.aves");
-    protected static Logger loggerActions = Logger.getLogger("net.indrix.actions");
+
+	protected static Logger loggerActions = Logger
+			.getLogger("net.indrix.actions");
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
-		throws ServletException, IOException {
-
+			throws ServletException, IOException {
 
 		List erros = new ArrayList();
 
 		// retrieve data from request
 		String login = req.getParameter("login");
-        logger.debug("SendPasswordServlet.doPost: user is requesting password for login " + login);
+		logger
+				.debug("SendPasswordServlet.doPost: user is requesting password for login "
+						+ login);
 
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
@@ -61,10 +64,11 @@ public class SendPasswordServlet extends HttpServlet {
 		// verify if the input (current) password is correct
 		UserModel userModel = new UserModel();
 		try {
-            loggerActions.info("User " + login + " from IP " + req.getRemoteAddr() + " has requested his/her password.");
-            userModel.setLocale(req.getLocale());
+			loggerActions.info("User " + login + " from IP "
+					+ req.getRemoteAddr() + " has requested his/her password.");
+			userModel.setLocale(req.getLocale());
 			user = userModel.sendPassword(login);
-            nextPage = ServletConstants.PASSWORD_SENT_PAGE;
+			nextPage = ServletConstants.PASSWORD_SENT_PAGE;
 		} catch (DatabaseDownException e) {
 			erros.add(ServletConstants.DATABASE_ERROR);
 		} catch (SQLException e) {
@@ -75,7 +79,8 @@ public class SendPasswordServlet extends HttpServlet {
 		}
 
 		if (!erros.isEmpty()) {
-			// coloca erros no request para registrar.jsp processar e apresentar mensagem de erro
+			// coloca erros no request para registrar.jsp processar e apresentar
+			// mensagem de erro
 			req.setAttribute(ServletConstants.ERRORS_KEY, erros);
 			req.setAttribute(ServletConstants.USER_KEY, null);
 

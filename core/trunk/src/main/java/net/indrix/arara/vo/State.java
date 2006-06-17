@@ -8,19 +8,21 @@ package net.indrix.arara.vo;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class State {
-    private int id;
-    private String acronym;
-    private String description;
-    
-    public State(){
-        id = -1;
-    }
-    
+	private int id;
+
+	private String acronym;
+
+	private String description;
+
+	public State() {
+		id = -1;
+	}
+
 	/**
 	 * @return
 	 */
@@ -63,15 +65,15 @@ public class State {
 		id = i;
 	}
 
-    public String toString(){
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("[");
-        buffer.append(id);
-        buffer.append(" | ");
-        buffer.append(acronym);
-        buffer.append(" | ");
-        buffer.append(description);
-        buffer.append("]");
-        return buffer.toString();
-    }
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("[");
+		buffer.append(id);
+		buffer.append(" | ");
+		buffer.append(acronym);
+		buffer.append(" | ");
+		buffer.append(description);
+		buffer.append("]");
+		return buffer.toString();
+	}
 }

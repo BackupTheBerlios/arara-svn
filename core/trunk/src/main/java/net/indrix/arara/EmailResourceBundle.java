@@ -8,7 +8,7 @@ package net.indrix.arara;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
@@ -18,10 +18,10 @@ public class EmailResourceBundle extends AbstractResourceBundle {
 	 * @see net.indrix.arara.AbstractResourceBundle#getInstance()
 	 */
 	public static synchronized AbstractResourceBundle getInstance() {
-		if (instance == null){
-            instance = new EmailResourceBundle();
+		if (instance == null) {
+			instance = new EmailResourceBundle();
 		}
-        return instance;
+		return instance;
 	}
 
 	/**

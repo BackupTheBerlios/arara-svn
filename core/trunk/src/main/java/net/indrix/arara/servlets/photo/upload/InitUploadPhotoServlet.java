@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Jefferson
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
@@ -37,7 +37,7 @@ public class InitUploadPhotoServlet extends RetrieveFamiliesServlet {
 	static Logger logger = Logger.getLogger("net.indrix.aves");
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
-		throws ServletException, IOException {
+			throws ServletException, IOException {
 		String nextPage = null;
 		List errors = new ArrayList();
 		List messages = new ArrayList();
@@ -46,7 +46,7 @@ public class InitUploadPhotoServlet extends RetrieveFamiliesServlet {
 		if (user == null) {
 			logger.debug("errors is not null.");
 			errors.add(ServletConstants.USER_NOT_LOGGED);
-			// put errors in request 
+			// put errors in request
 			req.setAttribute(ServletConstants.ERRORS_KEY, errors);
 			nextPage = ServletConstants.LOGIN_PAGE;
 
@@ -58,25 +58,27 @@ public class InitUploadPhotoServlet extends RetrieveFamiliesServlet {
 
 		} else {
 			// put states on request
-			List list = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
+			List list = ServletUtil.statesDataAsLabelValueBean(StatesModel
+					.getStates());
 
 			// reset upload data bean
-			UploadBean uploadBean =
-				(UploadPhotoBean) session.getAttribute(UploadPhotoConstants.UPLOAD_PHOTO_BEAN);
+			UploadBean uploadBean = (UploadPhotoBean) session
+					.getAttribute(UploadPhotoConstants.UPLOAD_PHOTO_BEAN);
 			if (uploadBean == null) {
 				uploadBean = new UploadPhotoBean();
-				session.setAttribute(UploadPhotoConstants.UPLOAD_PHOTO_BEAN, uploadBean);
+				session.setAttribute(UploadPhotoConstants.UPLOAD_PHOTO_BEAN,
+						uploadBean);
 			}
-            uploadBean.setStatesList(list);
-            uploadBean.setCitiesList(null);            
+			uploadBean.setStatesList(list);
+			uploadBean.setCitiesList(null);
 			uploadBean.setSelectedAgeId(null);
 			uploadBean.setSelectedCityId(null);
 			uploadBean.setSelectedSexId(null);
 			uploadBean.setSelectedStateId(null);
-            uploadBean.setSelectedFamilyId(null);
-            uploadBean.setSelectedSpecieId(null);
-            uploadBean.setSpecieList(null);
-            super.doGet(req, res);
+			uploadBean.setSelectedFamilyId(null);
+			uploadBean.setSelectedSpecieId(null);
+			uploadBean.setSpecieList(null);
+			super.doGet(req, res);
 		}
 	}
 
@@ -86,14 +88,14 @@ public class InitUploadPhotoServlet extends RetrieveFamiliesServlet {
 	protected String getNextPage() {
 		return ServletConstants.UPLOAD_PAGE;
 	}
-    
-    /**
-     * By default, user shall not be validated. However, for upload it shall be
-     * 
-     * @return true
-     */
-    protected boolean testeUser() {
-        return true;
-    }
-    
+
+	/**
+	 * By default, user shall not be validated. However, for upload it shall be
+	 * 
+	 * @return true
+	 */
+	protected boolean testeUser() {
+		return true;
+	}
+
 }

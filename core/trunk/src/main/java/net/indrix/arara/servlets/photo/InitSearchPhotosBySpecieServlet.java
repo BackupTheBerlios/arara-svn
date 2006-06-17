@@ -22,10 +22,9 @@ import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.servlets.ServletUtil;
 import net.indrix.arara.servlets.UploadConstants;
 
-
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
@@ -35,31 +34,33 @@ public class InitSearchPhotosBySpecieServlet extends RetrieveFamiliesServlet {
 	}
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
-		throws ServletException, IOException {
+			throws ServletException, IOException {
 
 		HttpSession session = req.getSession();
 
 		SpecieDAO dao = new SpecieDAO();
 		List list = null;
 		try {
-            logger.debug("Retrieving list of all species...");
+			logger.debug("Retrieving list of all species...");
 			list = dao.retrieve();
-            logger.debug("Converting to labelValueBean...");
+			logger.debug("Converting to labelValueBean...");
 			list = ServletUtil.specieDataAsLabelValueBean(list);
-            logger.debug("Putting to session...");
+			logger.debug("Putting to session...");
 
-            UploadPhotoBean uploadBean = new UploadPhotoBean();
+			UploadPhotoBean uploadBean = new UploadPhotoBean();
 			uploadBean.setSpecieList(list);
-            session.setAttribute(UploadConstants.UPLOAD_PHOTO_BEAN, uploadBean);            
+			session.setAttribute(UploadConstants.UPLOAD_PHOTO_BEAN, uploadBean);
 
 		} catch (DatabaseDownException e) {
-			logger.error(
-				"InitSearchPhotosBySpecieServlet.doGet : could not retrieve list of all species",
-				e);
+			logger
+					.error(
+							"InitSearchPhotosBySpecieServlet.doGet : could not retrieve list of all species",
+							e);
 		} catch (SQLException e) {
-			logger.error(
-				"InitSearchPhotosBySpecieServlet.doGet : could not retrieve list of all species",
-				e);
+			logger
+					.error(
+							"InitSearchPhotosBySpecieServlet.doGet : could not retrieve list of all species",
+							e);
 		}
 
 		super.doGet(req, res);

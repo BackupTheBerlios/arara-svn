@@ -14,28 +14,29 @@ import net.indrix.arara.utils.PropertiesManager;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class TesteMessageFormatter {
 
 	public static void main(String[] args) {
-        
-        String body = PropertiesManager.getProperty("email.newPhoto.body");
-        System.out.println("Body = " + body);
-        String bodyFormatted = "";
-        ArrayList list = new ArrayList();
-        list.add("Familia");
-        list.add("Especie");
-        list.add("http://www.aves.brasil.nom.br/servlet/showOnePhoto?photoId=" + 123);
 
-        try {
-            bodyFormatted = MessageComposer.formatMessage(body, list);
-            System.out.println(bodyFormatted);
-        } catch (WrongNumberOfValuesException e) {
-            System.out.println("Exception");
-        }
-        System.exit(1);        
+		String body = PropertiesManager.getProperty("email.newPhoto.body");
+		System.out.println("Body = " + body);
+		String bodyFormatted = "";
+		ArrayList list = new ArrayList();
+		list.add("Familia");
+		list.add("Especie");
+		list
+				.add("http://www.aves.brasil.nom.br/servlet/showOnePhoto?photoId=" + 123);
+
+		try {
+			bodyFormatted = MessageComposer.formatMessage(body, list);
+			System.out.println(bodyFormatted);
+		} catch (WrongNumberOfValuesException e) {
+			System.out.println("Exception");
+		}
+		System.exit(1);
 	}
 }

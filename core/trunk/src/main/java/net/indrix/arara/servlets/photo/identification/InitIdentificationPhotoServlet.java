@@ -33,21 +33,23 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class InitIdentificationPhotoServlet extends AbstractIdentificationServlet {
+public class InitIdentificationPhotoServlet extends
+		AbstractIdentificationServlet {
 	static Logger logger = Logger.getLogger("net.indrix.aves");
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
-		throws ServletException, IOException {
-        doPost(req, res);
+			throws ServletException, IOException {
+		doPost(req, res);
 	}
-    
+
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
-		throws ServletException, IOException {
-		logger.info("InitIdentificationPhotoServlet.doGet : entering method...");
+			throws ServletException, IOException {
+		logger
+				.info("InitIdentificationPhotoServlet.doGet : entering method...");
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
 		String nextPage = null;
@@ -57,14 +59,16 @@ public class InitIdentificationPhotoServlet extends AbstractIdentificationServle
 
 		User user = (User) session.getAttribute(ServletConstants.USER_KEY);
 		if (user == null) {
-			logger.debug("InitIdentificationPhotoServlet: USER is not logged...");
+			logger
+					.debug("InitIdentificationPhotoServlet: USER is not logged...");
 			errors.add(ServletConstants.USER_NOT_LOGGED);
-			// put errors in request 
+			// put errors in request
 			req.setAttribute(ServletConstants.ERRORS_KEY, errors);
 			nextPage = ServletConstants.LOGIN_PAGE;
 
 			String nextResourceToExecute = ServletUtil.getResource(req);
-			req.setAttribute(ServletConstants.NEXT_RESOURCE_AFTER_LOGIN, nextResourceToExecute);
+			req.setAttribute(ServletConstants.NEXT_RESOURCE_AFTER_LOGIN,
+					nextResourceToExecute);
 		} else {
 			PhotoModel model = new PhotoModel();
 
@@ -73,40 +77,44 @@ public class InitIdentificationPhotoServlet extends AbstractIdentificationServle
 			List list = null;
 			list = (List) session.getAttribute(ServletConstants.PHOTOS_LIST);
 
-            // retrieve families and species
-            FamilyDAO familyDao = new FamilyDAO();
-            SpecieDAO specieDao = new SpecieDAO();
-            List listOfSpecies = null;
-            List listOfFamilies = null;
-            try {
-                logger.debug("Retrieving list of all families...");
-                listOfFamilies = familyDao.retrieve();
-                logger.debug("Converting to labelValueBean...");
-                listOfFamilies = ServletUtil.familyDataAsLabelValueBean(listOfFamilies);
-                logger.debug("Putting to session...");
+			// retrieve families and species
+			FamilyDAO familyDao = new FamilyDAO();
+			SpecieDAO specieDao = new SpecieDAO();
+			List listOfSpecies = null;
+			List listOfFamilies = null;
+			try {
+				logger.debug("Retrieving list of all families...");
+				listOfFamilies = familyDao.retrieve();
+				logger.debug("Converting to labelValueBean...");
+				listOfFamilies = ServletUtil
+						.familyDataAsLabelValueBean(listOfFamilies);
+				logger.debug("Putting to session...");
 
-                logger.debug("Retrieving list of all species...");
-                listOfSpecies = specieDao.retrieve();
-                logger.debug("Converting to labelValueBean...");
-                listOfSpecies = ServletUtil.specieDataAsLabelValueBean(listOfSpecies);
-                logger.debug("Putting to session...");
+				logger.debug("Retrieving list of all species...");
+				listOfSpecies = specieDao.retrieve();
+				logger.debug("Converting to labelValueBean...");
+				listOfSpecies = ServletUtil
+						.specieDataAsLabelValueBean(listOfSpecies);
+				logger.debug("Putting to session...");
 
-                IdentifyPhotoBean identificationBean = new IdentifyPhotoBean();
-                identificationBean.setFamilyList(listOfFamilies);
-                identificationBean.setSpecieList(listOfSpecies);
-                session.setAttribute(
-                    IdentificationPhotoConstants.IDENTIFICATION_PHOTO_BEAN,
-                    identificationBean);
+				IdentifyPhotoBean identificationBean = new IdentifyPhotoBean();
+				identificationBean.setFamilyList(listOfFamilies);
+				identificationBean.setSpecieList(listOfSpecies);
+				session.setAttribute(
+						IdentificationPhotoConstants.IDENTIFICATION_PHOTO_BEAN,
+						identificationBean);
 
-            } catch (DatabaseDownException e) {
-                logger.error(
-                    "InitSearchPhotosBySpecieServlet.doGet : could not retrieve list of all species",
-                    e);
-            } catch (SQLException e) {
-                logger.error(
-                    "InitSearchPhotosBySpecieServlet.doGet : could not retrieve list of all species",
-                    e);
-            }
+			} catch (DatabaseDownException e) {
+				logger
+						.error(
+								"InitSearchPhotosBySpecieServlet.doGet : could not retrieve list of all species",
+								e);
+			} catch (SQLException e) {
+				logger
+						.error(
+								"InitSearchPhotosBySpecieServlet.doGet : could not retrieve list of all species",
+								e);
+			}
 
 			if ((photoId == null) || (list == null)) {
 				Photo photo = getPhotoFromDatabase(errors, photoId);
@@ -114,7 +122,8 @@ public class InitIdentificationPhotoServlet extends AbstractIdentificationServle
 					session.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
 					nextPage = ServletConstants.ONE_PHOTO_PAGE;
 
-					// retrieve all identifications already done for the given photo
+					// retrieve all identifications already done for the given
+					// photo
 					try {
 						retrieveIdentificationsForPhoto(model, photo);
 					} catch (DatabaseDownException e) {
@@ -143,7 +152,8 @@ public class InitIdentificationPhotoServlet extends AbstractIdentificationServle
 						try {
 							photoModel.retrievePhotoImage(photo);
 
-							// retrieve all identifications already done for the given photo
+							// retrieve all identifications already done for the
+							// given photo
 							retrieveIdentificationsForPhoto(model, photo);
 						} catch (DatabaseDownException e) {
 							logger.debug("DatabaseDownException.....", e);
@@ -166,8 +176,9 @@ public class InitIdentificationPhotoServlet extends AbstractIdentificationServle
 				nextPage = ServletConstants.ONE_PHOTO_PAGE;
 			}
 			req.setAttribute(ServletConstants.IDENTIFICATION_KEY, "true");
-            req.setAttribute(ServletConstants.VIEW_MODE_KEY, "identificationMode");
-            
+			req.setAttribute(ServletConstants.VIEW_MODE_KEY,
+					"identificationMode");
+
 		}
 
 		dispatcher = context.getRequestDispatcher(nextPage);

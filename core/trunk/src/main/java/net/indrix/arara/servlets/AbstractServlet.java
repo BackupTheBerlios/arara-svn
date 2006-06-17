@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Jefferson
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
@@ -39,13 +39,14 @@ public class AbstractServlet extends HttpServlet {
 	protected static Logger logger = Logger.getLogger("net.indrix.aves");
 
 	protected HashMap parseMultiPartFormData(HttpServletRequest request)
-		throws ServletException, IOException, FileUploadException {
+			throws ServletException, IOException, FileUploadException {
 		logger.debug(" - Entering parseMultiPartFormData(HttpServletRequest)");
-		String localRepository = PropertiesManager.getProperty(PropertiesManager.TEMP_FOLDER);
+		String localRepository = PropertiesManager
+				.getProperty(PropertiesManager.TEMP_FOLDER);
 		HashMap aData = new HashMap();
 		logger.debug(" - Temporary folder: " + localRepository);
-		DefaultFileItemFactory factory =
-			new DefaultFileItemFactory(1000000, new java.io.File(localRepository));
+		DefaultFileItemFactory factory = new DefaultFileItemFactory(1000000,
+				new java.io.File(localRepository));
 
 		FileUpload upload = new FileUpload(factory);
 		List fields = null;
@@ -60,7 +61,8 @@ public class AbstractServlet extends HttpServlet {
 			if (item.isFormField()) {
 				String key = item.getFieldName();
 				aData.put(key, item.getString().trim());
-				logger.debug("Adding data to map " + key + "," + item.getString().trim());
+				logger.debug("Adding data to map " + key + ","
+						+ item.getString().trim());
 			} else {
 				String file = item.getName();
 				if ((file != null) && ((!file.trim().equals("")))) {
@@ -69,12 +71,13 @@ public class AbstractServlet extends HttpServlet {
 					if (index > 0) {
 						filepath = file.substring(0, index);
 					}
-					String filename =
-						item.getName().substring(item.getName().lastIndexOf("\\") + 1);
+					String filename = item.getName().substring(
+							item.getName().lastIndexOf("\\") + 1);
 
 					aData.put(UploadConstants.FILE_NAME, filename);
 					aData.put(UploadConstants.FILE_URL, filepath);
-					aData.put(UploadConstants.FILE_SIZE, String.valueOf(item.getSize()));
+					aData.put(UploadConstants.FILE_SIZE, String.valueOf(item
+							.getSize()));
 					aData.put(UploadConstants.FILE_ITEM, item);
 				}
 			}
@@ -86,26 +89,30 @@ public class AbstractServlet extends HttpServlet {
 		return aData;
 	}
 
-    /**
-     * This method sends the user to the login page
-     * 
-     * @param req The http request object
-     * @param res The http response object
-     * 
-     * @return The next page to send the user to
-     * @throws ServletException if any servlet error occurs
-     * @throws IOException if any IO error occurs
-     */
-	protected String userNotLogged(HttpServletRequest req, HttpServletResponse res)
-		throws ServletException, IOException {
+	/**
+	 * This method sends the user to the login page
+	 * 
+	 * @param req
+	 *            The http request object
+	 * @param res
+	 *            The http response object
+	 * 
+	 * @return The next page to send the user to
+	 * @throws ServletException
+	 *             if any servlet error occurs
+	 * @throws IOException
+	 *             if any IO error occurs
+	 */
+	protected String userNotLogged(HttpServletRequest req,
+			HttpServletResponse res) throws ServletException, IOException {
 		List errors = new ArrayList();
 
 		logger.debug("errors is not null.");
 		errors.add(ServletConstants.USER_NOT_LOGGED);
-		// put errors in request 
+		// put errors in request
 		req.setAttribute(ServletConstants.ERRORS_KEY, errors);
 
 		String nextPage = ServletConstants.LOGIN_PAGE;
-        return nextPage;
+		return nextPage;
 	}
 }

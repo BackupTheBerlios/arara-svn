@@ -35,7 +35,7 @@ import net.indrix.arara.vo.User;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
@@ -48,50 +48,52 @@ public class UploadPhotoIdentifyServlet extends UploadPhotoServlet {
 	}
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
-		throws ServletException, IOException {
+			throws ServletException, IOException {
 		HttpSession session = req.getSession();
-        UploadPhotoBean uploadBean = (UploadPhotoBean)session.getAttribute(UploadConstants.UPLOAD_PHOTO_BEAN);
-        if (uploadBean == null){
-            uploadBean = new UploadPhotoBean();
-            // add bean to session
-            session.setAttribute(UploadConstants.UPLOAD_PHOTO_BEAN, uploadBean);
-        }      
-        super.doPost(req, res);
+		UploadPhotoBean uploadBean = (UploadPhotoBean) session
+				.getAttribute(UploadConstants.UPLOAD_PHOTO_BEAN);
+		if (uploadBean == null) {
+			uploadBean = new UploadPhotoBean();
+			// add bean to session
+			session.setAttribute(UploadConstants.UPLOAD_PHOTO_BEAN, uploadBean);
+		}
+		super.doPost(req, res);
 	}
 
-    /**
-     * Retrieve the next page to go
-     *  
-     * @return the next page to go
-     */
-    protected String getNextPage() {
-        return ServletConstants.UPLOAD_IDENTIFICATION_PAGE;
-    }
+	/**
+	 * Retrieve the next page to go
+	 * 
+	 * @return the next page to go
+	 */
+	protected String getNextPage() {
+		return ServletConstants.UPLOAD_IDENTIFICATION_PAGE;
+	}
 
-    /**
-     * Return the bean manager to be used
-     * 
-     * @return a new BeanManager instance
-     */
-    protected PhotoBeanManager getBeanManager() {
-        return new PhotoForIdentificationBeanManager();
-    }
+	/**
+	 * Return the bean manager to be used
+	 * 
+	 * @return a new BeanManager instance
+	 */
+	protected PhotoBeanManager getBeanManager() {
+		return new PhotoForIdentificationBeanManager();
+	}
 
-    /** 
-     * @param photo 
-     */
-    protected void addPhotoToDatabase(Photo photo)
-        throws DatabaseDownException, SQLException, ImageProcessingException {
-        UploadPhoto model = new UploadPhoto();
-        model.uploadPhotoForIdentification(photo);
-    }
+	/**
+	 * @param photo
+	 */
+	protected void addPhotoToDatabase(Photo photo)
+			throws DatabaseDownException, SQLException,
+			ImageProcessingException {
+		UploadPhoto model = new UploadPhoto();
+		model.uploadPhotoForIdentification(photo);
+	}
 
 	/**
 	 * @param data
 	 * @return
 	 */
 	protected Photo createPhoto(UploadPhotoBean bean, User user)
-		throws ParseException, InvalidFileException {
+			throws ParseException, InvalidFileException {
 		Photo photo = new Photo();
 		photo.setUser(user);
 		photo.setSpecie(new Specie());
@@ -102,9 +104,9 @@ public class UploadPhotoIdentifyServlet extends UploadPhotoServlet {
 		photo.setLens(bean.getLens());
 		photo.setFilm(bean.getFilm());
 		photo.setLocation(bean.getLocation());
-        List list = bean.getCitiesList();
-        String id = bean.getSelectedCityId();
-        photo.setCity(CityModel.getCity(list, id));       
+		List list = bean.getCitiesList();
+		String id = bean.getSelectedCityId();
+		photo.setCity(CityModel.getCity(list, id));
 		photo.setDate(createDate(bean.getDate()));
 		photo.getRealImage().setImageSize(Integer.parseInt(bean.getFileSize()));
 		try {
@@ -126,7 +128,7 @@ public class UploadPhotoIdentifyServlet extends UploadPhotoServlet {
 	protected void updateBirdData(Map data, UploadPhotoBean bean, List errors) {
 	}
 
-    protected String getSuccessPage() {
-        return ServletConstants.UPLOAD_SUCCESS_PAGE;
-    }
+	protected String getSuccessPage() {
+		return ServletConstants.UPLOAD_SUCCESS_PAGE;
+	}
 }

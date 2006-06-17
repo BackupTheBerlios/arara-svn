@@ -8,15 +8,16 @@ package net.indrix.arara.vo;
 
 /**
  * @author Jefferson_Angelica
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class CommonName {
 
 	private int id;
+
 	private String name;
-	
+
 	public CommonName() {
 		id = -1;
 		name = null;

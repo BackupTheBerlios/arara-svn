@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
@@ -39,7 +39,7 @@ public class ChangePasswordServlet extends HttpServlet {
 	static Logger logger = Logger.getLogger("net.indrix.aves");
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
-		throws ServletException, IOException {
+			throws ServletException, IOException {
 
 		List erros = new ArrayList();
 
@@ -59,7 +59,7 @@ public class ChangePasswordServlet extends HttpServlet {
 		if (user == null) {
 			logger.debug("User not found in session");
 			errors.add(ServletConstants.USER_NOT_LOGGED);
-			// put errors in request 
+			// put errors in request
 			req.setAttribute(ServletConstants.ERRORS_KEY, errors);
 			nextPage = ServletConstants.LOGIN_PAGE;
 		} else {
@@ -67,39 +67,40 @@ public class ChangePasswordServlet extends HttpServlet {
 			UserModel userModel = new UserModel();
 			boolean passwordOk = userModel.validatePassword(user, password);
 			if (passwordOk) {
-                // verify if the two new password matche
+				// verify if the two new password matche
 				if (newPassword.equals(confirmationPassword)) {
 					// new password ok. Update user password
 					UserModel model = new UserModel();
 					try {
 						model.changePassword(user, newPassword);
-                        nextPage = ServletConstants.PASSWORD_CHANGED_PAGE;
+						nextPage = ServletConstants.PASSWORD_CHANGED_PAGE;
 					} catch (DatabaseDownException e) {
 						erros.add(ServletConstants.DATABASE_ERROR);
 					} catch (SQLException e) {
 						erros.add(ServletConstants.DATABASE_ERROR);
-					} 
+					}
 				} else {
 					// segunda senha não bate com a primeira
 					erros.add(ServletConstants.PASSWORD_MISMATCH);
 				}
 			} else {
-                // invalid password
-                erros.add(ServletConstants.INVALID_PASSWORD);                
+				// invalid password
+				erros.add(ServletConstants.INVALID_PASSWORD);
 			}
 		}
 
 		if (!erros.isEmpty()) {
-			// coloca erros no request para registrar.jsp processar e apresentar mensagem de erro
+			// coloca erros no request para registrar.jsp processar e apresentar
+			// mensagem de erro
 			req.setAttribute(ServletConstants.ERRORS_KEY, erros);
 			req.setAttribute(ServletConstants.USER_KEY, null);
 
 			nextPage = ServletConstants.CHANGE_PASSWORD_PAGE;
 		}
 
-        dispatcher = context.getRequestDispatcher(nextPage);
-        logger.debug("Dispatching to " + nextPage);
-        
+		dispatcher = context.getRequestDispatcher(nextPage);
+		logger.debug("Dispatching to " + nextPage);
+
 		dispatcher.forward(req, res);
 	}
 

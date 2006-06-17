@@ -27,14 +27,15 @@ public class SessionControl implements HttpSessionListener {
 		NumberOfUsers numUsers = null;
 		synchronized (app) {
 			/* inc the number of on-line users */
-			numUsers = (NumberOfUsers) app.getAttribute(ServletConstants.USERS_ON_LINE);
+			numUsers = (NumberOfUsers) app
+					.getAttribute(ServletConstants.USERS_ON_LINE);
 			if (numUsers == null) {
 				numUsers = new NumberOfUsers();
 				app.setAttribute(ServletConstants.USERS_ON_LINE, numUsers);
 			}
 			numUsers.inc();
 		}
-		
+
 		logger.debug("  ---  Usuarios on-line  >>>  " + numUsers.getNumber());
 	}
 
@@ -47,18 +48,19 @@ public class SessionControl implements HttpSessionListener {
 
 		logger.info("Session " + session.getId() + " has been destroyed");
 
-        NumberOfUsers numUsers = null;
-        synchronized (app) {
-            /* inc the number of on-line users */
-            numUsers = (NumberOfUsers) app.getAttribute(ServletConstants.USERS_ON_LINE);
-            if (numUsers == null) {
-                numUsers = new NumberOfUsers();
-                app.setAttribute(ServletConstants.USERS_ON_LINE, numUsers);
-            }
-            numUsers.dec();
-        }
-        
-        logger.debug("  ---  Usuarios on-line  >>>  " + numUsers.getNumber());
+		NumberOfUsers numUsers = null;
+		synchronized (app) {
+			/* inc the number of on-line users */
+			numUsers = (NumberOfUsers) app
+					.getAttribute(ServletConstants.USERS_ON_LINE);
+			if (numUsers == null) {
+				numUsers = new NumberOfUsers();
+				app.setAttribute(ServletConstants.USERS_ON_LINE, numUsers);
+			}
+			numUsers.dec();
+		}
+
+		logger.debug("  ---  Usuarios on-line  >>>  " + numUsers.getNumber());
 	}
 
 	class NumberOfUsers {

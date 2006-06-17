@@ -31,7 +31,7 @@ import net.indrix.arara.tools.email.NoRecipientException;
 public class ExemploMail extends HttpServlet {
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
-		throws ServletException, IOException {
+			throws ServletException, IOException {
 
 		PrintWriter out = res.getWriter();
 		res.setContentType("text/html");
@@ -39,16 +39,16 @@ public class ExemploMail extends HttpServlet {
 
 			sendOne(req);
 			out.println("E-mail 1 enviado");
-            
+
 			sendTwo(req);
-            out.println("E-mail 2 enviado");
+			out.println("E-mail 2 enviado");
 		} catch (MessagingException e) {
 			out.println("Email nao pode ser enviado! " + e.getMessage());
 		}
 	}
 
-	private void sendTwo(HttpServletRequest req)
-		throws NoRecipientException, AddressException, MessageFormatException, SendFailedException {
+	private void sendTwo(HttpServletRequest req) throws NoRecipientException,
+			AddressException, MessageFormatException, SendFailedException {
 		MailClass m = new MailClass("smtp2.locaweb.com.br");
 		m.setToAddress(req.getParameter("to"));
 		m.setFromAddress("teste@dominio.com.br", "Teste");
@@ -57,25 +57,26 @@ public class ExemploMail extends HttpServlet {
 		m.sendMessage(true);
 	}
 
-	private void sendOne(HttpServletRequest req) throws MessagingException, AddressException {
+	private void sendOne(HttpServletRequest req) throws MessagingException,
+			AddressException {
 		String to = req.getParameter("to");
-		
+
 		String from = "teste@dominio.com.br";
-		
+
 		Properties props = new Properties();
 		props.put("mail.smtp.host", "smtp2.locaweb.com.br");
 		Session session = Session.getInstance(props, null);
-		
+
 		MimeMessage message = new MimeMessage(session);
-		
+
 		message.setFrom(new InternetAddress(from));
 		Address toAddress = new InternetAddress(to);
 		message.addRecipient(Message.RecipientType.TO, toAddress);
-		
+
 		message.setSubject("teste de envio de e-mails");
-		
+
 		message.setContent("este eh um teste de envio", "text/plain");
-		
+
 		Transport.send(message);
 	}
 }

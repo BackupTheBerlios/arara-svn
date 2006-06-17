@@ -8,10 +8,10 @@ package net.indrix.arara.servlets.sound;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public interface SoundConstants {
-    public static final String LINK_KEY = "linkKey";
+	public static final String LINK_KEY = "linkKey";
 }

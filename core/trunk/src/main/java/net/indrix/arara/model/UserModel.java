@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Jefferson_Angelica
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
@@ -39,25 +39,30 @@ public class UserModel extends AbstractModel {
 	 */
 	protected static Logger logger = Logger.getLogger("net.indrix.aves");
 
-    /**
-     * The object used to retrieve database information
-     */
+	/**
+	 * The object used to retrieve database information
+	 */
 	UserDAO userDAO = new UserDAO();
 
 	/**
 	 * This method performs the login for a user
 	 * 
-	 * @param login The user login 
-	 * @param password The user password
+	 * @param login
+	 *            The user login
+	 * @param password
+	 *            The user password
 	 * 
 	 * @return A valid user object, if the login is success, null otherwise
 	 * 
-	 * @throws DatabaseDownException If the database is down
-	 * @throws SQLException If some SQL Exception occurs
-	 * @throws UserNotFoundException If the user is not in database
+	 * @throws DatabaseDownException
+	 *             If the database is down
+	 * @throws SQLException
+	 *             If some SQL Exception occurs
+	 * @throws UserNotFoundException
+	 *             If the user is not in database
 	 */
 	public User login(String login, String password)
-		throws DatabaseDownException, SQLException, UserNotFoundException {
+			throws DatabaseDownException, SQLException, UserNotFoundException {
 		boolean passwordOk = false;
 
 		User dbUser = userDAO.retrieve(login);
@@ -75,8 +80,10 @@ public class UserModel extends AbstractModel {
 	/**
 	 * This method checks if a given password is correct for a given user
 	 * 
-	 * @param user The user object 
-	 * @param password The input password
+	 * @param user
+	 *            The user object
+	 * @param password
+	 *            The input password
 	 * 
 	 * @return true if the password is correct, false otherwise
 	 */
@@ -97,18 +104,24 @@ public class UserModel extends AbstractModel {
 	/**
 	 * This method performs the login for a user
 	 * 
-	 * @param login The user login 
-	 * @param password The user password
+	 * @param login
+	 *            The user login
+	 * @param password
+	 *            The user password
 	 * 
 	 * @return A valid user object, if the login is success, null otherwise
 	 * 
-	 * @throws DatabaseDownException If the database is down
-	 * @throws SQLException If some SQL Exception occurs
-	 * @throws UserNotFoundException If the user is not in database
+	 * @throws DatabaseDownException
+	 *             If the database is down
+	 * @throws SQLException
+	 *             If some SQL Exception occurs
+	 * @throws UserNotFoundException
+	 *             If the user is not in database
 	 */
 	public void changePassword(User user, String password)
-		throws DatabaseDownException, SQLException {
-		logger.debug("Changing password for " + user.getLogin() + " to " + password);
+			throws DatabaseDownException, SQLException {
+		logger.debug("Changing password for " + user.getLogin() + " to "
+				+ password);
 		boolean passwordOk = false;
 
 		// encrypt new password
@@ -122,14 +135,18 @@ public class UserModel extends AbstractModel {
 	/**
 	 * This method verifies if the given login exists in the database
 	 * 
-	 * @param login The login to be verified in the database
+	 * @param login
+	 *            The login to be verified in the database
 	 * 
 	 * @return true if the login exists in the database, false otherwise
 	 * 
-	 * @throws DatabaseDownException If the database is down
-	 * @throws SQLException If some SQL Exception occurs
+	 * @throws DatabaseDownException
+	 *             If the database is down
+	 * @throws SQLException
+	 *             If some SQL Exception occurs
 	 */
-	public boolean userExists(String login) throws DatabaseDownException, SQLException {
+	public boolean userExists(String login) throws DatabaseDownException,
+			SQLException {
 		boolean exists = true;
 		try {
 			User u = retrieve(login);
@@ -145,17 +162,21 @@ public class UserModel extends AbstractModel {
 
 	/**
 	 * This method retrieves an user from database, given the login
-	 *  
-	 * @param login The user login to be retrieved
+	 * 
+	 * @param login
+	 *            The user login to be retrieved
 	 * 
 	 * @return A user object
 	 * 
-	 * @throws DatabaseDownException If the database is down
-	 * @throws SQLException If some SQL Exception occurs
-	 * @throws UserNotFoundException If the user is not in database
+	 * @throws DatabaseDownException
+	 *             If the database is down
+	 * @throws SQLException
+	 *             If some SQL Exception occurs
+	 * @throws UserNotFoundException
+	 *             If the user is not in database
 	 */
-	public User retrieve(String login)
-		throws DatabaseDownException, SQLException, UserNotFoundException {
+	public User retrieve(String login) throws DatabaseDownException,
+			SQLException, UserNotFoundException {
 		User user = null;
 		user = userDAO.retrieve(login);
 		if (user == null) {
@@ -166,16 +187,20 @@ public class UserModel extends AbstractModel {
 
 	/**
 	 * This method retrieves all users from database that want to receive email
-	 *  
+	 * 
 	 * @return A list of user objects
 	 * 
-	 * @throws DatabaseDownException If the database is down
-	 * @throws SQLException If some SQL Exception occurs
-	 * @throws UserNotFoundException If the user is not in database
+	 * @throws DatabaseDownException
+	 *             If the database is down
+	 * @throws SQLException
+	 *             If some SQL Exception occurs
+	 * @throws UserNotFoundException
+	 *             If the user is not in database
 	 */
-	public List retrieveForEmail()
-		throws DatabaseDownException, SQLException, UserNotFoundException {
-		logger.debug("UserModel.retrieveForEmail : retrieving users to send email to");
+	public List retrieveForEmail() throws DatabaseDownException, SQLException,
+			UserNotFoundException {
+		logger
+				.debug("UserModel.retrieveForEmail : retrieving users to send email to");
 		User user = null;
 		List list = userDAO.retrieveForEmail();
 		if ((list == null) || (list.isEmpty())) {
@@ -184,33 +209,40 @@ public class UserModel extends AbstractModel {
 		return list;
 	}
 
-    /**
-     * This method retrieves all users from database that want to receive email
-     *  
-     * @return A list of user objects
-     * 
-     * @throws DatabaseDownException If the database is down
-     * @throws SQLException If some SQL Exception occurs
-     * @throws UserNotFoundException If the user is not in database
-     */
-    public List retrieveForPhotoIdentificationEmail()
-        throws DatabaseDownException, SQLException, UserNotFoundException {
-        logger.debug("UserModel.retrieveForPhotoIdentificationEmail : retrieving users to send email to");
-        User user = null;
-        List list = userDAO.retrieveForPhotoIdentificationEmail();
-        if ((list == null) || (list.isEmpty())) {
-            logger.debug("List with users is EMPTY !");
-        }
-        return list;
-    }
+	/**
+	 * This method retrieves all users from database that want to receive email
+	 * 
+	 * @return A list of user objects
+	 * 
+	 * @throws DatabaseDownException
+	 *             If the database is down
+	 * @throws SQLException
+	 *             If some SQL Exception occurs
+	 * @throws UserNotFoundException
+	 *             If the user is not in database
+	 */
+	public List retrieveForPhotoIdentificationEmail()
+			throws DatabaseDownException, SQLException, UserNotFoundException {
+		logger
+				.debug("UserModel.retrieveForPhotoIdentificationEmail : retrieving users to send email to");
+		User user = null;
+		List list = userDAO.retrieveForPhotoIdentificationEmail();
+		if ((list == null) || (list.isEmpty())) {
+			logger.debug("List with users is EMPTY !");
+		}
+		return list;
+	}
 
 	/**
 	 * This method inserts a new User to the database
 	 * 
-	 * @param user The user object to be inserted into the database
+	 * @param user
+	 *            The user object to be inserted into the database
 	 * 
-	 * @throws DatabaseDownException If the database is down
-	 * @throws SQLException If some SQL Exception occurs
+	 * @throws DatabaseDownException
+	 *             If the database is down
+	 * @throws SQLException
+	 *             If some SQL Exception occurs
 	 */
 	public void insert(User user) throws DatabaseDownException, SQLException {
 		encryptUserPassword(user);
@@ -219,31 +251,38 @@ public class UserModel extends AbstractModel {
 		sendEmailToWebmaster(user);
 	}
 
-    /**
-     * This method updates a User to the database
-     * 
-     * @param user The user object to be updated into the database
-     * 
-     * @throws DatabaseDownException If the database is down
-     * @throws SQLException If some SQL Exception occurs
-     */
-    public void update(User user) throws DatabaseDownException, SQLException {
-        userDAO.update(user);
-    }
+	/**
+	 * This method updates a User to the database
+	 * 
+	 * @param user
+	 *            The user object to be updated into the database
+	 * 
+	 * @throws DatabaseDownException
+	 *             If the database is down
+	 * @throws SQLException
+	 *             If some SQL Exception occurs
+	 */
+	public void update(User user) throws DatabaseDownException, SQLException {
+		userDAO.update(user);
+	}
 
 	/**
 	 * This method retrieves an user from database, given the login
-	 *  
-	 * @param login The user login to be retrieved
+	 * 
+	 * @param login
+	 *            The user login to be retrieved
 	 * 
 	 * @return A user object
 	 * 
-	 * @throws DatabaseDownException If the database is down
-	 * @throws SQLException If some SQL Exception occurs
-	 * @throws UserNotFoundException If the user is not in database
+	 * @throws DatabaseDownException
+	 *             If the database is down
+	 * @throws SQLException
+	 *             If some SQL Exception occurs
+	 * @throws UserNotFoundException
+	 *             If the user is not in database
 	 */
-	public User sendPassword(String login)
-		throws DatabaseDownException, SQLException, UserNotFoundException {
+	public User sendPassword(String login) throws DatabaseDownException,
+			SQLException, UserNotFoundException {
 		User user = null;
 		user = userDAO.retrieve(login);
 		if (user == null) {
@@ -259,15 +298,17 @@ public class UserModel extends AbstractModel {
 	/**
 	 * This method notifies the webmaster about a new user
 	 * 
-	 * @param user The new user
+	 * @param user
+	 *            The new user
 	 */
 	private void sendEmailToWebmaster(User user) {
 		String server = PropertiesManager.getProperty("email.server");
-        String fromAdd = PropertiesManager.getProperty("email.fromAdd");
+		String fromAdd = PropertiesManager.getProperty("email.fromAdd");
 		String subject = PropertiesManager.getProperty("email.newUser.subject");
 		String body = PropertiesManager.getProperty("email.newUser.body");
 		String toAdd = PropertiesManager.getProperty("email.newUser.toAdd");
-		String fromText = PropertiesManager.getProperty("email.newUser.fromText");
+		String fromText = PropertiesManager
+				.getProperty("email.newUser.fromText");
 		try {
 
 			// send password to user
@@ -292,7 +333,8 @@ public class UserModel extends AbstractModel {
 			sender.sendMessage(true);
 			// true indicates to emailObject to send the message right now
 		} catch (MessageFormatException e) {
-			logger.error("exception -> MessageFormatException in sendEmail " + e);
+			logger.error("exception -> MessageFormatException in sendEmail "
+					+ e);
 		} catch (AddressException e) {
 			logger.error("exception -> AddressException in sendEmail " + e);
 		} catch (NoRecipientException e) {
@@ -307,14 +349,16 @@ public class UserModel extends AbstractModel {
 	/**
 	 * This method sends the password to the given user
 	 * 
-	 * @param user The user that requested his/her password
+	 * @param user
+	 *            The user that requested his/her password
 	 */
 	private void sendPassword(User user) {
-        Locale l = new Locale(user.getLanguage());
-        EmailResourceBundle bundle = (EmailResourceBundle) EmailResourceBundle.getInstance();
-        
+		Locale l = new Locale(user.getLanguage());
+		EmailResourceBundle bundle = (EmailResourceBundle) EmailResourceBundle
+				.getInstance();
+
 		String server = PropertiesManager.getProperty("email.server");
-        String fromAdd = PropertiesManager.getProperty("email.from");
+		String fromAdd = PropertiesManager.getProperty("email.from");
 		String subject = bundle.getString("email.forgotPassword.subject", l);
 		String body = bundle.getString("email.forgotPassword.body", l);
 		String fromText = bundle.getString("email.forgotPassword.fromText", l);
@@ -342,7 +386,8 @@ public class UserModel extends AbstractModel {
 			sender.sendMessage(true);
 			// true indicates to emailObject to send the message right now
 		} catch (MessageFormatException e) {
-			logger.error("exception -> MessageFormatException in sendEmail " + e);
+			logger.error("exception -> MessageFormatException in sendEmail "
+					+ e);
 		} catch (AddressException e) {
 			logger.error("exception -> AddressException in sendEmail " + e);
 		} catch (NoRecipientException e) {
@@ -399,7 +444,8 @@ public class UserModel extends AbstractModel {
 	/**
 	 * This method encrypts the user password
 	 * 
-	 * @param user The user object that will have the password encrypted
+	 * @param user
+	 *            The user object that will have the password encrypted
 	 */
 	private void encryptUserPassword(User user) {
 		String pass = user.getPassword();
@@ -408,9 +454,11 @@ public class UserModel extends AbstractModel {
 	}
 
 	/**
-	 * This method verifies if the password contains a character different than digit or letter
+	 * This method verifies if the password contains a character different than
+	 * digit or letter
 	 * 
-	 * @param p The password string to be verified
+	 * @param p
+	 *            The password string to be verified
 	 * 
 	 * @return true if the pass is valid, false otherwise
 	 */

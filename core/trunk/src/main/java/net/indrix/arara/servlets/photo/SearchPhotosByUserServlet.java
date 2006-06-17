@@ -27,13 +27,13 @@ import net.indrix.arara.vo.User;
 
 /**
  * @author Jefferson
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class SearchPhotosByUserServlet extends AbstractSearchPhotosServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
-		throws ServletException, IOException {
+			throws ServletException, IOException {
 
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
@@ -52,21 +52,22 @@ public class SearchPhotosByUserServlet extends AbstractSearchPhotosServlet {
 		String action = req.getParameter(ServletConstants.ACTION);
 
 		List list = null;
-		PhotoPaginationController controller =
-			(PhotoPaginationController) getPaginationController(session,
-				false,
-				PAGINATION_FOR_ALL_USER);
+		PhotoPaginationController controller = (PhotoPaginationController) getPaginationController(
+				session, false, PAGINATION_FOR_ALL_USER);
 		controller.setId(userId);
-        try {
-            list = controller.doAction(action);
-        } catch (InvalidControllerException e) {
-            try {
-                list = controller.doAction(ServletConstants.BEGIN);
-            } catch (InvalidControllerException e1) {
-                // this should never happend
-                logger.fatal("InvalidControllerException when doing BEGIN action...", e1);
-            }
-        }
+		try {
+			list = controller.doAction(action);
+		} catch (InvalidControllerException e) {
+			try {
+				list = controller.doAction(ServletConstants.BEGIN);
+			} catch (InvalidControllerException e1) {
+				// this should never happend
+				logger
+						.fatal(
+								"InvalidControllerException when doing BEGIN action...",
+								e1);
+			}
+		}
 
 		Iterator it = list.iterator();
 		while (it.hasNext()) {
@@ -76,23 +77,26 @@ public class SearchPhotosByUserServlet extends AbstractSearchPhotosServlet {
 		logger.debug("List of photos retrieved...");
 		logger.debug("Putting list of photos in session");
 		session.setAttribute(ServletConstants.PHOTOS_LIST, list);
-		session.setAttribute(ServletConstants.SERVLET_TO_CALL, "/servlet/searchPhotosByUser");
+		session.setAttribute(ServletConstants.SERVLET_TO_CALL,
+				"/servlet/searchPhotosByUser");
 		nextPage = ServletConstants.ALL_PHOTOS_PAGE;
 
-        // adding the user id to request, so it can be sent back by view
-        req.setAttribute(ServletConstants.ID, userIdStr);
+		// adding the user id to request, so it can be sent back by view
+		req.setAttribute(ServletConstants.ID, userIdStr);
 
 		if (user != null) {
-			loggerActions.info("User " + user.getLogin() + " has selected photos by user.");
+			loggerActions.info("User " + user.getLogin()
+					+ " has selected photos by user.");
 		} else {
-            String ip = req.getRemoteAddr();               
-            Locale locale = req.getLocale();
-            loggerActions.info("Anonymous "+ " from IP " + ip + "(" + locale + ") has selected all photos by user.");
+			String ip = req.getRemoteAddr();
+			Locale locale = req.getLocale();
+			loggerActions.info("Anonymous " + " from IP " + ip + "(" + locale
+					+ ") has selected all photos by user.");
 		}
 
 		if (!errors.isEmpty()) {
 			logger.debug("errors is not null.");
-			// put errors in request 
+			// put errors in request
 			req.setAttribute(ServletConstants.ERRORS_KEY, errors);
 			nextPage = ServletConstants.UPLOAD_PAGE;
 		}

@@ -6,9 +6,9 @@
  */
 package net.indrix.arara.model;
 
-import org.apache.log4j.Logger;
-
 import net.indrix.arara.utils.PropertiesManager;
+
+import org.apache.log4j.Logger;
 
 /**
  * @author Jeff

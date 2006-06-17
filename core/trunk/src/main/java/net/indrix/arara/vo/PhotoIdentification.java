@@ -10,26 +10,33 @@ import java.util.Date;
 
 /**
  * @author Jeff
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class PhotoIdentification {
-    private int id;
-    private User user;
-    private Specie specie;
-    private Date date;
-    private String comment;
-    private Age age;
-    private Sex sex;
-    private Photo photo;
-    
-    public PhotoIdentification(){
-        specie = new Specie();
-        user = null;
-        photo = null;
-    }
-    
+	private int id;
+
+	private User user;
+
+	private Specie specie;
+
+	private Date date;
+
+	private String comment;
+
+	private Age age;
+
+	private Sex sex;
+
+	private Photo photo;
+
+	public PhotoIdentification() {
+		specie = new Specie();
+		user = null;
+		photo = null;
+	}
+
 	/**
 	 * @return
 	 */
@@ -142,40 +149,40 @@ public class PhotoIdentification {
 		this.user = user;
 	}
 
-    public String toString(){
-        StringBuffer buffer = new StringBuffer("[");
-        buffer.append(id);
-        buffer.append(",");
-        buffer.append(date);
-        buffer.append(",");
+	public String toString() {
+		StringBuffer buffer = new StringBuffer("[");
+		buffer.append(id);
+		buffer.append(",");
+		buffer.append(date);
+		buffer.append(",");
 
-        if (user != null) {
-            buffer.append(user.getLogin());
-            buffer.append(" (");
-            buffer.append(user.getEmail());
-            buffer.append("),");
-        }
+		if (user != null) {
+			buffer.append(user.getLogin());
+			buffer.append(" (");
+			buffer.append(user.getEmail());
+			buffer.append("),");
+		}
 
-        if (specie != null) {
-            buffer.append(specie.getId());
-            buffer.append(",");
-            buffer.append(specie.getName());
-            buffer.append(",");
+		if (specie != null) {
+			buffer.append(specie.getId());
+			buffer.append(",");
+			buffer.append(specie.getName());
+			buffer.append(",");
 
-            if (specie.getFamily() != null) {
-                buffer.append(specie.getFamily().getId());
-                buffer.append(",");
-                buffer.append(specie.getFamily().getName());
-                buffer.append(",");
-            }
+			if (specie.getFamily() != null) {
+				buffer.append(specie.getFamily().getId());
+				buffer.append(",");
+				buffer.append(specie.getFamily().getName());
+				buffer.append(",");
+			}
 
-            buffer.append(specie.getCommonNamesString());
-            buffer.append(",");
-        }
-        buffer.append(",");
-        buffer.append(comment);
-        buffer.append("]");
+			buffer.append(specie.getCommonNamesString());
+			buffer.append(",");
+		}
+		buffer.append(",");
+		buffer.append(comment);
+		buffer.append("]");
 
-        return buffer.toString();        
-    }
+		return buffer.toString();
+	}
 }

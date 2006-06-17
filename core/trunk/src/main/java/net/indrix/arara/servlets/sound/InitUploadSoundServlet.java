@@ -31,15 +31,15 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Jefferson
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class InitUploadSoundServlet extends RetrieveFamiliesServlet {
-    static Logger logger = Logger.getLogger("net.indrix.aves");
-        
+	static Logger logger = Logger.getLogger("net.indrix.aves");
+
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
-		throws ServletException, IOException {
+			throws ServletException, IOException {
 		String nextPage = null;
 		List errors = new ArrayList();
 		List messages = new ArrayList();
@@ -48,35 +48,37 @@ public class InitUploadSoundServlet extends RetrieveFamiliesServlet {
 		if (user == null) {
 			logger.debug("errors is not null.");
 			errors.add(ServletConstants.USER_NOT_LOGGED);
-			// put errors in request 
+			// put errors in request
 			req.setAttribute(ServletConstants.ERRORS_KEY, errors);
 			nextPage = ServletConstants.LOGIN_PAGE;
-            
-            RequestDispatcher dispatcher = null;
-            ServletContext context = this.getServletContext();
-            dispatcher = context.getRequestDispatcher(nextPage);
-            logger.debug("Dispatching to " + nextPage);
-            dispatcher.forward(req, res);
-            
-		} else {
-            // put states on request
-            List list = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
 
-            // reset upload data bean
-            UploadBean uploadBean =
-                (UploadSoundBean) session.getAttribute(UploadPhotoConstants.UPLOAD_SOUND_BEAN);
-            if (uploadBean == null) {
-                uploadBean = new UploadSoundBean();
-                session.setAttribute(UploadPhotoConstants.UPLOAD_SOUND_BEAN, uploadBean);
-            }
-            uploadBean.setStatesList(list);
-            uploadBean.setCitiesList(null);
-            uploadBean.setSelectedAgeId(null);
-            uploadBean.setSelectedCityId(null);
-            uploadBean.setSelectedSexId(null);
-            uploadBean.setSelectedStateId(null);
-            
-            super.doGet(req, res);
+			RequestDispatcher dispatcher = null;
+			ServletContext context = this.getServletContext();
+			dispatcher = context.getRequestDispatcher(nextPage);
+			logger.debug("Dispatching to " + nextPage);
+			dispatcher.forward(req, res);
+
+		} else {
+			// put states on request
+			List list = ServletUtil.statesDataAsLabelValueBean(StatesModel
+					.getStates());
+
+			// reset upload data bean
+			UploadBean uploadBean = (UploadSoundBean) session
+					.getAttribute(UploadPhotoConstants.UPLOAD_SOUND_BEAN);
+			if (uploadBean == null) {
+				uploadBean = new UploadSoundBean();
+				session.setAttribute(UploadPhotoConstants.UPLOAD_SOUND_BEAN,
+						uploadBean);
+			}
+			uploadBean.setStatesList(list);
+			uploadBean.setCitiesList(null);
+			uploadBean.setSelectedAgeId(null);
+			uploadBean.setSelectedCityId(null);
+			uploadBean.setSelectedSexId(null);
+			uploadBean.setSelectedStateId(null);
+
+			super.doGet(req, res);
 		}
 	}
 
@@ -87,30 +89,34 @@ public class InitUploadSoundServlet extends RetrieveFamiliesServlet {
 		return ServletConstants.UPLOAD_SOUND_PAGE;
 	}
 
-    /**
-     * By default, user shall not be validated. However, for upload it shall be
-     * 
-     * @return true
-     */
-    protected boolean testeUser() {
-        return true;
-    }
+	/**
+	 * By default, user shall not be validated. However, for upload it shall be
+	 * 
+	 * @return true
+	 */
+	protected boolean testeUser() {
+		return true;
+	}
 
-    /**
-     * This method retrieves or creates a bean, set the list in it and put the bean to the session
-     * 
-     * @param session Session to store the bean
-     * @param list The list retrieved from database
-     */
-    protected void handleListOfFamilies(HttpSession session, List list) {
-        UploadSoundBean uploadBean = (UploadSoundBean)session.getAttribute(UploadSoundConstants.UPLOAD_SOUND_BEAN);
-        if (uploadBean == null){
-            uploadBean = new UploadSoundBean();
-        }
-        uploadBean.setFamilyList(list);
-        
-        // add bean to session
-        session.setAttribute(UploadConstants.UPLOAD_SOUND_BEAN, uploadBean);
-    }
+	/**
+	 * This method retrieves or creates a bean, set the list in it and put the
+	 * bean to the session
+	 * 
+	 * @param session
+	 *            Session to store the bean
+	 * @param list
+	 *            The list retrieved from database
+	 */
+	protected void handleListOfFamilies(HttpSession session, List list) {
+		UploadSoundBean uploadBean = (UploadSoundBean) session
+				.getAttribute(UploadSoundConstants.UPLOAD_SOUND_BEAN);
+		if (uploadBean == null) {
+			uploadBean = new UploadSoundBean();
+		}
+		uploadBean.setFamilyList(list);
+
+		// add bean to session
+		session.setAttribute(UploadConstants.UPLOAD_SOUND_BEAN, uploadBean);
+	}
 
 }

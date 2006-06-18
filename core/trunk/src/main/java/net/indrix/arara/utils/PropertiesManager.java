@@ -97,9 +97,15 @@ public class PropertiesManager {
 			InputStream input = cl.getResourceAsStream(file);
 			
 			logger.debug("InputStream = " + input);
-			properties = new Properties();
-			properties.load(input);
 			
+			if (input != null){
+				properties = new Properties();
+				properties.load(input);				
+			}
+			else {
+				logger.error("File=" + file + "input=" + input + "Classloader=" + cl.toString());
+				throw new IOException("Error reading " + file);
+			}
 		} catch (IOException e) {
 			logger.error("Error reading property", e);
 		}

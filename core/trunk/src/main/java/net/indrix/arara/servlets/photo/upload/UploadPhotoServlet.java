@@ -56,8 +56,7 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 		logger.debug("Initializing UploadPhotoServlet...");
 	}
 
-	public void doPost(HttpServletRequest req, HttpServletResponse res)
-			throws ServletException, IOException {
+	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
 		String nextPage = null;
@@ -75,8 +74,7 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 			Map data = null;
 			try {
 				data = parseMultiPartFormData(req);
-				UploadPhotoBean photoBean = (UploadPhotoBean) session
-						.getAttribute(UploadConstants.UPLOAD_PHOTO_BEAN);
+				UploadPhotoBean photoBean = (UploadPhotoBean) session.getAttribute(UploadConstants.UPLOAD_PHOTO_BEAN);
 
 				logger.debug("Calling updateBean");
 				if (updateBean(data, photoBean, errors)) {
@@ -84,8 +82,7 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 					try {
 						Photo photo = createPhoto(photoBean, user);
 						if (photo.getRealImage().getImageSize() > MAX_PHOTO_SIZE) {
-							logger.debug("photo with size = "
-									+ photo.getRealImage().getImageSize());
+							logger.debug("photo with size = " + photo.getRealImage().getImageSize());
 							errors.add(UploadConstants.INVALID_FILE_SIZE);
 						} else {
 							logger.debug("Calling addPhotoToDatabase " + photo);
@@ -95,12 +92,9 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 							// next page
 							nextPage = getSuccessPage();
 
-							session.setAttribute(
-									ServletConstants.CURRENT_PHOTO, photo);
+							session.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
 
-							loggerActions.info("User " + user.getLogin()
-									+ " from IP " + req.getRemoteAddr()
-									+ " has uploaded one photo.");
+							loggerActions.info("User " + user.getLogin() + " from IP " + req.getRemoteAddr() + " has uploaded one photo.");
 						}
 					} catch (ParseException e1) {
 						logger.debug("ParseException.....");
@@ -164,9 +158,7 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 	/**
 	 * @param photo
 	 */
-	protected void addPhotoToDatabase(Photo photo)
-			throws DatabaseDownException, SQLException,
-			ImageProcessingException {
+	protected void addPhotoToDatabase(Photo photo) throws DatabaseDownException, SQLException, ImageProcessingException {
 		UploadPhoto dao = new UploadPhoto();
 		dao.uploadPhoto(photo);
 	}
@@ -175,25 +167,18 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 	 * @param data
 	 * @return
 	 */
-	protected Photo createPhoto(UploadPhotoBean bean, User user)
-			throws ParseException, InvalidFileException {
+	protected Photo createPhoto(UploadPhotoBean bean, User user) throws ParseException, InvalidFileException {
 		Photo photo = new Photo();
 		photo.setUser(user);
-		photo.setSpecie(createSpecie(bean.getSelectedSpecieId(), bean
-				.getSelectedFamilyId()));
+		photo.setSpecie(createSpecie(bean.getSelectedSpecieId(), bean.getSelectedFamilyId()));
 
-		photo
-				.setAge(AgeModel.getAge(Integer.parseInt(bean
-						.getSelectedAgeId())));
-		photo
-				.setSex(SexModel.getSex(Integer.parseInt(bean
-						.getSelectedSexId())));
+		photo.setAge(AgeModel.getAge(Integer.parseInt(bean.getSelectedAgeId())));
+		photo.setSex(SexModel.getSex(Integer.parseInt(bean.getSelectedSexId())));
 		photo.setCamera(bean.getCamera());
 		photo.setLens(bean.getLens());
 		photo.setFilm(bean.getFilm());
 		photo.setLocation(bean.getLocation());
-		photo.setCity(CityModel.getCity(bean.getCitiesList(), bean
-				.getSelectedCityId()));
+		photo.setCity(CityModel.getCity(bean.getCitiesList(), bean.getSelectedCityId()));
 		photo.setDate(createDate(bean.getDate()));
 		photo.getRealImage().setImageSize(Integer.parseInt(bean.getFileSize()));
 		try {

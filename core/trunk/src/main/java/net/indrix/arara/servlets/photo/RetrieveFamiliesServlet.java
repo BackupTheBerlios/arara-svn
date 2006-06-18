@@ -38,8 +38,7 @@ import org.apache.log4j.Logger;
 public abstract class RetrieveFamiliesServlet extends AbstractServlet {
 	static Logger logger = Logger.getLogger("net.indrix.aves");
 
-	public void doGet(HttpServletRequest req, HttpServletResponse res)
-			throws ServletException, IOException {
+	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		List erros = new ArrayList();
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
@@ -47,8 +46,7 @@ public abstract class RetrieveFamiliesServlet extends AbstractServlet {
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute(ServletConstants.USER_KEY);
 		if (testeUser() && (user == null)) {
-			logger
-					.debug("InitUploadPhotoForIdentificationServlet.doGet : user is NOT logged...");
+			logger.debug("InitUploadPhotoForIdentificationServlet.doGet : user is NOT logged...");
 			// The method userNotLogged takes care of user not logged trying to
 			// access options for
 			// logged users
@@ -58,8 +56,7 @@ public abstract class RetrieveFamiliesServlet extends AbstractServlet {
 			FamilyDAO dao = new FamilyDAO();
 
 			try {
-				List list = ServletUtil.familyDataAsLabelValueBean(dao
-						.retrieve());
+				List list = ServletUtil.familyDataAsLabelValueBean(dao.retrieve());
 				if ((list != null) && (!list.isEmpty())) {
 					logger.debug("Setting data in request");
 
@@ -113,8 +110,7 @@ public abstract class RetrieveFamiliesServlet extends AbstractServlet {
 	 *            The list retrieved from database
 	 */
 	protected void handleListOfFamilies(HttpSession session, List list) {
-		UploadPhotoBean uploadBean = (UploadPhotoBean) session
-				.getAttribute(UploadConstants.UPLOAD_PHOTO_BEAN);
+		UploadPhotoBean uploadBean = (UploadPhotoBean) session.getAttribute(UploadConstants.UPLOAD_PHOTO_BEAN);
 		if (uploadBean == null) {
 			uploadBean = new UploadPhotoBean();
 		}

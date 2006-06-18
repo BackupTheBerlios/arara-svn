@@ -36,8 +36,7 @@ import org.apache.log4j.Logger;
 public class InitUploadPhotoServlet extends RetrieveFamiliesServlet {
 	static Logger logger = Logger.getLogger("net.indrix.aves");
 
-	public void doGet(HttpServletRequest req, HttpServletResponse res)
-			throws ServletException, IOException {
+	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String nextPage = null;
 		List errors = new ArrayList();
 		List messages = new ArrayList();
@@ -58,16 +57,13 @@ public class InitUploadPhotoServlet extends RetrieveFamiliesServlet {
 
 		} else {
 			// put states on request
-			List list = ServletUtil.statesDataAsLabelValueBean(StatesModel
-					.getStates());
+			List list = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
 
 			// reset upload data bean
-			UploadBean uploadBean = (UploadPhotoBean) session
-					.getAttribute(UploadPhotoConstants.UPLOAD_PHOTO_BEAN);
+			UploadBean uploadBean = (UploadPhotoBean) session.getAttribute(UploadPhotoConstants.UPLOAD_PHOTO_BEAN);
 			if (uploadBean == null) {
 				uploadBean = new UploadPhotoBean();
-				session.setAttribute(UploadPhotoConstants.UPLOAD_PHOTO_BEAN,
-						uploadBean);
+				session.setAttribute(UploadPhotoConstants.UPLOAD_PHOTO_BEAN, uploadBean);
 			}
 			uploadBean.setStatesList(list);
 			uploadBean.setCitiesList(null);

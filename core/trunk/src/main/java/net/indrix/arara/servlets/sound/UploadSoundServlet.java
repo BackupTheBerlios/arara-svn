@@ -52,8 +52,7 @@ public class UploadSoundServlet extends AbstractUploadServlet {
 		logger.debug("Initializing UploadSoundServlet...");
 	}
 
-	public void doPost(HttpServletRequest req, HttpServletResponse res)
-			throws ServletException, IOException {
+	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
 		String nextPage = null;
@@ -71,19 +70,16 @@ public class UploadSoundServlet extends AbstractUploadServlet {
 			Map data = null;
 			try {
 				data = parseMultiPartFormData(req);
-				UploadSoundBean bean = (UploadSoundBean) session
-						.getAttribute(UploadSoundConstants.UPLOAD_BEAN);
+				UploadSoundBean bean = (UploadSoundBean) session.getAttribute(UploadSoundConstants.UPLOAD_BEAN);
 				logger.debug("Calling updateBean");
 				if (updateBean(data, bean, errors)) {
 					logger.debug("bean updated " + bean);
 					try {
 						Sound sound = createSound(bean, user);
 						// set upload data to session
-						session.setAttribute(
-								UploadSoundConstants.LAST_UPLOAD_BEAN, bean);
+						session.setAttribute(UploadSoundConstants.LAST_UPLOAD_BEAN, bean);
 						if (sound.getSound().getFileSize() > MAX_SOUND_SIZE) {
-							logger.debug("photo with size = "
-									+ sound.getSound().getFileSize());
+							logger.debug("photo with size = " + sound.getSound().getFileSize());
 							errors.add(UploadSoundConstants.INVALID_FILE_SIZE);
 						} else {
 							logger.debug("Calling addSoundToDatabase " + sound);
@@ -92,9 +88,7 @@ public class UploadSoundServlet extends AbstractUploadServlet {
 							// next page
 							nextPage = ServletConstants.UPLOAD_SOUND_SUCCESS_PAGE;
 
-							loggerActions.info("User " + user.getLogin()
-									+ " from IP " + req.getRemoteAddr()
-									+ " has uploaded one sound.");
+							loggerActions.info("User " + user.getLogin() + " from IP " + req.getRemoteAddr() + " has uploaded one sound.");
 						}
 					} catch (InvalidFileException e1) {
 						logger.debug("InvalidFileException.....");
@@ -142,8 +136,7 @@ public class UploadSoundServlet extends AbstractUploadServlet {
 	/**
 	 * @param photo
 	 */
-	private void addSoundToDatabase(Sound sound) throws DatabaseDownException,
-			SQLException, SoundProcessingException {
+	private void addSoundToDatabase(Sound sound) throws DatabaseDownException, SQLException, SoundProcessingException {
 		UploadSound model = new UploadSound();
 		model.uploadSound(sound);
 	}
@@ -152,23 +145,16 @@ public class UploadSoundServlet extends AbstractUploadServlet {
 	 * @param data
 	 * @return
 	 */
-	private Sound createSound(UploadSoundBean bean, User user)
-			throws InvalidFileException {
+	private Sound createSound(UploadSoundBean bean, User user) throws InvalidFileException {
 		Sound sound = new Sound();
 		sound.setUser(user);
-		sound.setSpecie(createSpecie(bean.getSelectedSpecieId(), bean
-				.getSelectedFamilyId()));
+		sound.setSpecie(createSpecie(bean.getSelectedSpecieId(), bean.getSelectedFamilyId()));
 		sound.getSound().setFileSize(Integer.parseInt(bean.getFileSize()));
 		sound.getSound().setFilename(bean.getFilename());
-		sound
-				.setAge(AgeModel.getAge(Integer.parseInt(bean
-						.getSelectedAgeId())));
-		sound
-				.setSex(SexModel.getSex(Integer.parseInt(bean
-						.getSelectedSexId())));
+		sound.setAge(AgeModel.getAge(Integer.parseInt(bean.getSelectedAgeId())));
+		sound.setSex(SexModel.getSex(Integer.parseInt(bean.getSelectedSexId())));
 		sound.setLocation(bean.getLocation());
-		sound.setCity(CityModel.getCity(bean.getCitiesList(), bean
-				.getSelectedCityId()));
+		sound.setCity(CityModel.getCity(bean.getCitiesList(), bean.getSelectedCityId()));
 		sound.setComment(bean.getComment());
 		try {
 			sound.getSound().setSound(bean.getFileItem().getInputStream());

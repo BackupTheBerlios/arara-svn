@@ -22,6 +22,12 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>cactus</groupId>
+			<artifactId>cactus</artifactId>
+			<version>13-1.7.2</version>
+			<scope>test</scope>
+		</dependency>		
+		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.9</version>
@@ -184,10 +190,6 @@
 				</artifactId>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>surefire-report-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 			</plugin>
@@ -219,6 +221,11 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>taglist-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>surefire-report-maven-plugin</artifactId>
+			</plugin>
+			
 		</plugins>
 	</reporting>
 	<distributionManagement>

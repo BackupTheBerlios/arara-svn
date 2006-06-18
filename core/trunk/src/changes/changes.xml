@@ -1,0 +1,14 @@
+<document>
+  <properties>
+    <title>Changes Arara Project</title>
+    <author email="indrix@indrix.net">Administrator</author>
+  </properties>
+  <body>
+
+    <release version="1.0" date="2005-01-01" desc="First release">
+      <action dev="indrix" type="update">
+        Uploaded documentation on how to use the project.
+      </action>
+    </release>
+  </body>
+</document>

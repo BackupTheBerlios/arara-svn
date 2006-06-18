@@ -2,9 +2,9 @@ package net.indrix.arara.test;
 
 import junit.framework.TestCase;
 
-public class SchemaTest extends TestCase {
+public class CryptTest extends TestCase {
 
-	public SchemaTest(String name) {
+	public CryptTest(String name) {
 		super(name);
 	}
 
@@ -17,6 +17,7 @@ public class SchemaTest extends TestCase {
 	}
 
 	public void testOne() {
-		assertTrue(true);
+		assertEquals(1, 1);
 	}
+
 }

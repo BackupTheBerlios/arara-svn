@@ -21,9 +21,12 @@ mvn package
 mvn site
 mvn site:deploy
 
+extrarep
 mvn install:install-file -DgroupId=javax.activation -DartifactId=activation -Dversion=1.0.2 -Dpackaging=jar -Dfile=activation.jar
 
 mvn install:install-file -DgroupId=javax.mail -DartifactId=mail -Dversion=1.3.3 -Dpackaging=jar -Dfile=mail.jar
+
+mvn install:install-file -DgroupId=javax.transaction -DartifactId=jta -Dversion=1.0.1B -Dpackaging=jar -Dfile=jta-1_0_1B-classes.zip
 
 --------------------------
 GoogleMaps

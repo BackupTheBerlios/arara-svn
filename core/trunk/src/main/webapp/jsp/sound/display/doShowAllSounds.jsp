@@ -20,15 +20,16 @@
 				</c:if>
 				<table bgcolor="#005500" width="100%">
 					<tr>
-						<td width="14%"><b><font color="#FFFFFF"><fmt:message
+						<td width="10%"><b><font color="#FFFFFF"><fmt:message
 							key="user.login" /></font></b></td>
-						<td width="24%"><b><font color="#FFFFFF"><fmt:message key="family" /></font></b></td>
-						<td width="24%"><b><font color="#FFFFFF"><fmt:message key="specie" /></font></b></td>
-						<td width="10%"><b><font color="#FFFFFF"><fmt:message
+						<td width="22%"><b><font color="#FFFFFF"><fmt:message key="family" /></font></b></td>
+						<td width="22%"><b><font color="#FFFFFF"><fmt:message key="specie" /></font></b></td>
+						<td width="22%"><b><font color="#FFFFFF"><fmt:message key="common.name" /></font></b></td>
+						<td width="8%"><b><font color="#FFFFFF"><fmt:message
 							key="specie.sex" /></font></b></td>
-						<td width="10%"><b><font color="#FFFFFF"><fmt:message
+						<td width="8%"><b><font color="#FFFFFF"><fmt:message
 							key="specie.age" /></font></b></td>
-						<td width="10%"><b><font color="#FFFFFF"><fmt:message
+						<td width="8%"><b><font color="#FFFFFF"><fmt:message
 							key="sound.link.title" /></font></b></td>
 					</tr>
 				</table>
@@ -45,20 +46,21 @@
 
 					<table bgcolor="${color}" width="100%">
 						<tr>
-							<td width="14%"><font size="1" face="Verdana">${sound.user.login}</font></td>
-							<td width="24%"><font size="1" face="Verdana">${sound.specie.family.name}</font></td>
-							<td width="24%"><font size="1" face="Verdana">${sound.specie.name}</font></td>
-							<td width="10%"><font size="1" face="Verdana">${sound.sex.sex}</font></td>
-							<td width="10%"><font size="1" face="Verdana">${sound.age.age}</font></td>
-							<td width="10%"><a
+							<td width="10%"><font size="1" face="Verdana">${sound.user.login}</font></td>
+							<td width="22%"><font size="1" face="Verdana">${sound.specie.family.name}</font></td>
+							<td width="22%"><font size="1" face="Verdana">${sound.specie.name}</font></td>
+							<td width="22%"><font size="1" face="Verdana">${sound.specie.commonNameString}</font></td>
+							<td width="8%"><font size="1" face="Verdana">${sound.sex.sex}</font></td>
+							<td width="8%"><font size="1" face="Verdana">${sound.age.age}</font></td>
+							<td width="8%"><a
 								href="<c:url value="${linkKey}${sound.relativePathAsLink}"/>"
 								target="_blank"> <font size="1" face="Verdana"> <fmt:message
 								key="sound.link.lable" /> </font> </a></td>
 						</tr>
 						<tr>
-							<td width="14%" align="left"><font size="1" face="Verdana"><fmt:message
+							<td width="10%" align="left"><font size="1" face="Verdana"><fmt:message
 								key="photo.identify.comment" /></font></td>
-							<td width="86%" colspan="2" align="left"><font size="1"
+							<td width="90%" colspan="2" align="left"><font size="1"
 								face="Verdana">${sound.comment}</font></td>
 						</tr>
 					</table>

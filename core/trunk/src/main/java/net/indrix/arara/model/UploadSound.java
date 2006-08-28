@@ -11,6 +11,8 @@ import java.sql.SQLException;
 
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.dao.SoundDAO;
+import net.indrix.arara.model.email.PhotoEmailSender;
+import net.indrix.arara.model.email.SoundEmailSender;
 import net.indrix.arara.model.exceptions.SoundProcessingException;
 import net.indrix.arara.model.file.SoundFileManager;
 import net.indrix.arara.vo.Sound;
@@ -42,6 +44,12 @@ public class UploadSound extends AbstractUpload {
 		try {
 			SoundFileManager manager = new SoundFileManager(sound);
 			manager.writeFile();
+            
+            // send email to users
+            logger.debug("Sending email");
+            SoundEmailSender emailSender = new SoundEmailSender(sound);
+            emailSender.sendEmail();
+            
 		} catch (FileNotFoundException e) {
 			dao.delete(sound.getId());
 			throw new SoundProcessingException("Could not write sound file...");

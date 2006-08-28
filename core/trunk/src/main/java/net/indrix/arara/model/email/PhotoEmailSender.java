@@ -51,7 +51,7 @@ public class PhotoEmailSender extends AbstractPhotoEmailSender {
 		try {
 			logger
 					.debug("UploadPhoto.sendEmail : Retrieving list of users to sent email to");
-			List list = userModel.retrieveForEmail();
+			List list = userModel.retrieveForEmailOnNewPhoto();
 			if (!list.isEmpty()) {
 				Iterator it = list.iterator();
 				while (it.hasNext()) {

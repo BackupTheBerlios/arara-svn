@@ -51,9 +51,11 @@ public class UserDAO extends AbstractDAO {
 
 	private static final String SELECT_BY_LOGIN = "SELECT * FROM user where login = ?";
 
-	private static final String SELECT_FOR_EMAIL = "SELECT * FROM user where emailOnNewPhoto = 1";
+	private static final String SELECT_FOR_EMAIL_ON_NEW_PHOTO = "SELECT * FROM user where emailOnNewPhoto = 1";
 
 	private static final String SELECT_FOR_EMAIL_ON_NEW_ID_PHOTO = "SELECT * FROM user where emailOnNewIdPhoto = 1";
+
+    private static final String SELECT_FOR_EMAIL_ON_NEW_SOUND = "SELECT * FROM user where emailOnNewSound = 1";
 
 	/**
 	 * This method retrieves all users from database
@@ -80,11 +82,27 @@ public class UserDAO extends AbstractDAO {
 	 * @throws SQLException
 	 *             If some SQL Exception occurs
 	 */
-	public List retrieveForEmail() throws DatabaseDownException, SQLException {
-		logger.debug("UserDAO.retrieveForEmail: entering method...");
-		List list = super.retrieveObject(SELECT_FOR_EMAIL);
+	public List retrieveForEmailOnNewPhoto() throws DatabaseDownException, SQLException {
+		logger.debug("UserDAO.retrieveForEmailOnNewPhoto: entering method...");
+		List list = super.retrieveObject(SELECT_FOR_EMAIL_ON_NEW_PHOTO);
 		return list;
 	}
+
+    /**
+     * This method retrieves all users from database that want to receive email
+     * 
+     * @return an ArrayList object with User objects
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public List retrieveForEmailOnNewSound() throws DatabaseDownException, SQLException {
+        logger.debug("UserDAO.retrieveForEmailOnNewSound: entering method...");
+        List list = super.retrieveObject(SELECT_FOR_EMAIL_ON_NEW_SOUND);
+        return list;
+    }
 
 	/**
 	 * This method retrieves all users from database that want to receive email

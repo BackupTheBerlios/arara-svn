@@ -49,7 +49,8 @@
 				${f:numberOfFamilies()}</b><br>
 				<b><fmt:message key="species.with.photos" /> :
 				${f:numberOfSpecies()}</b><br>
-				<b><fmt:message key="users.on.line" /> : ${usersOnLine}</b><br>
+				<!-- <b><fmt:message key="users.on.line" /> : ${usersOnLine}</b><br>
+				-->
 				<br>
 				<br>
 				</font></td>

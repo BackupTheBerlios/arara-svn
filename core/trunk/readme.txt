@@ -21,7 +21,7 @@ mvn package
 mvn site
 mvn site:deploy
 
-extrarep
+extralib (go to this directory)
 mvn install:install-file -DgroupId=javax.activation -DartifactId=activation -Dversion=1.0.2 -Dpackaging=jar -Dfile=activation.jar
 
 mvn install:install-file -DgroupId=javax.mail -DartifactId=mail -Dversion=1.3.3 -Dpackaging=jar -Dfile=mail.jar

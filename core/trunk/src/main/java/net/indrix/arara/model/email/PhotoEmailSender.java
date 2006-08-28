@@ -139,17 +139,14 @@ public class PhotoEmailSender extends AbstractPhotoEmailSender {
 	 */
 	private String getMessage(String body, User user, Photo photo) {
 		String bodyFormatted = "";
-		ArrayList list = new ArrayList();
+		ArrayList<String> list = new ArrayList<String>();
 		list.add(user.getName());
-		list
-				.add(photo.getUser().getLogin() + " | "
-						+ photo.getUser().getName());
+		list.add(photo.getUser().getLogin() + " | " + photo.getUser().getName());
 		String family = photo.getSpecie().getFamily().getName();
 		list.add(family);
 		String specie = photo.getSpecie().getName();
 		list.add(specie);
-		String url = "http://www.aves.brasil.nom.br/servlet/showOnePhoto?photoId="
-				+ photo.getId();
+		String url = "http://www.aves.brasil.nom.br/servlet/showOnePhoto?photoId=" + photo.getId();
 		list.add(url);
 
 		logger.debug(family + " | " + specie + " | " + url);

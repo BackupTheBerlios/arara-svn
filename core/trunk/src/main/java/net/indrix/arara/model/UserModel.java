@@ -197,18 +197,42 @@ public class UserModel extends AbstractModel {
 	 * @throws UserNotFoundException
 	 *             If the user is not in database
 	 */
-	public List retrieveForEmail() throws DatabaseDownException, SQLException,
+	public List retrieveForEmailOnNewPhoto() throws DatabaseDownException, SQLException,
 			UserNotFoundException {
 		logger
-				.debug("UserModel.retrieveForEmail : retrieving users to send email to");
+				.debug("UserModel.retrieveForEmailOnNewPhoto : retrieving users to send email to");
 		User user = null;
-		List list = userDAO.retrieveForEmail();
+		List list = userDAO.retrieveForEmailOnNewPhoto();
 		if ((list == null) || (list.isEmpty())) {
 			logger.debug("List with users is EMPTY !");
 		}
 		return list;
 	}
 
+    /**
+     * This method retrieves all users from database that want to receive email on new sound
+     * 
+     * @return A list of user objects
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     * @throws UserNotFoundException
+     *             If the user is not in database
+     */
+    public List retrieveForEmailOnNewSound() throws DatabaseDownException, SQLException,
+            UserNotFoundException {
+        logger
+                .debug("UserModel.retrieveForEmailOnNewSound : retrieving users to send email to");
+        User user = null;
+        List list = userDAO.retrieveForEmailOnNewSound();
+        if ((list == null) || (list.isEmpty())) {
+            logger.debug("List with users is EMPTY !");
+        }
+        return list;
+    }
+    
 	/**
 	 * This method retrieves all users from database that want to receive email
 	 * 

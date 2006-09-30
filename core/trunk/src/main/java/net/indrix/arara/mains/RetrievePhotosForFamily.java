@@ -34,7 +34,7 @@ public class RetrievePhotosForFamily {
 				.showInputDialog(null, "Family ID"));
 
 		PhotoDAO fDao = new PhotoDAO();
-		List list = fDao.retrieveForFamily(id);
+		List list = fDao.retrieveIDsForFamily(id);
 		if (list.isEmpty()) {
 			System.out.println("No photos for specie id " + id);
 		} else {

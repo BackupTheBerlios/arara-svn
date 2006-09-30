@@ -33,14 +33,15 @@ public class RetrievePhotosForUser {
 		int id = Integer.parseInt(JOptionPane.showInputDialog(null, "User ID"));
 
 		PhotoDAO fDao = new PhotoDAO();
-		List list = fDao.retrieveForUser(id);
+		List list = fDao.retrieveIDsForUser(id);
 		if (list.isEmpty()) {
 			System.out.println("No photos for specie id " + id);
 		} else {
 			Iterator it = list.iterator();
 			int index = 0;
 			while (it.hasNext()) {
-				Photo photo = (Photo) it.next();
+                Integer i = (Integer)it.next();
+                Photo photo = fDao.retrieve(i);
 				InputStream in = photo.getRealImage().getImage();
 
 				File ff = new File("d:\\newImage" + index++ + ".jpg");

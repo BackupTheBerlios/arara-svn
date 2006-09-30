@@ -26,10 +26,11 @@ public class RetrievePhotos {
 			SQLException {
 
 		PhotoModel model = new PhotoModel();
-		List l = model.retrievePhotos();
+		List l = model.retrievePhotoIDs();
 		Iterator it = l.iterator();
 		while (it.hasNext()) {
-			Photo p = (Photo) it.next();
+            Integer i = (Integer)it.next();
+            Photo p = model.retrieve(i);
 
 			System.out.println(p);
 		}

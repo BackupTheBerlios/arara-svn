@@ -145,23 +145,6 @@ public class PhotoModel {
 	}
 
 	/**
-	 * This method retrieves all photos from database
-	 * 
-	 * @return An ArrayList object with Photo objects
-	 * 
-	 * @throws DatabaseDownException
-	 *             If the database is down
-	 * @throws SQLException
-	 *             If some SQL Exception occurs
-	 */
-	public List retrievePhotos() throws DatabaseDownException, SQLException {
-		logger.debug("PhotoModel.retrievePhotos: retrieving photos...");
-		List list = dao.retrieve();
-		logger.debug("PhotoModel.retrievePhotos: photos retrieved.");
-		return list;
-	}
-
-	/**
 	 * This method retrieves the id of all photos from database
 	 * 
 	 * @return An ArrayList object with Integer objects
@@ -175,27 +158,6 @@ public class PhotoModel {
 		logger.debug("PhotoModel.retrievePhotoIDs: retrieving photo ids...");
 		List list = dao.retrieveIDs();
 		logger.debug("PhotoModel.retrievePhotoIDs: photo ids retrieved.");
-		return list;
-	}
-
-	/**
-	 * This method retrieves all photos for the given family id
-	 * 
-	 * @param familyId
-	 *            The id of the family
-	 * 
-	 * @return An ArrayList object with Photo objects
-	 * 
-	 * @throws DatabaseDownException
-	 *             If the database is down
-	 * @throws SQLException
-	 *             If some SQL Exception occurs
-	 */
-	public List retrievePhotosForFamily(int familyId)
-			throws DatabaseDownException, SQLException {
-		logger.debug("PhotoModel.retrievePhotosForFamily | familyId "
-				+ familyId);
-		List list = dao.retrieveForFamily(familyId);
 		return list;
 	}
 
@@ -265,27 +227,6 @@ public class PhotoModel {
 	}
 
 	/**
-	 * This method retrieves all photos for the given common name id
-	 * 
-	 * @param commonNameId
-	 *            The id of the common name
-	 * 
-	 * @return An ArrayList object with Photo objects
-	 * 
-	 * @throws DatabaseDownException
-	 *             If the database is down
-	 * @throws SQLException
-	 *             If some SQL Exception occurs
-	 */
-	public List retrievePhotosForCommonName(int commonNameId)
-			throws DatabaseDownException, SQLException {
-		logger.debug("PhotoModel.retrievePhotosForCommonName | commonNameId "
-				+ commonNameId);
-		List list = dao.retrieveForCommonName(commonNameId);
-		return list;
-	}
-
-	/**
 	 * This method retrieves the id of all photos from database, for the given
 	 * common name id
 	 * 
@@ -305,26 +246,6 @@ public class PhotoModel {
 		List list = dao.retrieveIDsForCommonName(commonNameId);
 		logger
 				.debug("PhotoModel.retrievePhotoIDsForCommonName: photo ids retrieved.");
-		return list;
-	}
-
-	/**
-	 * This method retrieves all photos for the given user id
-	 * 
-	 * @param userId
-	 *            The id of the user
-	 * 
-	 * @return An ArrayList object with Photo objects
-	 * 
-	 * @throws DatabaseDownException
-	 *             If the database is down
-	 * @throws SQLException
-	 *             If some SQL Exception occurs
-	 */
-	public List retrievePhotosForUser(int userId) throws DatabaseDownException,
-			SQLException {
-		logger.debug("PhotoModel.retrievePhotosForUser | userId " + userId);
-		List list = dao.retrieveForUser(userId);
 		return list;
 	}
 
@@ -546,7 +467,7 @@ public class PhotoModel {
 
 			// retrieve addresses to send photo
 			CommentsDAO dao = new CommentsDAO();
-			List l = dao.retrieveUsersWithCommentsForPhoto(photo.getId(), user
+			List <User>l = dao.retrieveUsersWithCommentsForPhoto(photo.getId(), user
 					.getId());
 			Iterator dIt = l.iterator();
 			while (dIt.hasNext()) {
@@ -614,7 +535,7 @@ public class PhotoModel {
 	private String getMessage(User user, String body, Comment comment,
 			Photo photo) {
 		String bodyFormatted = "";
-		ArrayList list = new ArrayList();
+		ArrayList <String>list = new ArrayList<String>();
 		String url = "http://www.aves.brasil.nom.br/servlet/showOnePhoto?photoId="
 				+ photo.getId();
 		list.add(user.getName());
@@ -707,7 +628,7 @@ public class PhotoModel {
 	private String getMessage(User user, String body,
 			PhotoIdentification photoIdentification) {
 		String bodyFormatted = "";
-		ArrayList list = new ArrayList();
+		ArrayList <String>list = new ArrayList<String>();
 		String url = "http://www.aves.brasil.nom.br/servlet/initIdentification?photoId="
 				+ photoIdentification.getPhoto().getId();
 		list.add(user.getName());
@@ -760,7 +681,7 @@ public class PhotoModel {
 			EmailResourceBundle bundle = (EmailResourceBundle) EmailResourceBundle
 					.getInstance();
 
-			Map map = new HashMap();
+			Map <String, Locale>map = new HashMap<String, Locale>();
 			while (it.hasNext()) {
 				User user = (User) it.next();
 				logger.debug("Going to send to... " + user.getName() + " | "
@@ -850,7 +771,7 @@ public class PhotoModel {
 			EmailResourceBundle bundle = (EmailResourceBundle) EmailResourceBundle
 					.getInstance();
 
-			Map map = new HashMap();
+			Map <String, Locale>map = new HashMap<String, Locale>();
 			while (it.hasNext()) {
 				User user = (User) it.next();
 				logger.debug("Going to send to... " + user.getName() + " | "

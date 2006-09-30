@@ -22,7 +22,8 @@ import net.indrix.arara.bean.UploadPhotoBean;
 import net.indrix.arara.model.StatesModel;
 import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.servlets.ServletUtil;
-import net.indrix.arara.servlets.photo.RetrieveFamiliesServlet;
+import net.indrix.arara.servlets.UploadConstants;
+import net.indrix.arara.servlets.common.RetrieveFamiliesServlet;
 import net.indrix.arara.vo.User;
 
 import org.apache.log4j.Logger;
@@ -38,8 +39,7 @@ public class InitUploadPhotoServlet extends RetrieveFamiliesServlet {
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String nextPage = null;
-		List errors = new ArrayList();
-		List messages = new ArrayList();
+		List <String>errors = new ArrayList<String>();
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute(ServletConstants.USER_KEY);
 		if (user == null) {
@@ -74,17 +74,15 @@ public class InitUploadPhotoServlet extends RetrieveFamiliesServlet {
 			uploadBean.setSelectedFamilyId(null);
 			uploadBean.setSelectedSpecieId(null);
 			uploadBean.setSpecieList(null);
+            
 			super.doGet(req, res);
 		}
 	}
 
-	/**
-	 * @return
-	 */
-	protected String getNextPage() {
-		return ServletConstants.UPLOAD_PAGE;
-	}
-
+    protected String getNextPage(HttpServletRequest req) {
+        return ServletConstants.UPLOAD_PAGE;
+    }
+    
 	/**
 	 * By default, user shall not be validated. However, for upload it shall be
 	 * 
@@ -94,4 +92,22 @@ public class InitUploadPhotoServlet extends RetrieveFamiliesServlet {
 		return true;
 	}
 
+    /**
+     * This method retrieves or creates a bean, set the list in it and put the bean to the session
+     * 
+     * @param session Session to store the bean
+     * @param list The list retrieved from database
+     */
+    protected void handleListOfFamilies(HttpSession session, List list) {
+        UploadPhotoBean uploadBean = (UploadPhotoBean) session.getAttribute(UploadConstants.UPLOAD_PHOTO_BEAN);
+        if (uploadBean == null) {
+            uploadBean = new UploadPhotoBean();
+        }
+        uploadBean.setFamilyList(list);
+
+        // add bean to session
+        session.setAttribute(UploadConstants.UPLOAD_PHOTO_BEAN, uploadBean);
+    }
+
+    
 }

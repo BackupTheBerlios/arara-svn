@@ -17,7 +17,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.model.PhotoModel;
@@ -44,9 +43,7 @@ public class DeletePhotoServlet extends HttpServlet {
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
 		String nextPage = null;
-		List errors = new ArrayList();
-		List messages = new ArrayList();
-		HttpSession session = req.getSession();
+		List <String>errors = new ArrayList<String>();
 		String photoId = req.getParameter("photoId");
 
 		PhotoModel model = new PhotoModel();

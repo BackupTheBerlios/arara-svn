@@ -45,8 +45,6 @@ import org.apache.log4j.Logger;
 public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 	private static final int MAX_PHOTO_SIZE = 250000;
 
-	private static final String MAX_PHOTO_SIZE_STR = "250Kb";
-
 	static Logger logger = Logger.getLogger("net.indrix.aves");
 
 	/**
@@ -60,8 +58,7 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
 		String nextPage = null;
-		List errors = new ArrayList();
-		List messages = new ArrayList();
+		List <String>errors = new ArrayList<String>();
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute(ServletConstants.USER_KEY);
 		if (user == null) {
@@ -129,11 +126,6 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 		if (!errors.isEmpty()) {
 			// put errors in request
 			req.setAttribute(ServletConstants.ERRORS_KEY, errors);
-		}
-		if (!messages.isEmpty()) {
-			logger.debug("messages is not null.");
-			// put messages in request
-			req.setAttribute(ServletConstants.MESSAGES_KEY, messages);
 		}
 
 		dispatcher = context.getRequestDispatcher(nextPage);

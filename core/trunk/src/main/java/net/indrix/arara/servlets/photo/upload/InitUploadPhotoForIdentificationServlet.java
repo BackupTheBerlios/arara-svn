@@ -7,7 +7,6 @@
 package net.indrix.arara.servlets.photo.upload;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -39,11 +38,8 @@ public class InitUploadPhotoForIdentificationServlet extends AbstractServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
 
-		logger
-				.debug("InitUploadPhotoForIdentificationServlet.doGet : entering method...");
+		logger.debug("InitUploadPhotoForIdentificationServlet.doGet : entering method...");
 		String nextPage = null;
-		List errors = new ArrayList();
-		List messages = new ArrayList();
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute(ServletConstants.USER_KEY);
 		if (user == null) {
@@ -54,23 +50,17 @@ public class InitUploadPhotoForIdentificationServlet extends AbstractServlet {
 			// logged users
 			nextPage = userNotLogged(req, res);
 		} else {
-			logger
-					.debug("InitUploadPhotoForIdentificationServlet.doGet : retrieving states...");
+			logger.debug("InitUploadPhotoForIdentificationServlet.doGet : retrieving states...");
 			// put states on request
-			List list = ServletUtil.statesDataAsLabelValueBean(StatesModel
-					.getStates());
+			List list = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
 
-			logger
-					.debug("InitUploadPhotoForIdentificationServlet.doGet : retrieving bean from session...");
+			logger.debug("InitUploadPhotoForIdentificationServlet.doGet : retrieving bean from session...");
 			// reset upload data bean
-			UploadBean uploadBean = (UploadPhotoBean) session
-					.getAttribute(UploadPhotoConstants.UPLOAD_PHOTO_BEAN);
+			UploadBean uploadBean = (UploadPhotoBean) session.getAttribute(UploadPhotoConstants.UPLOAD_PHOTO_BEAN);
 			if (uploadBean == null) {
-				logger
-						.debug("InitUploadPhotoForIdentificationServlet.doGet : bean is NULL...");
+				logger.debug("InitUploadPhotoForIdentificationServlet.doGet : bean is NULL...");
 				uploadBean = new UploadPhotoBean();
-				session.setAttribute(UploadPhotoConstants.UPLOAD_PHOTO_BEAN,
-						uploadBean);
+				session.setAttribute(UploadPhotoConstants.UPLOAD_PHOTO_BEAN, uploadBean);
 			}
 			uploadBean.setStatesList(list);
 			uploadBean.setCitiesList(null);
@@ -85,8 +75,7 @@ public class InitUploadPhotoForIdentificationServlet extends AbstractServlet {
 		ServletContext context = this.getServletContext();
 		dispatcher = context.getRequestDispatcher(nextPage);
 
-		logger
-				.debug("InitUploadPhotoForIdentificationServlet.doGet : dispatching to "
+		logger.debug("InitUploadPhotoForIdentificationServlet.doGet : dispatching to "
 						+ nextPage);
 		dispatcher.forward(req, res);
 	}

@@ -58,8 +58,7 @@ public class EditPhotoServlet extends AbstractUploadPhotoServlet {
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
 		String nextPage = null;
-		List errors = new ArrayList();
-		List messages = new ArrayList();
+		List <String>errors = new ArrayList<String>();
 		HttpSession session = req.getSession();
 
 		String identStr = req.getParameter(ServletConstants.IDENTIFICATION_KEY);
@@ -87,6 +86,8 @@ public class EditPhotoServlet extends AbstractUploadPhotoServlet {
 					nextPage = ServletConstants.EDIT_SUCCESS_PAGE;
 
 					session.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
+                    
+                    session.setAttribute(ServletConstants.PHOTOS_LIST, null);                    
 				} catch (ParseException e1) {
 					logger.debug("ParseException.....");
 					errors.add(UploadPhotoConstants.INVALID_DATE);
@@ -114,12 +115,6 @@ public class EditPhotoServlet extends AbstractUploadPhotoServlet {
 			// put errors in request
 			req.setAttribute(ServletConstants.ERRORS_KEY, errors);
 		}
-		if (!messages.isEmpty()) {
-			logger.debug("messages is not null.");
-			// put messages in request
-			req.setAttribute(ServletConstants.MESSAGES_KEY, messages);
-		}
-
 		dispatcher = context.getRequestDispatcher(nextPage);
 		logger.debug("Dispatching to " + nextPage);
 		dispatcher.forward(req, res);

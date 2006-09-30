@@ -44,7 +44,7 @@ public abstract class AbstractUploadPhotoServlet extends AbstractServlet {
 	 * @param data
 	 * @param bean
 	 */
-	protected boolean updateBean(Map data, UploadPhotoBean bean, List errors) {
+	protected boolean updateBean(Map data, UploadPhotoBean bean, List <String>errors) {
 		boolean status = false;
 
 		PhotoBeanManager manager = getBeanManager();

@@ -8,7 +8,6 @@ package net.indrix.arara.servlets.photo.upload;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -25,6 +24,7 @@ import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.dao.FamilyDAO;
 import net.indrix.arara.dao.SpecieDAO;
 import net.indrix.arara.model.CityModel;
+import net.indrix.arara.model.PhotoModel;
 import net.indrix.arara.model.StatesModel;
 import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.servlets.ServletUtil;
@@ -56,28 +56,42 @@ public class InitEditPhotoServlet extends HttpServlet {
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
 		String nextPage = null;
-		List errors = new ArrayList();
-		List messages = new ArrayList();
 		HttpSession session = req.getSession();
-        
-		Photo photo = (Photo) session.getAttribute(ServletConstants.CURRENT_PHOTO);
-		if (photo != null) {
-			logger.debug("InitEditPhotoServlet.doGet: photo found..." + photo);
-			UploadPhotoBean bean = new UploadPhotoBean();
-			logger.debug("InitEditPhotoServlet.doGet: calling updateBean method...");
-			updateBean(bean, photo, req);
-			logger.debug("InitEditPhotoServlet.doGet: bean updated: " + bean);
-			logger.debug("InitEditPhotoServlet.doGet: setting bean (EDIT_BEAN key) in session...");
-			session.setAttribute(UploadPhotoConstants.EDIT_BEAN, bean);
-			nextPage = ServletConstants.EDIT_PAGE;
 
-			// put states on request
-			List list = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
-			logger.debug("InitEditPhotoServlet.doGet: setting states in bean");
-			bean.setStatesList(list);
-		} else {
-			logger.debug("InitEditPhotoServlet.doGet : photo == null");
-		}
+        int photoId; 
+        String photoIdStr = req.getParameter("photoId");
+        Photo photo = null;
+        if (photoIdStr != null){
+            photoId = Integer.parseInt(photoIdStr);           
+            PhotoModel model = new PhotoModel();
+            try {
+                photo = model.retrieve(photoId);
+                session.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
+            } catch (DatabaseDownException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        } else {
+            photo = (Photo) session.getAttribute(ServletConstants.CURRENT_PHOTO);            
+        }
+
+        logger.debug("InitEditPhotoServlet.doGet: photo found..." + photo);
+        UploadPhotoBean bean = new UploadPhotoBean();
+        logger.debug("InitEditPhotoServlet.doGet: calling updateBean method...");
+        updateBean(bean, photo, req);
+        logger.debug("InitEditPhotoServlet.doGet: bean updated: " + bean);
+        logger.debug("InitEditPhotoServlet.doGet: setting bean (EDIT_BEAN key) in session...");
+        session.setAttribute(UploadPhotoConstants.EDIT_BEAN, bean);
+        nextPage = ServletConstants.EDIT_PAGE;
+
+        // put states on request
+        List list = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
+        logger.debug("InitEditPhotoServlet.doGet: setting states in bean");
+        bean.setStatesList(list);
+
         String identStr = req.getParameter(ServletConstants.IDENTIFICATION_KEY);
         req.setAttribute(ServletConstants.IDENTIFICATION_KEY, identStr);
         
@@ -120,15 +134,6 @@ public class InitEditPhotoServlet extends HttpServlet {
 	 * @return
 	 */
 	private String getId(int id) {
-		return Integer.toString(id);
-	}
-
-	/**
-	 * @param photo
-	 * @return
-	 */
-	private String getStateId(Photo photo) {
-		int id = photo.getCity().getState().getId();
 		return Integer.toString(id);
 	}
 

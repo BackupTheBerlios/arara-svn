@@ -62,7 +62,6 @@ public class CityDAO {
 	 */
 	public void insert(City city) throws DatabaseDownException {
 		logger.debug("CityDAO.insert : entering method...");
-		List list = new ArrayList();
 		Connection conn = DatabaseManager.getConnection();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;

@@ -48,8 +48,6 @@ public class ServletConstants {
 
 	public static final String PHOTO_ID = "photoId";
 
-	public static final String SERVLET_TO_CALL = "servletToCall";
-
 	public static final String ACTION = "action";
 
 	public static final String BEGIN = "BEGIN";
@@ -88,6 +86,12 @@ public class ServletConstants {
 	public static final String ERRORS_KEY = "erros";
 
 	public static final String MESSAGES_KEY = "messages";
+    
+    public static final String NEXT_PAGE_KEY = "nextPage";
+    
+    public static final String PAGE_TO_SHOW_KEY = "pageToShow";
+    
+    public static final String SERVLET_TO_CALL_KEY = "servletToCall";
 
 	public static final String FAMILY_LIST_KEY = "familyList";
 
@@ -154,6 +158,8 @@ public class ServletConstants {
 	public static final String UPLOAD_IDENTIFICATION_PAGE = "/jsp/photo/upload/uploadPhotoIdentify.jsp";
 
 	public static final String EDIT_PAGE = "/jsp/photo/upload/editPhoto.jsp";
+
+    public static final String COMMENT_PAGE = "/jsp/photo/comment/commentPhoto.jsp";
 
 	public static final String EDIT_SUCCESS_PAGE = "/jsp/photo/upload/editSuccess.jsp";
 

@@ -17,6 +17,7 @@ import net.indrix.arara.vo.CommonName;
 import net.indrix.arara.vo.Family;
 import net.indrix.arara.vo.Specie;
 import net.indrix.arara.vo.State;
+import net.indrix.arara.vo.User;
 
 import org.apache.log4j.Logger;
 
@@ -29,13 +30,13 @@ import org.apache.log4j.Logger;
 public class ServletUtil {
 	static Logger logger = Logger.getLogger("net.indrix.aves");
 
-	private static List familyListInMemory = null;
+	private static List <LabelValueBean>familyListInMemory = null;
 
-	private static List specieListInMemory = null;
+	private static List <LabelValueBean>specieListInMemory = null;
 
-	private static List statesListInMemory = null;
+	private static List <LabelValueBean>statesListInMemory = null;
 
-	private static List commonNamesListInMemory = null;
+	private static List <LabelValueBean>commonNamesListInMemory = null;
 
 	/**
 	 * This method retrives from the request the resource that was requested
@@ -61,9 +62,8 @@ public class ServletUtil {
 	 */
 	public static List familyDataAsLabelValueBean(List list) {
 		if (familyListInMemory == null) {
-			logger
-					.debug("Creating family data as LabelValueBean for the first time...");
-			familyListInMemory = new ArrayList();
+			logger.debug("Creating family data as LabelValueBean for the first time...");
+			familyListInMemory = new ArrayList<LabelValueBean>();
 			Iterator it = list.iterator();
 			while (it.hasNext()) {
 				Family f = (Family) it.next();
@@ -90,7 +90,7 @@ public class ServletUtil {
 		if (specieListInMemory == null) {
 			logger
 					.debug("Creating species data as LabelValueBean for the first time...");
-			specieListInMemory = new ArrayList();
+			specieListInMemory = new ArrayList<LabelValueBean>();
 			Iterator it = list.iterator();
 			while (it.hasNext()) {
 				Specie s = (Specie) it.next();
@@ -110,7 +110,7 @@ public class ServletUtil {
 	 * @return
 	 */
 	public static List specieForFamilyDataAsLabelValueBean(List list) {
-		List newList = new ArrayList();
+		List <LabelValueBean>newList = new ArrayList<LabelValueBean>();
 		Iterator it = list.iterator();
 		while (it.hasNext()) {
 			Specie s = (Specie) it.next();
@@ -126,10 +126,8 @@ public class ServletUtil {
 	 */
 	public static List commonNameDataAsLabelValueBean(List list) {
 		if (commonNamesListInMemory == null) {
-			logger
-					.debug("Creating common names data as LabelValueBean for the first time...");
-			commonNamesListInMemory = new ArrayList();
-			List newList = new ArrayList();
+			logger.debug("Creating common names data as LabelValueBean for the first time...");
+			commonNamesListInMemory = new ArrayList<LabelValueBean>();
 			Iterator it = list.iterator();
 			while (it.hasNext()) {
 				CommonName c = (CommonName) it.next();
@@ -145,15 +143,30 @@ public class ServletUtil {
 		return commonNamesListInMemory;
 	}
 
+     /**
+     * @param list
+     * @return
+     */
+    public static List userDataAsLabelValueBean(List list) {
+        List <LabelValueBean>newList = new ArrayList<LabelValueBean>();
+        Iterator it = list.iterator();
+        while (it.hasNext()) {
+            User user = (User) it.next();
+            LabelValueBean bean = new LabelValueBean(user.getName(), user.getId());
+            newList.add(bean);
+            logger.debug("adding bean to list " + bean);
+        }
+        return newList;
+    }
+    
 	/**
 	 * @param list
 	 * @return
 	 */
 	public static List statesDataAsLabelValueBean(List list) {
 		if (statesListInMemory == null) {
-			logger
-					.debug("Creating states data as LabelValueBean for the first time...");
-			statesListInMemory = new ArrayList();
+			logger.debug("Creating states data as LabelValueBean for the first time...");
+			statesListInMemory = new ArrayList<LabelValueBean>();
 			Iterator it = list.iterator();
 			while (it.hasNext()) {
 				State state = (State) it.next();

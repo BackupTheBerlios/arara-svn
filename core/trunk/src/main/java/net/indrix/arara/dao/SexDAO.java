@@ -33,8 +33,7 @@ public class SexDAO {
 
 	public List retrieve() throws DatabaseDownException {
 		logger.debug("CommentsDAO.retrieveUsersForPhoto : entering method...");
-		List list = new ArrayList();
-		CommonNameDAO commonNameDAO = new CommonNameDAO();
+		List<Sex> list = new ArrayList<Sex>();
 		Connection conn = DatabaseManager.getConnection();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;

@@ -21,10 +21,6 @@ import net.indrix.arara.vo.Specie;
  */
 public class SpecieCommonNameDAO extends AbstractDAO {
 
-	private static final String ID_COLUMN = "id";
-
-	private static final String NAME_COLUMN = "name";
-
 	private static final String INSERT = "INSERT INTO specie_has_common_name (specie_id, common_name_id, specie_family_id) values (?,?,?)";
 
 	/**

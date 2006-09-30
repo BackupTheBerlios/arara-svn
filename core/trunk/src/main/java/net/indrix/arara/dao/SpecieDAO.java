@@ -53,11 +53,6 @@ public class SpecieDAO extends AbstractDAO {
 	private static List listInMemory = null;
 
 	/**
-	 * The DAO object to use to retrieve <code>Family</code> objects
-	 */
-	private FamilyDAO dao = new FamilyDAO();
-
-	/**
 	 * This method inserts a new specie to the database. It inserts in two
 	 * tables: <br> - SPECIE - SPECIE_HAS_COMMON_NAME
 	 * 
@@ -148,7 +143,7 @@ public class SpecieDAO extends AbstractDAO {
 	 *             If the database is down
 	 */
 	public List retrieveForFamily(Family family) throws DatabaseDownException {
-		List list = new ArrayList();
+		List <Specie>list = new ArrayList<Specie>();
 		CommonNameDAO commonNameDAO = new CommonNameDAO();
 		Connection conn = DatabaseManager.getConnection();
 		PreparedStatement stmt = null;

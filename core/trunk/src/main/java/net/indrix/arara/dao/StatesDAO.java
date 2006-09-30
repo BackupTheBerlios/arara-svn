@@ -44,7 +44,7 @@ public class StatesDAO {
 	 */
 	public List retrieve() throws DatabaseDownException {
 		logger.debug("StatesDAO.retrieve : entering method...");
-		List list = new ArrayList();
+		List <State>list = new ArrayList<State>();
 		Connection conn = DatabaseManager.getConnection();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;

@@ -53,8 +53,6 @@ public class StatisticsDAO {
 		try {
 			stmt = conn.prepareStatement(SELECT_NUM_PHOTOS);
 			rs = stmt.executeQuery();
-			Object object = null;
-
 			if (rs.next()) {
 				number = rs.getInt(1);
 			}
@@ -91,8 +89,6 @@ public class StatisticsDAO {
 		try {
 			stmt = conn.prepareStatement(SELECT_NUM_FAMILIES);
 			rs = stmt.executeQuery();
-			Object object = null;
-
 			while (rs.next()) {
 				number++;
 			}
@@ -129,8 +125,6 @@ public class StatisticsDAO {
 		try {
 			stmt = conn.prepareStatement(SELECT_NUM_SPECIES);
 			rs = stmt.executeQuery();
-			Object object = null;
-
 			while (rs.next()) {
 				number++;
 			}
@@ -167,8 +161,6 @@ public class StatisticsDAO {
 		try {
 			stmt = conn.prepareStatement(SELECT_NUM_USERS);
 			rs = stmt.executeQuery();
-			Object object = null;
-
 			if (rs.next()) {
 				number = rs.getInt(1);
 			}

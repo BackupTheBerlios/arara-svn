@@ -29,12 +29,6 @@ import net.indrix.arara.vo.User;
  */
 public class PhotoIdentificationDAO extends AbstractDAO implements
 		PhotoConstants {
-	private static final String INSERT_FOR_IDENTIFICATION = "INSERT INTO photo"
-			+ "(specie_id, specie_family_id, age_id, sex_id, user_id, date, place, camera, lens, film, "
-			+ "image, w, h, smallImage, sW, sH, post_date, "
-			+ "comment, imageSize, smallImageSize, city_id) "
-			+ "values (-1, -1, -1, -1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
 	private static final String INSERT_IDENTIFICATION_FOR_PHOTO = "INSERT INTO user_identifies_photo"
 			+ "(user_id, photo_id, specie_id, sex_id, age_id, comment, date) "
 			+ "values (?, ?, ?, ?, ?, ?, ?)";
@@ -128,7 +122,7 @@ public class PhotoIdentificationDAO extends AbstractDAO implements
 			throws DatabaseDownException, SQLException {
 		logger
 				.info("PhotoIdentificationDAO.retrieveUsersForIdentification: entering method...");
-		List list = new ArrayList();
+		List <User>list = new ArrayList<User>();
 		Connection conn = DatabaseManager.getConnection();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;

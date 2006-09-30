@@ -45,7 +45,9 @@ public class UserDAO extends AbstractDAO {
 			+ "set name = ?, password = ?, email = ?, language = ?, emailOnNewPhoto = ?, emailOnNewIdPhoto = ?, emailOnNewSound = ? "
 			+ "WHERE id = ?";
 
-	private static final String SELECT_ALL = "SELECT * FROM user where addPhoto = 1 order by name";
+	private static final String SELECT_ALL_FOR_PHOTOS = "SELECT * FROM user where addPhoto = 1 order by name";
+
+    private static final String SELECT_ALL_FOR_SOUNDS = "SELECT * FROM user where addSound = 1 order by name";
 
 	private static final String SELECT_BY_ID = "SELECT * FROM user WHERE id = ?";
 
@@ -68,10 +70,24 @@ public class UserDAO extends AbstractDAO {
 	 *             If some SQL Exception occurs
 	 */
 	public List retrieve() throws DatabaseDownException, SQLException {
-		List list = super.retrieveObject(SELECT_ALL);
+		List list = super.retrieveObject(SELECT_ALL_FOR_PHOTOS);
 		return list;
 	}
 
+    /**
+     * This method retrieves all users from database
+     * 
+     * @return an ArrayList object with User objects
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public List retrieveUsersForSound() throws DatabaseDownException, SQLException {
+        List list = super.retrieveObject(SELECT_ALL_FOR_SOUNDS);
+        return list;
+    }    
 	/**
 	 * This method retrieves all users from database that want to receive email
 	 * 

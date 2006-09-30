@@ -44,8 +44,6 @@ import org.apache.log4j.Logger;
 public class UploadSoundServlet extends AbstractUploadServlet {
 	private static final int MAX_SOUND_SIZE = 500000;
 
-	private static final String MAX_SOUND_SIZE_STR = "500Kb";
-
 	static Logger logger = Logger.getLogger("net.indrix.aves");
 
 	public void init() {
@@ -56,8 +54,7 @@ public class UploadSoundServlet extends AbstractUploadServlet {
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
 		String nextPage = null;
-		List errors = new ArrayList();
-		List messages = new ArrayList();
+		List<String> errors = new ArrayList<String>();
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute(ServletConstants.USER_KEY);
 		if (user == null) {
@@ -120,11 +117,6 @@ public class UploadSoundServlet extends AbstractUploadServlet {
 		if (!errors.isEmpty()) {
 			// put errors in request
 			req.setAttribute(ServletConstants.ERRORS_KEY, errors);
-		}
-		if (!messages.isEmpty()) {
-			logger.debug("messages is not null.");
-			// put messages in request
-			req.setAttribute(ServletConstants.MESSAGES_KEY, messages);
 		}
 
 		dispatcher = context.getRequestDispatcher(nextPage);

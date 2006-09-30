@@ -45,15 +45,14 @@ public class AbstractUploadServlet extends HttpServlet {
 	 */
 	protected static Logger logger = Logger.getLogger("net.indrix.aves");
 
-	protected static Logger loggerActions = Logger
-			.getLogger("net.indrix.actions");
+	protected static Logger loggerActions = Logger.getLogger("net.indrix.actions");
 
 	protected HashMap parseMultiPartFormData(HttpServletRequest request)
 			throws ServletException, IOException, FileUploadException {
 		logger.debug(" - Entering parseMultiPartFormData(HttpServletRequest)");
 		String localRepository = PropertiesManager
 				.getProperty(PropertiesManager.TEMP_FOLDER);
-		HashMap aData = new HashMap();
+		HashMap <String, Object>aData = new HashMap<String, Object>();
 		logger.debug(" - Temporary folder: " + localRepository);
 		DefaultFileItemFactory factory = new DefaultFileItemFactory(1000000,
 				new java.io.File(localRepository));
@@ -81,13 +80,11 @@ public class AbstractUploadServlet extends HttpServlet {
 					if (index > 0) {
 						filepath = file.substring(0, index);
 					}
-					String filename = item.getName().substring(
-							item.getName().lastIndexOf("\\") + 1);
+					String filename = item.getName().substring(item.getName().lastIndexOf("\\") + 1);
 
 					aData.put(UploadConstants.FILE_NAME, filename);
 					aData.put(UploadConstants.FILE_URL, filepath);
-					aData.put(UploadConstants.FILE_SIZE, String.valueOf(item
-							.getSize()));
+					aData.put(UploadConstants.FILE_SIZE, String.valueOf(item.getSize()));
 					aData.put(UploadConstants.FILE_ITEM, item);
 				}
 			}
@@ -103,7 +100,7 @@ public class AbstractUploadServlet extends HttpServlet {
 	 * @param data
 	 * @param bean
 	 */
-	protected boolean updateBean(Map data, UploadSoundBean bean, List errors) {
+	protected boolean updateBean(Map data, UploadSoundBean bean, List <String>errors) {
 		boolean status = false;
 
 		SoundBeanManager manager = getBeanManager();

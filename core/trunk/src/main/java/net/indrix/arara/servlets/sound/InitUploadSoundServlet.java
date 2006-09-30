@@ -23,7 +23,7 @@ import net.indrix.arara.model.StatesModel;
 import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.servlets.ServletUtil;
 import net.indrix.arara.servlets.UploadConstants;
-import net.indrix.arara.servlets.photo.RetrieveFamiliesServlet;
+import net.indrix.arara.servlets.common.RetrieveFamiliesServlet;
 import net.indrix.arara.servlets.photo.upload.UploadPhotoConstants;
 import net.indrix.arara.vo.User;
 
@@ -41,8 +41,7 @@ public class InitUploadSoundServlet extends RetrieveFamiliesServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
 		String nextPage = null;
-		List errors = new ArrayList();
-		List messages = new ArrayList();
+		List <String>errors = new ArrayList<String>();
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute(ServletConstants.USER_KEY);
 		if (user == null) {
@@ -60,16 +59,13 @@ public class InitUploadSoundServlet extends RetrieveFamiliesServlet {
 
 		} else {
 			// put states on request
-			List list = ServletUtil.statesDataAsLabelValueBean(StatesModel
-					.getStates());
+			List list = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
 
 			// reset upload data bean
-			UploadBean uploadBean = (UploadSoundBean) session
-					.getAttribute(UploadPhotoConstants.UPLOAD_SOUND_BEAN);
+			UploadBean uploadBean = (UploadSoundBean) session.getAttribute(UploadPhotoConstants.UPLOAD_SOUND_BEAN);
 			if (uploadBean == null) {
 				uploadBean = new UploadSoundBean();
-				session.setAttribute(UploadPhotoConstants.UPLOAD_SOUND_BEAN,
-						uploadBean);
+				session.setAttribute(UploadPhotoConstants.UPLOAD_SOUND_BEAN, uploadBean);
 			}
 			uploadBean.setStatesList(list);
 			uploadBean.setCitiesList(null);
@@ -85,7 +81,7 @@ public class InitUploadSoundServlet extends RetrieveFamiliesServlet {
 	/**
 	 * @return
 	 */
-	protected String getNextPage() {
+	protected String getNextPage(HttpServletRequest req) {
 		return ServletConstants.UPLOAD_SOUND_PAGE;
 	}
 

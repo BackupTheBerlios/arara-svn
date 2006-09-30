@@ -49,7 +49,7 @@ public class RetrieveCitiesForStateServlet extends AbstractServlet {
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
-		List errors = new ArrayList();
+		List <String>errors = new ArrayList<String>();
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
 		String nextPage = req.getParameter("toPage");
@@ -107,7 +107,7 @@ public class RetrieveCitiesForStateServlet extends AbstractServlet {
 	 * @param dataToBeUploaded
 	 */
 	private void handleList(List list, Map data, HttpServletRequest req,
-			List errors) {
+			List <String>errors) {
 
 		String dataToBeUploaded = req.getParameter("data");
 		String action = req.getParameter("action");

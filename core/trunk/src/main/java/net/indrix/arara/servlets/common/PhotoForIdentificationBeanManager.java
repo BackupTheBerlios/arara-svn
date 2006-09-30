@@ -31,7 +31,7 @@ public class PhotoForIdentificationBeanManager extends PhotoBeanManager {
 	 * @param bean
 	 * @param errors
 	 */
-	protected void updateBirdData(Map data, UploadBean bean, List errors,
+	protected void updateBirdData(Map data, UploadBean bean, List <String>errors,
 			boolean validate) {
 		logger
 				.debug("PhotoForIdentificationBeanManager.updateBirdData: updating bird data...");

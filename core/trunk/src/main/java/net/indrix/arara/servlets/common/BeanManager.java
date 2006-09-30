@@ -33,7 +33,7 @@ public class BeanManager {
 	 * @param data
 	 * @param bean
 	 */
-	public boolean updateBean(Map data, UploadBean bean, List errors,
+	public boolean updateBean(Map data, UploadBean bean, List <String>errors,
 			boolean validate) {
 		boolean status = false;
 
@@ -55,7 +55,7 @@ public class BeanManager {
 	 * @param bean
 	 * @param errors
 	 */
-	protected void updateBirdData(Map data, UploadBean bean, List errors,
+	protected void updateBirdData(Map data, UploadBean bean, List <String>errors,
 			boolean validate) {
 		logger.debug("BeanManager.updateBirdData: updating bird data...");
 		String familyId = (String) data.get(ServletConstants.FAMILY_ID);

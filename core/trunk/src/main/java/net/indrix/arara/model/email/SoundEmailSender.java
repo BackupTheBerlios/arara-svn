@@ -49,17 +49,14 @@ public class SoundEmailSender extends AbstractSoundEmailSender {
     public void run() {
         UserModel userModel = new UserModel();
         try {
-            logger
-                    .debug("SoundEmailSender.run : Retrieving list of users to sent email to");
-            List list = userModel.retrieveForEmailOnNewPhoto();
+            logger.debug("SoundEmailSender.run : Retrieving list of users to sent email to");
+            List list = userModel.retrieveForEmailOnNewSound();
             if (!list.isEmpty()) {
                 Iterator it = list.iterator();
                 while (it.hasNext()) {
                     User user = (User) it.next();
                     if (!user.equals(sound.getUser())) {
-                        logger
-                                .debug("SoundEmailSender.run : sending email to user "
-                                        + user.getLogin());
+                        logger.debug("SoundEmailSender.run : sending email to user " + user.getLogin());
                         sendEmailToUser(user, sound);
                     }
                 }
@@ -83,8 +80,7 @@ public class SoundEmailSender extends AbstractSoundEmailSender {
      */
     private void sendEmailToUser(User user, Sound sound) {
         Locale l = new Locale(user.getLanguage());
-        EmailResourceBundle bundle = (EmailResourceBundle) EmailResourceBundle
-                .getInstance();
+        EmailResourceBundle bundle = (EmailResourceBundle) EmailResourceBundle.getInstance();
         String server = PropertiesManager.getProperty("email.server");
         String fromAdd = PropertiesManager.getProperty("email.from");
         String subject = bundle.getString("email.newSound.subject", l);
@@ -114,8 +110,7 @@ public class SoundEmailSender extends AbstractSoundEmailSender {
             sender.sendMessage(false);
             // true indicates to emailObject to send the message right now
         } catch (MessageFormatException e) {
-            logger.error("exception -> MessageFormatException in sendEmail "
-                    + e);
+            logger.error("exception -> MessageFormatException in sendEmail " + e);
         } catch (AddressException e) {
             logger.error("exception -> AddressException in sendEmail " + e);
         } catch (NoRecipientException e) {

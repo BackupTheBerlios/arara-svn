@@ -93,57 +93,6 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
 			+ "where p.specie_id=? and p.specie_id = s.id and p.specie_family_id = f.id and p.user_id=u.id and p.city_id = c.id ";
 
 	/**
-	 * SQL to select photos by a given family ID
-	 */
-	private static final String SELECT_BY_FAMILY_ID = "SELECT p.id, p.date, p.place, p.city_id, p.camera, p.lens, p.film, "
-			+ "p.w, p.h, p.imageSize, p.smallImage, p.sW, p.sH, p.smallImageSize, p.comment,"
-			+ "p.specie_family_id, s.id s_id, s.name s_name, "
-			+ "f.id f_id, f.name f_name, f.subFamilyName f_sub_name, "
-			+ "p.user_id, p.age_id, p.sex_id, "
-			+ "c.id city_id, c.name city_name, c.state_id state_id "
-			+ "from photo p, specie s, family f, user u, city c "
-			+ "where p.specie_family_id=? and p.specie_id = s.id and p.specie_family_id = f.id and p.user_id=u.id  and p.city_id = c.id ";
-
-	/**
-	 * SQL to select photos by a given common name ID
-	 */
-	private static final String SELECT_BY_COMMON_NAME_ID = "SELECT p.id, p.date, p.place, p.city_id, p.camera, p.lens, p.film, "
-			+ "p.w, p.h, p.imageSize, p.smallImage, p.sW, p.sH, p.smallImageSize, p.comment,"
-			+ "p.specie_family_id, s.id s_id, s.name s_name, "
-			+ "f.id f_id, f.name f_name, f.subFamilyName f_sub_name, "
-			+ "p.user_id, p.age_id, p.sex_id, "
-			+ "c.id city_id, c.name city_name, c.state_id state_id "
-			+ "from photo p, specie s, family f, specie_has_common_name shcn, user u, city c "
-			+ "where shcn.common_name_id = ? and  p.specie_id=shcn.specie_id and p.specie_id = s.id and p.specie_family_id = f.id and p.user_id=u.id and p.city_id = c.id ";
-
-	/**
-	 * SQL to select photos by a given user ID
-	 */
-	private static final String SELECT_BY_USER = "SELECT p.id, p.date, p.place, p.city_id, p.camera, p.lens, p.film, "
-			+ "p.w, p.h, p.imageSize, p.smallImage, p.sW, p.sH, p.smallImageSize, p.comment, "
-			+ "p.specie_family_id, s.id s_id, s.name s_name, "
-			+ "f.id f_id, f.name f_name, f.subFamilyName f_sub_name, "
-			+ "p.user_id, p.age_id, p.sex_id, "
-			+ "c.id city_id, c.name city_name, c.state_id state_id "
-			+ "from photo p, specie s, family f, user u, city c "
-			+ "where p.specie_id > -1 and p.user_id=? and p.specie_id = s.id and p.specie_family_id = f.id and p.user_id=u.id and p.city_id = c.id "
-			+ "order by f_name";
-
-	/**
-	 * SQL to select all photos
-	 */
-	private static final String SELECT_ALL = "SELECT p.id, p.date, p.place, p.city_id, p.camera, p.lens, p.film, "
-			+ "p.w, p.h, p.imageSize, p.smallImage, p.sW, p.sH, p.smallImageSize, p.comment,"
-			+ "s.id s_id, s.name s_name, "
-			+ "f.id f_id, f.name f_name, f.subFamilyName f_sub_name, "
-			+ "p.user_id, p.age_id, p.sex_id, "
-			+ "c.id city_id, c.name city_name, c.state_id state_id "
-			+ "from photo p, specie s, family f, user u "
-			+ "LEFT JOIN city c on p.city_id = c.id "
-			+ "where p.specie_id > -1 and p.specie_id = s.id and p.specie_family_id = f.id and p.user_id=u.id "
-			+ "order by f_name, s_name";
-
-	/**
 	 * SQL to select id of all photos
 	 */
 	private static final String SELECT_IDS_FOR_ALL = "SELECT p.id, f.id f_id, f.name f_name, s.id s_id, s.name s_name "
@@ -311,154 +260,6 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
 	}
 
 	/**
-	 * This method retrieves a <code>List</code> object with
-	 * <code>Photo</code> objects, based on the id of the specie
-	 * 
-	 * @param id
-	 *            The id of the <code>List</code>
-	 * 
-	 * @return a <code>List</code> object with <code>Photo</code> objects,
-	 *         based on the id of the specie
-	 * 
-	 * @throws DatabaseDownException
-	 *             If the database is down
-	 * @throws SQLException
-	 *             If some SQL Exception occurs
-	 */
-	public List retrieveIDsForSpecie(int id) throws DatabaseDownException,
-			SQLException {
-		List list = super.retrieveIDsForGivenID(id, SELECT_IDS_BY_SPECIE_ID);
-		return list;
-	}
-
-	/**
-	 * This method retrieves a <code>List</code> object with
-	 * <code>Photo</code> objects, based on the id of the common name
-	 * 
-	 * @param id
-	 *            The id of the <code>List</code>
-	 * 
-	 * @return a <code>List</code> object with <code>Photo</code> objects,
-	 *         based on the id of the common name
-	 * 
-	 * @throws DatabaseDownException
-	 *             If the database is down
-	 * @throws SQLException
-	 *             If some SQL Exception occurs
-	 */
-	public List retrieveForCommonName(int id) throws DatabaseDownException,
-			SQLException {
-		List list = super.retrieveObjects(id, SELECT_BY_COMMON_NAME_ID);
-		return list;
-	}
-
-	/**
-	 * This method retrieves a <code>List</code> object with
-	 * <code>Photo</code> objects, based on the id of the common name
-	 * 
-	 * @param id
-	 *            The id of the <code>List</code>
-	 * 
-	 * @return a <code>List</code> object with <code>Photo</code> objects,
-	 *         based on the id of the common name
-	 * 
-	 * @throws DatabaseDownException
-	 *             If the database is down
-	 * @throws SQLException
-	 *             If some SQL Exception occurs
-	 */
-	public List retrieveIDsForCommonName(int id) throws DatabaseDownException,
-			SQLException {
-		List list = super.retrieveIDsForGivenID(id,
-				SELECT_IDS_BY_COMMON_NAME_ID);
-		return list;
-	}
-
-	/**
-	 * This method retrieves a <code>List</code> object with
-	 * <code>Photo</code> objects, based on the id of the family
-	 * 
-	 * @param id
-	 *            The id of the <code>List</code>
-	 * 
-	 * @return a <code>List</code> object with <code>Photo</code> objects,
-	 *         based on the id of the family
-	 * 
-	 * @throws DatabaseDownException
-	 *             If the database is down
-	 * @throws SQLException
-	 *             If some SQL Exception occurs
-	 */
-	public List retrieveForFamily(int id) throws DatabaseDownException,
-			SQLException {
-		List list = super.retrieveObjects(id, SELECT_BY_FAMILY_ID);
-		return list;
-	}
-
-	/**
-	 * This method retrieves a <code>List</code> object with
-	 * <code>Integer</code> objects, based on the id of the family
-	 * 
-	 * @param id
-	 *            The id of the <code>List</code>
-	 * 
-	 * @return a <code>List</code> object with <code>Photo</code> objects,
-	 *         based on the id of the common name
-	 * 
-	 * @throws DatabaseDownException
-	 *             If the database is down
-	 * @throws SQLException
-	 *             If some SQL Exception occurs
-	 */
-	public List retrieveIDsForFamily(int id) throws DatabaseDownException,
-			SQLException {
-		List list = super.retrieveIDsForGivenID(id, SELECT_IDS_BY_FAMILY_ID);
-		return list;
-	}
-
-	/**
-	 * This method retrieves a <code>List</code> object with
-	 * <code>Photo</code> objects, based on the id of the user
-	 * 
-	 * @param id
-	 *            The id of the <code>List</code>
-	 * 
-	 * @return a <code>List</code> object with <code>Photo</code> objects,
-	 *         based on the id of the specie
-	 * 
-	 * @throws DatabaseDownException
-	 *             If the database is down
-	 * @throws SQLException
-	 *             If some SQL Exception occurs
-	 */
-	public List retrieveForUser(int id) throws DatabaseDownException,
-			SQLException {
-		List list = super.retrieveObjects(id, SELECT_BY_USER);
-		return list;
-	}
-
-	/**
-	 * This method retrieves a <code>List</code> object with
-	 * <code>Integer</code> objects, based on the id of the user
-	 * 
-	 * @param id
-	 *            The id of the <code>List</code>
-	 * 
-	 * @return a <code>List</code> object with <code>Photo</code> objects,
-	 *         based on the id of the specie
-	 * 
-	 * @throws DatabaseDownException
-	 *             If the database is down
-	 * @throws SQLException
-	 *             If some SQL Exception occurs
-	 */
-	public List retrieveIDsForUser(int id) throws DatabaseDownException,
-			SQLException {
-		List list = super.retrieveIDsForGivenID(id, SELECT_IDS_BY_USER);
-		return list;
-	}
-
-	/**
 	 * This method retrieves the photo image from database, given the photo id
 	 * 
 	 * @param i
@@ -471,7 +272,6 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
 		Connection conn = DatabaseManager.getConnection();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		Object object = null;
 		ImageFile image = null;
 
 		try {
@@ -784,15 +584,6 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
 	}
 
 	/**
-	 * This method returns the SQL statement to select all object from database
-	 * 
-	 * @return the SelectALL sql
-	 */
-	protected String getSelectAllSQL() {
-		return SELECT_ALL;
-	}
-
-	/**
 	 * This method returns the SQL statement to select all ids from database
 	 * 
 	 * @return the SelectALLIDs sql
@@ -800,6 +591,42 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
 	protected String getSelectAllIDsSQL() {
 		return SELECT_IDS_FOR_ALL;
 	}
+
+    /**
+     * This method returns the SQL statement to select ids for family from database
+     * 
+     * @return the SELECT_IDS_BY_FAMILY_ID sql
+     */
+    protected String getSelectIDsForFamilySQL(){
+        return SELECT_IDS_BY_FAMILY_ID;
+    }
+    
+    /**
+     * This method returns the SQL statement to select ids for specie from database
+     * 
+     * @return the SELECT_IDS_BY_SPECIE_ID sql
+     */
+    protected String getSelectIDsForSpecieSQL(){
+        return SELECT_IDS_BY_SPECIE_ID;
+    }
+
+    /**
+     * This method returns the SQL statement to select ids for common name from database
+     * 
+     * @return the SELECT_IDS_BY_COMMON_NAME_ID sql
+     */
+    protected String getSelectIDsForCommonNameSQL(){
+        return SELECT_IDS_BY_COMMON_NAME_ID;
+    }
+
+    /**
+     * This method returns the SQL statement to select ids for user from database
+     * 
+     * @return the SELECT_IDS_BY_USER sql
+     */
+    protected String getSelectIDsForUserSQL(){
+        return SELECT_IDS_BY_USER;
+    }
 
 	/**
 	 * @param rs

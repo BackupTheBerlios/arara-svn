@@ -13,13 +13,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.model.PhotoModel;
@@ -35,7 +32,7 @@ import org.apache.log4j.Logger;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class GetPhotoServlet extends HttpServlet {
-	/**
+    /**
 	 * Logger object
 	 */
 	static Logger logger = Logger.getLogger("net.indrix.aves");
@@ -43,12 +40,7 @@ public class GetPhotoServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
 		logger.debug("GetPhotoServlet.doGet called...");
-		RequestDispatcher dispatcher = null;
-		ServletContext context = this.getServletContext();
-		String nextPage = null;
-		List errors = new ArrayList();
-		List messages = new ArrayList();
-		HttpSession session = req.getSession();
+		List <String>errors = new ArrayList<String>();
 		String photoId = req.getParameter("photoId");
 
 		logger.debug("PhotoId = " + photoId);
@@ -66,7 +58,7 @@ public class GetPhotoServlet extends HttpServlet {
 		output.flush();
 	}
 
-	private Photo getPhotoFromDatabase(List errors, String photoId) {
+	private Photo getPhotoFromDatabase(List <String>errors, String photoId) {
 		// retrieve from database
 		PhotoModel model = new PhotoModel();
 		Photo photo = null;

@@ -47,22 +47,6 @@ public class SoundModel {
 	}
 
 	/**
-	 * This method retrieves all sounds from database
-	 * 
-	 * @return An ArrayList object with Sound objects
-	 * 
-	 * @throws DatabaseDownException
-	 *             If the database is down
-	 * @throws SQLException
-	 *             If some SQL Exception occurs
-	 */
-	public List retrieveSounds() throws DatabaseDownException, SQLException {
-		logger.debug("SoundModel.retrieveSounds");
-		List list = dao.retrieve();
-		return list;
-	}
-
-	/**
 	 * This method retrieves the id of all sounds from database
 	 * 
 	 * @return An ArrayList object with Integer objects
@@ -79,6 +63,93 @@ public class SoundModel {
 		return list;
 	}
 
+    /**
+     * This method retrieves the id of all sounds from database, for the given
+     * the family id
+     * 
+     * @param familyId
+     *            The id of the family
+     * 
+     * @return An ArrayList object with Sound objects
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public List retrieveSoundIDsForFamily(int familyId)
+            throws DatabaseDownException, SQLException {
+        logger.debug("SoundModel.retrieveSoundIDsForFamily | familyId "
+                + familyId);
+        List list = dao.retrieveIDsForFamily(familyId);
+        return list;
+    }    
+
+    /**
+     * This method retrieves the id of all sounds from database, for the given
+     * the specie id
+     * 
+     * @param specieId
+     *            The id of the specie
+     * 
+     * @return An ArrayList object with Sound objects
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public List retrieveSoundIDsForSpecie(int specieId)
+            throws DatabaseDownException, SQLException {
+        logger.debug("SoundModel.retrieveSoundIDsForSpecie | specieId "
+                + specieId);
+        List list = dao.retrieveIDsForSpecie(specieId);
+        return list;
+    }    
+    
+    /**
+     * This method retrieves the id of all sounds from database, for the given
+     * the common name id
+     * 
+     * @param commonNameId
+     *            The id of the specie
+     * 
+     * @return An ArrayList object with Sound objects
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public List retrieveSoundIDsForCommonName(int commonNameId)
+            throws DatabaseDownException, SQLException {
+        logger.debug("SoundModel.retrieveSoundIDsForCommonName | commonNameId "
+                + commonNameId);
+        List list = dao.retrieveIDsForCommonName(commonNameId);
+        return list;
+    }   
+
+    /**
+     * This method retrieves the id of all sounds from database, for the given
+     * the user id
+     * 
+     * @param userId
+     *            The id of the specie
+     * 
+     * @return An ArrayList object with Sound objects
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public List retrieveSoundIDsForUser(int userId)
+            throws DatabaseDownException, SQLException {
+        logger.debug("SoundModel.retrieveSoundIDsForUser | userId "
+                + userId);
+        List list = dao.retrieveIDsForUser(userId);
+        return list;
+    }    
 	/**
 	 * This method deletes a sound given by the soundId
 	 * 
@@ -101,6 +172,11 @@ public class SoundModel {
 		return sound;
 	}
 
+    /**
+     * This method updates the sound link, to the given sound
+     * 
+     * @param sound The Sound object to be updated
+     */
 	public void updateSoundLink(Sound sound) {
 		// set the filename, with the full path, to the sound file
 		SoundFileManager manager = new SoundFileManager(sound);

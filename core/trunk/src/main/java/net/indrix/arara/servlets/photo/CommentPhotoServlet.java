@@ -61,8 +61,7 @@ public class CommentPhotoServlet extends HttpServlet {
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
 		String nextPage = null;
-		List errors = new ArrayList();
-		List messages = new ArrayList();
+		List <String>errors = new ArrayList<String>();
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute(ServletConstants.USER_KEY);
 		String identificationStr = req
@@ -122,15 +121,8 @@ public class CommentPhotoServlet extends HttpServlet {
 			// put errors in request
 			req.setAttribute(ServletConstants.ERRORS_KEY, errors);
 		}
-		if (!messages.isEmpty()) {
-			logger.debug("messages is not null.");
-			// put messages in request
-			req.setAttribute(ServletConstants.MESSAGES_KEY, messages);
-		}
 
-		req
-				.setAttribute(ServletConstants.IDENTIFICATION_KEY,
-						identificationStr);
+		req.setAttribute(ServletConstants.IDENTIFICATION_KEY, identificationStr);
 		req.setAttribute(ServletConstants.VIEW_MODE_KEY, "viewMode");
 
 		dispatcher = context.getRequestDispatcher(nextPage);

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <web-app id="WebApp_ID" version="2.4"
 	xmlns="http://java.sun.com/xml/ns/j2ee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -97,7 +96,7 @@
 	<servlet>
 		<servlet-name>retrieveSpecies</servlet-name>
 		<servlet-class>
-			net.indrix.arara.servlets.photo.RetrieveSpeciesForFamilyServlet
+			net.indrix.arara.servlets.common.RetrieveSpeciesForFamilyServlet
 		</servlet-class>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
@@ -128,33 +127,31 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>initSearchPhotosByFamily</servlet-name>
+		<servlet-name>initSearchByFamily</servlet-name>
+		<servlet-class>net.indrix.arara.servlets.common.RetrieveFamiliesServlet</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>initSearchBySpecie</servlet-name>
 		<servlet-class>
-			net.indrix.arara.servlets.photo.InitSearchPhotosByFamilyServlet
+			net.indrix.arara.servlets.common.InitSearchBySpecieServlet
 		</servlet-class>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
 
 	<servlet>
-		<servlet-name>initSearchPhotosBySpecie</servlet-name>
+		<servlet-name>initSearchByCommonName</servlet-name>
 		<servlet-class>
-			net.indrix.arara.servlets.photo.InitSearchPhotosBySpecieServlet
+			net.indrix.arara.servlets.common.InitSearchByCommonNameServlet
 		</servlet-class>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
 
 	<servlet>
-		<servlet-name>initSearchPhotosByCommonName</servlet-name>
+		<servlet-name>initSearchByUser</servlet-name>
 		<servlet-class>
-			net.indrix.arara.servlets.photo.InitSearchPhotosByCommonNameServlet
-		</servlet-class>
-		<load-on-startup>2</load-on-startup>
-	</servlet>
-
-	<servlet>
-		<servlet-name>initSearchPhotosByUser</servlet-name>
-		<servlet-class>
-			net.indrix.arara.servlets.photo.InitSearchPhotosByUserServlet
+			net.indrix.arara.servlets.common.InitSearchByUserServlet
 		</servlet-class>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
@@ -264,6 +261,14 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>initCommentPhoto</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.photo.InitCommentPhotoServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
 		<servlet-name>commentPhoto</servlet-name>
 		<servlet-class>
 			net.indrix.arara.servlets.photo.CommentPhotoServlet
@@ -317,6 +322,38 @@
 		<servlet-name>searchSounds</servlet-name>
 		<servlet-class>
 			net.indrix.arara.servlets.sound.display.SearchSoundsServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>searchSoundsByFamily</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.sound.display.SearchSoundsByFamilyServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>searchSoundsBySpecie</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.sound.display.SearchSoundsBySpecieServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>searchSoundsByCommonName</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.sound.display.SearchSoundsByCommonNameServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>searchSoundsByUser</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.sound.display.SearchSoundsByUserServlet
 		</servlet-class>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
@@ -421,24 +458,24 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>initSearchPhotosByFamily</servlet-name>
-		<url-pattern>/servlet/initSearchPhotosByFamily</url-pattern>
+		<servlet-name>initSearchByFamily</servlet-name>
+		<url-pattern>/servlet/initSearchByFamily</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>initSearchPhotosByUser</servlet-name>
-		<url-pattern>/servlet/initSearchPhotosByUser</url-pattern>
+		<servlet-name>initSearchByUser</servlet-name>
+		<url-pattern>/servlet/initSearchByUser</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>initSearchPhotosByCommonName</servlet-name>
-		<url-pattern>/servlet/initSearchPhotosByCommonName</url-pattern>
+		<servlet-name>initSearchByCommonName</servlet-name>
+		<url-pattern>/servlet/initSearchByCommonName</url-pattern>
 	</servlet-mapping>
 
 
 	<servlet-mapping>
-		<servlet-name>initSearchPhotosBySpecie</servlet-name>
-		<url-pattern>/servlet/initSearchPhotosBySpecie</url-pattern>
+		<servlet-name>initSearchBySpecie</servlet-name>
+		<url-pattern>/servlet/initSearchBySpecie</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
@@ -492,6 +529,11 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
+		<servlet-name>initCommentPhoto</servlet-name>
+		<url-pattern>/servlet/initCommentPhoto</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
 		<servlet-name>commentPhoto</servlet-name>
 		<url-pattern>/servlet/commentPhoto</url-pattern>
 	</servlet-mapping>
@@ -528,6 +570,26 @@
 	<servlet-mapping>
 		<servlet-name>searchSounds</servlet-name>
 		<url-pattern>/servlet/searchSounds</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>searchSoundsByFamily</servlet-name>
+		<url-pattern>/servlet/searchSoundsByFamily</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>searchSoundsBySpecie</servlet-name>
+		<url-pattern>/servlet/searchSoundsBySpecie</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>searchSoundsByCommonName</servlet-name>
+		<url-pattern>/servlet/searchSoundsByCommonName</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>searchSoundsByUser</servlet-name>
+		<url-pattern>/servlet/searchSoundsByUser</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

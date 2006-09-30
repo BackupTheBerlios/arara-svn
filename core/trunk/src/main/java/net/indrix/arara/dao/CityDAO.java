@@ -15,7 +15,6 @@ import java.util.List;
 
 import net.indrix.arara.model.StatesModel;
 import net.indrix.arara.vo.City;
-import net.indrix.arara.vo.State;
 
 import org.apache.log4j.Logger;
 
@@ -34,7 +33,7 @@ public class CityDAO {
 	/**
 	 * SQL statement to retrieve all cities
 	 */
-	private static final String SELECT_ALL = "Select * from city order by name";
+	//private static final String SELECT_ALL = "Select * from city order by name";
 
 	/**
 	 * SQL statement to retrieve the city with the given id
@@ -101,7 +100,7 @@ public class CityDAO {
 	 * 
 	 * @throws DatabaseDownException
 	 *             if database is down
-	 */
+	 *
 	public List retrieve() throws DatabaseDownException {
 		logger.debug("CityDAO.retrieve : entering method...");
 		List list = new ArrayList();
@@ -140,7 +139,8 @@ public class CityDAO {
 		logger.debug("CityDAO.retrieve : finishing method...");
 		return list;
 	}
-
+    */
+    
 	/**
 	 * This method retrieves a <code>Specie</code> object based on its id
 	 * 
@@ -200,7 +200,7 @@ public class CityDAO {
 	 */
 	public List retrieveForState(int id) throws DatabaseDownException {
 		logger.debug("CityDAO.retrieveForState : entering method...");
-		List list = new ArrayList();
+		List <City>list = new ArrayList<City>();
 		Connection conn = DatabaseManager.getConnection();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;

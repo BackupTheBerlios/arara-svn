@@ -2,7 +2,7 @@
 <%@ taglib uri="/fmt" prefix="fmt"%>
 <SCRIPT language="JavaScript"> 
     function familySelected() { 
-       document.uploadForm.action = "<c:url value="/servlet/retrieveSpecies?toPage=/jsp/sound/upload/uploadSound.jsp&data=SOUND&action=UPLOAD"/>"; 
+       document.uploadForm.action = "<c:url value="/servlet/retrieveSpecies?nextPage=/jsp/sound/upload/uploadSound.jsp&data=SOUND&action=UPLOAD"/>"; 
        document.uploadForm.submit(); 
     } 
 

@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.indrix.arara.model.PhotoModel;
 import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.servlets.pagination.PaginationController;
 import net.indrix.arara.servlets.pagination.exceptions.InvalidControllerException;
@@ -47,26 +46,20 @@ public class SearchPhotosServlet extends AbstractSearchPhotosServlet {
 		ServletContext context = this.getServletContext();
 		String nextPage = null;
 		List errors = new ArrayList();
-		List messages = new ArrayList();
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute(ServletConstants.USER_KEY);
 
 		String action = req.getParameter(ServletConstants.ACTION);
-		String identificationStr = req
-				.getParameter(ServletConstants.IDENTIFICATION_KEY);
+		String identificationStr = req.getParameter(ServletConstants.IDENTIFICATION_KEY);
 		boolean identification = new Boolean(identificationStr).booleanValue();
 
-		PhotoModel model = new PhotoModel();
-
 		logger.debug("Retrieving controller ...");
-		PaginationController controller = getPaginationController(session,
-				identification, PAGINATION_FOR_ALL_PHOTOS);
+		PaginationController controller = getPaginationController(session, identification, PAGINATION_FOR_ALL_PHOTOS);
 		List list = null;
 		if (identification) {
 			logger.debug("Retrieving photos for identification...");
 			list = getListOfPhotos(action, controller);
-			req.setAttribute(ServletConstants.IDENTIFICATION_KEY,
-					identificationStr);
+			req.setAttribute(ServletConstants.IDENTIFICATION_KEY, identificationStr);
 		} else {
 			list = getListOfPhotos(action, controller);
 		}
@@ -74,18 +67,15 @@ public class SearchPhotosServlet extends AbstractSearchPhotosServlet {
 		logger.debug("Putting list of photos in session");
 		req.setAttribute("identification", identificationStr);
 		session.setAttribute(ServletConstants.PHOTOS_LIST, list);
-		session.setAttribute(ServletConstants.SERVLET_TO_CALL,
-				"/servlet/searchPhotos");
+		session.setAttribute(ServletConstants.SERVLET_TO_CALL_KEY, "/servlet/searchPhotos");
 		nextPage = ServletConstants.ALL_PHOTOS_PAGE;
 
 		if (user != null) {
-			loggerActions.info("User " + user.getLogin()
-					+ " has selected all photos.");
+			loggerActions.info("User " + user.getLogin() + " has selected all photos.");
 		} else {
 			String ip = req.getRemoteAddr();
 			Locale locale = req.getLocale();
-			loggerActions.info("Anonymous " + " from IP " + ip + "(" + locale
-					+ ") has selected all photos.");
+			loggerActions.info("Anonymous " + " from IP " + ip + "(" + locale + ") has selected all photos.");
 		}
 		if (!errors.isEmpty()) {
 			logger.debug("errors is not null.");
@@ -98,6 +88,13 @@ public class SearchPhotosServlet extends AbstractSearchPhotosServlet {
 		dispatcher.forward(req, res);
 	}
 
+    protected String getServletToCall() {
+        return "/servlet/searchPhotos";
+    }  
+
+    protected int getPaginationConstant() {
+        return PAGINATION_FOR_ALL_PHOTOS;
+    }    
 	private List getListOfPhotos(String action, PaginationController controller) {
 		List list = null;
 		try {
@@ -107,10 +104,7 @@ public class SearchPhotosServlet extends AbstractSearchPhotosServlet {
 				list = controller.doAction(ServletConstants.BEGIN);
 			} catch (InvalidControllerException e1) {
 				// this should never happend
-				logger
-						.fatal(
-								"InvalidControllerException when doing BEGIN action...",
-								e1);
+				logger.fatal("InvalidControllerException when doing BEGIN action...", e1);
 			}
 		}
 

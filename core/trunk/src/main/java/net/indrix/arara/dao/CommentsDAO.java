@@ -108,7 +108,7 @@ public class CommentsDAO extends AbstractDAO {
 	 * @throws DatabaseDownException
 	 *             If the database is down
 	 */
-	public List retrieveUsersWithCommentsForPhoto(int photoId, int userId)
+	public List<User> retrieveUsersWithCommentsForPhoto(int photoId, int userId)
 			throws DatabaseDownException {
 		logger.debug("CommentsDAO.retrieveUsersForPhoto : entering method...");
 		List <User>list = new ArrayList<User>();

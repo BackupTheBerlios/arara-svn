@@ -33,7 +33,7 @@ public class SoundDAO extends AbstractDAO implements SoundConstants {
 	private static final String DELETE_BY_ID = "DELETE FROM sound WHERE id = ?";
 
 	private static final String SELECT_ALL = "SELECT snd.id, snd.specie_id, snd.user_id, snd.age_id, snd.sex_id, snd.fileSize, "
-			+ "snd.location, snd.city_id, snd.post_date, snd.comment, s.family_id, f.id, f.name "
+			+ "snd.location, snd.city_id, snd.post_date, snd.comment, s.family_id, f.id, f.name, f.subFamilyName f_sub_name "
 			+ "from sound snd, specie s, family f "
 			+ "where snd.specie_id = s.id and s.family_id = f.id "
 			+ "order by f.name";
@@ -47,30 +47,41 @@ public class SoundDAO extends AbstractDAO implements SoundConstants {
 	/**
 	 * SQL to select id of all photos
 	 */
-	private static final String SELECT_IDS_FOR_ALL = "SELECT s.id, f.id f_id, f.name f_name "
+	private static final String SELECT_IDS_FOR_ALL = "SELECT s.id, f.id f_id, f.name f_name, f.subFamilyName f_sub_name "
 			+ "from sound s, specie sp, family f "
 			+ "where s.specie_id > -1 and s.specie_id = sp.id and sp.family_id = f.id "
 			+ "order by f_name";
 
-	/**
-	 * This method returns the SQL statement to insert a new object into
-	 * database
-	 * 
-	 * @return The insert SQL statement
-	 */
-	protected String getInsertSQL() {
-		return INSERT;
-	}
+    /**
+     * SQL to select id of photos by a given family ID
+     */
+    private static final String SELECT_IDS_BY_FAMILY_ID = "SELECT s.id, sp.id s_id, sp.name s_name "
+            + "from sound s, family f, specie sp "
+            + "where s.specie_id = sp.id and sp.family_id = ? and sp.family_id = f.id "
+            + "order by s_name";
 
-	/**
-	 * This method returns the SQL statement to delete an object from database
-	 * 
-	 * @return The delete SQL statement
-	 */
-	protected String getDeleteSQL() {
-		return DELETE_BY_ID;
-	}
+    /**
+     * SQL to select ids of photos by a given specie ID
+     */
+    private static final String SELECT_IDS_BY_SPECIE_ID = "SELECT s.id, sp.id s_id, sp.name s_name "
+            + "from sound s, specie sp "
+            + "where s.specie_id=? and s.specie_id = sp.id " + "order by s_name";
 
+    /**
+     * SQL to select photo ids by a given common name ID
+     */
+    private static final String SELECT_IDS_BY_COMMON_NAME_ID = "SELECT s.id "
+            + "from sound s, specie_has_common_name shcn "
+            + "where shcn.common_name_id = ? and s.specie_id=shcn.specie_id ";
+
+    /**
+     * SQL to select photo ids by a given user ID
+     */
+    private static final String SELECT_IDS_BY_USER = "SELECT s.id, f.id f_id, f.name f_name, f.subFamilyName f_sub_name, sp.id s_id, sp.name s_name "
+            + "from sound s, family f, specie sp "
+            + "where s.specie_id > -1 and s.user_id=? and sp.family_id = f.id and s.specie_id = sp.id "
+            + "order by f_name, s_name";
+    
 	/**
 	 * This method retrieves all photos from database. It uses the following
 	 * SQL: <br>
@@ -121,7 +132,7 @@ public class SoundDAO extends AbstractDAO implements SoundConstants {
 		Sound object = (Sound) super.retrieveObject(id, SELECT_BY_SPECIE_ID);
 		return object;
 	}
-
+  
 	/**
 	 * This method retrieves a <code>List</code> object with
 	 * <code>Photo</code> objects, based on the id of the specie
@@ -241,12 +252,67 @@ public class SoundDAO extends AbstractDAO implements SoundConstants {
 		sound.setId(id);
 	}
 
-	/**
-	 * This method returns the SQL statement to select all ids from database
-	 * 
-	 * @return the SelectALLIDs sql
-	 */
-	protected String getSelectAllIDsSQL() {
-		return SELECT_IDS_FOR_ALL;
-	}
+    /**
+     * This method returns the SQL statement to insert a new object into
+     * database
+     * 
+     * @return The insert SQL statement
+     */
+    protected String getInsertSQL() {
+        return INSERT;
+    }
+
+    /**
+     * This method returns the SQL statement to delete an object from database
+     * 
+     * @return The delete SQL statement
+     */
+    protected String getDeleteSQL() {
+        return DELETE_BY_ID;
+    }
+
+    /**
+     * This method returns the SQL statement to select all ids from database
+     * 
+     * @return the SelectALLIDs sql
+     */
+    protected String getSelectAllIDsSQL() {
+        return SELECT_IDS_FOR_ALL;
+    }
+
+    /**
+     * This method returns the SQL statement to select ids for family from database
+     * 
+     * @return the SELECT_IDS_BY_FAMILY_ID sql
+     */
+    protected String getSelectIDsForFamilySQL(){
+        return SELECT_IDS_BY_FAMILY_ID;
+    }
+    
+    /**
+     * This method returns the SQL statement to select ids for specie from database
+     * 
+     * @return the SELECT_IDS_BY_SPECIE_ID sql
+     */
+    protected String getSelectIDsForSpecieSQL(){
+        return SELECT_IDS_BY_SPECIE_ID;
+    }
+
+    /**
+     * This method returns the SQL statement to select ids for common name from database
+     * 
+     * @return the SELECT_IDS_BY_COMMON_NAME_ID sql
+     */
+    protected String getSelectIDsForCommonNameSQL(){
+        return SELECT_IDS_BY_COMMON_NAME_ID;
+    }
+
+    /**
+     * This method returns the SQL statement to select ids for user from database
+     * 
+     * @return the SELECT_IDS_BY_USER sql
+     */
+    protected String getSelectIDsForUserSQL(){
+        return SELECT_IDS_BY_USER;
+    }
 }

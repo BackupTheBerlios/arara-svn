@@ -52,10 +52,9 @@ public abstract class AbstractPhotoEmailSender implements Runnable {
 	 *            The new photo data
 	 */
 	public void sendEmail() {
-		logger
-				.info("AbstractPhotoEmailSender.sendEmail: starting thread to send emails...");
+		logger.info("AbstractPhotoEmailSender.sendEmail: starting thread to send emails...");
 		Thread t = new Thread(this);
-		this.run();
+		t.run();
 	}
 
 }

@@ -55,7 +55,7 @@ public abstract class AbstractSoundEmailSender implements Runnable {
         logger
                 .info("AbstractSoundEmailSender.sendEmail: starting thread to send emails...");
         Thread t = new Thread(this);
-        this.run();
+        t.run();
     }
 
 }

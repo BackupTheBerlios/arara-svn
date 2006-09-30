@@ -147,11 +147,9 @@ public class IdentificationPhotoEmailSender extends AbstractPhotoEmailSender {
 	private String getMessageForIdentification(String body, User user,
 			Photo photo) {
 		String bodyFormatted = "";
-		ArrayList list = new ArrayList();
+		ArrayList <String>list = new ArrayList<String>();
 		list.add(user.getName());
-		list
-				.add(photo.getUser().getLogin() + " | "
-						+ photo.getUser().getName());
+		list.add(photo.getUser().getLogin() + " | " + photo.getUser().getName());
 		String url = "http://www.aves.brasil.nom.br/servlet/initIdentification?photoId="
 				+ photo.getId();
 		list.add(url);

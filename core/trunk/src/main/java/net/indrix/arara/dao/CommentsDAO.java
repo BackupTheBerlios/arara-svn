@@ -111,8 +111,7 @@ public class CommentsDAO extends AbstractDAO {
 	public List retrieveUsersWithCommentsForPhoto(int photoId, int userId)
 			throws DatabaseDownException {
 		logger.debug("CommentsDAO.retrieveUsersForPhoto : entering method...");
-		List list = new ArrayList();
-		CommonNameDAO commonNameDAO = new CommonNameDAO();
+		List <User>list = new ArrayList<User>();
 		Connection conn = DatabaseManager.getConnection();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;

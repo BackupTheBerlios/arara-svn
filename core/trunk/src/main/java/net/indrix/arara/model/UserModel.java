@@ -63,8 +63,6 @@ public class UserModel extends AbstractModel {
 	 */
 	public User login(String login, String password)
 			throws DatabaseDownException, SQLException, UserNotFoundException {
-		boolean passwordOk = false;
-
 		User dbUser = userDAO.retrieve(login);
 		if (dbUser == null) {
 			throw new UserNotFoundException();
@@ -122,8 +120,6 @@ public class UserModel extends AbstractModel {
 			throws DatabaseDownException, SQLException {
 		logger.debug("Changing password for " + user.getLogin() + " to "
 				+ password);
-		boolean passwordOk = false;
-
 		// encrypt new password
 		String encryptedPassword = Cryptography.cryptPassword(password);
 		user.setPassword(encryptedPassword);
@@ -150,6 +146,7 @@ public class UserModel extends AbstractModel {
 		boolean exists = true;
 		try {
 			User u = retrieve(login);
+            exists = (u != null);
 		} catch (DatabaseDownException e) {
 			throw e;
 		} catch (SQLException e) {
@@ -201,7 +198,6 @@ public class UserModel extends AbstractModel {
 			UserNotFoundException {
 		logger
 				.debug("UserModel.retrieveForEmailOnNewPhoto : retrieving users to send email to");
-		User user = null;
 		List list = userDAO.retrieveForEmailOnNewPhoto();
 		if ((list == null) || (list.isEmpty())) {
 			logger.debug("List with users is EMPTY !");
@@ -225,7 +221,6 @@ public class UserModel extends AbstractModel {
             UserNotFoundException {
         logger
                 .debug("UserModel.retrieveForEmailOnNewSound : retrieving users to send email to");
-        User user = null;
         List list = userDAO.retrieveForEmailOnNewSound();
         if ((list == null) || (list.isEmpty())) {
             logger.debug("List with users is EMPTY !");
@@ -249,7 +244,6 @@ public class UserModel extends AbstractModel {
 			throws DatabaseDownException, SQLException, UserNotFoundException {
 		logger
 				.debug("UserModel.retrieveForPhotoIdentificationEmail : retrieving users to send email to");
-		User user = null;
 		List list = userDAO.retrieveForPhotoIdentificationEmail();
 		if ((list == null) || (list.isEmpty())) {
 			logger.debug("List with users is EMPTY !");
@@ -429,7 +423,7 @@ public class UserModel extends AbstractModel {
 	 */
 	private String getMessage(String body, User user) {
 		String bodyFormatted = "";
-		ArrayList list = new ArrayList();
+		ArrayList <String>list = new ArrayList<String>();
 		String name = user.getName();
 		list.add(name);
 		String email = user.getEmail();
@@ -451,7 +445,7 @@ public class UserModel extends AbstractModel {
 	 */
 	private String getPasswordMessage(String body, User user) {
 		String bodyFormatted = "";
-		ArrayList list = new ArrayList();
+		ArrayList <String>list = new ArrayList<String>();
 		String name = user.getName();
 		list.add(name);
 		String password = user.getPassword();

@@ -11,7 +11,6 @@ import java.sql.SQLException;
 
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.dao.SoundDAO;
-import net.indrix.arara.model.email.PhotoEmailSender;
 import net.indrix.arara.model.email.SoundEmailSender;
 import net.indrix.arara.model.exceptions.SoundProcessingException;
 import net.indrix.arara.model.file.SoundFileManager;
@@ -24,8 +23,6 @@ import net.indrix.arara.vo.Sound;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class UploadSound extends AbstractUpload {
-	private static final String SOUND_PATH = "sound.path";
-
 	private static final String validExtensions[] = { "mp3" };
 
 	/**

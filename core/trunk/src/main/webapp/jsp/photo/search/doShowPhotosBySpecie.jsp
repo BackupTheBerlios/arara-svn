@@ -10,10 +10,8 @@
 </script>
 
 
-<c:set var="selectedFamilyId"
-	value="${uploadPhotoBean.selectedFamilyId}" />
-<c:set var="selectedSpecieId"
-	value="${uploadPhotoBean.selectedSpecieId}" />
+<c:set var="selectedFamilyId" value="${familyList.selectedId}" />
+<c:set var="selectedSpecieId" value="${specieList.selectedId}" />
 
 <form name="initShowPhotosBySpecieForm" method="get"
 	action="<c:url value="/servlet/searchPhotosBySpecie"/>"
@@ -23,7 +21,7 @@
 	<tr>
 		<td width="15%"><b><fmt:message key="family" /></b></td>
 		<td width="85%"><select name="familyId" onChange="familySelected()">
-			<c:forEach items="${uploadPhotoBean.familyList}" var="familyBean">
+			<c:forEach items="${familyList.list}" var="familyBean">
 				<c:if
 					test="${selectedFamilyId != null && selectedFamilyId == familyBean.value}">
 					<option selected value="${familyBean.value}">${familyBean.label}</option>
@@ -38,7 +36,7 @@
 	<tr>
 		<td width="15%"><b><fmt:message key="specie" /></b></td>
 		<td width="85%"><select name="id">
-			<c:forEach items="${uploadPhotoBean.specieList}" var="specieBean">
+			<c:forEach items="${specieList.list}" var="specieBean">
 				<c:if
 					test="${selectedSpecieId != null && selectedSpecieId == specieBean.value}">
 					<option selected value="${specieBean.value}">${specieBean.label}</option>

@@ -9,14 +9,14 @@
           boolean next = false;
           if ((p != null) && (p.hasPrevious())){
        %> <a
-		href="<c:url value="${servletToCall}?action=FIRST&id=${id}"/>"><b><fmt:message
+		href="<c:url value="${servletToCall}?identification=${identification}&action=FIRST&id=${id}"/>"><b><fmt:message
 		key="pagination.first" /></b></a>&nbsp;&nbsp;|&nbsp;&nbsp; <%
 	   	   }
        %> <% 
           if ((p != null) && (p.hasPrevious())){
              previous = true;
        %> <a
-		href="<c:url value="${servletToCall}?action=PREVIOUS&id=${id}"/>"><b><
+		href="<c:url value="${servletToCall}?identification=${identification}&action=PREVIOUS&id=${id}"/>"><b><
 	<fmt:message key="pagination.previous" /></b></a> <%
 	   	   }
        %> <% 
@@ -25,13 +25,13 @@
        %> &nbsp;&nbsp;|&nbsp;&nbsp; <%
              }
        %> <a
-		href="<c:url value="${servletToCall}?action=NEXT&id=${id}"/>"><b><fmt:message
+		href="<c:url value="${servletToCall}?identification=${identification}&action=NEXT&id=${id}"/>"><b><fmt:message
 		key="pagination.next" /> ></b></a>&nbsp;&nbsp;|&nbsp;&nbsp; <%
 	   	   }
        %> <% 
           if ((p != null) && (p.hasNext())){
        %> <a
-		href="<c:url value="${servletToCall}?action=LAST&id=${id}"/>"><b><fmt:message
+		href="<c:url value="${servletToCall}?identification=${identification}&action=LAST&id=${id}"/>"><b><fmt:message
 		key="pagination.last" /></b></a> <%
 	   	   }
        %></td>

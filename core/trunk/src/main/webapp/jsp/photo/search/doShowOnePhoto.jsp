@@ -54,12 +54,20 @@
 			</table>
 			<table width="100%">
 				<tr>
-					<td width="20%"><font size="${fontSize}" face="Verdana"><b><fmt:message
-						key="family" /></b></font></td>
-					<td><font size="${fontSize}" face="Verdana"><a
-						href="<c:url value="/servlet/searchPhotosByFamily?id=${currentPhoto.specie.family.id}"/>">
-					${currentPhoto.specie.family.name}<br>
-					</a></font></td>
+					<td width="20%"><font size="${fontSize}" face="Verdana">
+						<b><fmt:message key="family" /></b>
+					</font></td>
+					<td><font size="${fontSize}" face="Verdana">
+
+					<c:if test="${currentPhoto.specie.family.subFamilyName == null}">
+						<a href="<c:url value="/servlet/searchPhotosByFamily?id=${currentPhoto.specie.family.id}"/>">${currentPhoto.specie.family.name}<br></a>
+					</c:if> 
+					<c:if test="${currentPhoto.specie.family.subFamilyName != null}">
+						<a href="<c:url value="/servlet/searchPhotosByFamily?id=${currentPhoto.specie.family.id}"/>">${currentPhoto.specie.family.name} (${currentPhoto.specie.family.subFamilyName})</a>
+					</c:if> 
+					</font></td>
+
+
 				</tr>
 			</table>
 
@@ -69,7 +77,7 @@
 						key="specie" /></b></font></td>
 					<td><font size="${fontSize}" face="Verdana"><a
 						href="<c:url value="/servlet/searchPhotosBySpecie?id=${currentPhoto.specie.id}"/>">
-					${currentPhoto.specie.name}</a></font></td>
+					<i>${currentPhoto.specie.name}</i></a></font></td>
 				</tr>
 			</table>
 

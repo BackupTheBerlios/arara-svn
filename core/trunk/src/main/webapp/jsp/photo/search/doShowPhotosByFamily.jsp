@@ -1,8 +1,7 @@
 <%@ taglib uri="/core" prefix="c"%>
 <%@ taglib uri="/fmt" prefix="fmt"%>
 
-<c:set var="selectedFamilyId" value="${uploadBean.selectedFamilyId}" />
-<c:set var="selectedSpecieId" value="${uploadBean.selectedSpecieId}" />
+<c:set var="selectedFamilyId" value="${familyList.selectedId}" />
 
 <form name="showPhotosByFamilyForm" method="get"
 	action="<c:url value="/servlet/searchPhotosByFamily?action=BEGIN"/>">
@@ -11,7 +10,7 @@
 	<tr>
 		<td width="10%"><b><fmt:message key="family" /></b></td>
 		<td width="90%"><select name="id">
-			<c:forEach items="${uploadPhotoBean.familyList}" var="familyBean">
+			<c:forEach items="${familyList.list}" var="familyBean">
 				<c:if
 					test="${selectedFamilyId != null && selectedFamilyId == familyBean.value}">
 					<option selected value="${familyBean.value}">${familyBean.label}</option>

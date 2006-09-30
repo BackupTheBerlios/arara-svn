@@ -21,10 +21,6 @@ import net.indrix.arara.vo.Photo;
  */
 public class PhotoPaginationController extends PaginationController {
 
-	private boolean identification;
-
-	protected int id;
-
 	/**
 	 * The model to use to retrieve data from database
 	 */
@@ -35,8 +31,7 @@ public class PhotoPaginationController extends PaginationController {
 	 * @param identification
 	 */
 	public PhotoPaginationController(int photosPerPage, boolean identification) {
-		super(photosPerPage);
-		this.identification = identification;
+		super(photosPerPage, identification);
 	}
 
 	/**
@@ -76,26 +71,11 @@ public class PhotoPaginationController extends PaginationController {
 	 */
 	protected List retrieveAllData() throws DatabaseDownException, SQLException {
 		List listOfPhotos = null;
-		if (identification) {
+		if (isIdentification()) {
 			listOfPhotos = model.retrievePhotosForIdentification();
 		} else {
 			listOfPhotos = model.retrievePhotoIDs();
 		}
 		return listOfPhotos;
 	}
-
-	/**
-	 * @return
-	 */
-	public int getId() {
-		return id;
-	}
-
-	/**
-	 * @param i
-	 */
-	public void setId(int i) {
-		id = i;
-	}
-
 }

@@ -25,31 +25,59 @@ import org.apache.log4j.Logger;
 public abstract class PaginationController {
 	protected static Logger logger = Logger.getLogger("net.indrix.aves");
 
+    /**
+     * Flag to control wheter the media is for identification or not
+     */
+    private boolean identification;
+    
+    /**
+     * the current index media
+     */
 	protected int currentIndex;
 
+    /**
+     * The number of data per page
+     */
 	protected int dataPerPage;
 
+    /**
+     * The list of data (media) to be displayed
+     */
 	protected List listOfData;
 
-	protected List viewOfList;
+    /**
+     * The list that will handle the objects for just one page
+     */
+	protected List <Object>viewOfList;
 
-	public PaginationController(int photosPerPage) {
-		this.dataPerPage = photosPerPage;
+    /**
+     * The id, when necessary, to retrieve data from database
+     */
+    protected int id;
+
+    /**
+     * Creates a new PaginationController object, with the given number of elements per page, and
+     * with the flag identification
+     * 
+     * @param dataPerPage The amount of data per page
+     * @param identification The flag for identification
+     */
+	public PaginationController(int dataPerPage, boolean identification) {
+		this.dataPerPage = dataPerPage;
+        this.identification = identification;
 	}
 
 	/**
 	 * This method performs the steps necessary to treat the action
 	 * 
-	 * @param action
-	 *            The action from user
+	 * @param action The action from user
 	 * 
 	 * @return a new list with the subset of photos
 	 */
 	public List doAction(String action) throws InvalidControllerException {
-		logger.debug("PaginationController.doAction called with action "
-				+ action);
+		logger.debug("PaginationController.doAction called with action " + action);
 
-		viewOfList = new ArrayList();
+		viewOfList = new ArrayList<Object>();
 		if (action == null) {
 			action = "BEGIN";
 		}
@@ -62,16 +90,10 @@ public abstract class PaginationController {
 			try {
 				listOfData = retrieveAllData();
 			} catch (DatabaseDownException e) {
-				logger
-						.debug(
-								"PaginationController.doAction: DatabaseDownException when retrieving all data",
-								e);
+				logger.debug("PaginationController.doAction: DatabaseDownException when retrieving all data",e);
 				viewOfList = null;
 			} catch (SQLException e) {
-				logger
-						.debug(
-								"PaginationController.doAction: SQLException when retrieving all data",
-								e);
+				logger.debug("PaginationController.doAction: SQLException when retrieving all data",e);
 				viewOfList = null;
 			}
 		} else if (action.equals(ServletConstants.NEXT)) {
@@ -87,16 +109,10 @@ public abstract class PaginationController {
 		try {
 			retrieveDataForPage();
 		} catch (DatabaseDownException e) {
-			logger
-					.debug(
-							"PaginationController.doAction: DatabaseDownException when retrieving page data",
-							e);
+			logger.debug("PaginationController.doAction: DatabaseDownException when retrieving page data",e);
 			viewOfList = null;
 		} catch (SQLException e) {
-			logger
-					.debug(
-							"PaginationController.doAction: SQLException when retrieving page data",
-							e);
+			logger.debug("PaginationController.doAction: SQLException when retrieving page data",e);
 			viewOfList = null;
 		}
 		return viewOfList;
@@ -185,7 +201,6 @@ public abstract class PaginationController {
 	 */
 	public boolean hasPrevious() {
 		boolean previous = false;
-		int size = listOfData.size();
 		if (currentIndex > 0) {
 			previous = true;
 		}
@@ -250,4 +265,20 @@ public abstract class PaginationController {
 	public boolean isListSet() {
 		return listOfData != null;
 	}
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public boolean isIdentification() {
+        return identification;
+    }
+
+    public void setIdentification(boolean identification) {
+        this.identification = identification;
+    }
 }

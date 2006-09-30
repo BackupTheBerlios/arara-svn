@@ -22,11 +22,10 @@ public class SoundBySpeciePaginationController extends
 
     @Override
     protected List retrieveAllData() throws DatabaseDownException, SQLException {
-        logger.debug("SoundPaginationController.retrieveAllData : retrieving all sounds...");
+        logger.debug("SoundBySpeciePaginationController.retrieveAllData : retrieving all sounds...");
         List listOfSounds = null;
-        listOfSounds = model.retrieveSoundIDsForFamily(getId());
-        logger.debug("SoundPaginationController.retrieveAllData : "
-                + listOfSounds.size() + " sounds retrieved...");
+        listOfSounds = model.retrieveSoundIDsForSpecie(getId());
+        logger.debug("SoundBySpeciePaginationController.retrieveAllData : " + listOfSounds.size() + " sounds retrieved...");
         return listOfSounds;
     }
 }

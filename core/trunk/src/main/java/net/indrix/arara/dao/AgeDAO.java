@@ -33,8 +33,7 @@ public class AgeDAO {
 
 	public List retrieve() throws DatabaseDownException {
 		logger.debug("CommentsDAO.retrieveUsersForPhoto : entering method...");
-		List list = new ArrayList();
-		CommonNameDAO commonNameDAO = new CommonNameDAO();
+		List <Age>list = new ArrayList<Age>();
 		Connection conn = DatabaseManager.getConnection();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;

@@ -13,8 +13,8 @@
        %> <% 
           if ((p != null) && (p.hasPrevious())){
              previous = true;
-       %> <a href="<c:url value="${servletToCall}?action=PREVIOUS"/>"><b><
-	<fmt:message key="pagination.previous" /></b></a> <%
+       %> <a href="<c:url value="${servletToCall}?action=PREVIOUS"/>"><b><fmt:message key="pagination.previous" /></b></a> 
+       <%
 	   	   }
        %> <% 
           if ((p != null) && (p.hasNext())){

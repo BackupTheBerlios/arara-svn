@@ -12,16 +12,13 @@
 	</table>
 	<table bgcolor="#005500" width="100%">
 		<tr>
-			<td width="14%"><b><font color="#FFFFFF"><fmt:message
-				key="user.login" /></font></b></td>
-			<td width="18%"><b><font color="#FFFFFF"><fmt:message
-				key="photo.date" /></font></b></td>
-			<td width="24%"><b><font color="#FFFFFF"><fmt:message key="family" /></font></b></td>
-			<td width="24%"><b><font color="#FFFFFF"><fmt:message key="specie" /></font></b></td>
-			<td width="10%"><b><font color="#FFFFFF"><fmt:message
-				key="specie.sex" /></font></b></td>
-			<td width="10%"><b><font color="#FFFFFF"><fmt:message
-				key="specie.age" /></font></b></td>
+			<td width="10%"><b><font color="#FFFFFF"><fmt:message key="user.login" /></font></b></td>
+			<td width="14%"><b><font color="#FFFFFF"><fmt:message key="photo.date" /></font></b></td>
+			<td width="20%"><b><font color="#FFFFFF"><fmt:message key="family" /></font></b></td>
+			<td width="22%"><b><font color="#FFFFFF"><fmt:message key="specie" /></font></b></td>
+			<td width="22%"><b><font color="#FFFFFF"><fmt:message key="common.name" /></font></b></td>
+			<td width="6%"><b><font color="#FFFFFF"><fmt:message key="specie.sex" /></font></b></td>
+			<td width="6%"><b><font color="#FFFFFF"><fmt:message key="specie.age" /></font></b></td>
 		</tr>
 	</table>
 
@@ -38,17 +35,18 @@
 
 		<table bgcolor="${color}" width="100%">
 			<tr>
-				<td width="14%"><font size="1" face="Verdana">${identification.user.login}</font></td>
-				<td width="18%"><font size="1" face="Verdana">${f:dateTimeAsString(identification.date)}</font></td>
-				<td width="24%"><font size="1" face="Verdana">${identification.specie.family.name}</font></td>
-				<td width="24%"><font size="1" face="Verdana">${identification.specie.name}</font></td>
-				<td width="10%"><font size="1" face="Verdana">${identification.sex.sex}</font></td>
-				<td width="10%"><font size="1" face="Verdana">${identification.age.age}</font></td>
+				<td width="10%"><font size="1" face="Verdana">${identification.user.login}</font></td>
+				<td width="14%"><font size="1" face="Verdana">${f:dateTimeAsString(identification.date)}</font></td>
+				<td width="20%"><font size="1" face="Verdana">${identification.specie.family.name}</font></td>
+				<td width="22%"><font size="1" face="Verdana">${identification.specie.name}</font></td>
+				<td width="22%"><font size="1" face="Verdana">${identification.specie.commonNameString}</font></td>
+				<td width="6%"><font size="1" face="Verdana">${identification.sex.sex}</font></td>
+				<td width="6%"><font size="1" face="Verdana">${identification.age.age}</font></td>
 			</tr>
 			<tr>
-				<td width="14%" align="left"><font size="1" face="Verdana"><fmt:message
+				<td width="10%" align="left"><font size="1" face="Verdana"><fmt:message
 					key="photo.identify.comment" /></font></td>
-				<td width="86%" colspan="2" align="left"><font size="1"
+				<td width="90%" colspan="2" align="left"><font size="1"
 					face="Verdana">${identification.comment}</font></td>
 			</tr>
 		</table>

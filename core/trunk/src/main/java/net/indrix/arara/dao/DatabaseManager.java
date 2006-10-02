@@ -46,7 +46,7 @@ public class DatabaseManager {
 	/**
 	 * Logger object to be used by this class
 	 */
-	protected static Logger logger = Logger.getLogger("net.indrix.aves");
+	protected static final Logger logger = Logger.getLogger("net.indrix.aves");
 
 	/**
 	 * Database Manager
@@ -61,7 +61,7 @@ public class DatabaseManager {
 		logger.debug("Reading DB driver class...");
 		try {
 			String classToUse = getClassToUse();
-			logger.error("Driver to use:" + classToUse);
+			logger.info("Driver to use:" + classToUse);
 			Class.forName(classToUse);
 			logger.info("Driver loaded");
 		} catch (Exception e) {
@@ -108,18 +108,19 @@ public class DatabaseManager {
 			// "jeff",
 			// "jeff");
 			// } else {
+            logger.info("Conection by Context");            
 			Context initContext = new InitialContext();
 			Context envContext = (Context) initContext.lookup("java:/comp/env");
-			DataSource ds = (DataSource) envContext.lookup("aves");
+			DataSource ds = (DataSource) envContext.lookup("jdbc/aves");
 			c = ds.getConnection();
 			// }
 		} else {
 			if (!initialized) {
-				logger
-						.error("DatabaseManager.retrieveConnection : initializing...");
+				logger.error("DatabaseManager.retrieveConnection : initializing...");
 				initialize();
 				initialized = true;
 			}
+            logger.info("Conection direct");            
 			String url = "jdbc:mysql://" + site + "/" + database
 					+ "?autoReconnect=true";
 			c = DriverManager.getConnection(url, user, password);

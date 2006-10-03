@@ -1,4 +1,6 @@
 <pre>
+Jefferson Silva
+
 	Com 5 pra 6 anos de idade, ganhei um coleira do vizinho. A partir deste dia, comecei a 
 gostar de pássaros. Morava em Passa Quatro - MG, e até os 10 anos era passarinheiro. 
 Ia para o mato caçar coleiras. Fiz isso até o dia em que precisei mudar de casa, então tive que me
@@ -24,4 +26,7 @@ informação ornitológica.
 
 	Se o site puder ser usado por pessoas para troca de informações, consultas e admiração 
 das nossas belas aves, terei realizado um sonho!
+
+Rafael de Melo Cuba
+
 </pre>

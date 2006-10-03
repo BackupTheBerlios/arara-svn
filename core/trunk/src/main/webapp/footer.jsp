@@ -9,7 +9,7 @@
 		</td>
 		<td align="right"><font color="#ffffff"> <fmt:message
 			key="site.footer.developer" /><a
-			href="<c:url value="/jsp/author/author.jsp"/>">Jefferson Silva</a> 
+			href="<c:url value="/jsp/author/author.jsp"/>">Indrix</a> 
 			</font>
 		</td>
 	</tr>

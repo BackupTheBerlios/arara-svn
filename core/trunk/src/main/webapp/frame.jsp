@@ -126,12 +126,11 @@ body {
 					<hr>		
 			        <c:import url="/menu.jsp" />		
 					<hr>	
-					<img src="<%= request.getContextPath()%>/images/chart.png" alt="" width="20" height="20"><b>Estatisticas</b><br/>
+					<img src="<%= request.getContextPath()%>/images/chart.png" alt="" width="20" height="20"><b><fmt:message key="menu.statistics.statistics"/></b><br/>
 					<div id="statistics" style="position: relative;">
-					<h3>Statistics</h3>
 					<div id="updatesponsor">
 					<p>
-					Loading...
+					<fmt:message key="menu.statistics.load"/>
 					</p>
 					</div>
 					</div>              

@@ -19,40 +19,63 @@
 				<tr>
 			</c:if>
 			<td align="left">
-			<c:if test="${photo.soundAvailable == true}">
-				<a  href="<c:url value="${linkKey}${photo.sound.relativePathAsLink}"/>" target="_blank"> 
-					<font size="1" face="Verdana"> 
-						<img src="<c:url value="/jsp/images/sound.gif"/>" width="16" height="16"> 
-					</font> 
-				</a>
-			</c:if> 
-			<a href="<c:url value="/servlet/showOnePhoto?photoId=${photo.id}&identification=${identification}"/>">
-				<img src="<c:url value="/servlet/getThumbnail?photoId=${photo.id}&identification=${identification}"/>"
-					width="${f:thumbnailWidth(w, photo.smallImage.width, photo.smallImage.height)}"
-					height="${f:thumbnailHeight(w, photo.smallImage.width, photo.smallImage.height)}"
-					align="bottom" />
-			</a> 
-				
-			<c:if test="${user != null and identification != true}">
-				<a href="<c:url value="/servlet/initCommentPhoto?photoId=${photo.id}&identification=${identification}"/>"> 
-					<font size="1" face="Verdana"> 
-						<img src="<c:url value="/jsp/images/comment.gif"/>" width="16" height="16"> 
-					</font>
-				</a>
-			</c:if> 
-			<c:if test="${(photo.user.id == user.id) or (user.admin == true)}">
-				<a href="<c:url value="/jsp/photo/search/deletePhoto.jsp?photoId=${photo.id}"/>"> 
-					<font size="1" face="Verdana"> 
-						<img src="<c:url value="/jsp/images/delete.gif"/>" width="16" height="16"> 
-					</font>
-				</a>
-				<a href="<c:url value="/servlet/initEditPhoto?photoId=${photo.id}&identification=${identification}"/>"> 
-					<font size="1" face="Verdana"> 
-						<img src="<c:url value="/jsp/images/edit.gif"/>" width="16" height="16"> 
-					</font>
-				</a>
-			</c:if> 
-				
+
+	  			<table width="100%" border="0" cellpadding="2" cellspacing="2">
+				<tr>
+					<td align="right">
+					<c:if test="${photo.soundAvailable == true}">
+						<a  href="<c:url value="${linkKey}${photo.sound.relativePathAsLink}"/>" target="_blank"> 
+							<font size="1" face="Verdana"> 
+								<fmt:message key="button.sound.tooltip" var="soundToolTip"/>
+								<img title="${soundToolTip}" src="<c:url value="/jsp/images/sound.gif"/>" width="20" height="20"> 
+							</font> 
+						</a>
+					</c:if> 
+					</td>
+	        		<td colspan="1" rowspan="4" align="left">
+					<a href="<c:url value="/servlet/showOnePhoto?photoId=${photo.id}&identification=${identification}"/>">
+					<img src="<c:url value="/servlet/getThumbnail?photoId=${photo.id}&identification=${identification}"/>"
+						width="${f:thumbnailWidth(w, photo.smallImage.width, photo.smallImage.height)}"
+						height="${f:thumbnailHeight(w, photo.smallImage.width, photo.smallImage.height)}"
+						align="bottom" />
+					</a> 
+					</td>
+				</tr>
+				<tr>
+				<td align="right">
+					<c:if test="${user != null and identification != true}">
+						<a href="<c:url value="/servlet/initCommentPhoto?photoId=${photo.id}&identification=${identification}"/>"> 
+							<font size="1" face="Verdana"> 
+								<fmt:message key="button.comment.tooltip" var="commentToolTip"/>
+								<img title="${commentToolTip}" src="<c:url value="/jsp/images/comment.gif"/>" width="20" height="20"> 
+							</font>
+						</a>
+					</c:if> 
+				</td>
+				</tr>
+				<c:if test="${(photo.user.id == user.id) or (user.admin == true)}">
+					<tr>
+					<td align="right">
+						<a href="<c:url value="/servlet/initEditPhoto?photoId=${photo.id}&identification=${identification}"/>"> 
+							<font size="1" face="Verdana"> 
+								<fmt:message key="button.edit.tooltip" var="editToolTip"/>
+								<img title="${editToolTip}"src="<c:url value="/jsp/images/edit.gif"/>" width="20" height="20"> 
+							</font>
+						</a>
+					</td>
+					</tr>
+					<tr>
+					<td align="right">
+						<a href="<c:url value="/jsp/photo/search/deletePhoto.jsp?photoId=${photo.id}"/>"> 
+							<font size="1" face="Verdana"> 
+								<fmt:message key="button.delete.tooltip" var="deleteToolTip"/>
+								<img title="${deleteToolTip}" src="<c:url value="/jsp/images/delete.gif"/>" width="20" height="20"> 
+							</font>
+						</a>
+					</td>
+					</tr>
+				</c:if> 
+				</table>
 			<c:if test="${photo.specie.id != -1}">
 				<font size="1" face="Verdana"><br><fmt:message key="family" />: 
 				<c:if test="${photo.specie.family.subFamilyName == null}">
@@ -93,7 +116,8 @@
 			<c:set var="newLine" value="${true}" />
 			</tr>
 		</c:if>
-	</c:forEach>
+	    </c:forEach>
+  	  </table>
 	</table>
 </td></tr>
 <c:import url="/jsp/photo/search/pagination.jsp" />

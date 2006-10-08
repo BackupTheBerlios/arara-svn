@@ -90,4 +90,18 @@ public class Statistics {
 		return n;
 	}
 
+    public static String getSlideShow() {
+        // ; is the separator
+        String imgUrls= request.getContextPath()+ "/images/arara.jpg" 
+        try {
+            
+        } catch (DatabaseDownException e) {
+            logger.error(
+                    "Statistics.getSlideShow: DatabaseDownException ", e);
+        } catch (SQLException e) {
+            logger.error("Statistics.getSlideShow: SQLException ", e);
+        }
+        return imgUrls;
+    }
+    
 }

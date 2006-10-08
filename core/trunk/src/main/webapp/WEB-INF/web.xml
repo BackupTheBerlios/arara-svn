@@ -384,19 +384,16 @@
 		<load-on-startup>2</load-on-startup>
 	</servlet>
 	<servlet>
-		<description>
-		City Find</description>
-		<display-name>
-		CityFind</display-name>
-		<servlet-name>CityFind</servlet-name>
-		<servlet-class>
-		net.indrix.maps.servlets.CityFind</servlet-class>
+		<description>city Find</description>
+		<display-name>cityFind</display-name>
+		<servlet-name>cityFind</servlet-name>
+		<servlet-class>	net.indrix.maps.servlets.CityFindServlet</servlet-class>
 		<init-param>
-			<description>
-			City to find</description>
-			<param-name>City</param-name>
+			<description>City to find</description>
+			<param-name>city</param-name>
 			<param-value></param-value>
 		</init-param>
+		<load-on-startup>2</load-on-startup>		
 	</servlet>
 
 
@@ -619,8 +616,8 @@
 		<url-pattern>/servlet/addCities</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>CityFind</servlet-name>
-		<url-pattern>/CityFind</url-pattern>
+		<servlet-name>cityFind</servlet-name>
+		<url-pattern>/servlet/cityFind</url-pattern>
 	</servlet-mapping>
 
 	<!-- The Usual Welcome File List -->

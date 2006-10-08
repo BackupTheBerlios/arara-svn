@@ -210,5 +210,11 @@ public class ServletConstants {
 	public static final String SESSION_EXPIRED_DURING_PHOTO_NAVIGATION = "session.expired.during.photo.navigation";
 
 	public static final String DATABASE_ERROR = "database.error";
+    
+    public static final String CITY_COORDS = "city.coords";    
+    
+    public static final String CITY_NAME = "city.name";    
+    
+    public static final String CITY_INFO = "city.info";    
 
 }

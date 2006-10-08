@@ -40,11 +40,14 @@
 </table>
 <table width="100%">
 	<tr>
-		<td width="20%"><font size="${fontSize}" face="Verdana"><b><fmt:message
-			key="city" /></b></font></td>
-		<td><font size="${fontSize}" face="Verdana">${currentPhoto.city.name} - ${currentPhoto.city.state.acronym} 
-		<a href="javascript:window.open('/arara/maps/maps.jsp?city=${currentPhoto.city.name}-${currentPhoto.city.state.acronym}','Map','height=400,width=600');">
-		<fmt:message key="map" /> </a></font></td>
+		<td width="20%"><font size="${fontSize}" face="Verdana"><b>
+		<fmt:message key="city" /></b></font></td>
+		<td>
+			<font size="${fontSize}" face="Verdana">${currentPhoto.city.name} - ${currentPhoto.city.state.acronym}
+			<FORM> 
+			<INPUT type="button" value="<fmt:message key="map" />" onClick="window.open('<%= request.getContextPath()%>/servlet/cityFind?city=${currentPhoto.city.name}/${currentPhoto.city.state.acronym}','Map','height=600,width=600,status=yes,scrollbars=yes')"> 
+			</FORM> 
+		</font></td>
 	</tr>
 </table>
 <table width="100%">

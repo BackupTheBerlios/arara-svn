@@ -39,8 +39,10 @@ ABQIAAAAsGlxfJNNFT2UMdPvkWu4chSXfif7qM1OeSkUCwGfI9nRZvUk7xQinUjgk0a-BmsdLb5eSinn
         
 		map.addControl(new GSmallMapControl());
 		map.addControl(new GMapTypeControl());
-        map.setCenter(new GLatLng(-22.90655,-47.06142), 13,G_HYBRID_MAP);
-		map.openInfoWindow(map.getCenter(), document.createTextNode("Campinas"));
+	  //map.setCenter(new GLatLng(37.4419, -122.1419), 13);	
+	  //map.setCenter(new GLatLng(-47.06142, -22.90655), 13,G_HYBRID_MAP);
+        map.setCenter(new GLatLng(<%= request.getAttribute("city.coords")%>), 13,G_HYBRID_MAP);
+		map.openInfoWindow(map.getCenter(), document.createTextNode("<%= request.getAttribute("city.name")%>"));
       }
     }
     //]]>
@@ -49,11 +51,15 @@ ABQIAAAAsGlxfJNNFT2UMdPvkWu4chSXfif7qM1OeSkUCwGfI9nRZvUk7xQinUjgk0a-BmsdLb5eSinn
 <body onload="load()" onunload="GUnload()">
 <div id="map" style="width: 500px; height: 300px"></div>
 <P> 
-<%= request.getParameter("city") %><br>
+<%= request.getAttribute("city.name") %><br>
+<%= request.getAttribute("city.info") %>
+<!-- 
 <a href="http://www.ibge.gov.br/cidadesat/xtras/perfilwindowat.php?codmun=140010">INFO</a><br />
 <a href="http://www.sidra.ibge.gov.br/bda/territorio/infomun.asp?codmun=1400100">More info</a>
 </P>
 <center><img src="http://www.ibge.gov.br/mapas/google/1400101p.jpg"	width="150" height="85"></center>
+ -->
+
 </font>
 </body>
 </html>

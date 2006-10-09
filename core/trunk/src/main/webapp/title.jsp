@@ -8,21 +8,21 @@
 	<tr bgcolor="#669900">
 		<td height="25">
 			<div align="left"><font color="#FFFF00"
-			face="Georgia, Times New Roman, Times, serif" size="+1"> <fmt:message
+			face="Verdana, Georgia, Times New Roman, Times, serif" size="+1"> <fmt:message
 			key="site.title" /> </font>
 			</div>
 		</td>
 		<td height="25" width="200">
-		<font size="-1" face="Verdana"><b>		
-		<c:choose>		
-		<c:when test='<%= user == null %>'>
-		 	  <fmt:message key="user.comein" />		
-		</c:when>
-		<c:otherwise>
-		 	  <fmt:message key="user.welcome" /> &nbsp; <%= user.getName()%>	
-		</c:otherwise>
-		</c:choose>		
-		</b></font>	
+			<font size="-1" face="Verdana"><b>		
+				<c:choose>		
+				<c:when test='<%= user == null %>'>
+				 	  <fmt:message key="user.comein" />		
+				</c:when>
+				<c:otherwise>
+				 	  <fmt:message key="user.welcome" /> &nbsp; <%= user.getName()%>	
+				</c:otherwise>
+				</c:choose>		
+			</b></font>	
 		</td>	 	  
 		<td height="25" width="100">	 	  		
 		  <div class="outerbar">

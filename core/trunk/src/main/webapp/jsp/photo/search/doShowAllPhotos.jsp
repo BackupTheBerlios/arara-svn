@@ -1,10 +1,21 @@
+<style type="text/css">
+table.comBordaSimples {
+	border-collapse: collapse; /* CSS2 */
+	border: 1px solid black;
+	border-bottom: 2px solid white;
+}
+table.comBordaSimples tr {
+	border: 1px solid white;
+}
+</style>
+
 <%@ taglib uri="/core" prefix="c"%>
 <%@ taglib uri="/fmt" prefix="fmt"%>
 <%@ taglib uri="functions" prefix="f"%>
 
 <table width="100%" border="0" cellspacing="2" height="100%">
 <tr><td>
-	<table width="100%" border="0" cellspacing="2" height="100%">
+	<table class="comBordaSimples" width="100%" border="0" cellspacing="2" height="100%">
 		<c:if test="${empty listOfPhotos}">
 			<br>
 			<h3><fmt:message key="show.all.photos.not.found" /></h3>
@@ -20,7 +31,7 @@
 			</c:if>
 			<td align="left">
 
-	  			<table width="100%" border="0" cellpadding="2" cellspacing="2">
+	  			<table class="semBorda" width="100%" border="0" cellpadding="2" cellspacing="2">
 				<tr>
 					<td align="right">
 					<c:if test="${photo.soundAvailable == true}">

@@ -163,7 +163,7 @@ body {
   </tr>
 </table>
 
-<center><font color="#ffffff" size="-1">
+<center><font face="Verdana" color="#ffffff" size="-1">
 Copyright © 2006 Indrix.
 </font></center>
 

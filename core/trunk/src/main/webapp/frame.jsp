@@ -117,8 +117,9 @@ body {
     	<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#669900">
       		<tr>
         		<td align="left">
+        		<!-- imgUrls="<%= request.getContextPath()%>/images/arara.jpg;servlet/getPhoto?photoId=852&identification="  -->
 					<img dojoType="SlideShow" 
-					imgUrls="<%= request.getContextPath()%>/images/arara.jpg;servlet/getPhoto?photoId=852&identification=" 
+					imgUrls="${f:getSlideShow("/arara/")}" 					
 					transitionInterval="700"
 					delay="7000" 
 					src="<%= request.getContextPath()%>/images/arara.jpg"

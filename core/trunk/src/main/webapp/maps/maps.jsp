@@ -31,28 +31,44 @@ ABQIAAAAsGlxfJNNFT2UMdPvkWu4chSXfif7qM1OeSkUCwGfI9nRZvUk7xQinUjgk0a-BmsdLb5eSinn
     function load() {
       if (GBrowserIsCompatible()) {
         var map = new GMap2(document.getElementById("map"));
-        
+/*        
 		GEvent.addListener(map, "moveend", function() {
 		  var center = map.getCenter();
 		  document.getElementById("message").innerHTML = center.toString();
 		});
-        
+*/        
 		map.addControl(new GSmallMapControl());
 		map.addControl(new GMapTypeControl());
 	  //map.setCenter(new GLatLng(37.4419, -122.1419), 13);	
 	  //map.setCenter(new GLatLng(-47.06142, -22.90655), 13,G_HYBRID_MAP);
-        map.setCenter(new GLatLng(<%= request.getAttribute("city.coords")%>), 13,G_HYBRID_MAP);
-		map.openInfoWindow(map.getCenter(), document.createTextNode("<%= request.getAttribute("city.name")%>"));
+        map.setCenter(new GLatLng(<%= request.getAttribute("city.coords")%>), 5,G_HYBRID_MAP);
+//		map.openInfoWindow(map.getCenter(), document.createTextNode("<%= request.getAttribute("city.name")%>"));
+		
+		// Our info window content
+		var infoTabs = [
+  			new GInfoWindowTab("<%= request.getAttribute("city.name") %>", "<%= request.getAttribute("city.name") %>"),
+//			new GInfoWindowTab("Tab #2", "This is tab #2 content")
+		];
+
+		// Place a marker in the center of the map and open the info window
+		// automatically
+		var marker = new GMarker(map.getCenter());		
+		GEvent.addListener(marker, "Info", function() {
+//			marker.openInfoWindowTabsHtml(infoTabs);
+			marker.openInfoWindowHtml("<%= request.getAttribute("city.name") %>");
+		});
+		map.addOverlay(marker);
+//		marker.openInfoWindowTabsHtml(infoTabs);
+		marker.openInfoWindowHtml("<%= request.getAttribute("city.name") %>");		
       }
     }
     //]]>
     </script>
 </head>
 <body onload="load()" onunload="GUnload()">
-<div id="map" style="width: 500px; height: 300px"></div>
-<P> 
-<%= request.getAttribute("city.name") %><br>
+<div id="map" style="width: 550px; height: 500px"></div>
 <%= request.getAttribute("city.info") %>
+
 <!-- 
 <a href="http://www.ibge.gov.br/cidadesat/xtras/perfilwindowat.php?codmun=140010">INFO</a><br />
 <a href="http://www.sidra.ibge.gov.br/bda/territorio/infomun.asp?codmun=1400100">More info</a>
@@ -60,6 +76,5 @@ ABQIAAAAsGlxfJNNFT2UMdPvkWu4chSXfif7qM1OeSkUCwGfI9nRZvUk7xQinUjgk0a-BmsdLb5eSinn
 <center><img src="http://www.ibge.gov.br/mapas/google/1400101p.jpg"	width="150" height="85"></center>
  -->
 
-</font>
 </body>
 </html>

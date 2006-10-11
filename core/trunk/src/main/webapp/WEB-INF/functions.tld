@@ -92,4 +92,12 @@
 		<function-signature>int getNumberOfUsers()</function-signature>
 	</function>
 
+	<function>
+		<name>getSlideShow</name>
+		<function-class>net.indrix.arara.utils.jsp.Statistics</function-class>
+		<function-signature>
+			java.lang.String getSlideShow(java.lang.String)
+		</function-signature>
+	</function>
+
 </taglib>

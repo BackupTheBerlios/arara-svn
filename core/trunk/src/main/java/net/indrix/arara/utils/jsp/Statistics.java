@@ -7,8 +7,12 @@
 package net.indrix.arara.utils.jsp;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Iterator;
+import java.util.Collections;
 
 import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.model.PhotoModel;
 import net.indrix.arara.model.StatisticsModel;
 
 import org.apache.log4j.Logger;
@@ -90,10 +94,25 @@ public class Statistics {
 		return n;
 	}
 
-    public static String getSlideShow() {
+    public static String getSlideShow(String contextPath) {
         // ; is the separator
-        String imgUrls= request.getContextPath()+ "/images/arara.jpg" 
+        String imgUrls="";
         try {
+            PhotoModel model = new PhotoModel();
+            List listOfPhotos = null;
+            listOfPhotos = model.retrievePhotoIDs();
+            Collections.shuffle(listOfPhotos);
+            int maxSize = 10;
+            if (maxSize > listOfPhotos.size()){
+                maxSize = listOfPhotos.size();
+            }
+            Iterator i = (listOfPhotos.subList(0, maxSize)).iterator();
+            String id = ((Integer) (i.next())).toString();            
+            imgUrls = "/servlet/getPhoto?photoId=" + id;
+            while (i.hasNext()) {
+                id = ((Integer) (i.next())).toString();
+                imgUrls = imgUrls + ";" + "/servlet/getPhoto?photoId=" + id;
+            }            
             
         } catch (DatabaseDownException e) {
             logger.error(

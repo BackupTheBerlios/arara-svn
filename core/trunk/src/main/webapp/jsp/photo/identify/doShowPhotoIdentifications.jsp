@@ -18,7 +18,7 @@
 			<td width="22%"><b><font color="#FFFFFF"><fmt:message key="specie" /></font></b></td>
 			<td width="22%"><b><font color="#FFFFFF"><fmt:message key="common.name" /></font></b></td>
 			<td width="6%"><b><font color="#FFFFFF"><fmt:message key="specie.sex" /></font></b></td>
-			<td width="6%"><b><font color="#FFFFFF"><fmt:message key="specie.age" /></font></b></td>
+			<td align="right" width="6%"><b><font color="#FFFFFF"><fmt:message key="specie.age" /></font></b></td>
 		</tr>
 	</table>
 
@@ -41,7 +41,7 @@
 				<td width="22%"><font size="1" face="Verdana">${identification.specie.name}</font></td>
 				<td width="22%"><font size="1" face="Verdana">${identification.specie.commonNameString}</font></td>
 				<td width="6%"><font size="1" face="Verdana">${identification.sex.sex}</font></td>
-				<td width="6%"><font size="1" face="Verdana">${identification.age.age}</font></td>
+				<td align="right" width="6%"><font size="1" face="Verdana">${identification.age.age}</font></td>
 			</tr>
 			<tr>
 				<td width="10%" align="left"><font size="1" face="Verdana"><fmt:message

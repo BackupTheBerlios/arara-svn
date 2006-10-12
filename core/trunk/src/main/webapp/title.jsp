@@ -67,9 +67,8 @@
 		</td>		
 	</tr>
 	<tr bgcolor="#669900">	
-		<td colspan="3" height="75">
-			<hr>
-			<img src="<%= request.getContextPath()%>/images/top.jpg" alt="">
+		<td align="center" colspan="3" height="75" width="100%">
+			<img width="100%" src="<%= request.getContextPath()%>/images/top.jpg" alt="">
 		</td>
 	</tr>
 		

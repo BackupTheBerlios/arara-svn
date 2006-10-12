@@ -100,7 +100,7 @@ body {
 	</c:otherwise>
 </c:choose>
 
-<table width="800" border="0" align="center" cellspacing="1">
+<table width="98%" border="0" align="center" cellspacing="1">
   <tr>
     <td colspan="3">
     	<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#669900">

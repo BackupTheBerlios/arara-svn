@@ -100,11 +100,6 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
             }
         }
 
-        Iterator it = list.iterator();
-        while (it.hasNext()) {
-            Photo photo = (Photo) it.next();
-            logger.debug("Photo " + photo);
-        }
         logger.debug("List of photos retrieved...");
         logger.debug("Putting list of photos in session");
         session.setAttribute(ServletConstants.PHOTOS_LIST, list);

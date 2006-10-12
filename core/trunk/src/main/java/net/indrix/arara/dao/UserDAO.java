@@ -195,19 +195,12 @@ public class UserDAO extends AbstractDAO {
 		user.setPassword(rs.getString(PASSWORD_COLUMN));
 		user.setEmail(rs.getString(EMAIL_COLUMN));
 		user.setLanguage(rs.getString(LANGUAGE_COLUMN));
-		user
-				.setEmailOnNewPhoto(rs.getInt(EMAIL_ON_NEW_PHOTO_COLUMN) == 1 ? true
-						: false);
-		user
-				.setEmailOnNewIdPhoto(rs.getInt(EMAIL_ON_NEW_ID_PHOTO_COLUMN) == 1 ? true
-						: false);
-		user
-				.setEmailOnNewSound(rs.getInt(EMAIL_ON_NEW_SOUND_COLUMN) == 1 ? true
-						: false);
+		user.setEmailOnNewPhoto(rs.getInt(EMAIL_ON_NEW_PHOTO_COLUMN) == 1 ? true : false);
+		user.setEmailOnNewIdPhoto(rs.getInt(EMAIL_ON_NEW_ID_PHOTO_COLUMN) == 1 ? true : false);
+		user.setEmailOnNewSound(rs.getInt(EMAIL_ON_NEW_SOUND_COLUMN) == 1 ? true : false);
 		user.setAddPhoto(rs.getInt(ADD_PHOTO_COLUMN) == 1 ? true : false);
 		user.setAddSound(rs.getInt(ADD_SOUND_COLUMN) == 1 ? true : false);
 		user.setAdmin(rs.getBoolean(ADMIN_COLUMN));
-		logger.debug("createObject: user created: " + user);
 		return user;
 	}
 
@@ -229,7 +222,6 @@ public class UserDAO extends AbstractDAO {
         user.setName(rs.getString(NAME_COLUMN));
         user.setEmail(rs.getString(EMAIL_COLUMN));
         user.setLanguage(rs.getString(LANGUAGE_COLUMN));
-        logger.debug("createObject: user created: " + user);
         return user;
     }
     

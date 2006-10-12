@@ -400,6 +400,22 @@ public abstract class AbstractDAO {
      */
     protected List retrieveObject(String sql) throws DatabaseDownException,
             SQLException {
+        return retrieveObject(sql, false);
+    }
+
+    /**
+     * This method retrieves all common names from database. It uses the
+     * following SQL: <br>
+     * SELECT * FROM COMMON_NAME
+     * 
+     * @return A list of <code>CommonName</code> objects
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    protected List retrieveObject(String sql, boolean light) throws DatabaseDownException, SQLException {       
         List<Object> list = new ArrayList<Object>();
         Connection conn = DatabaseManager.getConnection();
         PreparedStatement stmt = null;
@@ -411,7 +427,11 @@ public abstract class AbstractDAO {
             Object object = null;
 
             while (rs.next()) {
-                object = createObject(rs);
+                if (light){
+                    object = createLightObject(rs);                    
+                } else {
+                    object = createObject(rs);                    
+                }
                 list.add(object);
             }
         } catch (SQLException e) {
@@ -425,7 +445,7 @@ public abstract class AbstractDAO {
         }
         return list;
     }
-
+    
     /**
      * This method retrieves all IDS from database.
      * 
@@ -673,6 +693,16 @@ public abstract class AbstractDAO {
      */
     abstract protected Object createObject(ResultSet rs) throws SQLException;
 
+    /**
+     * This is not abstract because it was implemented a long time after the createObject
+     * 
+     * @param rs
+     * @return
+     */
+    protected Object createLightObject(ResultSet rs) throws SQLException {
+        return null;
+    }
+    
     /**
      * This method closes the given statement
      * 

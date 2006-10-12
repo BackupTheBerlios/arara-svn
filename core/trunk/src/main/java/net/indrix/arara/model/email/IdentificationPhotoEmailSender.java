@@ -55,12 +55,14 @@ public class IdentificationPhotoEmailSender extends AbstractPhotoEmailSender {
 			logger.debug("IdentificationPhotoEmailSender.sendEmailForIdentification : Retrieving list of users to sent email to");
 			List list = userModel.retrieveForPhotoIdentificationEmail();
 			if (!list.isEmpty()) {
+                String server = PropertiesManager.getProperty("email.server");
+                String fromAdd = PropertiesManager.getProperty("email.fromAdd");           
 				Iterator it = list.iterator();
+                logger.debug("IdentificationPhotoEmailSender.sendEmailForIdentification : sending email to users...");
 				while (it.hasNext()) {
                     LightUser user = (LightUser) it.next();
 					if (!user.equals(photo.getUser())) {
-						logger.debug("IdentificationPhotoEmailSender.sendEmailForIdentification : sending email to user " + user.getLogin());
-						sendEmailForIdentificationToUser(user, photo);
+						sendEmailForIdentificationToUser(user, photo, server, fromAdd);
 					}
 				}
 			}
@@ -81,40 +83,22 @@ public class IdentificationPhotoEmailSender extends AbstractPhotoEmailSender {
 	 * @param photo
 	 *            The new photo just added
 	 */
-	private void sendEmailForIdentificationToUser(LightUser user, Photo photo) {
+	private void sendEmailForIdentificationToUser(LightUser user, Photo photo, String server, String fromAdd) {
 		Locale l = new Locale(user.getLanguage());
 		EmailResourceBundle bundle = (EmailResourceBundle) EmailResourceBundle.getInstance();
-		String server = PropertiesManager.getProperty("email.server");
-		String fromAdd = PropertiesManager.getProperty("email.fromAdd");
 		String subject = bundle.getString("email.newPhotoForIdentification.subject", l);
 		String body = bundle.getString("email.newPhotoForIdentification.body", l);
 		String fromText = bundle.getString("email.newPhotoForIdentification.fromText", l);
 		try {
-
-			// send password to user
-			logger.debug("enviando email com os dados:");
-			logger.debug(server);
-			logger.debug(user.getEmail());
-			logger.debug(subject);
-			logger.debug(getMessageForIdentification(body, user, photo));
-			logger.debug(fromAdd);
-			logger.debug(fromText);
-
 			MailClass sender = new MailClass(server);
-			logger.debug("Setting to...");
 			sender.setToAddress(user.getEmail());
-			logger.debug("Setting subject...");
 			sender.setSubject(subject);
-			logger.debug("Setting message...");
 			sender.setMessageTextBody(getMessageForIdentification(body, user, photo));
-			logger.debug("Setting from...");
 			sender.setFromAddress(fromAdd, fromText);
-			logger.debug("Sending message...");
-			sender.sendMessage(true);
+			sender.sendMessage(false);
 			// true indicates to emailObject to send the message right now
 		} catch (MessageFormatException e) {
-			logger.error("exception -> MessageFormatException in sendEmail "
-					+ e);
+			logger.error("exception -> MessageFormatException in sendEmail " + e);
 		} catch (AddressException e) {
 			logger.error("exception -> AddressException in sendEmail " + e);
 		} catch (NoRecipientException e) {

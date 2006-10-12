@@ -25,8 +25,8 @@ import net.indrix.arara.tools.email.MessageFormatException;
 import net.indrix.arara.tools.email.NoRecipientException;
 import net.indrix.arara.tools.email.WrongNumberOfValuesException;
 import net.indrix.arara.utils.PropertiesManager;
+import net.indrix.arara.vo.LightUser;
 import net.indrix.arara.vo.Photo;
-import net.indrix.arara.vo.User;
 
 /**
  * @author Jeff
@@ -55,7 +55,7 @@ public class PhotoEmailSender extends AbstractPhotoEmailSender {
 			if (!list.isEmpty()) {
 				Iterator it = list.iterator();
 				while (it.hasNext()) {
-					User user = (User) it.next();
+					LightUser user = (LightUser) it.next();
 					if (!user.equals(photo.getUser())) {
 						logger
 								.debug("UploadPhoto.sendEmail : sending email to user "
@@ -81,7 +81,7 @@ public class PhotoEmailSender extends AbstractPhotoEmailSender {
 	 * @param photo
 	 *            The new photo just added
 	 */
-	private void sendEmailToUser(User user, Photo photo) {
+	private void sendEmailToUser(LightUser user, Photo photo) {
 		Locale l = new Locale(user.getLanguage());
 		EmailResourceBundle bundle = (EmailResourceBundle) EmailResourceBundle
 				.getInstance();
@@ -137,7 +137,7 @@ public class PhotoEmailSender extends AbstractPhotoEmailSender {
 	 * 
 	 * @return A string message with the content of the email
 	 */
-	private String getMessage(String body, User user, Photo photo) {
+	private String getMessage(String body, LightUser user, Photo photo) {
 		String bodyFormatted = "";
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(user.getName());

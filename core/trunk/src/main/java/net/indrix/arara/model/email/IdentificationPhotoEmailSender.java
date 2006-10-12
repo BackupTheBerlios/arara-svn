@@ -25,8 +25,8 @@ import net.indrix.arara.tools.email.MessageFormatException;
 import net.indrix.arara.tools.email.NoRecipientException;
 import net.indrix.arara.tools.email.WrongNumberOfValuesException;
 import net.indrix.arara.utils.PropertiesManager;
+import net.indrix.arara.vo.LightUser;
 import net.indrix.arara.vo.Photo;
-import net.indrix.arara.vo.User;
 
 /**
  * @author Jeff
@@ -52,17 +52,14 @@ public class IdentificationPhotoEmailSender extends AbstractPhotoEmailSender {
 	public void run() {
 		UserModel userModel = new UserModel();
 		try {
-			logger
-					.debug("UploadPhoto.sendEmailForIdentification : Retrieving list of users to sent email to");
+			logger.debug("IdentificationPhotoEmailSender.sendEmailForIdentification : Retrieving list of users to sent email to");
 			List list = userModel.retrieveForPhotoIdentificationEmail();
 			if (!list.isEmpty()) {
 				Iterator it = list.iterator();
 				while (it.hasNext()) {
-					User user = (User) it.next();
+                    LightUser user = (LightUser) it.next();
 					if (!user.equals(photo.getUser())) {
-						logger
-								.debug("UploadPhoto.sendEmailForIdentification : sending email to user "
-										+ user.getLogin());
+						logger.debug("IdentificationPhotoEmailSender.sendEmailForIdentification : sending email to user " + user.getLogin());
 						sendEmailForIdentificationToUser(user, photo);
 					}
 				}
@@ -84,18 +81,14 @@ public class IdentificationPhotoEmailSender extends AbstractPhotoEmailSender {
 	 * @param photo
 	 *            The new photo just added
 	 */
-	private void sendEmailForIdentificationToUser(User user, Photo photo) {
+	private void sendEmailForIdentificationToUser(LightUser user, Photo photo) {
 		Locale l = new Locale(user.getLanguage());
-		EmailResourceBundle bundle = (EmailResourceBundle) EmailResourceBundle
-				.getInstance();
+		EmailResourceBundle bundle = (EmailResourceBundle) EmailResourceBundle.getInstance();
 		String server = PropertiesManager.getProperty("email.server");
 		String fromAdd = PropertiesManager.getProperty("email.fromAdd");
-		String subject = bundle.getString(
-				"email.newPhotoForIdentification.subject", l);
-		String body = bundle.getString("email.newPhotoForIdentification.body",
-				l);
-		String fromText = bundle.getString(
-				"email.newPhotoForIdentification.fromText", l);
+		String subject = bundle.getString("email.newPhotoForIdentification.subject", l);
+		String body = bundle.getString("email.newPhotoForIdentification.body", l);
+		String fromText = bundle.getString("email.newPhotoForIdentification.fromText", l);
 		try {
 
 			// send password to user
@@ -113,8 +106,7 @@ public class IdentificationPhotoEmailSender extends AbstractPhotoEmailSender {
 			logger.debug("Setting subject...");
 			sender.setSubject(subject);
 			logger.debug("Setting message...");
-			sender.setMessageTextBody(getMessageForIdentification(body, user,
-					photo));
+			sender.setMessageTextBody(getMessageForIdentification(body, user, photo));
 			logger.debug("Setting from...");
 			sender.setFromAddress(fromAdd, fromText);
 			logger.debug("Sending message...");
@@ -144,20 +136,18 @@ public class IdentificationPhotoEmailSender extends AbstractPhotoEmailSender {
 	 * 
 	 * @return A string message with the content of the email
 	 */
-	private String getMessageForIdentification(String body, User user,
-			Photo photo) {
+	private String getMessageForIdentification(String body, LightUser user, Photo photo) {
 		String bodyFormatted = "";
 		ArrayList <String>list = new ArrayList<String>();
 		list.add(user.getName());
 		list.add(photo.getUser().getLogin() + " | " + photo.getUser().getName());
-		String url = "http://www.aves.brasil.nom.br/servlet/initIdentification?photoId="
-				+ photo.getId();
+		String url = "http://www.aves.brasil.nom.br/servlet/initIdentification?photoId=" + photo.getId();
 		list.add(url);
 
 		try {
 			bodyFormatted = MessageComposer.formatMessage(body, list);
 		} catch (WrongNumberOfValuesException e) {
-			logger.error("UploadPhoto.getMessage : Exception", e);
+			logger.error("IdentificationPhotoEmailSender.getMessage : Exception", e);
 		}
 		return bodyFormatted;
 	}

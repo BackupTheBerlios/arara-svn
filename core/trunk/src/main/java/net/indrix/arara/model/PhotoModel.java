@@ -458,12 +458,9 @@ public class PhotoModel {
 		String body = null;
 		String fromText = null;
 		try {
+            logger.debug("PhotoModel.notifyPhotoAuthor: sending email...");
+            
 			MailClass sender = new MailClass(server);
-
-			// send password to user
-			logger.debug("Sending comment email with:");
-			logger.debug(server);
-			logger.debug(fromAdd);
 
 			// retrieve addresses to send photo
 			CommentsDAO dao = new CommentsDAO();
@@ -475,7 +472,6 @@ public class PhotoModel {
 				logger.debug("User = " + u);
 			}
 
-			logger.debug("Photo user = " + photo.getUser());
 			if (!l.contains(photo.getUser())) {
 				l.add(photo.getUser());
 			}
@@ -490,17 +486,15 @@ public class PhotoModel {
 
 				subject = bundle.getString("email.newComment.subject", locale);
 				body = bundle.getString("email.newComment.body", locale);
-				fromText = bundle
-						.getString("email.newComment.fromText", locale);
+				fromText = bundle.getString("email.newComment.fromText", locale);
 
 				sender.setMessageTextBody(getMessage(u, body, c, photo));
 				sender.setSubject(subject);
 				sender.setFromAddress(fromAdd, fromText);
 
-				logger.debug("Sending to... " + u.getEmail());
 				sender.setToAddress(u.getEmail());
-				sender.sendMessage(true);
-				// true indicates to emailObject to send the message right now
+				sender.sendMessage(false);
+				// false indicates to emailObject to not send the message right now
 			}
 		} catch (MessageFormatException e) {
 			logger.error("exception -> MessageFormatException in sendEmail "

@@ -49,17 +49,14 @@ public class PhotoEmailSender extends AbstractPhotoEmailSender {
 	public void run() {
 		UserModel userModel = new UserModel();
 		try {
-			logger
-					.debug("UploadPhoto.sendEmail : Retrieving list of users to sent email to");
+			logger.debug("UploadPhoto.sendEmail : Retrieving list of users to sent email to");
 			List list = userModel.retrieveForEmailOnNewPhoto();
 			if (!list.isEmpty()) {
 				Iterator it = list.iterator();
+                logger.debug("UploadPhoto.sendEmail : sending email to users...");
 				while (it.hasNext()) {
 					LightUser user = (LightUser) it.next();
 					if (!user.equals(photo.getUser())) {
-						logger
-								.debug("UploadPhoto.sendEmail : sending email to user "
-										+ user.getLogin());
 						sendEmailToUser(user, photo);
 					}
 				}
@@ -92,25 +89,11 @@ public class PhotoEmailSender extends AbstractPhotoEmailSender {
 		String fromText = bundle.getString("email.newPhoto.fromText", l);
 		try {
 
-			// send password to user
-			logger.debug("enviando email com os dados:");
-			logger.debug(server);
-			logger.debug(user.getEmail());
-			logger.debug(subject);
-			logger.debug(getMessage(body, user, photo));
-			logger.debug(fromAdd);
-			logger.debug(fromText);
-
 			MailClass sender = new MailClass(server);
-			logger.debug("Setting to...");
 			sender.setBCCAddress(user.getEmail());
-			logger.debug("Setting subject...");
 			sender.setSubject(subject);
-			logger.debug("Setting message...");
 			sender.setMessageTextBody(getMessage(body, user, photo));
-			logger.debug("Setting from...");
 			sender.setFromAddress(fromAdd, fromText);
-			logger.debug("Sending message...");
 			sender.sendMessage(false);
 			// true indicates to emailObject to send the message right now
 		} catch (MessageFormatException e) {

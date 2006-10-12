@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import net.indrix.arara.vo.LightUser;
 import net.indrix.arara.vo.User;
 
 public class UserDAO extends AbstractDAO {
@@ -100,7 +101,7 @@ public class UserDAO extends AbstractDAO {
 	 */
 	public List retrieveForEmailOnNewPhoto() throws DatabaseDownException, SQLException {
 		logger.debug("UserDAO.retrieveForEmailOnNewPhoto: entering method...");
-		List list = super.retrieveObject(SELECT_FOR_EMAIL_ON_NEW_PHOTO);
+		List list = super.retrieveObject(SELECT_FOR_EMAIL_ON_NEW_PHOTO, true);
 		return list;
 	}
 
@@ -116,7 +117,7 @@ public class UserDAO extends AbstractDAO {
      */
     public List retrieveForEmailOnNewSound() throws DatabaseDownException, SQLException {
         logger.debug("UserDAO.retrieveForEmailOnNewSound: entering method...");
-        List list = super.retrieveObject(SELECT_FOR_EMAIL_ON_NEW_SOUND);
+        List list = super.retrieveObject(SELECT_FOR_EMAIL_ON_NEW_SOUND, true);
         return list;
     }
 
@@ -132,9 +133,8 @@ public class UserDAO extends AbstractDAO {
 	 */
 	public List retrieveForPhotoIdentificationEmail()
 			throws DatabaseDownException, SQLException {
-		logger
-				.debug("UserDAO.retrieveForPhotoIdentificationEmail: entering method...");
-		List list = super.retrieveObject(SELECT_FOR_EMAIL_ON_NEW_ID_PHOTO);
+		logger.debug("UserDAO.retrieveForPhotoIdentificationEmail: entering method...");
+		List list = super.retrieveObject(SELECT_FOR_EMAIL_ON_NEW_ID_PHOTO, true);
 		return list;
 	}
 
@@ -211,6 +211,28 @@ public class UserDAO extends AbstractDAO {
 		return user;
 	}
 
+    /**
+     * This method creates a <code>User</code> object with the data from
+     * database
+     * 
+     * @param rs
+     *            The <code>ResultSet<code> object to retrieve the data
+     * 
+     * @return A new <code>User</code> object 
+     * 
+     * @throws SQLException If an error occur while retrieving data from result set
+     */
+    protected Object createLightObject(ResultSet rs) throws SQLException {
+        LightUser user;
+        user = new LightUser();
+        user.setId(rs.getInt(ID_COLUMN));
+        user.setName(rs.getString(NAME_COLUMN));
+        user.setEmail(rs.getString(EMAIL_COLUMN));
+        user.setLanguage(rs.getString(LANGUAGE_COLUMN));
+        logger.debug("createObject: user created: " + user);
+        return user;
+    }
+    
 	/**
 	 * This method set the values into statement, before running the SQL in
 	 * insert method

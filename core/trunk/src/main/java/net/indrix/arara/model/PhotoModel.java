@@ -569,37 +569,24 @@ public class PhotoModel {
 		try {
 			MailClass sender = new MailClass(server);
 
-			// send password to user
-			logger
-					.debug("Sending email about notification to photo author with:");
-			logger.debug(server);
-			logger.debug(fromAdd);
-
-			logger.debug("Photo user = " + photoIdentification.getUser());
-
 			Locale locale = new Locale(photoAuthor.getLanguage());
 			EmailResourceBundle bundle = (EmailResourceBundle) EmailResourceBundle
 					.getInstance();
 
-			subject = bundle.getString(
-					"email.toAuthor.newPhotoIdentification.subject", locale);
-			body = bundle.getString(
-					"email.toAuthor.newPhotoIdentification.body", locale);
-			fromText = bundle.getString(
-					"email.toAuthor.newPhotoIdentification.fromText", locale);
+			subject = bundle.getString("email.toAuthor.newPhotoIdentification.subject", locale);
+			body = bundle.getString("email.toAuthor.newPhotoIdentification.body", locale);
+			fromText = bundle.getString("email.toAuthor.newPhotoIdentification.fromText", locale);
 
-			sender.setMessageTextBody(getMessage(photoAuthor, body,
-					photoIdentification));
+			sender.setMessageTextBody(getMessage(photoAuthor, body, photoIdentification));
 			sender.setSubject(subject);
 			sender.setFromAddress(fromAdd, fromText);
 
 			logger.debug("Sending to... " + photoAuthor.getEmail());
 			sender.setToAddress(photoAuthor.getEmail());
-			sender.sendMessage(true);
-			// true indicates to emailObject to send the message right now
+			sender.sendMessage(false);
+            // false indicates to emailObject to not send the message right now
 		} catch (MessageFormatException e) {
-			logger.error("exception -> MessageFormatException in sendEmail "
-					+ e);
+			logger.error("exception -> MessageFormatException in sendEmail " + e);
 		} catch (AddressException e) {
 			logger.error("exception -> AddressException in sendEmail " + e);
 		} catch (NoRecipientException e) {
@@ -661,43 +648,26 @@ public class PhotoModel {
 		String body = null;
 		String fromText = null;
 		try {
-			List listOfUsers = daoIdentification
-					.retrieveUsersForIdentification(photoIdentification
-							.getPhoto().getId());
+			List listOfUsers = daoIdentification.retrieveUsersForIdentification(photoIdentification.getPhoto().getId());
 
 			MailClass sender = new MailClass(server);
 
-			// send password to user
-			logger
-					.debug("Sending email about notification to all notifiers with:");
-			logger.debug("Server:" + server);
-			logger.debug("From:" + fromAdd);
-
-			logger.debug("Photo Identifier user = "
-					+ photoIdentification.getUser());
-
 			Iterator it = listOfUsers.iterator();
 
-			EmailResourceBundle bundle = (EmailResourceBundle) EmailResourceBundle
-					.getInstance();
+			EmailResourceBundle bundle = (EmailResourceBundle) EmailResourceBundle.getInstance();
 
 			Map <String, Locale>map = new HashMap<String, Locale>();
 			while (it.hasNext()) {
 				User user = (User) it.next();
-				logger.debug("Going to send to... " + user.getName() + " | "
-						+ user.getEmail());
 
-				Locale locale = (Locale) map.get(user.getLanguage());
+                Locale locale = (Locale) map.get(user.getLanguage());
 				if (locale == null) {
 					locale = new Locale(user.getLanguage());
 					map.put(user.getLanguage(), locale);
 				}
-				subject = bundle.getString(
-						"email.identification.to.photo.subject", locale);
-				body = bundle.getString("email.identification.to.photo.body",
-						locale);
-				fromText = bundle.getString(
-						"email.identification.to.photo.fromText", locale);
+				subject = bundle.getString("email.identification.to.photo.subject", locale);
+				body = bundle.getString("email.identification.to.photo.body", locale);
+				fromText = bundle.getString("email.identification.to.photo.fromText", locale);
 
 				if (!user.equals(photoIdentifier)) {
 					sender.setMessageTextBody(getMessage(user, body,
@@ -705,12 +675,10 @@ public class PhotoModel {
 					sender.setSubject(subject);
 					sender.setFromAddress(fromAdd, fromText);
 
-					logger.debug("Sending to... " + user.getName() + " | "
-							+ user.getEmail());
+					logger.debug("Sending to... " + user.getName() + " | " + user.getEmail());
 					sender.setToAddress(user.getEmail());
-					sender.sendMessage(true);
-					// true indicates to emailObject to send the message right
-					// now
+					sender.sendMessage(false);
+					// false indicates to emailObject to not send the message right now
 				}
 			}
 		} catch (DatabaseDownException e1) {
@@ -754,11 +722,6 @@ public class PhotoModel {
 			List listOfUsers = daoIdentification.retrieveUsersForIdentification(photoIdentification.getPhoto().getId());
 
 			MailClass sender = new MailClass(server);
-
-			// send password to user
-			logger.debug("Sending email about end of notification to all notifiers with:");
-
-			logger.debug("Photo Identifier user = "+ photoIdentification.getUser());
 
 			Iterator it = listOfUsers.iterator();
 

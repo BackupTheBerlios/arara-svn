@@ -17,10 +17,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.model.PhotoModel;
 import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.vo.User;
 
 import org.apache.log4j.Logger;
 
@@ -35,6 +37,7 @@ public class DeletePhotoServlet extends HttpServlet {
 	 * Logger object
 	 */
 	static Logger logger = Logger.getLogger("net.indrix.aves");
+    static Logger loggerActions = Logger .getLogger("net.indrix.actions");
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
@@ -51,6 +54,10 @@ public class DeletePhotoServlet extends HttpServlet {
 			int id = Integer.parseInt(photoId);
 			model.delete(id);
 			logger.debug("Photo deleted..." + photoId);
+
+            HttpSession session = req.getSession();
+            User user = (User) session.getAttribute(ServletConstants.USER_KEY);           
+            loggerActions.info("User " + user.getLogin() + " from IP " + req.getRemoteAddr() + " has deleted the photo " + photoId);
 
 			nextPage = ServletConstants.DELETED_PAGE;
 		} catch (DatabaseDownException e) {

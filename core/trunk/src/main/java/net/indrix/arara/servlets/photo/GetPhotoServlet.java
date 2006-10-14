@@ -56,6 +56,8 @@ public class GetPhotoServlet extends HttpServlet {
 			output.write(info);
 		}
 		output.flush();
+        input.close();
+        output.close();
 	}
 
 	private Photo getPhotoFromDatabase(List <String>errors, String photoId) {

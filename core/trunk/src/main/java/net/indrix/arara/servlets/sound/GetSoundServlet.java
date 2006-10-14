@@ -52,7 +52,6 @@ public class GetSoundServlet extends HttpServlet {
 			res.setContentType("application/binary");
 			InputStream input = sound.getSound().getSound();
 			OutputStream output = res.getOutputStream();
-			int info = 0;
 			int size = sound.getSound().getFileSize();
 			String s = "" + size;
 			byte bytes[] = s.getBytes();
@@ -61,10 +60,13 @@ public class GetSoundServlet extends HttpServlet {
 			output.write(bytes.length);
 			// write the size of the sound file
 			output.write(bytes);
-			while ((info = input.read()) != -1) {
-				output.write(info);
+            byte buffer[] = new byte[512];   
+			while ((input.read(buffer)) != -1) {
+				output.write(buffer);
 			}
 			output.flush();
+            input.close();
+            output.close();
 		} catch (DatabaseDownException e) {
 			logger.debug("DatabaseDownException.....", e);
 		} catch (SQLException e) {

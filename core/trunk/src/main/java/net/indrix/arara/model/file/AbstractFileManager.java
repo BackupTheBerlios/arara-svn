@@ -45,30 +45,28 @@ public abstract class AbstractFileManager {
 	 *            The InputStream with the file contents
 	 */
 	public void writeFile() throws FileNotFoundException {
-		logger.debug("UploadSound.writeSoundToFilesystem: entering method...");
+		logger.debug("AbstractFileManager.writeSoundToFilesystem: entering method...");
 		String path = getRootPath() + File.separator + getFolder();
 
 		File dir = new File(path);
-		logger.debug("UploadSound.writeSoundToFilesystem: creating dir " + dir);
+		logger.debug("AbstractFileManager.writeSoundToFilesystem: creating dir " + dir);
 		dir.mkdirs();
 
 		String filename = getFullFilename();
-		logger.debug("UploadSound.writeSoundToFilesystem: creating file "
+		logger.debug("AbstractFileManager.writeSoundToFilesystem: creating file "
 				+ filename);
 		FileOutputStream output = new FileOutputStream(new File(filename));
 		InputStream input = getInputStream();
 		byte buffer[] = new byte[512];
 		try {
-			logger.debug("UploadSound.writeSoundToFilesystem: writing file...");
+			logger.debug("AbstractFileManager.writeSoundToFilesystem: writing file...");
 			while (input.read(buffer) != -1) {
 				output.write(buffer);
 			}
 			output.close();
 			input.close();
 		} catch (IOException e) {
-			logger
-					.debug("UploadSound.writeSoundToFilesystem: IOException: ",
-							e);
+			logger.debug("AbstractFileManager.writeSoundToFilesystem: IOException: ", e);
 			throw new FileNotFoundException();
 		}
 		logger.debug("UploadSound.writeSoundToFilesystem: finishing method...");

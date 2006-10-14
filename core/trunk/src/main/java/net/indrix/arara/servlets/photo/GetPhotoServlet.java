@@ -51,9 +51,9 @@ public class GetPhotoServlet extends HttpServlet {
 		res.setContentType("image/jpeg");
 		InputStream input = photo.getRealImage().getImage();
 		OutputStream output = res.getOutputStream();
-		int info = 0;
-		while ((info = input.read()) != -1) {
-			output.write(info);
+        byte buffer[] = new byte[512];
+		while ((input.read(buffer)) != -1) {
+			output.write(buffer);
 		}
 		output.flush();
         input.close();

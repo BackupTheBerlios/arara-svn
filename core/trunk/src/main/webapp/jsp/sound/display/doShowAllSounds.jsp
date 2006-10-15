@@ -13,11 +13,6 @@
 					<h3>Não há sons para a opção selecionada.</h3>
 				</c:if>
 				<c:if test="${!empty listOfSounds}">
-				<table border="0" width="100%">
-					<tr>
-						<td align="center"><b><fmt:message key="all.sounds.title" /></b></td>
-					</tr>
-				</table>
 				<table bgcolor="#005500" width="100%">
 					<tr>
 						<td width="10%"><b><font color="#FFFFFF"><fmt:message

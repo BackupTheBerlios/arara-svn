@@ -4,7 +4,7 @@
 
 <form method="post" action="<c:url value="/servlet/register"/>">
 
-<table width="100%" border="0" cellspacing="2" bgcolor="#A6D2D2">
+<table width="100%" border="0" cellspacing="2" bgcolor="#669900">
 	<tr>
 		<td width="20%"><fmt:message key="user.name" /></td>
 		<td width="80%"><input type="text" name="name" size="64"
@@ -59,7 +59,7 @@
 </table>
 
 <table width="100%" border="0" cellspacing="2" align="center"
-	bgcolor="#A6D2D2">
+	bgcolor="#669900">
 	<tr>
 		<td width="20%"></td>
 		<td>

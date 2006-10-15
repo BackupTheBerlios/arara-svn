@@ -36,3 +36,9 @@
 		<br>
 	</c:forEach>
 </c:if> </font>
+<a href="<c:url value="/servlet/initCommentPhoto?photoId=${photo.id}&identification=${identification}"/>"> 
+	<font size="1" face="Verdana"> 
+		<fmt:message key="button.comment.tooltip" var="commentToolTip"/>
+			<img title="${commentToolTip}" src="<c:url value="/jsp/images/comment.gif"/>" width="48" height="48"> 
+	</font>
+</a>

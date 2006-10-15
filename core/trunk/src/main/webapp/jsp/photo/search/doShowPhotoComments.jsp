@@ -2,17 +2,23 @@
 <%@ taglib uri="/fmt" prefix="fmt"%>
 <%@ taglib uri="functions" prefix="f"%>
 
-<font size="3" face="Verdana"> 
 <c:if test="${!empty currentPhoto.comments}">
 	<table border="0" width="100%">
 		<tr>
-			<td align="center"><b><fmt:message key="show.one.photo.comments" /></b></td>
+			<td align="center">
+			<b>
+			<font size="3" face="Verdana"> 
+				<fmt:message key="show.one.photo.comments" />
+			</font>
+			</b>
+			</td>
 		</tr>
 	</table>
 	
 	<c:set var="count" value="${0}" />
 	<c:set var="color" value="${'#339966'}" />
 	<c:forEach items="${currentPhoto.comments}" var="comment">
+		<font size="1" face="Verdana"> 
 	
 		<c:if test="${(count % 2) == 0}">
 			<c:set var="color" value="${'#339966'}" />
@@ -44,10 +50,10 @@
 				</td>
 			</tr>
 		</table>
+		</font>	
 		<c:set var="count" value="${count + 1}" />
 	</c:forEach>
 </c:if> 
-</font>
 <a href="<c:url value="/servlet/initCommentPhoto?photoId=${currentPhoto.id}&identification=${identification}"/>"> 
 	<font size="1" face="Verdana"> 
 		<fmt:message key="button.comment.tooltip" var="commentToolTip"/>

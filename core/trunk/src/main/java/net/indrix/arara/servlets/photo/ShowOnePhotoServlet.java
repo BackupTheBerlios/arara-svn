@@ -41,11 +41,12 @@ public class ShowOnePhotoServlet extends HttpServlet {
 
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
-		String nextPage = null;
 		List <String>errors = new ArrayList<String>();
 		HttpSession session = req.getSession();
 		String photoId = req.getParameter("photoId");
 		String identificationStr = req.getParameter(ServletConstants.IDENTIFICATION_KEY);
+        String nextPage = req.getParameter(ServletConstants.NEXT_PAGE_KEY);
+        String pageToShow = req.getParameter(ServletConstants.PAGE_TO_SHOW_KEY);
 
 		List list = null;
 		list = (List) session.getAttribute(ServletConstants.PHOTOS_LIST);
@@ -53,7 +54,7 @@ public class ShowOnePhotoServlet extends HttpServlet {
 			Photo photo = getPhotoFromDatabase(errors, photoId);
 			if (photo != null) {
 				session.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
-				nextPage = ServletConstants.ONE_PHOTO_PAGE;
+                req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
 			} else {
 				logger.debug("List of photos not found...");
 				nextPage = ServletConstants.ONE_PHOTO_PAGE_ERROR;
@@ -90,7 +91,7 @@ public class ShowOnePhotoServlet extends HttpServlet {
 				}
 			}
 			session.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
-			nextPage = ServletConstants.ONE_PHOTO_PAGE;
+            req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
 		}
 
 		req.setAttribute(ServletConstants.IDENTIFICATION_KEY, identificationStr);

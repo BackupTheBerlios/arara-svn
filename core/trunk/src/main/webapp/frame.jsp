@@ -10,26 +10,26 @@
 <meta name="keywords" content="animal planet, birs, aves" />
 <meta name="description" content="Welcome to the Arara Web Site." />
 <meta name="network" content="Birds Planet" />
-<meta name="launchDate" content="01/01/2006" />
+<meta name="launchDate" content="01/09/2005" />
 <meta name="category" content="homepage" />
 <meta name="type" content="network" />
 <title>Aves do Brasil</title>
 <script type="text/javascript">
 	console.log("%d ways to skin a cat.", 101);
-	var djConfig = {isDebug: true, debugAtAllCosts: true,baseRelativePath:"<%= request.getContextPath()%>/"};
+	var djConfig = {isDebug: true, debugAtAllCosts: true,baseRelativePath:"<c:url value="/"/>"};
 </script>
-<script type="text/javascript" src="<%= request.getContextPath()%>/dojo-core.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath()%>/prototype.js"></script>
-<script type="text/javascript" src="<%= request.getContextPath()%>/rico.js"></script>
+<script type="text/javascript" src="<c:url value="/dojo-core.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/prototype.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/rico.js"/>"></script>
 
 <!-- 
 <script type="text/javascript" src="dojo-minimal.js"></script>
 <script type="text/javascript" src="dojo-ajax.js"></script>
 <script type="text/javascript" src="dojo-widget.js"></script>
-    dojo.setModulePrefix("dojo", "<%= request.getContextPath()%>/src");
+    dojo.setModulePrefix("dojo", "<c:url value="/src"/>");
 
-	baseScriptUri:'<%= request.getContextPath()%>/',     
-	baseRelativePath: "<%= request.getContextPath()%>/src",
+	baseScriptUri:'<c:url value="/"/>',     
+	baseRelativePath: "<c:url value="/src"/>",
 -->
 <script language="JavaScript" type="text/javascript">
 
@@ -41,12 +41,12 @@
 
 <script>
 	function load_app(id){
-		document.location.assign('<%= request.getContextPath()%>'+id);		
+		document.location.assign('<c:url value="/"/>'+id);		
 	}
 </script>
 
 <script type="text/javascript">
-  new Ajax.PeriodicalUpdater("statistics", "<%= request.getContextPath()%>/statistics.jsp", 
+  new Ajax.PeriodicalUpdater("statistics", "<c:url value="/statistics.jsp"/>", 
 	{ // initial number of seconds interval between calls 
 	 frequency : 10, 
 	 decay : 2 
@@ -117,17 +117,16 @@ body {
     	<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#669900">
       		<tr>
         		<td align="left">
-        		<!-- imgUrls="<%= request.getContextPath()%>/images/arara.jpg;servlet/getPhoto?photoId=852&identification="  -->
 					<img dojoType="SlideShow" 
 					imgUrls="${f:getSlideShow("/arara/")}" 					
 					transitionInterval="700"
-					delay="7000" 
-					src="<%= request.getContextPath()%>/images/arara.jpg"
+					delay="7000" 					
+					src="<c:url value="/images/arara.jpg"/>"
 					imgWidth="150" imgHeight="115" />	
 					<hr>		
 			        <c:import url="/menu.jsp" />		
 					<hr>	
-					<img src="<%= request.getContextPath()%>/images/chart.png" alt="" width="20" height="20"><b><fmt:message key="menu.statistics.statistics"/></b><br/>
+					<img src="<c:url value="/images/chart.png"/>" alt="" width="20" height="20"><b><fmt:message key="menu.statistics.statistics"/></b><br/>
 					<div id="statistics" style="position: relative;">
 					<div id="updatesponsor">
 					<p>

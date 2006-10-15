@@ -64,11 +64,10 @@ public class CommentPhotoServlet extends HttpServlet {
 		List <String>errors = new ArrayList<String>();
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute(ServletConstants.USER_KEY);
-		String identificationStr = req
-				.getParameter(ServletConstants.IDENTIFICATION_KEY);
+		String identificationStr = req.getParameter(ServletConstants.IDENTIFICATION_KEY);
 
 		if (user == null) {
-			logger.debug("errors is not null.");
+			logger.debug("User null.");
 			errors.add(ServletConstants.USER_NOT_LOGGED);
 			// put errors in request
 			req.setAttribute(ServletConstants.ERRORS_KEY, errors);
@@ -80,8 +79,7 @@ public class CommentPhotoServlet extends HttpServlet {
 			logger.debug("Comment: " + comment);
 			if (validateData(comment)) {
 				// retrieve current photo
-				Photo photo = (Photo) session
-						.getAttribute(ServletConstants.CURRENT_PHOTO);
+				Photo photo = (Photo) session.getAttribute(ServletConstants.CURRENT_PHOTO);
 				if (photo != null) {
 					PhotoModel model = new PhotoModel();
 					try {
@@ -99,7 +97,8 @@ public class CommentPhotoServlet extends HttpServlet {
 						}
 
 						// next page
-						nextPage = ServletConstants.ONE_PHOTO_PAGE;
+						nextPage = "/frame.jsp";
+                        req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, "/jsp/photo/search/doShowOnePhoto.jsp");
 					} catch (DatabaseDownException e) {
 						logger.debug("DatabaseDownException.....", e);
 						errors.add(ServletConstants.DATABASE_ERROR);

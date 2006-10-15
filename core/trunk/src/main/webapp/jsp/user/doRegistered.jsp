@@ -2,7 +2,7 @@
 <%@ taglib uri="/fmt" prefix="fmt"%>
 
 <div align="center"></div>
-<table width="100%" border="0" cellspacing="2" bgcolor="#A6D2D2">
+<table width="100%" border="0" cellspacing="2" bgcolor="#669900">
 	<tr>
 
 		<td width="15%">

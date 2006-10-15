@@ -3,7 +3,7 @@
 <form method="post" action="<c:url value="/servlet/login"/>"><input
 	type=hidden name="nextResource" value="${nextResource}">
 
-<table width="30%" border="0" cellspacing="2" bgcolor="#669900"
+<table width="30%" border="0" cellspacing="2" bgcolor="${mainBgColor}"
 	align="center">
 	<tr>
 		<td width="17%"><fmt:message key="user.login" /></td>
@@ -21,7 +21,7 @@
 			value="<fmt:message key="user.login.submit"/>"></td>
 	</tr>
 </table>
-<table width="30%" border="0" cellspacing="2" bgcolor="#669900"
+<table width="30%" border="0" cellspacing="2" bgcolor="${mainBgColor}"
 	align="center">
 	<tr>
 		<td width="100%"><fmt:message key="user.login.password.msg" /><a

@@ -2,7 +2,7 @@
 <%@ taglib uri="/fmt" prefix="fmt"%>
 <%@ taglib uri="functions" prefix="f"%>
 
-<font size="2" face="Verdana"> <c:if
+<font size="3" face="Verdana"> <c:if
 	test="${!empty currentPhoto.identifications}">
 	<table border="0" width="100%">
 		<tr>

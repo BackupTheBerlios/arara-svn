@@ -3,9 +3,6 @@
 <%@ taglib uri="/fmt" prefix="fmt"%>
 <%@ taglib uri="functions" prefix="f"%>
 
-<c:import url="/jsp/showErrors.jsp" />
-<c:import url="/jsp/showMessages.jsp" />
-
 <c:if test="${identification != 'true'}">
 	<c:set var="tableW" value="${70}" />
 	<c:set var="imageAlign" value="${'left'}" />
@@ -162,6 +159,6 @@
 	<c:import url="/jsp/photo/search/doShowPhotoComments.jsp" />
 </c:if>
 
-<c:if test="${viewMode == 'identificationMode'}">
+<c:if test="${viewMode == 'viewMode'}">
 	<c:import url="/jsp/photo/identify/doShowPhotoIdentifications.jsp" />
 </c:if>

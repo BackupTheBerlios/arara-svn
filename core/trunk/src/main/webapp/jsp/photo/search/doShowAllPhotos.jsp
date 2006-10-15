@@ -48,7 +48,7 @@ table.comBordaSimples tr {
 					</c:if> 
 					</td>
 	        		<td width="${w+10}" colspan="1" rowspan="4" align="left">
-					<a href="<c:url value="/servlet/showOnePhoto?photoId=${photo.id}&identification=${identification}"/>">
+					<a href="<c:url value="/servlet/showOnePhoto?nextPage=/frame.jsp&pageToShow=/jsp/photo/search/doShowOnePhoto.jsp&photoId=${photo.id}&identification=${identification}"/>">
 					<img src="<c:url value="/servlet/getThumbnail?photoId=${photo.id}&identification=${identification}"/>"
 						width="${f:thumbnailWidth(w, photo.smallImage.width, photo.smallImage.height)}"
 						height="${f:thumbnailHeight(w, photo.smallImage.width, photo.smallImage.height)}"

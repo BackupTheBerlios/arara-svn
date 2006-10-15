@@ -34,116 +34,127 @@ import org.apache.log4j.Logger;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class ShowOnePhotoServlet extends HttpServlet {
-	static Logger logger = Logger.getLogger("net.indrix.aves");
+    static Logger logger = Logger.getLogger("net.indrix.aves");
 
-	public void doGet(HttpServletRequest req, HttpServletResponse res)
-			throws ServletException, IOException {
+    public void doGet(HttpServletRequest req, HttpServletResponse res)
+            throws ServletException, IOException {
 
-		RequestDispatcher dispatcher = null;
-		ServletContext context = this.getServletContext();
-		List <String>errors = new ArrayList<String>();
-		HttpSession session = req.getSession();
-		String photoId = req.getParameter("photoId");
-		String identificationStr = req.getParameter(ServletConstants.IDENTIFICATION_KEY);
+        RequestDispatcher dispatcher = null;
+        ServletContext context = this.getServletContext();
+        List<String> errors = new ArrayList<String>();
+        HttpSession session = req.getSession();
+        String photoId = req.getParameter("photoId");
+        String identificationStr = req.getParameter(ServletConstants.IDENTIFICATION_KEY);
         String nextPage = req.getParameter(ServletConstants.NEXT_PAGE_KEY);
         String pageToShow = req.getParameter(ServletConstants.PAGE_TO_SHOW_KEY);
 
-		List list = null;
-		list = (List) session.getAttribute(ServletConstants.PHOTOS_LIST);
-		if ((photoId == null) || (list == null)) {
-			Photo photo = getPhotoFromDatabase(errors, photoId);
-			if (photo != null) {
-				session.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
+        List list = null;
+        list = (List) session.getAttribute(ServletConstants.PHOTOS_LIST);
+        if ((photoId == null) || (list == null)) {
+            Photo photo = getPhotoFromDatabase(errors, photoId);
+            if (photo != null) {
+                session.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
                 req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
-			} else {
-				logger.debug("List of photos not found...");
-				nextPage = ServletConstants.ONE_PHOTO_PAGE_ERROR;
-			}
-		} else {
-			logger.debug("List of photos found...");
-			Iterator it = list.iterator();
-			int id = Integer.parseInt(photoId);
-			boolean found = false;
-			Photo photo = null;
-			while (it.hasNext() && (!found)) {
-				photo = (Photo) it.next();
-				if (photo.getId() == id) {
-					logger.debug("Photo found !!!! ");
-					found = true;
-					PhotoModel model = new PhotoModel();
-					try {
-						model.retrievePhotoImage(photo);
-						retrieveCommentsForPhoto(model, photo);
-					} catch (DatabaseDownException e) {
-						logger.debug("DatabaseDownException.....", e);
-						errors.add(ServletConstants.DATABASE_ERROR);
-					} catch (SQLException e) {
-						logger.debug("SQLException.....", e);
-						errors.add(ServletConstants.DATABASE_ERROR);
-					}
-				}
-			}
-			if (!found) {
-				photo = getPhotoFromDatabase(errors, photoId);
-				if (!errors.isEmpty() || photo == null) {
-					logger.debug("Photo does not exist in DB anymore");
-					nextPage = ServletConstants.ONE_PHOTO_PAGE_ERROR;
-				}
-			}
-			session.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
+            } else {
+                logger.debug("List of photos not found...");
+                nextPage = ServletConstants.ONE_PHOTO_PAGE_ERROR;
+            }
+        } else {
+            logger.debug("List of photos found...");
+            Iterator it = list.iterator();
+            int id = Integer.parseInt(photoId);
+            boolean found = false;
+            Photo photo = null;
+            while (it.hasNext() && (!found)) {
+                photo = (Photo) it.next();
+                if (photo.getId() == id) {
+                    logger.debug("Photo found !!!! ");
+                    found = true;
+                    PhotoModel model = new PhotoModel();
+                    try {
+                        model.retrievePhotoImage(photo);
+                        retrieveCommentsForPhoto(model, photo);
+                    } catch (DatabaseDownException e) {
+                        logger.debug("DatabaseDownException.....", e);
+                        errors.add(ServletConstants.DATABASE_ERROR);
+                    } catch (SQLException e) {
+                        logger.debug("SQLException.....", e);
+                        errors.add(ServletConstants.DATABASE_ERROR);
+                    }
+                }
+            }
+            if (!found) {
+                photo = getPhotoFromDatabase(errors, photoId);
+                if (!errors.isEmpty() || photo == null) {
+                    logger.debug("Photo does not exist in DB anymore");
+                    nextPage = ServletConstants.ONE_PHOTO_PAGE_ERROR;
+                }
+            }
+            session.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
             req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
-		}
+        }
 
-		req.setAttribute(ServletConstants.IDENTIFICATION_KEY, identificationStr);
-		req.setAttribute(ServletConstants.VIEW_MODE_KEY, "viewMode");
+        req
+                .setAttribute(ServletConstants.IDENTIFICATION_KEY,
+                        identificationStr);
+        req.setAttribute(ServletConstants.VIEW_MODE_KEY, "viewMode");
 
-		dispatcher = context.getRequestDispatcher(nextPage);
-		logger.debug("Dispatching to " + nextPage);
-		dispatcher.forward(req, res);
+        dispatcher = context.getRequestDispatcher(nextPage);
+        logger.debug("Dispatching to " + nextPage);
+        dispatcher.forward(req, res);
 
-	}
+    }
 
-	private Photo getPhotoFromDatabase(List <String>errors, String photoId) {
-		// retrieve from database
-		PhotoModel model = new PhotoModel();
-		Photo photo = null;
-		try {
-			photo = model.retrieve(Integer.parseInt(photoId));
-			if (photo != null) {
-				retrieveCommentsForPhoto(model, photo);
-			}
-			logger.debug("Photo retrieved = " + photo);
-		} catch (NumberFormatException e) {
-			logger.error("Could not parse photoId " + photoId);
-			errors.add(ServletConstants.DATABASE_ERROR);
-		} catch (DatabaseDownException e) {
-			logger.debug("DatabaseDownException.....");
-			errors.add(ServletConstants.DATABASE_ERROR);
-		} catch (SQLException e) {
-			logger.debug("SQLException.....", e);
-			errors.add(ServletConstants.DATABASE_ERROR);
-		}
-		return photo;
-	}
+    private Photo getPhotoFromDatabase(List<String> errors, String photoId) {
+        // retrieve from database
+        PhotoModel model = new PhotoModel();
+        Photo photo = null;
+        try {
+            photo = model.retrieve(Integer.parseInt(photoId));
+            if (photo != null) {
+                retrieveCommentsForPhoto(model, photo);
+            }
+            logger.debug("Photo retrieved = " + photo);
+        } catch (NumberFormatException e) {
+            logger.error("Could not parse photoId " + photoId);
+            errors.add(ServletConstants.DATABASE_ERROR);
+        } catch (DatabaseDownException e) {
+            logger.debug("DatabaseDownException.....");
+            errors.add(ServletConstants.DATABASE_ERROR);
+        } catch (SQLException e) {
+            logger.debug("SQLException.....", e);
+            errors.add(ServletConstants.DATABASE_ERROR);
+        }
+        return photo;
+    }
 
-	/**
-	 * This method retrieves the comments for a given photo
-	 * 
-	 * @param model
-	 * @param photo
-	 * @throws DatabaseDownException
-	 * @throws SQLException
-	 */
-	private void retrieveCommentsForPhoto(PhotoModel model, Photo photo)
-			throws DatabaseDownException, SQLException {
-		// now retrieve the comments
-		List comments = model.retrieveCommentsForPhoto(photo);
-		photo.setComments(comments);
-		if ((comments == null) || (comments.isEmpty())) {
-			logger.debug("There is no comment for photo " + photo);
-		} else {
-			logger.debug(comments.size() + " comments found for photo " + photo);
-		}
-	}
+    /**
+     * This method retrieves the comments for a given photo
+     * 
+     * @param model
+     * @param photo
+     * @throws DatabaseDownException
+     * @throws SQLException
+     */
+    private void retrieveCommentsForPhoto(PhotoModel model, Photo photo)
+            throws DatabaseDownException, SQLException {
+        // now retrieve the comments
+        List comments = model.retrieveCommentsForPhoto(photo);
+        photo.setComments(comments);
+        if ((comments == null) || (comments.isEmpty())) {
+            logger.debug("There is no comment for photo " + photo);
+        } else {
+            logger.debug(comments.size() + " comments found for photo " + photo);
+        }
+
+        // now retrieve the comments
+        List ident = model.retrieveIdentificationsForPhoto(photo);
+        photo.setIdentifications(ident);
+        if ((ident == null) || (ident.isEmpty())) {
+            logger.debug("There is no ident for photo " + photo);
+        } else {
+            logger.debug(comments.size() + " ident found for photo " + photo);
+        }
+    }
 
 }

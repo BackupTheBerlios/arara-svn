@@ -48,7 +48,7 @@
 <script type="text/javascript">
   new Ajax.PeriodicalUpdater("statistics", "<c:url value="/statistics.jsp"/>", 
 	{ // initial number of seconds interval between calls 
-	 frequency : 10, 
+	 frequency : 30, 
 	 decay : 2 
 	});
 
@@ -126,8 +126,8 @@ body {
         		<td align="left">
 					<img dojoType="SlideShow" 
 					imgUrls="${f:getSlideShow("/arara/")}" 					
-					transitionInterval="700"
-					delay="7000" 					
+					transitionInterval="1000"
+					delay="10000" 					
 					src="<c:url value="/images/arara.jpg"/>"
 					imgWidth="150" imgHeight="115" />	
 					<hr>		

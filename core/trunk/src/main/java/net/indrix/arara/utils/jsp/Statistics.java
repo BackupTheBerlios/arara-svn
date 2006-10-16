@@ -108,10 +108,10 @@ public class Statistics {
             }
             Iterator i = (listOfPhotos.subList(0, maxSize)).iterator();
             String id = ((Integer) (i.next())).toString();            
-            imgUrls = "/servlet/getPhoto?photoId=" + id;
+            imgUrls = "/arara/servlet/getThumbnail?photoId=" + id;
             while (i.hasNext()) {
                 id = ((Integer) (i.next())).toString();
-                imgUrls = imgUrls + ";" + "/servlet/getPhoto?photoId=" + id;
+                imgUrls = imgUrls + ";" + "/arara/servlet/getThumbnail?photoId=" + id;
             }            
             
         } catch (DatabaseDownException e) {

@@ -4,14 +4,14 @@
 
 <table width="100%" border="0" cellspacing="0" height="100" bgcolor="#669900">
 	<tr bgcolor="#669900">
-		<td height="25">
+		<td width="40%" height="25">
 			<div align="left">
 			<font color="#FFFF00" face="Verdana, Georgia, Times New Roman, Times, serif" size="+1"> 
 				<fmt:message key="site.title" /> 
 			</font>
 			</div>
 		</td>
-		<td height="25" width="200">
+		<td align="right" width="40%" height="25">
 			<font size="-1" face="Verdana"><b>		
 				<c:choose>		
 				<c:when test='${user == null}'>
@@ -23,7 +23,7 @@
 				</c:choose>		
 			</b></font>	
 		</td>	 	  
-		<td height="25" width="100">	 	  		
+		<td width="20%" height="25">
 		  <div class="outerbar">
 		  <div class="dojo-FisheyeList"
 				dojo:itemWidth="30" 

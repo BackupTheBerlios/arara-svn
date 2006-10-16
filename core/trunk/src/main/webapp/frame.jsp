@@ -127,7 +127,7 @@ body {
 					<img dojoType="SlideShow" 
 					imgUrls="${f:getSlideShow("/arara/")}" 					
 					transitionInterval="1000"
-					delay="10000" 					
+					delay="30000" 					
 					src="<c:url value="/images/arara.jpg"/>"
 					imgWidth="150" imgHeight="115" />	
 					<hr>		

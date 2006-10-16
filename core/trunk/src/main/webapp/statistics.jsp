@@ -6,21 +6,18 @@
     <c:choose>
         <c:when test='${statistics == "1"}'>
 			<c:set var="statistics" scope="session" value="2" />
-	<fmt:message key="stat.users" />:${f:numberOfUsers()}<br>
-	<fmt:message key="stat.photos" /> : ${f:numberOfPhotos()}<br>
-	<fmt:message key="users.on.line" /> : ${usersOnLine}<br>
+			<fmt:message key="stat.users" />:${f:numberOfUsers()}<br>
+			<fmt:message key="stat.photos" /> : ${f:numberOfPhotos()}<br>
         </c:when>
         <c:when test='${statistics == "2"}'>
 			<c:set var="statistics" scope="session" value="3" />
-	<fmt:message key="family.with.photos" /> :${f:numberOfFamilies()}<br>
-	<fmt:message key="species.with.photos" /> :	${f:numberOfSpecies()}<br>
-	<fmt:message key="users.on.line" /> : ${usersOnLine}<br>
+			<fmt:message key="family.with.photos" /> :${f:numberOfFamilies()}<br>
+			<fmt:message key="species.with.photos" /> :	${f:numberOfSpecies()}<br>
         </c:when>
         <c:otherwise>
 			<c:set var="statistics" scope="session" value="1" />
-	<fmt:message key="stat.users" />:${f:numberOfUsers()}<br>
-	<fmt:message key="stat.photos" /> : ${f:numberOfPhotos()}<br>
-	<fmt:message key="users.on.line" /> : ${usersOnLine}<br>			
+		  	<fmt:message key="stat.users" />:${f:numberOfUsers()}<br> 
+			<fmt:message key="stat.photos" /> : ${f:numberOfPhotos()}<br>
         </c:otherwise>
     </c:choose>
 </font>   			

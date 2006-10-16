@@ -4,7 +4,7 @@
 <%@ taglib uri="functions" prefix="f"%>
 
 <c:if test="${identification != 'true'}">
-	<c:set var="tableW" value="${70}" />
+	<c:set var="tableW" value="${100}" />
 	<c:set var="imageAlign" value="${'left'}" />
 	<c:set var="fontSize" value="${2}" />
 </c:if>

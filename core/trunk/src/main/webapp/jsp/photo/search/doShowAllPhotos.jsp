@@ -95,20 +95,12 @@ table.comBordaSimples tr {
 				<tr>
 				<td align="right">
 				    <!--  COMMENT -->
-					<c:if test="${user != null and identification != true}">
-						<a href="<c:url value="/servlet/initCommentPhoto?photoId=${photo.id}&identification=${identification}"/>"> 
-							<font size="1" face="Verdana"> 
-								<fmt:message key="button.comment.tooltip" var="commentToolTip"/>
-								<img title="${commentToolTip}" src="<c:url value="/jsp/images/comment.gif"/>" width="20" height="20"> 
-							</font>
-						</a>
-					</c:if> 
-					<c:if test="${user == null}">
+					<a href="<c:url value="/servlet/initCommentPhoto?photoId=${photo.id}&identification=${identification}"/>"> 
 						<font size="1" face="Verdana"> 
-							<fmt:message key="button.noComment.tooltip" var="commentToolTip"/>
-							<img title="${commentToolTip}" src="<c:url value="/jsp/images/noComment.gif"/>" width="20" height="20"> 
+							<fmt:message key="button.comment.tooltip" var="commentToolTip"/>
+							<img title="${commentToolTip}" src="<c:url value="/jsp/images/comment.gif"/>" width="20" height="20"> 
 						</font>
-					</c:if> 
+					</a>
 				</td>
 				</tr>
 				<!-- EDIT and DELETE -->

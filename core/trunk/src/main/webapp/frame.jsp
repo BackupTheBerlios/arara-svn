@@ -84,10 +84,17 @@ body {
 	<c:set var="width" value="600" scope="application" />
 </c:if>
 
+<c:set var="mainBgColor" value="#669900" scope="application" />
+
 <c:choose>
 	<c:when test="${param.pageToShow == null || param.pageToShow == ''}">
-		<fmt:message key="main.page" var="mainPage" />
-		<c:set var="page" value="${mainPage}" />
+		<c:if test="${pageToShow == null || pageToShow == ''}">
+			<fmt:message key="main.page" var="mainPage" />
+			<c:set var="page" value="${mainPage}" />
+		</c:if>
+		<c:if test="${pageToShow != null}">
+			<c:set var="page" value="${pageToShow}" />
+		</c:if>
 	</c:when>
 	<c:otherwise>
 		<c:if test="${param.pageToShow == 'main.page'}">

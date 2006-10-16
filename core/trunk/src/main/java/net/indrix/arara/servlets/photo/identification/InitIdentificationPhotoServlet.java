@@ -53,14 +53,12 @@ public class InitIdentificationPhotoServlet extends
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
 		String nextPage = null;
-		List errors = new ArrayList();
-		List messages = new ArrayList();
+		List <String>errors = new ArrayList<String>();
 		HttpSession session = req.getSession();
 
 		User user = (User) session.getAttribute(ServletConstants.USER_KEY);
 		if (user == null) {
-			logger
-					.debug("InitIdentificationPhotoServlet: USER is not logged...");
+			logger.debug("InitIdentificationPhotoServlet: USER is not logged...");
 			errors.add(ServletConstants.USER_NOT_LOGGED);
 			// put errors in request
 			req.setAttribute(ServletConstants.ERRORS_KEY, errors);

@@ -4,7 +4,7 @@
 <table width="100%" border="0" cellspacing="2" height="100%">
 	<tr>
 		<td>
-		<p>Sistema de banco de dados de imagens de aves do Brasil, versão
+		<p>Sistema de banco de dados de imagens e sons de aves do Brasil, versão
 		03.00</p>
 		<hr>
 		<p>Seja bem-vindo ao <b>Sistema de Informações de Aves do Brasil</b>.

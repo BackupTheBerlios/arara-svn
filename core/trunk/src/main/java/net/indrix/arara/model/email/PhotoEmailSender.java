@@ -56,7 +56,7 @@ public class PhotoEmailSender extends AbstractPhotoEmailSender {
                 logger.debug("UploadPhoto.sendEmail : sending email to users...");
 				while (it.hasNext()) {
 					LightUser user = (LightUser) it.next();
-					if (!user.equals(photo.getUser())) {
+					if (user.getId() != photo.getUser().getId()) {
 						sendEmailToUser(user, photo);
 					}
 				}

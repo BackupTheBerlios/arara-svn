@@ -61,7 +61,7 @@ public class IdentificationPhotoEmailSender extends AbstractPhotoEmailSender {
                 logger.debug("IdentificationPhotoEmailSender.sendEmailForIdentification : sending email to users...");
 				while (it.hasNext()) {
                     LightUser user = (LightUser) it.next();
-					if (!user.equals(photo.getUser())) {
+					if (user.getId() != photo.getUser().getId()) {
 						sendEmailForIdentificationToUser(user, photo, server, fromAdd);
 					}
 				}

@@ -23,6 +23,7 @@
 <script type="text/javascript" src="<c:url value="/rico.js"/>"></script>
 
 <!-- 
+	var djConfig = {isDebug: true, debugAtAllCosts: true,baseRelativePath:"<c:url value="/"/>"};
 <script type="text/javascript" src="dojo-minimal.js"></script>
 <script type="text/javascript" src="dojo-ajax.js"></script>
 <script type="text/javascript" src="dojo-widget.js"></script>
@@ -30,9 +31,10 @@
 
 	baseScriptUri:'<c:url value="/"/>',     
 	baseRelativePath: "<c:url value="/src"/>",
+	
+    dojo.setModulePrefix("dojo", "<c:url value="/src"/>");	
 -->
 <script language="JavaScript" type="text/javascript">
-
 	dojo.require("dojo.widget.*");
 	dojo.require("dojo.widget.SlideShow");	
 	dojo.require("dojo.widget.FisheyeList");

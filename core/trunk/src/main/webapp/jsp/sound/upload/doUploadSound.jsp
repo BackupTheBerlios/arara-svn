@@ -26,7 +26,7 @@
 	action="<c:url value="/servlet/uploadSound"/>"
 	enctype="multipart/form-data">
 
-<table width="100%" border="0" cellspacing="2" bgcolor="#A6D2D2">
+<table width="100%" border="0" cellspacing="2" bgcolor="${mainBgColor}">
 	<tr>
 		<td width="15%"><b><fmt:message key="family" /></b></td>
 		<td width="85%"><select name="familyId" onChange="familySelected()">
@@ -132,7 +132,7 @@
 </table>
 
 <table width="100%" border="0" cellspacing="2" align="center"
-	bgcolor="#A6D2D2">
+	bgcolor="${mainBgColor}">
 	<tr>
 		<td width="15%"></td>
 		<td>

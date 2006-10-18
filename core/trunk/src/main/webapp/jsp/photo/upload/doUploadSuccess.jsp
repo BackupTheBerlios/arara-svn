@@ -6,7 +6,7 @@
 <c:set var="w" value="${120}" />
 
 <a
-	href="<c:url value="/servlet/showOnePhoto?photoId=${currentPhoto.id}"/>">
+	href="<c:url value="/servlet/showOnePhoto?nextPage=/frame.jsp&pageToShow=/jsp/photo/search/doShowOnePhoto.jsp&photoId=${currentPhoto.id}&identification=${identification}"/>">
 <img
 	src="<c:url value="/servlet/getThumbnail?photoId=${currentPhoto.id}"/>"
 	width="${f:thumbnailWidth(w, currentPhoto.smallImage.width, currentPhoto.smallImage.height)}"

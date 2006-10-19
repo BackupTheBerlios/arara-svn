@@ -6,14 +6,14 @@
 <table width="100%" border="0" cellspacing="1">
 	<tr valign="top">
 		<td>
-		<table width="100%" border="0" cellspacing="1">
+		<table class="formBorder" width="100%" border="0" cellspacing="1">
 			<tr>
 				<td><c:if test="${empty listOfSounds}">
 					<br>
 					<h3>Não há sons para a opção selecionada.</h3>
 				</c:if>
 				<c:if test="${!empty listOfSounds}">
-				<table bgcolor="#005500" width="100%">
+				<table bgcolor="#000000" width="100%">
 					<tr>
 						<td width="10%"><b><font color="#FFFFFF"><fmt:message
 							key="user.login" /></font></b></td>
@@ -37,7 +37,7 @@
 					</c:if>
 
 					<c:if test="${(count % 2) != 0}">
-						<c:set var="color" value="${'#339966'}" />
+						<c:set var="color" value="${'#AAD1D8'}" />
 					</c:if>
 
 					<table bgcolor="${color}" width="100%">

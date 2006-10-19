@@ -3,7 +3,7 @@
 
 <%@ page import="net.indrix.arara.servlets.pagination.*"%>
 
-<tr bgcolor="#339966">
+<tr>
 	<td align="center"><% PaginationController p = (PaginationController)session.getAttribute("photoPaginationController");
           boolean previous = false;
           boolean next = false;

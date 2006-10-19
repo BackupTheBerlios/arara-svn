@@ -17,10 +17,20 @@
 	action="<c:url value="${servletToCall}"/>"
 	enctype="multipart/form-data">
 
-<table width="100%" border="0" cellspacing="2" bgcolor="${mainBgColor}">
-	<tr>
-		<td width="15%"><b><fmt:message key="family" /></b></td>
-		<td width="85%"><select name="familyId" onChange="familySelected()">
+<br><br>
+<table align="center" class="formBorder" width="60%" border="0" cellspacing="2" bgcolor="${mainBgColor}">
+	<tr height="10" bgcolor="#000000">
+		<td colspan="3"></td>
+	</tr>
+	<tr height="15" >
+		<td colspan="3"></td>
+	</tr>
+	<tr height="30">
+		<td width="15%"></td>
+		<td width="15%">
+			<b><fmt:message key="family" /></b>
+		</td>
+		<td width="70%"><select name="familyId" onChange="familySelected()">
 			<c:forEach items="${familyList.list}" var="familyBean">
 				<c:if
 					test="${selectedFamilyId != null && selectedFamilyId == familyBean.value}">
@@ -33,9 +43,10 @@
 			</c:forEach>
 		</select></td>
 	</tr>
-	<tr>
+	<tr height="30">
+		<td width="15%"></td>
 		<td width="15%"><b><fmt:message key="specie" /></b></td>
-		<td width="85%"><select name="id">
+		<td width="70%"><select name="id">
 			<c:forEach items="${specieList.list}" var="specieBean">
 				<c:if
 					test="${selectedSpecieId != null && selectedSpecieId == specieBean.value}">
@@ -46,18 +57,18 @@
 					<option value="${specieBean.value}">${specieBean.label}</option>
 				</c:if>
 			</c:forEach>
-		</select></td>
+		</select></td>		<br>&nbsp;
 	</tr>
-</table>
-
-<table width="100%" border="0" cellspacing="2" align="center"
-	bgcolor="${mainBgColor}">
-	<tr>
+	<tr height="30">
+		<td width="15%"></td>
 		<td width="15%"></td>
 		<td>
 		<div align="left"><input type="SUBMIT"
 			value="<fmt:message key="button.submit.send"/>"></div>
 		</td>
+	</tr>
+	<tr height="15" >
+		<td colspan="3"></td>
 	</tr>
 </table>
 </form>

@@ -2,7 +2,8 @@
 <%@ taglib uri="/fmt" prefix="fmt"%>
 <%@ page import="net.indrix.arara.servlets.pagination.*"%>
 
-<tr bgcolor="#339966">
+<font face="Verdana" color="#ffffff" size="-1">
+<tr>
 	<td align="center"><% PaginationController p = (PaginationController)session.getAttribute("soundPaginationController");
           boolean previous = false;
           boolean next = false;
@@ -31,3 +32,4 @@
 	   	   }
        %></td>
 </tr>
+</font>

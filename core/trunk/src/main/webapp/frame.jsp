@@ -133,7 +133,7 @@ body {
     </td>
   </tr>
   <tr>
-    <td width="150" align="left" valign="top">
+    <td width="17%" align="left" valign="top">
     	<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#669900">
       		<tr>
         		<td align="left">
@@ -160,16 +160,20 @@ body {
       		</tr>
     	</table>
       </td>
-      <td colspan="2" valign="top" width="650" height="100%">
+      <td colspan="2" valign="top" width="83%" height="100%" bgcolor="#669900">
+		<!-- 
     	<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#669900">
       		<tr>
         		<td>
+		 -->        		
         			<c:import url="/jsp/showErrors.jsp" /> 
 				    <c:import url="/jsp/showMessages.jsp" /> 
 				    <c:import url="${page}" />        
+		<!-- 
 		        </td>
       		</tr>
     	</table>
+		 -->    	
       </td>
   </tr>
   <tr>

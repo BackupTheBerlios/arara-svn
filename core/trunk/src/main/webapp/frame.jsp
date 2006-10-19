@@ -36,6 +36,7 @@ function change(source){
 table.formBorder {
 	border-collapse: collapse; /* CSS2 */
 	border: 2px solid #000000;
+	background-color:#DDDDDD;
 }
 </style>
 
@@ -130,7 +131,7 @@ body {
 <table width="98%" border="0" align="center" cellspacing="1">
   <tr>
     <td colspan="3">
-    	<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#669900">
+    	<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="${mainBgColor}">
       		<tr>
         		<td>
 			        <c:import url="/title.jsp" />
@@ -141,7 +142,7 @@ body {
   </tr>
   <tr>
     <td width="17%" align="left" valign="top">
-    	<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#669900">
+    	<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="${mainBgColor}">
       		<tr>
         		<td align="left">
         			<c:set var="contextPath" value="<%=request.getContextPath()%>" />
@@ -167,7 +168,7 @@ body {
       		</tr>
     	</table>
       </td>
-      <td colspan="2" valign="top" width="83%" height="100%" bgcolor="#669900">
+      <td colspan="2" valign="top" width="83%" height="100%" bgcolor="${mainBgColor}">
 		<!-- 
     	<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#669900">
       		<tr>
@@ -185,7 +186,7 @@ body {
   </tr>
   <tr>
     <td colspan="3">
-    	<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#669900">
+    	<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="${mainBgColor}">
       		<tr>
 		        <td>
 		        	<c:import url="/footer.jsp" />

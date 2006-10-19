@@ -7,7 +7,7 @@
 	action="<c:url value="${servletToCall}?action=${action}"/>">
 
 <br><br>
-<table align="center" class="formBorder"  width="60%" border="0" cellspacing="2" bgcolor="${mainBgColor}">
+<table align="center" class="formBorder"  width="60%" border="0" cellspacing="2">
 	<tr height="10" bgcolor="#000000">
 		<td></td>
 	</tr>

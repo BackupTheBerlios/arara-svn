@@ -32,6 +32,13 @@ function change(source){
 }
 </script>
 
+<style type="text/css">
+table.formBorder {
+	border-collapse: collapse; /* CSS2 */
+	border: 2px solid #000000;
+}
+</style>
+
 
 <!-- 
 	var djConfig = {isDebug: true, debugAtAllCosts: true,baseRelativePath:"<c:url value="/"/>"};

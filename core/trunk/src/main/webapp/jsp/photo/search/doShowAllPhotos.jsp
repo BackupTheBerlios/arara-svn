@@ -154,7 +154,6 @@ table.comBordaSimples tr {
 		</c:if>
 	    </c:forEach>
   	  </table>
-	</table>
 </td></tr>
 <c:import url="/jsp/photo/search/pagination.jsp" />
 </table>

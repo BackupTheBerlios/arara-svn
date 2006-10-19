@@ -108,12 +108,11 @@ public class Statistics {
             }
             Iterator i = (listOfPhotos.subList(0, maxSize)).iterator();
             String id = ((Integer) (i.next())).toString();            
-            imgUrls = "/arara/servlet/getThumbnail?photoId=" + id;
+            imgUrls = contextPath + "/servlet/getThumbnail?photoId=" + id;
             while (i.hasNext()) {
                 id = ((Integer) (i.next())).toString();
-                imgUrls = imgUrls + ";" + "/arara/servlet/getThumbnail?photoId=" + id;
+                imgUrls = imgUrls + ";" + contextPath + "/servlet/getThumbnail?photoId=" + id;
             }            
-            
         } catch (DatabaseDownException e) {
             logger.error(
                     "Statistics.getSlideShow: DatabaseDownException ", e);

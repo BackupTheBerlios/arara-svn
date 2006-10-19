@@ -2,8 +2,8 @@
 <%@ taglib uri="/fmt" prefix="fmt"%>
 <%@ taglib uri="/core" prefix="c"%>
 
-<table width="100%" border="0" cellspacing="0" height="100" bgcolor="#669900">
-	<tr bgcolor="#669900">
+<table width="100%" border="0" cellspacing="0" height="100" bgcolor="${mainBgColor}">
+	<tr bgcolor="${mainBgColor}">
 		<td width="40%" height="25">
 			<div align="left">
 			<font color="#FFFF00" face="Verdana, Georgia, Times New Roman, Times, serif" size="+1"> 
@@ -67,7 +67,7 @@
 		  </div>
 		</td>		
 	</tr>
-	<tr bgcolor="#669900">	
+	<tr bgcolor="${mainBgColor}">	
 		<td align="center" colspan="3" height="75" width="100%">
 			<img width="100%" src="<c:url value="/images/top.jpg"/>" alt="">
 		</td>

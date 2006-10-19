@@ -11,36 +11,52 @@
 <c:set var="selectedStateId" value="${uploadPhotoBean.selectedStateId}" />
 <c:set var="selectedCityId" value="${uploadPhotoBean.selectedCityId}" />
 
+<c:set var="col1" value="${5}"/>
+<c:set var="col2" value="${15}"/>
+<c:set var="col3" value="${80}"/>
+
+<br>
 <form name="uploadForm" method="post"
 	action="<c:url value="/servlet/uploadPhotoIdentify"/>"
 	enctype="multipart/form-data">
 
-<table width="100%" border="0" cellspacing="2" bgcolor="${mainBgColor}">
+<table class="formBorder" width="80%" border="0" align="center" cellspacing="2" bgcolor="${mainBgColor}">
+	<tr height="10" bgcolor="#000000">
+		<td colspan="3"></td>
+	</tr>
+	<tr height="5">
+		<td colspan="3"></td>
+	</tr>
 	<tr>
-		<td width="15%"><b><fmt:message key="photo.camera" /></b></td>
-		<td width="85%"><input type="text" name="camera"
+		<td width="${col1}"></td>
+		<td width="${col2}"><b><fmt:message key="photo.camera" /></b></td>
+		<td width="${col3}"><input type="text" name="camera"
 			value="${uploadPhotoBean.camera}" size="64" maxlength="64"></td>
 	</tr>
 	<tr>
-		<td width="15%"><b><fmt:message key="photo.len" /></b></td>
-		<td width="85%"><input type="text" name="lens"
+		<td width="${col1}"></td>
+		<td width="${col2}"><b><fmt:message key="photo.len" /></b></td>
+		<td width="${col3}"><input type="text" name="lens"
 			value="${uploadPhotoBean.lens}" size="64" maxlength="64"></td>
 	</tr>
 	<tr>
-		<td width="15%"><b><fmt:message key="photo.film" /></b></td>
-		<td width="85%"><input type="text" name="film"
+		<td width="${col1}"></td>
+		<td width="${col2}"><b><fmt:message key="photo.film" /></b></td>
+		<td width="${col3}"><input type="text" name="film"
 			value="${uploadPhotoBean.film}" size="64" maxlength="64"></td>
 	</tr>
 
 	<tr>
-		<td width="15%"><b><fmt:message key="photo.location" /></b></td>
-		<td width="85%"><input type="text" name="location"
+		<td width="${col1}"></td>
+		<td width="${col2}"><b><fmt:message key="photo.location" /></b></td>
+		<td width="${col3}"><input type="text" name="location"
 			value="${uploadPhotoBean.location}" size="64" maxlength="256"></td>
 	</tr>
 
 	<tr>
-		<td width="15%"><b><fmt:message key="state" /></b></td>
-		<td width="85%"><select name="stateId" onChange="stateSelected()">
+		<td width="${col1}"></td>
+		<td width="${col2}"><b><fmt:message key="state" /></b></td>
+		<td width="${col3}"><select name="stateId" onChange="stateSelected()">
 			<c:forEach items="${uploadPhotoBean.statesList}" var="stateBean">
 				<c:if
 					test="${selectedStateId != null && selectedStateId == stateBean.value}">
@@ -65,29 +81,33 @@
 	</tr>
 
 	<tr>
-		<td width="15%"><b><fmt:message key="photo.date" /></b></td>
-		<td width="85%"><input type="text" name="date"
+		<td width="${col1}"></td>
+		<td width="${col2}"><b><fmt:message key="photo.date" /></b></td>
+		<td width="${col3}"><input type="text" name="date"
 			value="${uploadPhotoBean.date}" size="16" maxlength="16"></td>
 	</tr>
 	<tr>
-		<td width="15%"><b><fmt:message key="photo.author.comment" /></b></td>
-		<td width="85%"><textarea rows="5" cols="70" name="comment">${uploadPhotoBean.comment}</textarea>
+		<td width="${col1}"></td>
+		<td width="${col2}"><b><fmt:message key="photo.author.comment" /></b></td>
+		<td width="${col3}"><textarea rows="5" cols="60" name="comment">${uploadPhotoBean.comment}</textarea>
 		</td>
 	</tr>
 	<tr>
-		<td width="15%"><b><fmt:message key="photo.file" /></b></td>
-		<td width="85%"><input type="file" name="fileName"> <font
+		<td width="${col1}"></td>
+		<td width="${col2}"><b><fmt:message key="photo.file" /></b></td>
+		<td width="${col3}"><input type="file" name="fileName"> <font
 			color="#FF000">Max 250Kb</font></td>
 	</tr>
-</table>
-
-<table width="100%" border="0" cellspacing="2" align="center" bgcolor="${mainBgColor}">
 	<tr>
-		<td width="15%"></td>
+		<td width="${col1}"></td>
+		<td width="${col2}"></td>
 		<td>
 		<div align="left"><input type="SUBMIT"
 			value="<fmt:message key="photo.submit"/>"></div>
 		</td>
+	</tr>
+	<tr height="5">
+		<td colspan="3"></td>
 	</tr>
 </table>
 </form>

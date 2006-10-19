@@ -22,14 +22,26 @@
 <c:set var="selectedAgeId" value="${uploadSoundBean.selectedAgeId}" />
 <c:set var="selectedSexId" value="${uploadSoundBean.selectedSexId}" />
 
+<c:set var="col1" value="${5}"/>
+<c:set var="col2" value="${15}"/>
+<c:set var="col3" value="${80}"/>
+
+<br>
 <form name="uploadForm" method="post"
 	action="<c:url value="/servlet/uploadSound"/>"
 	enctype="multipart/form-data">
 
-<table width="100%" border="0" cellspacing="2" bgcolor="${mainBgColor}">
+<table class="formBorder" width="80%" align="center" border="0" cellspacing="2">
+	<tr height="10" bgcolor="#000000">
+		<td colspan="3"></td>
+	</tr>
+	<tr height="5">
+		<td colspan="3"></td>
+	</tr>
 	<tr>
-		<td width="15%"><b><fmt:message key="family" /></b></td>
-		<td width="85%"><select name="familyId" onChange="familySelected()">
+		<td width="${col1}"></td>
+		<td width="${col2}"><b><fmt:message key="family" /></b></td>
+		<td width="${col3}"><select name="familyId" onChange="familySelected()">
 			<c:forEach items="${uploadSoundBean.familyList}" var="familyBean">
 				<c:if
 					test="${selectedFamilyId != null && selectedFamilyId == familyBean.value}">
@@ -43,8 +55,9 @@
 		</select></td>
 	</tr>
 	<tr>
-		<td width="15%"><b><fmt:message key="specie" /></b></td>
-		<td width="85%"><select name="specieId">
+		<td width="${col1}"></td>
+		<td width="${col2}"><b><fmt:message key="specie" /></b></td>
+		<td width="${col3}"><select name="specieId">
 			<c:forEach items="${uploadSoundBean.specieList}" var="specieBean">
 				<c:if
 					test="${selectedSpecieId != null && selectedSpecieId == specieBean.value}">
@@ -59,8 +72,9 @@
 	</tr>
 
 	<tr>
-		<td width="15%"><b><fmt:message key="specie.age" /></b></td>
-		<td width="85%"><select name="ageId">
+		<td width="${col1}"></td>
+		<td width="${col2}"><b><fmt:message key="specie.age" /></b></td>
+		<td width="${col3}"><select name="ageId">
 			<c:forEach items="${ageList}" var="age">
 				<c:if test="${selectedAgeId != null && selectedAgeId == age.id}">
 					<option selected value="${age.id}">${age.age}</option>
@@ -73,8 +87,9 @@
 	</tr>
 
 	<tr>
-		<td width="15%"><b><fmt:message key="specie.sex" /></b></td>
-		<td width="85%"><select name="sexId">
+		<td width="${col1}"></td>
+		<td width="${col2}"><b><fmt:message key="specie.sex" /></b></td>
+		<td width="${col3}"><select name="sexId">
 			<c:forEach items="${sexList}" var="sex">
 				<c:if test="${selectedSexId != null && selectedSexId == sex.id}">
 					<option selected value="${sex.id}">${sex.sex}</option>
@@ -87,14 +102,16 @@
 	</tr>
 
 	<tr>
-		<td width="15%"><b><fmt:message key="sound.location" /></b></td>
-		<td width="85%"><input type="text" name="location"
+		<td width="${col1}"></td>
+		<td width="${col2}"><b><fmt:message key="sound.location" /></b></td>
+		<td width="${col3}"><input type="text" name="location"
 			value="${lastUploadSoundBean.location}" size="64" maxlength="64"></td>
 	</tr>
 
 	<tr>
-		<td width="15%"><b><fmt:message key="state" /></b></td>
-		<td width="85%"><select name="stateId" onChange="stateSelected()">
+		<td width="${col1}"></td>
+		<td width="${col2}"><b><fmt:message key="state" /></b></td>
+		<td width="${col3}"><select name="stateId" onChange="stateSelected()">
 			<c:forEach items="${uploadSoundBean.statesList}" var="stateBean">
 				<c:if
 					test="${selectedStateId != null && selectedStateId == stateBean.value}">
@@ -119,26 +136,28 @@
 	</tr>
 
 	<tr>
-		<td width="15%"><b><fmt:message key="sound.author.comment" /></b></td>
-		<td width="85%"><textarea rows="5" cols="70" name="comment" /></textarea>
+		<td width="${col1}"></td>
+		<td width="${col2}"><b><fmt:message key="sound.author.comment" /></b></td>
+		<td width="${col3}"><textarea rows="5" cols="60" name="comment" /></textarea>
 		</td>
 	</tr>
 
 	<tr>
-		<td width="15%"><b><fmt:message key="sound.file" /></b></td>
-		<td width="85%"><input type="file" name="fileName"> <font
+		<td width="${col1}"></td>
+		<td width="${col2}"><b><fmt:message key="sound.file" /></b></td>
+		<td width="${col3}"><input type="file" name="fileName"> <font
 			color="#FF000">Max 500Kb</font></td>
 	</tr>
-</table>
-
-<table width="100%" border="0" cellspacing="2" align="center"
-	bgcolor="${mainBgColor}">
 	<tr>
-		<td width="15%"></td>
+		<td width="${col1}"></td>
+		<td width="${col2}"></td>
 		<td>
 		<div align="left"><input type="SUBMIT"
 			value="<fmt:message key="sound.submit"/>"></div>
 		</td>
 	</tr>
+    <tr height="5">
+		<td colspan="2"></td>
+    </tr>
 </table>
 </form>

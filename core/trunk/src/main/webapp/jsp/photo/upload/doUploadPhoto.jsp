@@ -20,14 +20,26 @@
 <c:set var="selectedAgeId" value="${uploadPhotoBean.selectedAgeId}"/>
 <c:set var="selectedSexId" value="${uploadPhotoBean.selectedSexId}"/>
 
+<c:set var="col1" value="${5}"/>
+<c:set var="col2" value="${15}"/>
+<c:set var="col3" value="${80}"/>
+
+<br>
 <form name="uploadForm" method="post" 
       action="<c:url value="/servlet/uploadPhoto"/>"
       enctype="multipart/form-data">
       
-  <table width="100%" border="0" cellspacing="2" bgcolor="${mainBgColor}">
-  <tr> 
-    <td width="15%"><b><fmt:message key="family"/></b></td>
-    <td width="85%"> 
+  <table class="formBorder" width="80%" align="center" border="0" cellspacing="2">
+	<tr height="10" bgcolor="#000000">
+		<td colspan="3"></td>
+	</tr>
+	<tr height="5">
+		<td colspan="3"></td>
+	</tr>
+	<tr>
+	<td width="${col1}"></td>
+    <td width="${col2}"><b><fmt:message key="family"/></b></td>
+    <td width="${col3}"> 
         <select name="familyId" onChange="familySelected()">
           <c:forEach items="${uploadPhotoBean.familyList}" var="familyBean">
 			<c:if test="${selectedFamilyId != null && selectedFamilyId == familyBean.value}">
@@ -41,8 +53,9 @@
     </td>
   </tr>
   <tr> 
-    <td width="15%"><b><fmt:message key="specie"/></b></td>
-    <td width="85%"> 
+	<td width="${col1}"></td>
+    <td width="${col2}"><b><fmt:message key="specie"/></b></td>
+    <td width="${col3}"> 
         <select name="specieId">
         <c:forEach items="${uploadPhotoBean.specieList}" var="specieBean">
 			<c:if test="${selectedSpecieId != null && selectedSpecieId == specieBean.value}">
@@ -56,8 +69,9 @@
     </td>
   </tr>
   <tr> 
-    <td width="15%"><b><fmt:message key="specie.age"/></b></td>
-    <td width="85%"> 
+	<td width="${col1}"></td>
+    <td width="${col2}"><b><fmt:message key="specie.age"/></b></td>
+    <td width="${col3}"> 
         <select name="ageId">
           <c:forEach items="${ageList}" var="age">
             <fmt:message key="${age.age}" var="ageI18N"/>
@@ -73,8 +87,9 @@
   </tr>
 
   <tr> 
-    <td width="15%"><b><fmt:message key="specie.sex"/></b></td>
-    <td width="85%"> 
+	<td width="${col1}"></td>
+    <td width="${col2}"><b><fmt:message key="specie.sex"/></b></td>
+    <td width="${col3}"> 
         <select name="sexId">
           <c:forEach items="${sexList}" var="sex">
             <fmt:message key="${sex.sex}" var="sexI18N"/>
@@ -89,34 +104,39 @@
     </td>
   </tr>
   <tr> 
-    <td width="15%"><b><fmt:message key="photo.camera"/></b></td>
-    <td width="85%"> 
+	<td width="${col1}"></td>
+    <td width="${col2}"><b><fmt:message key="photo.camera"/></b></td>
+    <td width="${col3}"> 
         <input type="text" name="camera" value="${uploadPhotoBean.camera}" size="64" maxlength="64">
     </td>
   </tr>
   <tr> 
-    <td width="15%"><b><fmt:message key="photo.len"/></b></td>
-    <td width="85%"> 
+	<td width="${col1}"></td>
+    <td width="${col2}"><b><fmt:message key="photo.len"/></b></td>
+    <td width="${col3}"> 
         <input type="text" name="lens" value="${uploadPhotoBean.lens}" size="64" maxlength="64">
     </td>
   </tr>
   <tr> 
-    <td width="15%"><b><fmt:message key="photo.film"/></b></td>
-    <td width="85%"> 
+	<td width="${col1}"></td>
+    <td width="${col2}"><b><fmt:message key="photo.film"/></b></td>
+    <td width="${col3}"> 
         <input type="text" name="film" value="${uploadPhotoBean.film}" size="64" maxlength="64">
     </td>
   </tr>
 
   <tr> 
-    <td width="15%"><b><fmt:message key="photo.location"/></b></td>
-    <td width="85%"> 
+	<td width="${col1}"></td>
+    <td width="${col2}"><b><fmt:message key="photo.location"/></b></td>
+    <td width="${col3}"> 
         <input type="text" name="location" value="${uploadPhotoBean.location}" size="64" maxlength="256">
     </td>
   </tr>
   
   <tr> 
-    <td width="15%"><b><fmt:message key="state"/></b></td>
-    <td width="85%">     
+	<td width="${col1}"></td>
+    <td width="${col2}"><b><fmt:message key="state"/></b></td>
+    <td width="${col3}">     
         <select name="stateId" onChange="stateSelected()">
           <c:forEach items="${uploadPhotoBean.statesList}" var="stateBean">        
 			<c:if test="${selectedStateId != null && selectedStateId == stateBean.value}">
@@ -142,34 +162,38 @@
   </tr>
   
   <tr>
-    <td width="15%"><b><fmt:message key="photo.date"/></b></td>
-    <td width="85%">
+	<td width="${col1}"></td>
+    <td width="${col2}"><b><fmt:message key="photo.date"/></b></td>
+    <td width="${col3}">
         <input type="text" name="date" value="${uploadPhotoBean.date}" size="16" maxlength="16">
     </td>
   </tr>
   <tr>
-    <td width="15%"><b><fmt:message key="photo.author.comment"/></b></td>
-    <td width="85%">
-        <textarea rows="5" cols="70" name="comment">${uploadPhotoBean.comment}</textarea>
+	<td width="${col1}"></td>
+    <td width="${col2}"><b><fmt:message key="photo.author.comment"/></b></td>
+    <td width="${col3}">
+        <textarea rows="4" cols="60" name="comment">${uploadPhotoBean.comment}</textarea>
     </td>
   </tr>
   <tr> 
-    <td width="15%"><b><fmt:message key="photo.file"/></b></td>
-    <td width="85%"> 
+	<td width="${col1}"></td>
+    <td width="${col2}"><b><fmt:message key="photo.file"/></b></td>
+    <td width="${col3}"> 
         <input type="file" name="fileName" label="Search"> 
         <font color="#FF000">Max 250Kb</font>
     </td>
   </tr>
-  </table>
-  
-  <table width="100%" border="0" cellspacing="2" align="center" bgcolor="${mainBgColor}">
   <tr>
-      <td width="15%"></td>
+	<td width="${col1}"></td>
+      <td width="${col2}"></td>
       <td> 
         <div align="left">
             <input type="SUBMIT" value="<fmt:message key="photo.submit"/>">
         </div>
       </td>
-    </tr>
+  </tr>
+  <tr height="5">
+	<td colspan="2"></td>
+  </tr>
   </table>  
 </form>

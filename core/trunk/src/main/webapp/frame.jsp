@@ -6,6 +6,9 @@
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<META HTTP-EQUIV="Expires" CONTENT="0">
+<META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
 <meta name="robots" content="index, follow" />
 <meta name="keywords" content="animal planet, birs, aves" />
 <meta name="description" content="Welcome to the Arara Web Site." />
@@ -14,13 +17,15 @@
 <meta name="category" content="homepage" />
 <meta name="type" content="network" />
 <title>Aves do Brasil</title>
+
 <script type="text/javascript">
 	console.log("%d ways to skin a cat.", 101);
-	var djConfig = {isDebug: true, debugAtAllCosts: true,baseRelativePath:"<c:url value="/"/>"};
+	var djConfig = {isDebug: true, debugAtAllCosts: true, baseScriptUri: '<c:url value="/"/>'};
 </script>
-<script type="text/javascript" src="<c:url value="/dojo-core.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/dojo.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/prototype.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/rico.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/rssajax.js"/>"></script>
 
 <script language="javascript">
 function change(source){
@@ -41,23 +46,19 @@ table.formBorder {
 </style>
 
 
-<!-- 
-	var djConfig = {isDebug: true, debugAtAllCosts: true,baseRelativePath:"<c:url value="/"/>"};
-<script type="text/javascript" src="dojo-minimal.js"></script>
-<script type="text/javascript" src="dojo-ajax.js"></script>
-<script type="text/javascript" src="dojo-widget.js"></script>
-    dojo.setModulePrefix("dojo", "<c:url value="/src"/>");
 
-	baseScriptUri:'<c:url value="/"/>',     
-	baseRelativePath: "<c:url value="/src"/>",
-	
-    dojo.setModulePrefix("dojo", "<c:url value="/src"/>");	
+<!-- dojo ajax
+	var djConfig = {isDebug: true, debugAtAllCosts: true};
+    dojo.setModulePrefix("dojo", "");
+	baseScriptUri:'',     
+	baseRelativePath: "",
+    dojo.setModulePrefix("dojo", "");	
 -->
 <script language="JavaScript" type="text/javascript">
 	dojo.require("dojo.widget.*");
 	dojo.require("dojo.widget.SlideShow");	
 	dojo.require("dojo.widget.FisheyeList");
-	dojo.hostenv.writeIncludes();
+	dojo.hostenv.writeIncludes();    	
 </script>
 
 <script>
@@ -93,11 +94,35 @@ body {
 .page {
 	padding: 60px 20px 20px 20px;
 }
+div.channeltitle
+{
+	clear: both;
+	border-top: #333 1px solid;
+	font-weight: bold;
+	font-size: 16px;
+	padding-bottom: 2px;
+	margin: 5px;
+	padding-top: 2px;
+	border-bottom: #333 1px solid;
+	font-family: Georgia, serif, 'Times New Roman';
+	width: 100%
+}
 
+div.channeltitle a
+{
+	color: white;
+	text-decoration: none;
+}
+div.channeltitle a:hover
+{
+	text-decoration: underline;
+}
 </style>
 
 </head>
-<!--  #669900 top  menu#FFFF00  fundo #333300 -->
+<!--  #669900 top  menu#FFFF00  fundo #333300 
+<body bgcolor="#333300" onload="RSSRequest();">
+-->
 <body bgcolor="#333300">
 
 <!-- defines the maximum width for an image -->
@@ -131,7 +156,7 @@ body {
 <table width="98%" border="0" align="center" cellspacing="1">
   <tr>
     <td colspan="3">
-    	<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="${mainBgColor}">
+    	<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#669900">
       		<tr>
         		<td>
 			        <c:import url="/title.jsp" />
@@ -141,14 +166,12 @@ body {
     </td>
   </tr>
   <tr>
-    <td width="17%" align="left" valign="top">
-    	<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="${mainBgColor}">
+    <td width="150" align="left" valign="top">
+    	<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#669900">
       		<tr>
         		<td align="left">
-        			<c:set var="contextPath" value="<%=request.getContextPath()%>" />
-        		
 					<img dojoType="SlideShow" 
-					imgUrls="${f:getSlideShow(contextPath)}" 					
+					imgUrls="${f:getSlideShow("/arara/")}" 					
 					transitionInterval="1000"
 					delay="30000" 					
 					src="<c:url value="/images/arara.jpg"/>"
@@ -168,25 +191,31 @@ body {
       		</tr>
     	</table>
       </td>
-      <td colspan="2" valign="top" width="83%" height="100%" bgcolor="${mainBgColor}">
-		<!-- 
+      <td colspan="2" valign="top" width="650" height="100%">
     	<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#669900">
       		<tr>
+        		<td width="*">
         		<td>
-		 -->        		
         			<c:import url="/jsp/showErrors.jsp" /> 
 				    <c:import url="/jsp/showMessages.jsp" /> 
 				    <c:import url="${page}" />        
-		<!-- 
 		        </td>
+<!-- 
+        		<td width="250">
+<script>RSSRequest();</script>        		
+<h3>Fale</h3>
+<div id="status" style="display:none"></div>
+<div id="ajaxreader"></div>
+
+	       </td>        				        
+ -->
       		</tr>
     	</table>
-		 -->    	
       </td>
   </tr>
   <tr>
     <td colspan="3">
-    	<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="${mainBgColor}">
+    	<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#669900">
       		<tr>
 		        <td>
 		        	<c:import url="/footer.jsp" />

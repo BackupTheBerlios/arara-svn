@@ -200,7 +200,7 @@ div.channeltitle a:hover
 				    <c:import url="/jsp/showMessages.jsp" /> 
 				    <c:import url="${page}" />        
 		        </td>
-<!-- 
+
         		<td width="250">
 <script>RSSRequest();</script>        		
 <h3>Fale</h3>
@@ -208,7 +208,7 @@ div.channeltitle a:hover
 <div id="ajaxreader"></div>
 
 	       </td>        				        
- -->
+
       		</tr>
     	</table>
       </td>

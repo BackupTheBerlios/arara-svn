@@ -36,7 +36,7 @@
 	<div id="panel4">
 	  <div id="panel3Header">
 	     <img src="<%= request.getContextPath()%>/images/eclub.png" alt="" width="20" height="20">
-	  	<fmt:message key="menu.eclub.videos" />
+	  	<fmt:message key="menu.eclub.eclub" />
 	  </div>
 		<div id="panel4Content">
 	      <c:import url="/menueClub.jsp" />				      

@@ -1,12 +1,11 @@
 <%@ taglib uri="/core" prefix="c"%>
 <%@ taglib uri="/fmt" prefix="fmt"%>
 
+<br><br>
 <form name="showPhotosByCommonNameForm" method="get"
 	action="<c:url value="${servletToCall}?action=${action}"/>">
-
-<br><br>
 <table align="center" class="formBorder"  width="60%" border="0" cellspacing="2" bgcolor="${mainBgColor}">
-	<tr height="10" bgcolor="#000000">
+	<tr height="10" bgcolor="${formTitleColor}">
 		<td></td>
 	</tr>
 	<tr align="center">

@@ -14,8 +14,7 @@
 <c:set var="col1" value="${5}"/>
 <c:set var="col2" value="${15}"/>
 <c:set var="col3" value="${80}"/>
-
-<br>
+<br><br>
 <form name="uploadForm" method="post"
 	action="<c:url value="/servlet/uploadPhotoIdentify"/>"
 	enctype="multipart/form-data">

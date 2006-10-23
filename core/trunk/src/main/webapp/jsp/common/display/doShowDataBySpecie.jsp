@@ -17,9 +17,8 @@
 	action="<c:url value="${servletToCall}"/>"
 	enctype="multipart/form-data">
 
-<br><br>
 <table align="center" class="formBorder" width="60%" border="0" cellspacing="2" bgcolor="${mainBgColor}">
-	<tr height="10" bgcolor="#000000">
+	<tr height="10" bgcolor="${formTitleColor}">
 		<td colspan="3"></td>
 	</tr>
 	<tr height="15" >
@@ -30,7 +29,8 @@
 		<td width="15%">
 			<b><fmt:message key="family" /></b>
 		</td>
-		<td width="70%"><select name="familyId" onChange="familySelected()">
+		<td width="70%">
+			<select name="familyId" onChange="familySelected()">
 			<c:forEach items="${familyList.list}" var="familyBean">
 				<c:if
 					test="${selectedFamilyId != null && selectedFamilyId == familyBean.value}">

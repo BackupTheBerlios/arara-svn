@@ -25,14 +25,13 @@
 <c:set var="col1" value="${5}"/>
 <c:set var="col2" value="${15}"/>
 <c:set var="col3" value="${80}"/>
-
-<br>
+<br><br>
 <form name="uploadForm" method="post"
 	action="<c:url value="/servlet/uploadSound"/>"
 	enctype="multipart/form-data">
 
 <table class="formBorder" width="80%" align="center" border="0" cellspacing="2">
-	<tr height="10" bgcolor="#000000">
+	<tr height="10" bgcolor="${formTitleColor}">
 		<td colspan="3"></td>
 	</tr>
 	<tr height="5">

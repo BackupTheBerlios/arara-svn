@@ -14,11 +14,26 @@ table.comBordaSimples tr {
 
 <table width="100%" border="0" cellspacing="2" height="100%">
 <tr><td>
-	<table class="comBordaSimples"  width="100%" border="0" cellspacing="2" height="100%">
 		<c:if test="${empty listOfPhotos}">
-			<br>
-			<h3><fmt:message key="show.all.photos.not.found" /></h3>
+			<br><br>
+			<table align="center" class="formBorder" width="50%" border="0" cellspacing="2" bgcolor="${mainBgColor}">
+				<tr height="10" bgcolor="#000000">
+					<td colspan="3"></td>
+				</tr>
+				<tr height="5">
+					<td colspan="3"></td>
+				</tr>
+				<tr>
+					<td align="center" width="15%">
+						<h3><fmt:message key="show.all.photos.not.found" /></h3>
+					</td>
+				</tr>
+				<tr height="5">
+					<td colspan="3"></td>
+				</tr>
+			</table>
 		</c:if>
+	<table class="comBordaSimples"  width="100%" border="0" cellspacing="2" height="100%">
 		<c:set var="index" value="${0}" />
 		<c:set var="newLine" value="${true}" />
 		<c:set var="w" value="${100}" />

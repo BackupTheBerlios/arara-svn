@@ -1,11 +1,21 @@
 <div align="center"></div>
 <%@ taglib uri="/fmt" prefix="fmt"%>
-<table width="100%" border="0" cellspacing="2" bgcolor="${mainBgColor}">
-	<tr>
 
-		<td width="15%">
-		<div align="left"><fmt:message key="user.logout.success" /></div>
+<br><br>
+<table align="center" class="formBorder" width="40%" border="0" cellspacing="2" bgcolor="${mainBgColor}">
+	<tr height="10" bgcolor="#000000">
+		<td colspan="3"></td>
+	</tr>
+	<tr height="5">
+		<td colspan="3"></td>
+	</tr>
+	<tr>
+		<td align="center" width="15%">
+			<fmt:message key="user.logout.success" />
 		</td>
+	</tr>
+	<tr height="5">
+		<td colspan="3"></td>
 	</tr>
 </table>
 <div align="left"></div>

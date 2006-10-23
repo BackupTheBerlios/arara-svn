@@ -131,6 +131,7 @@ div.channeltitle a:hover
 </c:if>
 
 <c:set var="mainBgColor" value="#669900" scope="application" />
+<c:set var="formTitleColor" value="#000000" scope="application" />
 
 <c:choose>
 	<c:when test="${param.pageToShow == null || param.pageToShow == ''}">
@@ -156,7 +157,7 @@ div.channeltitle a:hover
 <table width="98%" border="0" align="center" cellspacing="1">
   <tr>
     <td colspan="3">
-    	<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#669900">
+    	<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="${mainBgColor}">
       		<tr>
         		<td>
 			        <c:import url="/title.jsp" />
@@ -167,7 +168,7 @@ div.channeltitle a:hover
   </tr>
   <tr>
     <td width="150" align="left" valign="top">
-    	<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#669900">
+    	<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="${mainBgColor}">
       		<tr>
         		<td align="left">
 					<img dojoType="SlideShow" 
@@ -191,16 +192,15 @@ div.channeltitle a:hover
       		</tr>
     	</table>
       </td>
-      <td colspan="2" valign="top" width="650" height="100%">
-    	<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#669900">
+      <td colspan="2" valign="top" height="100%">
+    	<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="${mainBgColor}">
       		<tr>
-        		<td width="*">
-        		<td>
+        		<td valign="top">
         			<c:import url="/jsp/showErrors.jsp" /> 
 				    <c:import url="/jsp/showMessages.jsp" /> 
 				    <c:import url="${page}" />        
 		        </td>
-
+<!-- 
         		<td width="250">
 <script>RSSRequest();</script>        		
 <h3>Fale</h3>
@@ -208,14 +208,14 @@ div.channeltitle a:hover
 <div id="ajaxreader"></div>
 
 	       </td>        				        
-
+ -->
       		</tr>
     	</table>
       </td>
   </tr>
   <tr>
     <td colspan="3">
-    	<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#669900">
+    	<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="${mainBgColor}">
       		<tr>
 		        <td>
 		        	<c:import url="/footer.jsp" />

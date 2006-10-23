@@ -1,6 +1,6 @@
 <div align="center"></div>
 <%@ taglib uri="/fmt" prefix="fmt"%>
-<table width="100%" border="0" cellspacing="2" bgcolor="#669900">
+<table width="100%" border="0" cellspacing="2" bgcolor="${mainBgColor}">
 	<tr>
 
 		<td width="15%">

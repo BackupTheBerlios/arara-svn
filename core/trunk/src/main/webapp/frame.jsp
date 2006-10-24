@@ -171,8 +171,9 @@ div.channeltitle a:hover
     	<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="${mainBgColor}">
       		<tr>
         		<td align="left">
+					<c:set var="path" value="<%=request.getContextPath()%>"/>
 					<img dojoType="SlideShow" 
-					imgUrls="${f:getSlideShow("/arara/")}" 					
+					imgUrls="${f:getSlideShow(path)}"
 					transitionInterval="1000"
 					delay="30000" 					
 					src="<c:url value="/images/arara.jpg"/>"

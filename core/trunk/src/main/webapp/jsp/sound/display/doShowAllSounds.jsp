@@ -6,12 +6,28 @@
 <table width="100%" border="0" cellspacing="1">
 	<tr valign="top">
 		<td>
+			<c:if test="${empty listOfSounds}">
+				<br><br>
+				<table align="center" class="formBorder" width="50%" border="0" cellspacing="2" bgcolor="${mainBgColor}">
+					<tr height="10" bgcolor="#000000">
+						<td colspan="3"></td>
+					</tr>
+					<tr height="5">
+						<td colspan="3"></td>
+					</tr>
+					<tr>
+						<td align="center" width="15%">
+							<h3><fmt:message key="show.all.sounds.not.found" /></h3>
+						</td>
+					</tr>
+					<tr height="5">
+						<td colspan="3"></td>
+					</tr>
+				</table>
+			</c:if>
 		<table class="formBorder" width="100%" border="0" cellspacing="1">
 			<tr>
-				<td><c:if test="${empty listOfSounds}">
-					<br>
-					<h3>Não há sons para a opção selecionada.</h3>
-				</c:if>
+				<td>
 				<c:if test="${!empty listOfSounds}">
 				<table bgcolor="#000000" width="100%">
 					<tr>

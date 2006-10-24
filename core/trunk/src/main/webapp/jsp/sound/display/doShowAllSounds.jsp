@@ -26,9 +26,9 @@
 				</table>
 			</c:if>
 		<table class="formBorder" width="100%" border="0" cellspacing="1">
+		<c:if test="${!empty listOfSounds}">
 			<tr>
 				<td>
-				<c:if test="${!empty listOfSounds}">
 				<table bgcolor="#000000" width="100%">
 					<tr>
 						<td width="10%"><b><font color="#FFFFFF"><fmt:message
@@ -44,7 +44,7 @@
 							key="sound.link.title" /></font></b></td>
 					</tr>
 				</table>
-				</c:if>				
+		</c:if>				
 				<c:set var="count" value="${0}" /> 
 				<c:set var="color" value="${'#D8D8D8'}" /> 
 				<c:forEach items="${listOfSounds}" var="sound">

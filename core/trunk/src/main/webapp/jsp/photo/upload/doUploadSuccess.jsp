@@ -5,7 +5,7 @@
 
 <c:set var="w" value="${120}" />
 <br>
-<table align="center" class="formBorder" width="40%" border="0" cellspacing="2">
+<table align="center" class="formBorder" width="70%" border="0" cellspacing="2">
 	<tr height="10" bgcolor="#000000">
 		<td></td>
 	</tr>

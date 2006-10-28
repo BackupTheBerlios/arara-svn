@@ -54,7 +54,7 @@ public class SearchPhotosServlet extends AbstractSearchPhotosServlet {
 		boolean identification = new Boolean(identificationStr).booleanValue();
 
 		logger.debug("Retrieving controller ...");
-		PaginationController controller = getPaginationController(session, identification, PAGINATION_FOR_ALL_PHOTOS);
+		PaginationController controller = getPaginationController(session, identification, getPaginationConstant());
 		List list = null;
 		if (identification) {
 			logger.debug("Retrieving photos for identification...");
@@ -94,7 +94,8 @@ public class SearchPhotosServlet extends AbstractSearchPhotosServlet {
 
     protected int getPaginationConstant() {
         return PAGINATION_FOR_ALL_PHOTOS;
-    }    
+    }  
+    
 	private List getListOfPhotos(String action, PaginationController controller) {
 		List list = null;
 		try {

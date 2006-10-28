@@ -161,6 +161,23 @@ public class PhotoModel {
 		return list;
 	}
 
+    /**
+     * This method retrieves a <code>List</code> object with
+     * <code>Integer</code> objects, of photos more recently added to database
+     * 
+     * @return a <code>List</code> object with <code>Photo</code> objects
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    public List retrievePhotoIDsForRecentPhotos() throws DatabaseDownException,
+            SQLException {
+        logger.debug("PhotoModel.retrievePhotoIDsForRecentPhotos: retrieving photo ids for more recent photos...");
+        List list = dao.retrieveIDsForRecentPhotos();
+        logger.debug("PhotoModel.retrievePhotoIDsForRecentPhotos: photo ids retrieved.");
+        return list;
+    }
+    
 	/**
 	 * This method retrieves the id of all photos from database, for the given
 	 * the family id
@@ -180,27 +197,6 @@ public class PhotoModel {
 		logger.debug("PhotoModel.retrievePhotoIDsForFamily | familyId "
 				+ familyId);
 		List list = dao.retrieveIDsForFamily(familyId);
-		return list;
-	}
-
-	/**
-	 * This method retrieves all photos for the given specie id
-	 * 
-	 * @param specieId
-	 *            The id of the specie
-	 * 
-	 * @return An ArrayList object with Photo objects
-	 * 
-	 * @throws DatabaseDownException
-	 *             If the database is down
-	 * @throws SQLException
-	 *             If some SQL Exception occurs
-	 */
-	public List retrievePhotosForSpecie(int specieId)
-			throws DatabaseDownException, SQLException {
-		logger.debug("PhotoModel.retrievePhotosForSpecie | specieId "
-				+ specieId);
-		List list = dao.retrieveForSpecie(specieId);
 		return list;
 	}
 

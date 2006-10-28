@@ -2,8 +2,6 @@
 <%@ taglib uri="/core" prefix="c"%>
 <%@ taglib uri="/fmt" prefix="fmt"%>
 
-<% User user = (User)session.getAttribute("user"); %>
-
 <font size="2" face="Verdana"> 
 
 &nbsp;<b><fmt:message key="menu.photos.search" /></b>
@@ -12,6 +10,10 @@
 &nbsp;&nbsp;&nbsp;
 <a href="<c:url value="/servlet/searchPhotos?action=BEGIN"/>">
 <fmt:message key="menu.photos.search.all" /></a>
+<br/>
+&nbsp;&nbsp;&nbsp;
+<a href="<c:url value="/servlet/searchRecentPhotos?action=BEGIN"/>">
+<fmt:message key="menu.photos.search.recent" /></a>
 <br/>
 &nbsp;&nbsp;&nbsp;
 <a href="<c:url value="/servlet/initSearchByFamily?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataByFamily.jsp&servletToCall=/servlet/searchPhotosByFamily&action=BEGIN"/>">
@@ -33,7 +35,7 @@
 <a href="<c:url value="/servlet/searchPhotos?action=BEGIN&identification=true"/>">
 <fmt:message key="menu.photos.search.identification" /></a>
 
-<c:if test='<%= user != null %>'>
+<c:if test="${user != null}">
 <br/>
 &nbsp;<b><fmt:message key="menu.photos.send" /></b>
 
@@ -50,7 +52,7 @@
 </c:if>
 </c:if>
 
-<c:if test='<%= user != null %>'>
+<c:if test="${user != null}">
 <c:if test="${param.submenu == 'changePhoto'}">
 	<c:if test="${(param.userId == user.id) or (user.admin == true)}">
 		<c:if test="${viewMode == 'viewMode'}">
@@ -67,7 +69,7 @@
 </c:if>
 </c:if>
 <br/>
-<c:if test='<%= user != null %>'>
+<c:if test="${user != null}">
 <c:if test="${param.currentPage == 'showOnePhoto'}">
 	<c:if test="${identification != true}">
 		<br/>					
@@ -77,18 +79,6 @@
 	</c:if>
 </c:if>
 </c:if>
-<!--
-  <c:if test="${param.currentPage == 'showOnePhoto'}">
-	  <c:if test="${identification == true}">
-		<br/>					
-	      	&nbsp;&nbsp;&nbsp;
-	      	<a href="<c:url value="/jsp/photo/identify/identifyPhoto.jsp"/>">
-	      	<fmt:message key="menu.photos.identify"/>
-	      	</a>
-	  </c:if>
-  </c:if>
--->
-		
 </font>
 
 

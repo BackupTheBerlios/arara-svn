@@ -8,7 +8,6 @@ package net.indrix.arara.servlets.photo;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -27,9 +26,9 @@ import net.indrix.arara.servlets.pagination.PhotoByFamilyPaginationController;
 import net.indrix.arara.servlets.pagination.PhotoBySpeciePaginationController;
 import net.indrix.arara.servlets.pagination.PhotoByUserPaginationController;
 import net.indrix.arara.servlets.pagination.PhotoPaginationController;
+import net.indrix.arara.servlets.pagination.PhotoRecentPaginationController;
 import net.indrix.arara.servlets.pagination.exceptions.InvalidControllerException;
 import net.indrix.arara.utils.PropertiesManager;
-import net.indrix.arara.vo.Photo;
 import net.indrix.arara.vo.User;
 
 import org.apache.log4j.Logger;
@@ -50,6 +49,8 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
 	public static final int PAGINATION_FOR_COMMON_NAME = 3;
 
 	public static final int PAGINATION_FOR_USER = 4;
+
+    public static final int PAGINATION_FOR_RECENT = 5;
 
 	protected static Logger logger = Logger.getLogger("net.indrix.aves");
 
@@ -156,6 +157,9 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
 			case PAGINATION_FOR_USER:
 				c = new PhotoByUserPaginationController(PHOTOS_PER_PAGE);
 				break;
+            case PAGINATION_FOR_RECENT:
+                c = new PhotoRecentPaginationController(PHOTOS_PER_PAGE);
+                break;
 			}
 			logger.debug("PaginationController just created");
 		} else {

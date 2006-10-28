@@ -12,15 +12,13 @@
 			</div>
 		</td>
 		<td align="right" width="40%" height="25">
-			<font size="-1" face="Verdana"><b>		
-				<c:choose>		
-				<c:when test='${user == null}'>
+			<font size="-1" face="Verdana"><b>
+				<c:if test="${user == null}">
 				 	  <fmt:message key="user.comein" />		
-				</c:when>
-				<c:otherwise>
+				</c:if>
+				<c:if test="${user != null}">
 				 	  <fmt:message key="user.welcome" /> &nbsp; ${user.name}	
-				</c:otherwise>
-				</c:choose>		
+				</c:if>
 			</b></font>	
 		</td>	 	  
 		<td width="20%" height="25">
@@ -41,27 +39,25 @@
 				dojo:iconsrc="<c:url value="/images/home.png"/>" caption="<fmt:message key="menu.common.home" />">
 			</div>
 
-		<c:choose>
-		<c:when test='${user == null}'>
-			<div class="dojo-FisheyeListItem" onClick="load_app('/jsp/user/login.jsp');"
-				dojo:iconsrc="<c:url value="/images/login.png"/>" caption="<fmt:message key="menu.common.login" />">
-			</div>
-			<div class="dojo-FisheyeListItem" onClick="load_app('/jsp/user/register.jsp');"
-				dojo:iconsrc="<c:url value="/images/users.png"/>" caption="<fmt:message key="menu.common.register" />">			
-			</div>
-		</c:when>
-		<c:otherwise>
-			<div class="dojo-FisheyeListItem" onClick="load_app('/servlet/logout');"
-				dojo:iconsrc="<c:url value="/images/logout.png"/>" caption="<fmt:message key="menu.common.logout" />">
-			</div>
-			<div class="dojo-FisheyeListItem" onClick="load_app('/jsp/user/updateUser.jsp');"
-				dojo:iconsrc="<c:url value="/images/edit.png"/>" caption="<fmt:message key="menu.common.updateUser" />">			
-			</div>			
-			<div class="dojo-FisheyeListItem" onClick="load_app('/jsp/user/changePassword.jsp');"
-				dojo:iconsrc="<c:url value="/images/key.png"/>" caption="<fmt:message key="menu.common.changePassword" />">			
-			</div>		
-		</c:otherwise>
-		</c:choose>			
+			<c:if test="${user == null}">
+				<div class="dojo-FisheyeListItem" onClick="load_app('/jsp/user/login.jsp');"
+					dojo:iconsrc="<c:url value="/images/login.png"/>" caption="<fmt:message key="menu.common.login" />">
+				</div>
+				<div class="dojo-FisheyeListItem" onClick="load_app('/jsp/user/register.jsp');"
+					dojo:iconsrc="<c:url value="/images/users.png"/>" caption="<fmt:message key="menu.common.register" />">			
+				</div>
+			</c:if>
+			<c:if test="${user != null}">
+				<div class="dojo-FisheyeListItem" onClick="load_app('/servlet/logout');"
+					dojo:iconsrc="<c:url value="/images/logout.png"/>" caption="<fmt:message key="menu.common.logout" />">
+				</div>
+				<div class="dojo-FisheyeListItem" onClick="load_app('/jsp/user/updateUser.jsp');"
+					dojo:iconsrc="<c:url value="/images/edit.png"/>" caption="<fmt:message key="menu.common.updateUser" />">			
+				</div>			
+				<div class="dojo-FisheyeListItem" onClick="load_app('/jsp/user/changePassword.jsp');"
+					dojo:iconsrc="<c:url value="/images/key.png"/>" caption="<fmt:message key="menu.common.changePassword" />">			
+				</div>		
+			</c:if>
 			
 		  </div>
 		  </div>

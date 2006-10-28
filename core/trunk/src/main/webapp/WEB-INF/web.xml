@@ -181,6 +181,14 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>searchRecentPhotos</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.photo.SearchRecentPhotosServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
 		<servlet-name>searchPhotosByFamily</servlet-name>
 		<servlet-class>
 			net.indrix.arara.servlets.photo.SearchPhotosByFamilyServlet
@@ -465,6 +473,11 @@
 	<servlet-mapping>
 		<servlet-name>searchPhotos</servlet-name>
 		<url-pattern>/servlet/searchPhotos</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>searchRecentPhotos</servlet-name>
+		<url-pattern>/servlet/searchRecentPhotos</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

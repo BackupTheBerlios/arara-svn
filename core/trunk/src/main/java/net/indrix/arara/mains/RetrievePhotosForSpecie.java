@@ -31,14 +31,16 @@ public class RetrievePhotosForSpecie {
 		int id = Integer.parseInt(args[0]);
 
 		PhotoDAO fDao = new PhotoDAO();
-		List list = fDao.retrieveForSpecie(id);
+		List list = fDao.retrieveIDsForSpecie(id);
 		if (list.isEmpty()) {
 			System.out.println("No photos for specie id " + id);
 		} else {
 			Iterator it = list.iterator();
 			int index = 0;
 			while (it.hasNext()) {
-				Photo photo = (Photo) it.next();
+                Integer i = (Integer)it.next();
+                
+				Photo photo = fDao.retrieve(i);
 				InputStream in = photo.getRealImage().getImage();
 
 				File ff = new File("d:\\newImage" + index++ + ".jpg");

@@ -16,7 +16,7 @@
 </c:if>
 
 
-<table border="1" width="${tableW}%">
+<table width="${tableW}%">
 <tr>
 	<td align="${imageAlign}">
 		<c:if test="${viewMode == 'viewMode'}">
@@ -139,27 +139,33 @@
 
 <!-- Photo for IDENTIFICATION, in view mode. Present photo data to user  -->
 <c:if test="${viewMode == 'viewMode'}">
-<tr>
-	<td align="left">
-		<c:import url="/jsp/photo/search/doShowPhotoData.jsp" />
-	</td>
-</tr>
+	<tr>
+		<td align="left">
+			<c:import url="/jsp/photo/search/doShowPhotoData.jsp" />
+		</td>
+	</tr>
 </c:if>
 
 <!-- Photo for IDENTIFICATION, in identification mode. Present to user family and specie for selection -->
 <c:if test="${viewMode == 'identificationMode'}">
-<tr>
-	<td>
-		<c:import url="/jsp/photo/identify/doIdentifyPhoto.jsp" />
-	</td>
-</tr>
+	<tr>
+		<td>
+			<c:import url="/jsp/photo/identify/doIdentifyPhoto.jsp" />
+		</td>
+	</tr>
 </c:if>
+
+<c:if test="${viewMode == 'viewMode'}">
+	<tr>
+		<td>
+			<c:import url="/jsp/photo/search/doShowPhotoComments.jsp" />
+		</td>
+	</tr>
+</c:if>
+
+	<tr>
+		<td>
+			<c:import url="/jsp/photo/identify/doShowPhotoIdentifications.jsp" />
+		</td>
+	</tr>
 </table>
-
-<c:if test="${viewMode == 'viewMode'}">
-	<c:import url="/jsp/photo/search/doShowPhotoComments.jsp" />
-</c:if>
-
-<c:if test="${viewMode == 'viewMode'}">
-	<c:import url="/jsp/photo/identify/doShowPhotoIdentifications.jsp" />
-</c:if>

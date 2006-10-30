@@ -3,7 +3,7 @@
 <%@ taglib uri="functions" prefix="f"%>
 
 <c:if test="${!empty currentPhoto.comments}">
-<table border="1" width="100%">
+<table class="lineBorder" align="center" width="99%">
 <tr><td>
 	<table border="0" width="100%">
 		<tr>
@@ -62,12 +62,13 @@
 		<c:set var="count" value="${count + 1}" />
 	</c:forEach>
 </c:if> 
-<br>
+
 <a href="<c:url value="/servlet/initCommentPhoto?photoId=${currentPhoto.id}&identification=${identification}"/>"> 
 	<font size="1" face="Verdana"> 
 		<fmt:message key="button.comment.tooltip" var="commentToolTip"/>
 			<img title="${commentToolTip}" src="<c:url value="/jsp/images/comment.gif"/>" width="48" height="48"> 
 	</font>
 </a>
-</td></tr>
+</td>
+</tr>
 </table>

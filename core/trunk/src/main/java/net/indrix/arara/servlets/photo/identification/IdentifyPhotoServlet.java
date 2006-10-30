@@ -41,8 +41,8 @@ public class IdentifyPhotoServlet extends AbstractIdentificationServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
 		logger.info("IdentifyPhotoServlet.doPost : entering method...");
-		List errors = new ArrayList();
-		List messages = new ArrayList();
+		List <String>errors = new ArrayList<String>();
+		List <String>messages = new ArrayList<String>();
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
 		HttpSession session = req.getSession();
@@ -57,8 +57,7 @@ public class IdentifyPhotoServlet extends AbstractIdentificationServlet {
 			nextPage = ServletConstants.LOGIN_PAGE;
 		} else {
 			// retrieve photo under identification
-			Photo photo = (Photo) session
-					.getAttribute(ServletConstants.CURRENT_PHOTO);
+			Photo photo = (Photo) session.getAttribute(ServletConstants.CURRENT_PHOTO);
 			logger.debug("Photo under identification = " + photo);
 
 			String beanKey = IdentificationPhotoConstants.IDENTIFICATION_PHOTO_BEAN;
@@ -66,37 +65,25 @@ public class IdentifyPhotoServlet extends AbstractIdentificationServlet {
 			IdentifyPhotoBean bean = handleBean(req, session, beanKey, errors);
 
 			if (errors.isEmpty()) {
-				logger
-						.debug("IdentifyPhotoServlet.doPost : identification done: "
-								+ bean);
+				logger.debug("IdentifyPhotoServlet.doPost : identification done: " + bean);
 
-				PhotoIdentification photoIdentification = createObject(bean,
-						user, photo);
+				PhotoIdentification photoIdentification = createObject(bean, user, photo);
 				if (photoIdentification != null) {
 					PhotoModel model = new PhotoModel();
 					try {
 
 						if (model.identifyPhoto(photoIdentification)) {
-							req.setAttribute(
-									ServletConstants.IDENTIFICATION_KEY,
-									"false");
-							req.setAttribute(ServletConstants.VIEW_MODE_KEY,
-									"viewMode");
+							req.setAttribute(ServletConstants.IDENTIFICATION_KEY, "false");
+							req.setAttribute(ServletConstants.VIEW_MODE_KEY, "viewMode");
 
-							messages
-									.add(ServletConstants.END_OF_IDENTIFICATION_MSG);
-							req.setAttribute(ServletConstants.MESSAGES_KEY,
-									messages);
+							messages.add(ServletConstants.END_OF_IDENTIFICATION_MSG);
+							req.setAttribute(ServletConstants.MESSAGES_KEY, messages);
 						} else {
 							// retrieve all identifications already done for the
 							// given photo
 							retrieveIdentificationsForPhoto(model, photo);
-							req
-									.setAttribute(
-											ServletConstants.IDENTIFICATION_KEY,
-											"true");
-							req.setAttribute(ServletConstants.VIEW_MODE_KEY,
-									"identificationMode");
+							req.setAttribute(ServletConstants.IDENTIFICATION_KEY, "true");
+							req.setAttribute(ServletConstants.VIEW_MODE_KEY, "identificationMode");
 						}
 
 						// reset the bean object
@@ -128,18 +115,17 @@ public class IdentifyPhotoServlet extends AbstractIdentificationServlet {
 						errors.add(ServletConstants.DATABASE_ERROR);
 					}
 				} else {
-					logger
-							.debug("IdentifyPhotoServlet.doPost : COULD NOT create object...");
-					req.setAttribute(ServletConstants.IDENTIFICATION_KEY,
-							"true");
+					logger.debug("IdentifyPhotoServlet.doPost : COULD NOT create object...");
+					req.setAttribute(ServletConstants.IDENTIFICATION_KEY, "true");
 				}
 			} else {
 				req.setAttribute(ServletConstants.IDENTIFICATION_KEY, "true");
-				req.setAttribute(ServletConstants.VIEW_MODE_KEY,
-						"identificationMode");
+				req.setAttribute(ServletConstants.VIEW_MODE_KEY, "identificationMode");
 			}
 
-			nextPage = ServletConstants.ONE_PHOTO_PAGE;
+            nextPage = ServletConstants.FRAME_PAGE;
+            String pageToShow = "/jsp/photo/search/doShowOnePhoto.jsp";
+            req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
 
 			if (!errors.isEmpty()) {
 				// coloca erros no request para registrar.jsp processar e

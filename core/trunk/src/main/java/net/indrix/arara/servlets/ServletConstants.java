@@ -118,6 +118,8 @@ public class ServletConstants {
 	// Pages
 	public static final String INITIAL_PAGE = "/index.jsp";
 
+    public static final String FRAME_PAGE = "/frame.jsp";
+
 	public static final String REGISTER_PAGE = "/jsp/user/register.jsp";
 
 	public static final String REGISTERED_PAGE = "/jsp/user/registered.jsp";

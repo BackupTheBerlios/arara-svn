@@ -97,7 +97,7 @@ public class CommentPhotoServlet extends HttpServlet {
 						}
 
 						// next page
-						nextPage = "/frame.jsp";
+						nextPage = ServletConstants.FRAME_PAGE;
                         req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, "/jsp/photo/search/doShowOnePhoto.jsp");
 					} catch (DatabaseDownException e) {
 						logger.debug("DatabaseDownException.....", e);
@@ -146,10 +146,17 @@ public class CommentPhotoServlet extends HttpServlet {
 		if ((comments == null) || (comments.isEmpty())) {
 			logger.debug("There is no comment for photo " + photo);
 		} else {
-			logger
-					.debug(comments.size() + " comments found for photo "
-							+ photo);
+			logger.debug(comments.size() + " comments found for photo " + photo);
 		}
+        
+        // now retrieve the identifications
+        List ident = model.retrieveIdentificationsForPhoto(photo);
+        photo.setIdentifications(ident);
+        if ((ident == null) || (ident.isEmpty())) {
+            logger.debug("There is no ident for photo " + photo);
+        } else {
+            logger.debug(comments.size() + " ident found for photo " + photo);
+        }        
 	}
 
 	/**

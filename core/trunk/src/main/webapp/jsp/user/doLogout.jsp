@@ -1,6 +1,9 @@
-<div align="center"></div>
 <%@ taglib uri="/fmt" prefix="fmt"%>
+<%@ taglib uri="/core" prefix="c"%>
 
+<meta HTTP-EQUIV="refresh"
+	CONTENT="1.5;URL=<c:url value="/index.jsp"/>">
+	
 <br><br>
 <table align="center" class="formBorder" width="40%" border="0" cellspacing="2" bgcolor="${mainBgColor}">
 	<tr height="10" bgcolor="#000000">

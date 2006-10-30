@@ -43,6 +43,10 @@ table.formBorder {
 	border: 2px solid #000000;
 	background-color:#DDDDDD;
 }
+table.lineBorder {
+	border-collapse: collapse; /* CSS2 */
+	border: 2px solid #000000;
+}
 </style>
 
 
@@ -124,6 +128,10 @@ div.channeltitle a:hover
 <body bgcolor="#333300" onload="RSSRequest();">
 -->
 <body bgcolor="#333300">
+
+<c:set var="col1" value="${10}" scope="application"/>
+<c:set var="col2" value="${15}" scope="application"/>
+<c:set var="col3" value="${75}" scope="application"/>
 
 <!-- defines the maximum width for an image -->
 <c:if test="${width == null}">

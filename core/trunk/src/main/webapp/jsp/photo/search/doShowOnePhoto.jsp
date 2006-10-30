@@ -26,11 +26,12 @@
 		</c:if> 
 		
 		<c:if test="${viewMode == 'identificationMode'}">
-			<table>
+			<br>
+			<table class="formBorder"width="95%">
 			<tr>
 				<td align="left">
 					<c:import url="/jsp/photo/search/doShowPhotoData.jsp" />
-					<td align="left">
+					<td align="center">
 						<a href="<c:url value="/servlet/getPhoto?photoId=${currentPhoto.id}&identification=${identification}"/>" target="_blank"> 
 						<img
 							src="<c:url value="/servlet/getThumbnail?photoId=${currentPhoto.id}"/>"

@@ -22,7 +22,7 @@
 <form name="identifyPhotoForm" method="post"
 	action="<c:url value="/servlet/identifyPhoto"/>">
 
-<table width="100%" border="0" cellspacing="2" bgcolor="#A6D2D2">
+<table class="formBorder" width="100%" border="0" cellspacing="2">
 	<tr>
 		<td align="left" width="8%"><font size="${fontSize}" face="Verdana"><b><fmt:message
 			key="family" /></b></font></td>
@@ -84,7 +84,7 @@
 		</select> </font></td>
 	</tr>
 </table>
-<table width="100%" border="0" cellspacing="2" bgcolor="#A6D2D2">
+<table class="formBorder" width="100%" border="0" cellspacing="2">
 	<tr>
 		<td width="10%"><font size="${fontSize}" face="Verdana"><b><fmt:message
 			key="photo.identify.comment" /></b></font></td>

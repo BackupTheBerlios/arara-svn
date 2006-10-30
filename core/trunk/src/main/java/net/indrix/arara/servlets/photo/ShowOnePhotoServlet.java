@@ -147,7 +147,7 @@ public class ShowOnePhotoServlet extends HttpServlet {
             logger.debug(comments.size() + " comments found for photo " + photo);
         }
 
-        // now retrieve the comments
+        // now retrieve the identifications
         List ident = model.retrieveIdentificationsForPhoto(photo);
         photo.setIdentifications(ident);
         if ((ident == null) || (ident.isEmpty())) {

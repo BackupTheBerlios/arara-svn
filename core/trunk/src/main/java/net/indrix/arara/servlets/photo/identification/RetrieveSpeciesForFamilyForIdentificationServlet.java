@@ -37,9 +37,8 @@ public class RetrieveSpeciesForFamilyForIdentificationServlet extends
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
 
-		logger
-				.debug("RetrieveSpeciesForFamilyForIdentificationServlet.doPost: entering method...");
-		List errors = new ArrayList();
+		logger.debug("RetrieveSpeciesForFamilyForIdentificationServlet.doPost: entering method...");
+		List <String>errors = new ArrayList<String>();
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
 		HttpSession session = req.getSession();
@@ -47,8 +46,7 @@ public class RetrieveSpeciesForFamilyForIdentificationServlet extends
 
 		User user = (User) session.getAttribute(ServletConstants.USER_KEY);
 		if (user == null) {
-			logger
-					.debug("InitIdentificationPhotoServlet: USER is not logged...");
+			logger.debug("InitIdentificationPhotoServlet: USER is not logged...");
 			errors.add(ServletConstants.USER_NOT_LOGGED);
 			// put errors in request
 			req.setAttribute(ServletConstants.ERRORS_KEY, errors);
@@ -58,8 +56,7 @@ public class RetrieveSpeciesForFamilyForIdentificationServlet extends
 			String familyId = req.getParameter(ServletConstants.FAMILY_ID);
 			if ((familyId == null) || (familyId.equals(""))) {
 				errors.add(ServletConstants.SELECT_FAMILY_ERROR);
-				IdentifyPhotoBean identificationBean = (IdentifyPhotoBean) session
-						.getAttribute(IdentificationPhotoConstants.IDENTIFICATION_PHOTO_BEAN);
+				IdentifyPhotoBean identificationBean = (IdentifyPhotoBean) session.getAttribute(IdentificationPhotoConstants.IDENTIFICATION_PHOTO_BEAN);
 				identificationBean.setSelectedFamilyId(null);
 				identificationBean.setSelectedSpecieId(null);
 				identificationBean.setSpecieList(null);
@@ -73,11 +70,11 @@ public class RetrieveSpeciesForFamilyForIdentificationServlet extends
 						logger.debug("Setting specie list in request");
 						logger.debug("Setting data in request");
 						handleList(list, req, errors);
-						nextPage = ServletConstants.ONE_PHOTO_PAGE;
-						req.setAttribute(ServletConstants.IDENTIFICATION_KEY,
-								"true");
-						req.setAttribute(ServletConstants.VIEW_MODE_KEY,
-								"identificationMode");
+                        nextPage = ServletConstants.FRAME_PAGE;
+						req.setAttribute(ServletConstants.IDENTIFICATION_KEY, "true");
+						req.setAttribute(ServletConstants.VIEW_MODE_KEY, "identificationMode");
+                        String pageToShow = "/jsp/photo/search/doShowOnePhoto.jsp";
+                        req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
 
 					} else {
 						logger.debug("Specie list not found...");

@@ -49,11 +49,11 @@ public class PhotoEmailSender extends AbstractPhotoEmailSender {
 	public void run() {
 		UserModel userModel = new UserModel();
 		try {
-			logger.debug("UploadPhoto.sendEmail : Retrieving list of users to sent email to");
+			logger.debug("PhotoEmailSender.sendEmail : Retrieving list of users to sent email to");
 			List list = userModel.retrieveForEmailOnNewPhoto();
 			if (!list.isEmpty()) {
 				Iterator it = list.iterator();
-                logger.debug("UploadPhoto.sendEmail : sending email to users...");
+                logger.debug("PhotoEmailSender.sendEmail : sending email to users...");
 				while (it.hasNext()) {
 					LightUser user = (LightUser) it.next();
 					if (user.getId() != photo.getUser().getId()) {
@@ -137,7 +137,7 @@ public class PhotoEmailSender extends AbstractPhotoEmailSender {
 		try {
 			bodyFormatted = MessageComposer.formatMessage(body, list);
 		} catch (WrongNumberOfValuesException e) {
-			logger.error("UploadPhoto.getMessage : Exception", e);
+			logger.error("PhotoEmailSender.getMessage : Exception", e);
 		}
 		return bodyFormatted;
 	}

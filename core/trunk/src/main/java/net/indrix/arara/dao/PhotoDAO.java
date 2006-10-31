@@ -130,6 +130,9 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
     private static final String VERIFY_IF_PHOTO_FOR_IDENTIFICATION = "SELECT p.id "
             + "from photo p " + "where p.id = ? and p.specie_id = -1";
 
+    private static final String VERIFY_IF_SPECIE_HAS_PHOTO = "SELECT p.id "
+        + "from photo p " + "where p.specie_id = ?";
+    
     /**
      * Object to retrieve user data from database
      */
@@ -305,30 +308,26 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
     public boolean isPhotoForIdentification(int photoId)
             throws DatabaseDownException, SQLException {
 
-        boolean idFound = false;
-        Connection conn = DatabaseManager.getConnection();
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
+        return isIdInTable(photoId, VERIFY_IF_PHOTO_FOR_IDENTIFICATION);
+    }
 
-        try {
-            stmt = conn.prepareStatement(VERIFY_IF_PHOTO_FOR_IDENTIFICATION);
-            stmt.setInt(1, photoId);
-            rs = stmt.executeQuery();
+    /**
+     * This method verifies wheter an Id exists
+     * 
+     * @param sql
+     *            The SQL to be executed
+     * 
+     * @return a VO object
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public boolean hasSpecieAPhoto(int specieId)
+            throws DatabaseDownException, SQLException {
 
-            if (rs.next()) {
-                idFound = true;
-            }
-        } catch (SQLException e) {
-            logger.error("PhotoDAO.retrieve : could not retrieve data ");
-            logger.error(
-                    "Error in SQL : " + VERIFY_IF_PHOTO_FOR_IDENTIFICATION, e);
-            throw e;
-        } finally {
-            closeResultSet(rs);
-            closeStatement(stmt);
-            conn.close();
-        }
-        return idFound;
+        return isIdInTable(specieId, VERIFY_IF_SPECIE_HAS_PHOTO);
     }
 
     /**
@@ -619,7 +618,7 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
     protected String getSelectIDsForUserSQL() {
         return SELECT_IDS_BY_USER;
     }
-
+ 
     /**
      * @param rs
      * @return

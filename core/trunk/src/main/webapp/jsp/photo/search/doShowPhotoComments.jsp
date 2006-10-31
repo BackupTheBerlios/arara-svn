@@ -35,18 +35,23 @@
 				<td>
 				<table border="0" width="100%">
 					<tr>
-						<td align="left"><b><font color="#005500"><c:out
-							value="${comment.user.login}" /></font></b>
+						<td align="left">
+							<font color="#005500" size="2" face="Verdana">
+								<b><c:out	value="${comment.user.login}" /></b>
+							</font>
+							
 						<td>
-						<td align="right"><b><font color="#005500"><c:out
-							value="${f:dateTimeAsString(comment.date)}" /></font></b>
+						<td align="right">
+							<font color="#005500" size="2" face="Verdana">
+								<b><c:out value="${f:dateTimeAsString(comment.date)}" /></b>
+							</font>
 						<td>
 					</tr>
 				</table>
 				<table width="100%" align="center" border="0" cellpadding="0" cellspacing="6">
 					<tr>
 						<td align="left">
-							<font color="#0000FF">
+							<font size="2" color="#000000" face="Verdana">
 <pre>
 <c:out value="${comment.comment}" />
 </pre>

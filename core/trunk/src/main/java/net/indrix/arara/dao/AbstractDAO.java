@@ -688,6 +688,46 @@ public abstract class AbstractDAO {
     }
 
     /**
+     * This method verifies wheter a row exists or not
+     * 
+     * @param id The value to be searched
+     * 
+     * @return true if the id is found, false otherwise
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public boolean isIdInTable(int id, String sql)
+            throws DatabaseDownException, SQLException {
+
+        boolean idFound = false;
+        Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                idFound = true;
+            }
+        } catch (SQLException e) {
+            logger.error("PhotoDAO.retrieve : could not retrieve data ");
+            logger.error("Error in SQL : " + sql, e);
+            throw e;
+        } finally {
+            closeResultSet(rs);
+            closeStatement(stmt);
+            conn.close();
+        }
+        return idFound;
+    }
+
+    /**
      * @param rs
      * @return
      */

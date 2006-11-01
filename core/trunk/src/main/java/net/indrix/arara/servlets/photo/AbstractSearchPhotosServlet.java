@@ -73,25 +73,30 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
 
         RequestDispatcher dispatcher = null;
         ServletContext context = this.getServletContext();
-        List <String>errors = new ArrayList<String>();
+        List<String> errors = new ArrayList<String>();
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute(ServletConstants.USER_KEY);
 
         String nextPage = req.getParameter(ServletConstants.NEXT_PAGE_KEY);
         String pageToShow = req.getParameter(ServletConstants.PAGE_TO_SHOW_KEY);
         String action = req.getParameter(ServletConstants.ACTION);
-
+        
+        logger.debug(nextPage + " | " + pageToShow + " | " + action);
+        
         String idStr = (String) req.getParameter(ServletConstants.ID);
+        String familyName = req.getParameter(ServletConstants.TEXT_ID);
         int id = -1;
         if ((idStr != null) && (idStr.trim().length() > 0)) {
             id = Integer.parseInt(idStr);
-
-            action = req.getParameter(ServletConstants.ACTION);
-
+        }
+        if ((id != -1) || (familyName != null) && (familyName.trim().length() > 0)) {
             List list = null;
             PhotoPaginationController controller = (PhotoPaginationController) getPaginationController(
                     session, false, getPaginationConstant());
             controller.setId(id);
+            
+            familyName = familyName.replace('*', '%');
+            controller.setText(familyName);
             try {
                 list = controller.doAction(action);
             } catch (InvalidControllerException e) {
@@ -99,7 +104,10 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
                     list = controller.doAction(ServletConstants.BEGIN);
                 } catch (InvalidControllerException e1) {
                     // this should never happend
-                    logger.fatal("InvalidControllerException when doing BEGIN action...", e1);
+                    logger
+                            .fatal(
+                                    "InvalidControllerException when doing BEGIN action...",
+                                    e1);
                 }
             }
 
@@ -124,9 +132,10 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
                         + locale + ") has selected all photos - "
                         + getPaginationConstant());
             }
+
         } else {
             errors.add(ServletConstants.SELECT_VALUE_ERROR);
-            
+
             req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);
             req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
             req.setAttribute(ServletConstants.ACTION, action);
@@ -150,13 +159,9 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
             boolean identification, int target) {
 
         // the key is the key string plus the target
-        String key = ServletConstants.PHOTO_PAGINATION_CONTROLLER_KEY + target
-                + identification;
-        logger
-                .debug("AbstractSearchPhotosServlet.getPaginationController: retrieving controller with key "
-                        + key);
-        PaginationController c = (PaginationController) session
-                .getAttribute(key);
+        String key = ServletConstants.PHOTO_PAGINATION_CONTROLLER_KEY + target + identification;
+        logger.debug("AbstractSearchPhotosServlet.getPaginationController: retrieving controller with key " + key);
+        PaginationController c = (PaginationController) session.getAttribute(key);
         if (c == null) {
             switch (target) {
             case PAGINATION_FOR_ALL_PHOTOS:
@@ -184,8 +189,7 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
             logger.debug("PaginationController retrieved from session");
         }
         session.setAttribute(key, c);
-        session.setAttribute(ServletConstants.PHOTO_PAGINATION_CONTROLLER_KEY,
-                c);
+        session.setAttribute(ServletConstants.PHOTO_PAGINATION_CONTROLLER_KEY, c);
         return c;
     }
 }

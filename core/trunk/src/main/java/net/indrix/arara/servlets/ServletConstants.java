@@ -17,6 +17,8 @@ public class ServletConstants {
 	 * constants containing the names of the attributes submmited by the GUI.
 	 */
 	public static final String ID = "id";
+    
+    public static final String TEXT_ID = "text";
 
 	public static final String FAMILY_ID = "familyId";
 

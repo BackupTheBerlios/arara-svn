@@ -33,7 +33,11 @@ public class PhotoByFamilyPaginationController extends
 	 */
 	protected List retrieveAllData() throws DatabaseDownException, SQLException {
 		List listOfPhotos = null;
-		listOfPhotos = model.retrievePhotoIDsForFamily(id);
+        if (id != -1){
+            listOfPhotos = model.retrievePhotoIDsForFamily(id);            
+        } else {
+            listOfPhotos = model.retrievePhotoIDsForFamilyName(text);            
+        }
 		return listOfPhotos;
 	}
 

@@ -56,6 +56,11 @@ public abstract class PaginationController {
     protected int id;
 
     /**
+     * The text, when necessary, to retrieve data from database
+     */
+    protected String text;
+
+    /**
      * Creates a new PaginationController object, with the given number of elements per page, and
      * with the flag identification
      * 
@@ -280,5 +285,13 @@ public abstract class PaginationController {
 
     public void setIdentification(boolean identification) {
         this.identification = identification;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 }

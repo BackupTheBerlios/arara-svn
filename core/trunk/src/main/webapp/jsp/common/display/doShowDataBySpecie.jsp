@@ -13,24 +13,25 @@
 <c:set var="selectedFamilyId" value="${familyList.selectedId}" />
 <c:set var="selectedSpecieId" value="${specieList.selectedId}" />
 
+<br><br>
 <form name="initShowPhotosBySpecieForm" method="get"
 	action="<c:url value="${servletToCall}"/>">
 
 <c:import url="/jsp/common/display/hiddenFields.jsp"/>
 
-<table align="center" class="formBorder" width="60%" border="0" cellspacing="2" bgcolor="${mainBgColor}">
+<table align="center" class="formBorder" width="80%" border="0" cellspacing="2" bgcolor="${mainBgColor}">
 	<tr height="10" bgcolor="${formTitleColor}">
 		<td colspan="3"></td>
 	</tr>
-	<tr height="15" >
+	<tr height="5" >
 		<td colspan="3"></td>
 	</tr>
-	<tr height="30">
-		<td width="15%"></td>
-		<td width="15%">
+	<tr align="center">
+		<td width="${col1}"></td>
+		<td align="left" width="${col2}">
 			<b><fmt:message key="family" /></b>
 		</td>
-		<td width="70%">
+		<td align="left" width="${col3}">
 			<select name="familyId" onChange="familySelected()">
 			<c:forEach items="${familyList.list}" var="familyBean">
 				<c:if
@@ -45,9 +46,12 @@
 		</select></td>
 	</tr>
 	<tr height="30">
-		<td width="15%"></td>
-		<td width="15%"><b><fmt:message key="specie" /></b></td>
-		<td width="70%"><select name="id">
+		<td width="${col1}"></td>
+		<td align="left" width="${col2}">
+			<b><fmt:message key="specie" /></b>
+		</td>
+		<td align="left" width="${col3}">
+			<select name="id">
 			<c:forEach items="${specieList.list}" var="specieBean">
 				<c:if
 					test="${selectedSpecieId != null && selectedSpecieId == specieBean.value}">
@@ -58,17 +62,19 @@
 					<option value="${specieBean.value}">${specieBean.label}</option>
 				</c:if>
 			</c:forEach>
-		</select></td>		<br>&nbsp;
+			</select>  <input name="text" type="text" size="30"/>
+		</td>		
 	</tr>
 	<tr height="30">
-		<td width="15%"></td>
-		<td width="15%"></td>
-		<td>
-		<div align="left"><input type="SUBMIT"
-			value="<fmt:message key="button.submit.send"/>"></div>
+		<td width="${col1}"></td>
+		<td align="left" width="${col2}"></td>
+		<td align="left" width="${col3}">
+			<div align="left">
+				<input type="SUBMIT" value="<fmt:message key="button.submit.send"/>">
+			</div>
 		</td>
 	</tr>
-	<tr height="15" >
+	<tr height="5" >
 		<td colspan="3"></td>
 	</tr>
 </table>

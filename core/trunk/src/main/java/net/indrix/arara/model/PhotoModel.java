@@ -200,6 +200,27 @@ public class PhotoModel {
 		return list;
 	}
 
+    /**
+     * This method retrieves the id of all photos from database, for the given
+     * the family name
+     * 
+     * @param familyId
+     *            The id of the family
+     * 
+     * @return An ArrayList object with Integer objects
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public List retrievePhotoIDsForFamilyName(String name)
+            throws DatabaseDownException, SQLException {
+        logger.debug("PhotoModel.retrievePhotoIDsForFamilyName | name " + name);
+        List list = dao.retrieveIDsForFamilyName(name);
+        return list;
+    }
+    
 	/**
 	 * This method retrieves the id of all photos from database, for the given
 	 * the specie id
@@ -222,6 +243,26 @@ public class PhotoModel {
 		return list;
 	}
 
+    /**
+     * This method retrieves the id of all photos from database, for the given
+     * the specie name
+     * 
+     * @param name
+     *            The name of the specie
+     * 
+     * @return An ArrayList object with Integer objects
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public List retrievePhotoIDsForSpecieName(String name)
+            throws DatabaseDownException, SQLException {
+        logger.debug("PhotoModel.retrievePhotoIDsForSpecieName | name " + name);
+        List list = dao.retrieveIDsForSpecieName(name);
+        return list;
+    }
 	/**
 	 * This method retrieves the id of all photos from database, for the given
 	 * common name id

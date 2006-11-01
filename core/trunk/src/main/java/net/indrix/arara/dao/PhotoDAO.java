@@ -103,11 +103,26 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
             + "order by s_name";
 
     /**
+     * SQL to select id of photos by a given family ID
+     */
+    private static final String SELECT_IDS_BY_FAMILY_NAME = "SELECT p.id, s.id s_id, s.name s_name "
+            + "from photo p, family f, specie s "
+            + "where p.specie_family_id = f.id  and p.specie_id = s.id and f.name like ? "
+            + "order by s_name";
+
+    /**
      * SQL to select ids of photos by a given specie ID
      */
     private static final String SELECT_IDS_BY_SPECIE_ID = "SELECT p.id, s.id s_id, s.name s_name "
             + "from photo p, specie s "
             + "where p.specie_id=? and p.specie_id = s.id " + "order by s_name";
+
+    /**
+     * SQL to select ids of photos by a given specie ID
+     */
+    private static final String SELECT_IDS_BY_SPECIE_NAME = "SELECT p.id, s.id s_id, s.name s_name "
+            + "from photo p, specie s "
+            + "where p.specie_id = s.id and s.name like ? order by s_name";
 
     /**
      * SQL to select photo ids by a given common name ID
@@ -590,6 +605,16 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
     }
 
     /**
+     * This method returns the SQL statement to select ids for family from
+     * database
+     * 
+     * @return the SELECT_IDS_BY_FAMILY_NAME sql
+     */
+    protected String getSelectIDsForFamilyNameSQL() {
+        return SELECT_IDS_BY_FAMILY_NAME;
+    }    
+    
+    /**
      * This method returns the SQL statement to select ids for specie from
      * database
      * 
@@ -599,6 +624,16 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
         return SELECT_IDS_BY_SPECIE_ID;
     }
 
+    /**
+     * This method returns the SQL statement to select ids for family from
+     * database
+     * 
+     * @return the SELECT_IDS_BY_FAMILY_NAME sql
+     */
+    protected String getSelectIDsForSpecieNameSQL() {
+        return SELECT_IDS_BY_SPECIE_NAME;
+    }    
+    
     /**
      * This method returns the SQL statement to select ids for common name from
      * database

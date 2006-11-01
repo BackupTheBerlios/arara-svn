@@ -18,7 +18,7 @@
     	<td width="${col2}" align="left">
 			<h3><fmt:message key="errors.title" /></h3>
 			<c:forEach items="${erros}" var="erro">
-				<li>
+				<li style="margin-left: 40px;">
 				<font color="#FF0000">
 					<fmt:message key="${erro}" />
 				</font><br>

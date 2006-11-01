@@ -18,6 +18,7 @@
     	<td width="${col2}" align="left">
 			<h3><fmt:message key="messages.title" /></h3>
 			<c:forEach items="${messages}" var="msg">
+				<li style="margin-left: 40px;">
 				<font color="#FF0000">
 					<fmt:message key="${msg}" />
 				</font>

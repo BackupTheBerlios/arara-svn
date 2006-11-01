@@ -202,7 +202,9 @@ public class ServletConstants {
 	public static final String USER_NOT_FOUND = "user.not.found";
 
 	public static final String SELECT_FAMILY_ERROR = "select.family.error";
-
+    
+    public static final String SELECT_VALUE_ERROR = "select.value.error";
+    
 	public static final String PASSWORD_FORMAT = "password.format.error";
 
 	public static final String PHOTO_ALREADY_IDENTIFIED = "photo.already.identified";

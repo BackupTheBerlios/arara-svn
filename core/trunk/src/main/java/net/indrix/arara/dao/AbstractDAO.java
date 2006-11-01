@@ -127,6 +127,27 @@ public abstract class AbstractDAO {
 
     /**
      * This method retrieves a <code>List</code> object with
+     * <code>Integer</code> objects, based on the name of the family
+     * 
+     * @param name
+     *            The name of the family
+     * 
+     * @return a <code>List</code> object with <code>Photo</code> objects,
+     *         based on the id of the common name
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public List retrieveIDsForFamilyName(String name) throws DatabaseDownException,
+            SQLException {
+        List list = retrieveIDsForGivenStringField(name, getSelectIDsForFamilyNameSQL());
+        return list;
+    }
+    
+    /**
+     * This method retrieves a <code>List</code> object with
      * <code>Photo</code> objects, based on the id of the specie
      * 
      * @param id
@@ -146,6 +167,26 @@ public abstract class AbstractDAO {
         return list;
     }
 
+    /**
+     * This method retrieves a <code>List</code> object with
+     * <code>Integer</code> objects, based on the name of the specie
+     * 
+     * @param name
+     *            The name of the specie
+     * 
+     * @return a <code>List</code> object with <code>Photo</code> objects,
+     *         based on the name of the specie
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public List retrieveIDsForSpecieName(String name) throws DatabaseDownException,
+            SQLException {
+        List list = retrieveIDsForGivenStringField(name, getSelectIDsForSpecieNameSQL());
+        return list;
+    }    
     /**
      * This method retrieves a <code>List</code> object with
      * <code>Photo</code> objects, based on the id of the common name
@@ -208,6 +249,16 @@ public abstract class AbstractDAO {
     }
 
     /**
+     * This method returns the SQL statement to select ids for family from
+     * database
+     * 
+     * @return the SELECT_IDS_BY_FAMILY_NAME sql
+     */
+    protected String getSelectIDsForFamilyNameSQL() {
+        return null;
+    }
+
+    /**
      * This method returns the SQL statement to select ids for specie from
      * database
      * 
@@ -217,6 +268,15 @@ public abstract class AbstractDAO {
         return null;
     }
 
+    /**
+     * This method returns the SQL statement to select ids for specie from
+     * database
+     * 
+     * @return the SELECT_IDS_BY_SPECIE_NAME sql
+     */
+    protected String getSelectIDsForSpecieNameSQL() {
+        return null;
+    }    
     /**
      * This method returns the SQL statement to select ids for common name from
      * database
@@ -510,7 +570,7 @@ public abstract class AbstractDAO {
                 list.add(new Integer(id));
             }
         } catch (SQLException e) {
-            logger.error("AbstractDAO.retrieve : could not retrieve data ");
+            logger.error("AbstractDAO.retrieveIDsForGivenID : could not retrieve data ");
             logger.error("Error in SQL : " + sql, e);
             throw e;
         } finally {
@@ -521,6 +581,46 @@ public abstract class AbstractDAO {
         return list;
     }
 
+    /**
+     * This method retrieves all IDS from database.
+     * 
+     * @return A list of <code>Integer</code> objects
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public List retrieveIDsForGivenStringField(String text, String sql)
+            throws DatabaseDownException, SQLException {
+        List<Integer> list = new ArrayList<Integer>();
+        Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        logger.error("Running SQL : " + sql);
+
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, text);
+            rs = stmt.executeQuery();
+            int id;
+            while (rs.next()) {
+                id = rs.getInt("ID");
+                list.add(new Integer(id));
+            }
+        } catch (SQLException e) {
+            logger.error("AbstractDAO.retrieveIDsForGivenStringField : could not retrieve data ");
+            logger.error("Error in SQL : " + sql, e);
+            throw e;
+        } finally {
+            closeResultSet(rs);
+            closeStatement(stmt);
+            conn.close();
+        }
+        return list;
+    }
+    
     /**
      * This method retrieves a VO for an object based on its id
      * 

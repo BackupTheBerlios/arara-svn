@@ -14,8 +14,9 @@
 <c:set var="selectedSpecieId" value="${specieList.selectedId}" />
 
 <form name="initShowPhotosBySpecieForm" method="get"
-	action="<c:url value="${servletToCall}"/>"
-	enctype="multipart/form-data">
+	action="<c:url value="${servletToCall}"/>">
+
+<c:import url="/jsp/common/display/hiddenFields.jsp"/>
 
 <table align="center" class="formBorder" width="60%" border="0" cellspacing="2" bgcolor="${mainBgColor}">
 	<tr height="10" bgcolor="${formTitleColor}">

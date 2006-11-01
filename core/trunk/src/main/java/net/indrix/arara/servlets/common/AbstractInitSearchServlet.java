@@ -53,6 +53,7 @@ public abstract class AbstractInitSearchServlet extends HttpServlet {
                     req.setAttribute(ServletConstants.SERVLET_TO_CALL_KEY, servletToCall);
                     req.setAttribute(ServletConstants.ACTION, action);
                     req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
+                    req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);
                     logger.debug(this.getClass() + " | " + servletToCall + " | " + action + " | " + pageToShow);
                     
                 } else {

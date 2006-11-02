@@ -6,6 +6,8 @@
  */
 package net.indrix.arara.servlets.photo;
 
+import javax.servlet.http.HttpServletRequest;
+
 
 /**
  * @author Jeff
@@ -13,14 +15,25 @@ package net.indrix.arara.servlets.photo;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class SearchPhotosByCommonNameServlet extends
-		AbstractSearchPhotosServlet {
+public class SearchPhotosByCommonNameServlet extends AbstractSearchPhotosServlet {
     
     protected String getServletToCall() {
         return "/servlet/searchPhotosByCommonName";
     }    
     protected int getPaginationConstant() {
         return PAGINATION_FOR_COMMON_NAME;
+    }
+    
+    /**
+     * Retrieve and do any needed treatment to the text to search
+     * 
+     * @param req The request from user
+     * 
+     * @return The String with the text entered by user
+     */
+    protected String retrieveTextToSearch(HttpServletRequest req) {
+        String text = super.retrieveTextToSearch(req).replace(' ', '-');
+        return text;
     }
     
 }

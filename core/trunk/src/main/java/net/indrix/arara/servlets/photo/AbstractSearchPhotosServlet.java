@@ -80,7 +80,10 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
         String nextPage = req.getParameter(ServletConstants.NEXT_PAGE_KEY);
         String pageToShow = req.getParameter(ServletConstants.PAGE_TO_SHOW_KEY);
         String action = req.getParameter(ServletConstants.ACTION);
-        action = (action == null) ? ServletConstants.BEGIN : action;
+        
+        if (action == null || action.equals("")){
+            action =  ServletConstants.BEGIN;            
+        } 
         
         String idStr = (String) req.getParameter(ServletConstants.ID);
         String textToSearch = retrieveTextToSearch(req);

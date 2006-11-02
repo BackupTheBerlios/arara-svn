@@ -278,14 +278,32 @@ public class PhotoModel {
 	 */
 	public List retrievePhotoIDsForCommonName(int commonNameId)
 			throws DatabaseDownException, SQLException {
-		logger
-				.debug("PhotoModel.retrievePhotoIDsForCommonName: retrieving photo ids...");
+		logger.debug("PhotoModel.retrievePhotoIDsForCommonName: retrieving photo ids...");
 		List list = dao.retrieveIDsForCommonName(commonNameId);
-		logger
-				.debug("PhotoModel.retrievePhotoIDsForCommonName: photo ids retrieved.");
+		logger.debug("PhotoModel.retrievePhotoIDsForCommonName: photo ids retrieved.");
 		return list;
 	}
 
+    /**
+     * This method retrieves the id of all photos from database, for the given
+     * the family name
+     * 
+     * @param familyId
+     *            The id of the family
+     * 
+     * @return An ArrayList object with Integer objects
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public List retrievePhotoIDsForCommonNameName(String name)
+            throws DatabaseDownException, SQLException {
+        logger.debug("PhotoModel.retrievePhotoIDsForCommonNameName | name " + name);
+        List list = dao.retrieveIDsForCommonNameName(name);
+        return list;
+    }    
 	/**
 	 * This method retrieves the id of all photos from database, for the given
 	 * user id

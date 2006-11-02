@@ -94,9 +94,10 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
             PhotoPaginationController controller = (PhotoPaginationController) getPaginationController(
                     session, false, getPaginationConstant());
             controller.setId(id);
-            
-            familyName = familyName.replace('*', '%');
-            controller.setText(familyName);
+            if (familyName != null){
+                familyName = familyName.replace('*', '%');
+                controller.setText(familyName);                
+            }
             try {
                 list = controller.doAction(action);
             } catch (InvalidControllerException e) {

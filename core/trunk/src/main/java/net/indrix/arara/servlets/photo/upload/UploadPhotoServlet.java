@@ -43,7 +43,7 @@ import org.apache.log4j.Logger;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
-	private static final int MAX_PHOTO_SIZE = 250000;
+	private static final int MAX_PHOTO_SIZE = 400000;
 
 	static Logger logger = Logger.getLogger("net.indrix.aves");
 

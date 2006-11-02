@@ -127,27 +127,6 @@ public abstract class AbstractDAO {
 
     /**
      * This method retrieves a <code>List</code> object with
-     * <code>Integer</code> objects, based on the name of the family
-     * 
-     * @param name
-     *            The name of the family
-     * 
-     * @return a <code>List</code> object with <code>Photo</code> objects,
-     *         based on the id of the common name
-     * 
-     * @throws DatabaseDownException
-     *             If the database is down
-     * @throws SQLException
-     *             If some SQL Exception occurs
-     */
-    public List retrieveIDsForFamilyName(String name) throws DatabaseDownException,
-            SQLException {
-        List list = retrieveIDsForGivenStringField(name, getSelectIDsForFamilyNameSQL());
-        return list;
-    }
-    
-    /**
-     * This method retrieves a <code>List</code> object with
      * <code>Photo</code> objects, based on the id of the specie
      * 
      * @param id
@@ -166,27 +145,7 @@ public abstract class AbstractDAO {
         List list = retrieveIDsForGivenID(id, getSelectIDsForSpecieSQL());
         return list;
     }
-
-    /**
-     * This method retrieves a <code>List</code> object with
-     * <code>Integer</code> objects, based on the name of the specie
-     * 
-     * @param name
-     *            The name of the specie
-     * 
-     * @return a <code>List</code> object with <code>Photo</code> objects,
-     *         based on the name of the specie
-     * 
-     * @throws DatabaseDownException
-     *             If the database is down
-     * @throws SQLException
-     *             If some SQL Exception occurs
-     */
-    public List retrieveIDsForSpecieName(String name) throws DatabaseDownException,
-            SQLException {
-        List list = retrieveIDsForGivenStringField(name, getSelectIDsForSpecieNameSQL());
-        return list;
-    }    
+    
     /**
      * This method retrieves a <code>List</code> object with
      * <code>Photo</code> objects, based on the id of the common name

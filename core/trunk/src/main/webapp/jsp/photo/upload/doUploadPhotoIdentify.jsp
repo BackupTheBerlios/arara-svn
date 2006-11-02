@@ -94,8 +94,10 @@
 	<tr>
 		<td width="${col1}"></td>
 		<td width="${col2}"><b><fmt:message key="photo.file" /></b></td>
-		<td width="${col3}"><input type="file" name="fileName"> <font
-			color="#FF000">Max 250Kb</font></td>
+		<td width="${col3}">
+			<input type="file" name="fileName"> 
+				<font color="#FF0000" size="2" face="Verdana">Max 400Kb</font>
+		</td>
 	</tr>
 	<tr>
 		<td width="${col1}"></td>

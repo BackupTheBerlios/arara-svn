@@ -69,10 +69,10 @@
 		<td>
 			<font size="${fontSize}" face="Verdana">
 				<c:if test="${currentPhoto.specie.family.subFamilyName == null}">
-					<a href="<c:url value="/servlet/searchPhotosByFamily?id=${currentPhoto.specie.family.id}"/>">${currentPhoto.specie.family.name}</a><br>
+					<a href="<c:url value="/servlet/searchPhotosByFamily?id=${currentPhoto.specie.family.id}&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${currentPhoto.specie.family.name}</a><br>
 				</c:if> 
 				<c:if test="${currentPhoto.specie.family.subFamilyName != null}">
-					<a href="<c:url value="/servlet/searchPhotosByFamily?id=${currentPhoto.specie.family.id}"/>">${currentPhoto.specie.family.name} (${currentPhoto.specie.family.subFamilyName})</a>
+					<a href="<c:url value="/servlet/searchPhotosByFamily?id=${currentPhoto.specie.family.id}&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${currentPhoto.specie.family.name} (${currentPhoto.specie.family.subFamilyName})</a>
 				</c:if> 
 			</font>
 		</td>
@@ -87,7 +87,7 @@
 		</td>
 		<td>
 			<font size="${fontSize}" face="Verdana">
-				<a href="<c:url value="/servlet/searchPhotosBySpecie?id=${currentPhoto.specie.id}"/>">
+				<a href="<c:url value="/servlet/searchPhotosBySpecie?id=${currentPhoto.specie.id}&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">
 					<i>${currentPhoto.specie.name}</i></a>
 			</font>
 		</td>

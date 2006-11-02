@@ -31,7 +31,7 @@
 		</td>
 		<td>
 			<font size="${fontSize}" face="Verdana">${currentPhoto.user.name}
-				<a href="<c:url value="/servlet/searchPhotosByUser?id=${currentPhoto.user.id}"/>">(${currentPhoto.user.login})</a>
+				<a href="<c:url value="/servlet/searchPhotosByUser?id=${currentPhoto.user.id}&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">(${currentPhoto.user.login})</a>
 			</font>
 		</td>
 	</tr>

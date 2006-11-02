@@ -74,21 +74,21 @@ table.comBordaSimples tr {
 						<c:if test="${photo.specie.id != -1}">
 							<font size="1" face="Verdana"><br><fmt:message key="family" />: 
 							<c:if test="${photo.specie.family.subFamilyName == null}">
-								<a href="<c:url value="/servlet/searchPhotosByFamily?id=${photo.specie.family.id}&action=BEGIN"/>">${photo.specie.family.name}
+								<a href="<c:url value="/servlet/searchPhotosByFamily?id=${photo.specie.family.id}&action=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${photo.specie.family.name}
 								</a>
 							</c:if> 
 							<c:if test="${photo.specie.family.subFamilyName != null}">
-								<a href="<c:url value="/servlet/searchPhotosByFamily?id=${photo.specie.family.id}&action=BEGIN"/>">${photo.specie.family.name} (${photo.specie.family.subFamilyName}) 
+								<a href="<c:url value="/servlet/searchPhotosByFamily?id=${photo.specie.family.id}&action=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${photo.specie.family.name} (${photo.specie.family.subFamilyName}) 
 								</a>
 							</c:if> 
 							</font>
 							
 							<font size="1" face="Verdana"><br><fmt:message key="specie" />: 
-								<a href="<c:url value="/servlet/searchPhotosBySpecie?id=${photo.specie.id}&action=BEGIN"/>"><i>${photo.specie.name}</i>
+								<a href="<c:url value="/servlet/searchPhotosBySpecie?id=${photo.specie.id}&action=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>"><i>${photo.specie.name}</i>
 								</a>
 							</font> 
 							<font size="1" face="Verdana"><br><fmt:message key="common.name" />: 
-								<a href="<c:url value="/servlet/searchPhotosBySpecie?id=${photo.specie.id}&action=BEGIN"/>">${photo.specie.commonNameString}
+								<a href="<c:url value="/servlet/searchPhotosBySpecie?id=${photo.specie.id}&action=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${photo.specie.commonNameString}
 								</a>
 							</font> 
 						</c:if> 
@@ -97,7 +97,7 @@ table.comBordaSimples tr {
 							</font></b>
 						</c:if> 
 						<font size="1" face="Verdana"><br><fmt:message key="user.title" />: 
-							<a href="<c:url value="/servlet/searchPhotosByUser?id=${photo.user.id}&action=BEGIN"/>">${photo.user.login}
+							<a href="<c:url value="/servlet/searchPhotosByUser?id=${photo.user.id}&action=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${photo.user.login}
 							</a>
 						</font> 
 						<c:if test="${photo.specie.id == -1}">

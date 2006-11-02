@@ -203,7 +203,7 @@
     </td>
     <td width="${col3}"> 
         <input type="file" name="fileName" label="Search"> 
-        <font color="#FF000">Max 250Kb</font>
+        <font color="#FF0000" size="2" face="Verdana">Max 400Kb</font>
     </td>
   </tr>
   <tr>

@@ -80,24 +80,21 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
         String nextPage = req.getParameter(ServletConstants.NEXT_PAGE_KEY);
         String pageToShow = req.getParameter(ServletConstants.PAGE_TO_SHOW_KEY);
         String action = req.getParameter(ServletConstants.ACTION);
-        
-        logger.debug(nextPage + " | " + pageToShow + " | " + action);
+        action = (action == null) ? ServletConstants.BEGIN : action;
         
         String idStr = (String) req.getParameter(ServletConstants.ID);
-        String familyName = req.getParameter(ServletConstants.TEXT_ID);
+        String textToSearch = retrieveTextToSearch(req);
         int id = -1;
         if ((idStr != null) && (idStr.trim().length() > 0)) {
             id = Integer.parseInt(idStr);
         }
-        if ((id != -1) || (familyName != null) && (familyName.trim().length() > 0)) {
+        if ((id != -1) || (textToSearch.trim().length() > 0) || !ServletConstants.BEGIN.equals(action)) {
             List list = null;
             PhotoPaginationController controller = (PhotoPaginationController) getPaginationController(
                     session, false, getPaginationConstant());
             controller.setId(id);
-            if (familyName != null){
-                familyName = familyName.replace('*', '%');
-                controller.setText(familyName);                
-            }
+            logger.debug("Setting text to search = " + textToSearch);
+            controller.setText(textToSearch);                
             try {
                 list = controller.doAction(action);
             } catch (InvalidControllerException e) {
@@ -105,10 +102,7 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
                     list = controller.doAction(ServletConstants.BEGIN);
                 } catch (InvalidControllerException e1) {
                     // this should never happend
-                    logger
-                            .fatal(
-                                    "InvalidControllerException when doing BEGIN action...",
-                                    e1);
+                    logger.fatal("InvalidControllerException when doing BEGIN action...", e1);
                 }
             }
 
@@ -117,7 +111,8 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
             session.setAttribute(ServletConstants.PHOTOS_LIST, list);
             session.setAttribute(ServletConstants.SERVLET_TO_CALL_KEY,
                     getServletToCall());
-            nextPage = ServletConstants.ALL_PHOTOS_PAGE;
+
+            pageToShow = "/jsp/photo/search/doShowAllPhotos.jsp";
 
             // adding the user id to request, so it can be sent back by view
             req.setAttribute(ServletConstants.ID, idStr);
@@ -136,12 +131,12 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
 
         } else {
             errors.add(ServletConstants.SELECT_VALUE_ERROR);
-
-            req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);
-            req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
-            req.setAttribute(ServletConstants.ACTION, action);
         }
 
+        req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);
+        req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
+        req.setAttribute(ServletConstants.ACTION, action);
+        
         if (!errors.isEmpty()) {
             logger.debug("errors is not null.");
             // put errors in request
@@ -149,7 +144,28 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
         }
         dispatcher = context.getRequestDispatcher(nextPage);
         logger.debug("Dispatching to " + nextPage);
+        logger.debug("Data on request: " + nextPage + " | " + pageToShow + " | " + action);
         dispatcher.forward(req, res);
+    }
+
+    /**
+     * Retrieve and do any needed treatment to the text to search
+     * 
+     * @param req The request from user
+     * 
+     * @return The String with the text entered by user
+     */
+    protected String retrieveTextToSearch(HttpServletRequest req) {
+        String text = req.getParameter(ServletConstants.TEXT_ID);
+        if (text == null){
+            text = "";
+        } else {
+            text = text.trim().toLowerCase();
+            if (text.length() > 0){
+                text += "%";                
+            }
+        }
+        return text;
     }
 
     protected abstract String getServletToCall();

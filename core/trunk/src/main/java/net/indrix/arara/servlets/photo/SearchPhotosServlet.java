@@ -44,13 +44,18 @@ public class SearchPhotosServlet extends AbstractSearchPhotosServlet {
 		logger.info("SearchPhotosServlet.doGet: entering method...");
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
-		String nextPage = null;
-		List errors = new ArrayList();
+		List <String>errors = new ArrayList<String>();
+        
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute(ServletConstants.USER_KEY);
 
-		String action = req.getParameter(ServletConstants.ACTION);
+		String action = req.getParameter(ServletConstants.ACTION);       
 		String identificationStr = req.getParameter(ServletConstants.IDENTIFICATION_KEY);
+        String nextPage = req.getParameter(ServletConstants.NEXT_PAGE_KEY);
+        if (nextPage == null){
+            nextPage = ServletConstants.FRAME_PAGE;
+        }
+        
 		boolean identification = new Boolean(identificationStr).booleanValue();
 
 		logger.debug("Retrieving controller ...");
@@ -68,8 +73,13 @@ public class SearchPhotosServlet extends AbstractSearchPhotosServlet {
 		req.setAttribute("identification", identificationStr);
 		session.setAttribute(ServletConstants.PHOTOS_LIST, list);
 		session.setAttribute(ServletConstants.SERVLET_TO_CALL_KEY, "/servlet/searchPhotos");
-		nextPage = ServletConstants.ALL_PHOTOS_PAGE;
+        
+        String pageToShow = "/jsp/photo/search/doShowAllPhotos.jsp";
 
+        req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);
+        req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
+        req.setAttribute(ServletConstants.ACTION, action);
+        
 		if (user != null) {
 			loggerActions.info("User " + user.getLogin() + " has selected all photos.");
 		} else {

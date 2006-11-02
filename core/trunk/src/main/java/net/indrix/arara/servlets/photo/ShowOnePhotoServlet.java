@@ -43,18 +43,21 @@ public class ShowOnePhotoServlet extends HttpServlet {
         ServletContext context = this.getServletContext();
         List<String> errors = new ArrayList<String>();
         HttpSession session = req.getSession();
+        
         String photoId = req.getParameter("photoId");
         String identificationStr = req.getParameter(ServletConstants.IDENTIFICATION_KEY);
         String nextPage = req.getParameter(ServletConstants.NEXT_PAGE_KEY);
-        String pageToShow = req.getParameter(ServletConstants.PAGE_TO_SHOW_KEY);
 
+        if (nextPage == null){
+            nextPage = ServletConstants.FRAME_PAGE;
+        }
+        
         List list = null;
         list = (List) session.getAttribute(ServletConstants.PHOTOS_LIST);
         if ((photoId == null) || (list == null)) {
             Photo photo = getPhotoFromDatabase(errors, photoId);
             if (photo != null) {
                 session.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
-                req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
             } else {
                 logger.debug("List of photos not found...");
                 nextPage = ServletConstants.ONE_PHOTO_PAGE_ERROR;
@@ -91,13 +94,16 @@ public class ShowOnePhotoServlet extends HttpServlet {
                 }
             }
             session.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
-            req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
         }
 
-        req
-                .setAttribute(ServletConstants.IDENTIFICATION_KEY,
-                        identificationStr);
+        req.setAttribute(ServletConstants.IDENTIFICATION_KEY,identificationStr);
         req.setAttribute(ServletConstants.VIEW_MODE_KEY, "viewMode");
+
+        String pageToShow = "/jsp/photo/search/doShowOnePhoto.jsp";
+
+        req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);
+        req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
+        
 
         dispatcher = context.getRequestDispatcher(nextPage);
         logger.debug("Dispatching to " + nextPage);

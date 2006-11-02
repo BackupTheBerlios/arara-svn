@@ -33,7 +33,12 @@ public class PhotoByCommonNamePaginationController extends
 	 */
 	protected List retrieveAllData() throws DatabaseDownException, SQLException {
 		List listOfPhotos = null;
-		listOfPhotos = model.retrievePhotoIDsForCommonName(id);
+        if (id != -1){
+            listOfPhotos = model.retrievePhotoIDsForCommonName(id);
+        } else {
+            listOfPhotos = model.retrievePhotoIDsForCommonNameName(text);
+        }
+
 		return listOfPhotos;
 	}
 }

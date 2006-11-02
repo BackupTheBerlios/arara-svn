@@ -141,26 +141,31 @@ div.channeltitle a:hover
 <c:set var="mainBgColor" value="#669900" scope="application" />
 <c:set var="formTitleColor" value="#000000" scope="application" />
 
-<c:choose>
-	<c:when test="${param.pageToShow == null || param.pageToShow == ''}">
-		<c:if test="${pageToShow == null || pageToShow == ''}">
-			<fmt:message key="main.page" var="mainPage" />
-			<c:set var="page" value="${mainPage}" />
-		</c:if>
-		<c:if test="${pageToShow != null}">
-			<c:set var="page" value="${pageToShow}" />
-		</c:if>
-	</c:when>
-	<c:otherwise>
-		<c:if test="${param.pageToShow == 'main.page'}">
-			<fmt:message key="main.page" var="mainPage" />
-			<c:set var="page" value="${mainPage}" />
-		</c:if>
-		<c:if test="${param.pageToShow != 'main.page'}">
-			<c:set var="page" value="${param.pageToShow}" />
-		</c:if>
-	</c:otherwise>
-</c:choose>
+<c:if test="${pageToShow != null && pageToShow != ''}">
+	<c:set var="page" value="${pageToShow}" />
+</c:if>
+<c:if test="${pageToShow == null || pageToShow == ''}">
+	<c:choose>
+		<c:when test="${param.pageToShow == null || param.pageToShow == ''}">
+			<c:if test="${pageToShow == null || pageToShow == ''}">
+				<fmt:message key="main.page" var="mainPage" />
+				<c:set var="page" value="${mainPage}" />
+			</c:if>
+			<c:if test="${pageToShow != null}">
+				<c:set var="page" value="${pageToShow}" />
+			</c:if>
+		</c:when>
+		<c:otherwise>
+			<c:if test="${param.pageToShow == 'main.page'}">
+				<fmt:message key="main.page" var="mainPage" />
+				<c:set var="page" value="${mainPage}" />
+			</c:if>
+			<c:if test="${param.pageToShow != 'main.page'}">
+				<c:set var="page" value="${param.pageToShow}" />
+			</c:if>
+		</c:otherwise>
+	</c:choose>
+</c:if>
 
 <table width="98%" border="0" align="center" cellspacing="1">
   <tr>
@@ -205,6 +210,7 @@ div.channeltitle a:hover
     	<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="${mainBgColor}">
       		<tr>
         		<td valign="top">
+        			<!--  ${nextPage} | ${pageToShow} | ${page} | ${param.pageToShow} -->
         			<c:import url="/jsp/showErrors.jsp" /> 
 				    <c:import url="/jsp/showMessages.jsp" /> 
 				    <c:import url="${page}" />        

@@ -41,7 +41,7 @@ public class SearchPhotosServlet extends AbstractSearchPhotosServlet {
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
-		logger.info("SearchPhotosServlet.doGet: entering method...");
+		logger.info("Entering method...");
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
 		List <String>errors = new ArrayList<String>();
@@ -69,17 +69,16 @@ public class SearchPhotosServlet extends AbstractSearchPhotosServlet {
 		} else {
 			list = getListOfPhotos(action, controller);
 		}
-		logger.debug("List of photos retrieved...");
 		logger.debug("Putting list of photos in session");
 		req.setAttribute("identification", identificationStr);
 		session.setAttribute(ServletConstants.PHOTOS_LIST, list);
-		session.setAttribute(ServletConstants.SERVLET_TO_CALL_KEY, servletToCall);
         
         String pageToShow = "/jsp/photo/search/doShowAllPhotos.jsp";
 
         req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);
         req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
         req.setAttribute(ServletConstants.ACTION, action);
+        req.setAttribute(ServletConstants.SERVLET_TO_CALL_KEY, servletToCall);
         
 		if (user != null) {
 			loggerActions.info("User " + user.getLogin() + " has selected all photos.");

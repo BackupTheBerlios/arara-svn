@@ -31,7 +31,7 @@ public class PhotoByUserPaginationController extends PhotoPaginationController {
 	 */
 	protected List retrieveAllData() throws DatabaseDownException, SQLException {
 		List listOfPhotos = null;
-		listOfPhotos = model.retrievePhotoIDsForUser(id);
+		listOfPhotos = model.retrieveIDsForUser(id);
 		return listOfPhotos;
 	}
 

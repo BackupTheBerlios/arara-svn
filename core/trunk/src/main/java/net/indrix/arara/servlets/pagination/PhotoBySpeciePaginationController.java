@@ -34,9 +34,9 @@ public class PhotoBySpeciePaginationController extends
 	protected List retrieveAllData() throws DatabaseDownException, SQLException {
 		List listOfPhotos = null;
         if (id != -1){
-            listOfPhotos = model.retrievePhotoIDsForSpecie(id);
+            listOfPhotos = model.retrieveIDsForSpecie(id);
         } else {
-            listOfPhotos = model.retrievePhotoIDsForSpecieName(text);
+            listOfPhotos = model.retrieveIDsForSpecieName(text);
         }        
 		return listOfPhotos;
 	}

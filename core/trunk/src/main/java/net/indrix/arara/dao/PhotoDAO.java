@@ -30,7 +30,7 @@ import net.indrix.arara.vo.User;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class PhotoDAO extends AbstractDAO implements PhotoConstants {
+public class PhotoDAO extends MediaDAO implements PhotoConstants {
     /**
      * SQL to insert a new photo into database
      */
@@ -132,9 +132,9 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
             + "where shcn.common_name_id = ? and p.specie_id=shcn.specie_id ";
 
     /**
-     * SQL to select photo ids by a given common name ID
+     * SQL to select photo ids by a given common name name
      */
-    private static final String SELECT_IDS_BY_COMMON_NAME_NAME = "SELECT p.id "
+    private static final String SELECT_IDS_BY_COMMON_NAME_BY_NAME = "SELECT p.id "
             + "from photo p, specie_has_common_name shcn, common_name cn "
             + "where p.specie_id=shcn.specie_id and shcn.common_name_id = cn.id and cn.name like ?";
 
@@ -330,9 +330,9 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
      * @throws SQLException
      *             If some SQL Exception occurs
      */
-    public List retrieveIDsForCommonNameName(String name) throws DatabaseDownException,
+    public List retrieveIDsForCommonNameByName(String name) throws DatabaseDownException,
             SQLException {
-        List list = retrieveIDsForGivenStringField(name, getSelectIDsForCommonNameNameSQL());
+        List list = retrieveIDsForGivenStringField(name, getSelectIDsForCommonNameByNameSQL());
         return list;
     }    
     
@@ -630,109 +630,57 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
             String sql) {
     }
 
-    /**
-     * This method returns the SQL statement to insert a new object into
-     * database
-     * 
-     * @return The insert SQL statement
-     */
+    @Override
     protected String getInsertSQL() {
         return INSERT;
     }
 
-    /**
-     * This method returns the SQL statement to delete an object from database
-     * 
-     * @return The delete SQL statement
-     */
+    @Override
     protected String getDeleteSQL() {
         return DELETE_BY_ID;
     }
 
-    /**
-     * This method returns the SQL statement to update an object in the database
-     * 
-     * @return The update SQL statement
-     */
+    @Override
     protected String getUpdateSQL() {
         return UPDATE;
     }
 
-    /**
-     * This method returns the SQL statement to select all ids from database
-     * 
-     * @return the SelectALLIDs sql
-     */
+    @Override
     protected String getSelectAllIDsSQL() {
         return SELECT_IDS_FOR_ALL;
     }
 
-    /**
-     * This method returns the SQL statement to select ids for family from
-     * database
-     * 
-     * @return the SELECT_IDS_BY_FAMILY_ID sql
-     */
+    @Override
     protected String getSelectIDsForFamilySQL() {
         return SELECT_IDS_BY_FAMILY_ID;
     }
 
-    /**
-     * This method returns the SQL statement to select ids for family from
-     * database
-     * 
-     * @return the SELECT_IDS_BY_FAMILY_NAME sql
-     */
+    @Override
     protected String getSelectIDsForFamilyNameSQL() {
         return SELECT_IDS_BY_FAMILY_NAME;
     }    
     
-    /**
-     * This method returns the SQL statement to select ids for specie from
-     * database
-     * 
-     * @return the SELECT_IDS_BY_SPECIE_ID sql
-     */
+    @Override
     protected String getSelectIDsForSpecieSQL() {
         return SELECT_IDS_BY_SPECIE_ID;
     }
 
-    /**
-     * This method returns the SQL statement to select ids for family from
-     * database
-     * 
-     * @return the SELECT_IDS_BY_FAMILY_NAME sql
-     */
+    @Override
     protected String getSelectIDsForSpecieNameSQL() {
         return SELECT_IDS_BY_SPECIE_NAME;
     }    
     
-    /**
-     * This method returns the SQL statement to select ids for common name from
-     * database
-     * 
-     * @return the SELECT_IDS_BY_COMMON_NAME_ID sql
-     */
+    @Override
     protected String getSelectIDsForCommonNameSQL() {
         return SELECT_IDS_BY_COMMON_NAME_ID;
     }
 
-    /**
-     * This method returns the SQL statement to select ids for family from
-     * database
-     * 
-     * @return the SELECT_IDS_BY_FAMILY_NAME sql
-     */
-    protected String getSelectIDsForCommonNameNameSQL() {
-        return SELECT_IDS_BY_COMMON_NAME_NAME;
+    @Override
+    protected String getSelectIDsForCommonNameByNameSQL() {
+        return SELECT_IDS_BY_COMMON_NAME_BY_NAME;
     }  
     
-    /**
-     * This method returns the SQL statement to select ids for user from
-     * database
-     * 
-     * @return the SELECT_IDS_BY_USER sql
-     */
+    @Override
     protected String getSelectIDsForUserSQL() {
         return SELECT_IDS_BY_USER;
     }

@@ -104,68 +104,7 @@ public abstract class AbstractDAO {
         return list;
     }
 
-    /**
-     * This method retrieves a <code>List</code> object with
-     * <code>Integer</code> objects, based on the id of the family
-     * 
-     * @param id
-     *            The id of the <code>List</code>
-     * 
-     * @return a <code>List</code> object with <code>Photo</code> objects,
-     *         based on the id of the common name
-     * 
-     * @throws DatabaseDownException
-     *             If the database is down
-     * @throws SQLException
-     *             If some SQL Exception occurs
-     */
-    public List retrieveIDsForFamily(int id) throws DatabaseDownException,
-            SQLException {
-        List list = retrieveIDsForGivenID(id, getSelectIDsForFamilySQL());
-        return list;
-    }
 
-    /**
-     * This method retrieves a <code>List</code> object with
-     * <code>Photo</code> objects, based on the id of the specie
-     * 
-     * @param id
-     *            The id of the <code>List</code>
-     * 
-     * @return a <code>List</code> object with <code>Photo</code> objects,
-     *         based on the id of the specie
-     * 
-     * @throws DatabaseDownException
-     *             If the database is down
-     * @throws SQLException
-     *             If some SQL Exception occurs
-     */
-    public List retrieveIDsForSpecie(int id) throws DatabaseDownException,
-            SQLException {
-        List list = retrieveIDsForGivenID(id, getSelectIDsForSpecieSQL());
-        return list;
-    }
-    
-    /**
-     * This method retrieves a <code>List</code> object with
-     * <code>Photo</code> objects, based on the id of the common name
-     * 
-     * @param id
-     *            The id of the <code>List</code>
-     * 
-     * @return a <code>List</code> object with <code>Photo</code> objects,
-     *         based on the id of the common name
-     * 
-     * @throws DatabaseDownException
-     *             If the database is down
-     * @throws SQLException
-     *             If some SQL Exception occurs
-     */
-    public List retrieveIDsForCommonName(int id) throws DatabaseDownException,
-            SQLException {
-        List list = retrieveIDsForGivenID(id, getSelectIDsForCommonNameSQL());
-        return list;
-    }
 
     /**
      * This method retrieves a <code>List</code> object with
@@ -194,55 +133,6 @@ public abstract class AbstractDAO {
      * @return the SelectALLIDs sql
      */
     protected String getSelectAllIDsSQL() {
-        return null;
-    }
-
-    /**
-     * This method returns the SQL statement to select ids for family from
-     * database
-     * 
-     * @return the SELECT_IDS_BY_FAMILY_ID sql
-     */
-    protected String getSelectIDsForFamilySQL() {
-        return null;
-    }
-
-    /**
-     * This method returns the SQL statement to select ids for family from
-     * database
-     * 
-     * @return the SELECT_IDS_BY_FAMILY_NAME sql
-     */
-    protected String getSelectIDsForFamilyNameSQL() {
-        return null;
-    }
-
-    /**
-     * This method returns the SQL statement to select ids for specie from
-     * database
-     * 
-     * @return the SELECT_IDS_BY_FAMILY_ID sql
-     */
-    protected String getSelectIDsForSpecieSQL() {
-        return null;
-    }
-
-    /**
-     * This method returns the SQL statement to select ids for specie from
-     * database
-     * 
-     * @return the SELECT_IDS_BY_SPECIE_NAME sql
-     */
-    protected String getSelectIDsForSpecieNameSQL() {
-        return null;
-    }    
-    /**
-     * This method returns the SQL statement to select ids for common name from
-     * database
-     * 
-     * @return the SELECT_IDS_BY_COMMON_NAME_ID sql
-     */
-    protected String getSelectIDsForCommonNameSQL() {
         return null;
     }
 

@@ -95,7 +95,8 @@ public class InitIdentificationPhotoServlet extends
 				identificationBean.setFamilyList(listOfFamilies);
 				identificationBean.setSpecieList(listOfSpecies);
 				session.setAttribute(IdentificationPhotoConstants.IDENTIFICATION_PHOTO_BEAN, identificationBean);
-
+                
+                req.setAttribute(ServletConstants.NEXT_PAGE_KEY, ServletConstants.FRAME_PAGE);
 			} catch (DatabaseDownException e) {
 				logger.error("InitSearchPhotosBySpecieServlet.doGet : could not retrieve list of all species", e);
 			} catch (SQLException e) {

@@ -38,24 +38,19 @@ import net.indrix.arara.vo.PhotoIdentification;
 import net.indrix.arara.vo.Specie;
 import net.indrix.arara.vo.User;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Jeff
  * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class PhotoModel {
-	/**
-	 * Logger object
-	 */
-	static Logger logger = Logger.getLogger("net.indrix.aves");
+public class PhotoModel extends MediaModel {
 
-	/**
-	 * The DAO object to be used to retrieve photo data from database
-	 */
-	PhotoDAO dao = new PhotoDAO();
+	public PhotoModel() {
+        super();
+        dao = new PhotoDAO();
+    }
+
 
 	/**
 	 * The DAO object to be used to retrieve data of photo for identification
@@ -117,7 +112,7 @@ public class PhotoModel {
 	public Photo retrieve(int photoId) throws DatabaseDownException,
 			SQLException {
 		logger.debug("PhotoModel.retrieve | photoId " + photoId);
-		Photo photo = dao.retrieve(photoId);
+		Photo photo = ((PhotoDAO)dao).retrieve(photoId);
 		return photo;
 	}
 
@@ -136,7 +131,7 @@ public class PhotoModel {
 	public Photo retrieveThumbnail(int photoId) throws DatabaseDownException,
 			SQLException {
 		logger.debug("PhotoModel.retrieveThumbnail | photoId " + photoId);
-		Photo photo = dao.retrieveThumbnail(photoId);
+		Photo photo = ((PhotoDAO)dao).retrieveThumbnail(photoId);
 
 		if (photo.isSoundAvailable()) {
 			model.updateSoundLink(photo.getSound());
@@ -173,158 +168,11 @@ public class PhotoModel {
     public List retrievePhotoIDsForRecentPhotos() throws DatabaseDownException,
             SQLException {
         logger.debug("PhotoModel.retrievePhotoIDsForRecentPhotos: retrieving photo ids for more recent photos...");
-        List list = dao.retrieveIDsForRecentPhotos();
+        List list = ((PhotoDAO)dao).retrieveIDsForRecentPhotos();
         logger.debug("PhotoModel.retrievePhotoIDsForRecentPhotos: photo ids retrieved.");
         return list;
     }
-    
-	/**
-	 * This method retrieves the id of all photos from database, for the given
-	 * the family id
-	 * 
-	 * @param familyId
-	 *            The id of the family
-	 * 
-	 * @return An ArrayList object with Integer objects
-	 * 
-	 * @throws DatabaseDownException
-	 *             If the database is down
-	 * @throws SQLException
-	 *             If some SQL Exception occurs
-	 */
-	public List retrievePhotoIDsForFamily(int familyId)
-			throws DatabaseDownException, SQLException {
-		logger.debug("PhotoModel.retrievePhotoIDsForFamily | familyId "
-				+ familyId);
-		List list = dao.retrieveIDsForFamily(familyId);
-		return list;
-	}
-
-    /**
-     * This method retrieves the id of all photos from database, for the given
-     * the family name
-     * 
-     * @param familyId
-     *            The id of the family
-     * 
-     * @return An ArrayList object with Integer objects
-     * 
-     * @throws DatabaseDownException
-     *             If the database is down
-     * @throws SQLException
-     *             If some SQL Exception occurs
-     */
-    public List retrievePhotoIDsForFamilyName(String name)
-            throws DatabaseDownException, SQLException {
-        logger.debug("PhotoModel.retrievePhotoIDsForFamilyName | name " + name);
-        List list = dao.retrieveIDsForFamilyName(name);
-        return list;
-    }
-    
-	/**
-	 * This method retrieves the id of all photos from database, for the given
-	 * the specie id
-	 * 
-	 * @param specieId
-	 *            The id of the specie
-	 * 
-	 * @return An ArrayList object with Photo objects
-	 * 
-	 * @throws DatabaseDownException
-	 *             If the database is down
-	 * @throws SQLException
-	 *             If some SQL Exception occurs
-	 */
-	public List retrievePhotoIDsForSpecie(int specieId)
-			throws DatabaseDownException, SQLException {
-		logger.debug("PhotoModel.retrievePhotoIDsForSpecie | specieId "
-				+ specieId);
-		List list = dao.retrieveIDsForSpecie(specieId);
-		return list;
-	}
-
-    /**
-     * This method retrieves the id of all photos from database, for the given
-     * the specie name
-     * 
-     * @param name
-     *            The name of the specie
-     * 
-     * @return An ArrayList object with Integer objects
-     * 
-     * @throws DatabaseDownException
-     *             If the database is down
-     * @throws SQLException
-     *             If some SQL Exception occurs
-     */
-    public List retrievePhotoIDsForSpecieName(String name)
-            throws DatabaseDownException, SQLException {
-        logger.debug("PhotoModel.retrievePhotoIDsForSpecieName | name " + name);
-        List list = dao.retrieveIDsForSpecieName(name);
-        return list;
-    }
-	/**
-	 * This method retrieves the id of all photos from database, for the given
-	 * common name id
-	 * 
-	 * @param commonNameId
-	 *            The id of the common name to be retrieved
-	 * @return An ArrayList object with Integer objects
-	 * 
-	 * @throws DatabaseDownException
-	 *             If the database is down
-	 * @throws SQLException
-	 *             If some SQL Exception occurs
-	 */
-	public List retrievePhotoIDsForCommonName(int commonNameId)
-			throws DatabaseDownException, SQLException {
-		logger.debug("PhotoModel.retrievePhotoIDsForCommonName: retrieving photo ids...");
-		List list = dao.retrieveIDsForCommonName(commonNameId);
-		logger.debug("PhotoModel.retrievePhotoIDsForCommonName: photo ids retrieved.");
-		return list;
-	}
-
-    /**
-     * This method retrieves the id of all photos from database, for the given
-     * the family name
-     * 
-     * @param familyId
-     *            The id of the family
-     * 
-     * @return An ArrayList object with Integer objects
-     * 
-     * @throws DatabaseDownException
-     *             If the database is down
-     * @throws SQLException
-     *             If some SQL Exception occurs
-     */
-    public List retrievePhotoIDsForCommonNameName(String name)
-            throws DatabaseDownException, SQLException {
-        logger.debug("PhotoModel.retrievePhotoIDsForCommonNameName | name " + name);
-        List list = dao.retrieveIDsForCommonNameName(name);
-        return list;
-    }    
-	/**
-	 * This method retrieves the id of all photos from database, for the given
-	 * user id
-	 * 
-	 * @param userId
-	 *            The id of the user
-	 * 
-	 * @return An ArrayList object with Photo objects
-	 * 
-	 * @throws DatabaseDownException
-	 *             If the database is down
-	 * @throws SQLException
-	 *             If some SQL Exception occurs
-	 */
-	public List retrievePhotoIDsForUser(int userId)
-			throws DatabaseDownException, SQLException {
-		logger.debug("PhotoModel.retrievePhotoIDsForUser | userId " + userId);
-		List list = dao.retrieveIDsForUser(userId);
-		return list;
-	}
-
+      
 	/**
 	 * This method retrieves the photo image from database
 	 * 
@@ -341,7 +189,7 @@ public class PhotoModel {
 		logger
 				.debug("PhotoModel.retrievePhotoImage | photoId "
 						+ photo.getId());
-		ImageFile image = dao.retrievePhotoImage(photo.getId());
+		ImageFile image = ((PhotoDAO)dao).retrievePhotoImage(photo.getId());
 		photo.setRealImage(image);
 	}
 

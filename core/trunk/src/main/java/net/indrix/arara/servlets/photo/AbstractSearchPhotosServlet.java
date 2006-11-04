@@ -87,7 +87,7 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
         }
 
         String idStr = (String) req.getParameter(ServletConstants.ID);
-        String textToSearch = ServletUtil.retrieveTextToSearch(req);
+        String textToSearch = retrieveTextToSearch(req);
         int id = -1;
         if ((idStr != null) && (idStr.trim().length() > 0)) {
             id = Integer.parseInt(idStr);
@@ -153,6 +153,17 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
         logger.debug("Data on request: " + nextPage + " | " + pageToShow
                 + " | " + action);
         dispatcher.forward(req, res);
+    }
+
+    /**
+     * Retrieve and do any needed treatment to the text to search
+     * 
+     * @param req The request from user
+     * 
+     * @return The String with the text entered by user
+     */
+    protected String retrieveTextToSearch(HttpServletRequest req) {
+        return ServletUtil.retrieveTextToSearch(req);
     }
 
     protected abstract String getServletToCall();

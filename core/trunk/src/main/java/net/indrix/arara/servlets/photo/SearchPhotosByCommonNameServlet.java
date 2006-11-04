@@ -8,6 +8,8 @@ package net.indrix.arara.servlets.photo;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.indrix.arara.servlets.ServletUtil;
+
 
 /**
  * @author Jeff
@@ -32,7 +34,7 @@ public class SearchPhotosByCommonNameServlet extends AbstractSearchPhotosServlet
      * @return The String with the text entered by user
      */
     protected String retrieveTextToSearch(HttpServletRequest req) {
-        String text = super.retrieveTextToSearch(req).replace(' ', '-');
+        String text = ServletUtil.retrieveTextToSearch(req).replace(' ', '-');
         return text;
     }
     

@@ -38,6 +38,26 @@ public class ServletUtil {
 
 	private static List <LabelValueBean>commonNamesListInMemory = null;
 
+    /**
+     * Retrieve and do any needed treatment to the text to search
+     * 
+     * @param req The request from user
+     * 
+     * @return The String with the text entered by user
+     */
+    public static String retrieveTextToSearch(HttpServletRequest req) {
+        String text = req.getParameter(ServletConstants.TEXT_ID);
+        if (text == null){
+            text = "";
+        } else {
+            text = text.trim().toLowerCase();
+            if (text.length() > 0){
+                text += "%";                
+            }
+        }
+        return text;
+    }
+    
 	/**
 	 * This method retrives from the request the resource that was requested
 	 * from the user

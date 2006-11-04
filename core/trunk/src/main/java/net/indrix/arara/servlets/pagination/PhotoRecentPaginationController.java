@@ -22,6 +22,7 @@ public class PhotoRecentPaginationController extends PhotoPaginationController {
      */
     protected List retrieveAllData() throws DatabaseDownException, SQLException {
         List listOfPhotos = null;
+        logger.debug("PhotoPaginationController.retrieveAllData: retrieving more recent photos...");
         listOfPhotos = model.retrievePhotoIDsForRecentPhotos();
         return listOfPhotos;
     }

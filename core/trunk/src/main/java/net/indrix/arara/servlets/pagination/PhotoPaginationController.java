@@ -72,8 +72,10 @@ public class PhotoPaginationController extends PaginationController {
 	protected List retrieveAllData() throws DatabaseDownException, SQLException {
 		List listOfPhotos = null;
 		if (isIdentification()) {
+            logger.debug("PhotoPaginationController.retrieveAllData: retrieving photo for identification...");
 			listOfPhotos = model.retrievePhotosForIdentification();
 		} else {
+            logger.debug("PhotoPaginationController.retrieveAllData: retrieving photo...");
 			listOfPhotos = model.retrievePhotoIDs();
 		}
 		return listOfPhotos;

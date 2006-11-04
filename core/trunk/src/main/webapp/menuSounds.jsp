@@ -14,17 +14,17 @@
 
 <br/>
 &nbsp;&nbsp;&nbsp;
-<a href="<c:url value="/servlet/initSearchByFamily?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataByFamily.jsp&servletToCall=/servlet/searchSoundsByFamily"/>">
+<a href="<c:url value="/servlet/initSearchByFamily?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataByFamily.jsp&servletToCall=/servlet/searchSoundsByFamily&action=BEGIN"/>">
 <fmt:message key="menu.sounds.search.family" /></a>
 
 <br/>
 &nbsp;&nbsp;&nbsp;
-<a href="<c:url value="/servlet/initSearchBySpecie?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataBySpecie.jsp&servletToCall=/servlet/searchSoundsBySpecie"/>">
+<a href="<c:url value="/servlet/initSearchBySpecie?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataBySpecie.jsp&servletToCall=/servlet/searchSoundsBySpecie&action=BEGIN"/>">
 <fmt:message key="menu.sounds.search.specie" /></a>
 
 <br/>
 &nbsp;&nbsp;&nbsp;
-<a href="<c:url value="/servlet/initSearchByCommonName?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataByCommonName.jsp&servletToCall=/servlet/searchSoundsByCommonName"/>">
+<a href="<c:url value="/servlet/initSearchByCommonName?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataByCommonName.jsp&servletToCall=/servlet/searchSoundsByCommonName&action=BEGIN"/>">
 <fmt:message key="menu.sounds.search.commonName" /></a>
 
 <br/>

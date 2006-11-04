@@ -25,6 +25,8 @@ public class Photo implements Serializable {
 	private Specie specie;
 
 	private Date date;
+    
+    private Date postDate;
 
 	private String location;
 
@@ -360,6 +362,29 @@ public class Photo implements Serializable {
 		identifications = list;
 	}
 
+
+    /**
+     * @return
+     */
+    public Sound getSound() {
+        return sound;
+    }
+
+    /**
+     * @param sound
+     */
+    public void setSound(Sound sound) {
+        this.sound = sound;
+    }
+
+    public Date getPostDate() {
+        return postDate;
+    }
+
+    public void setPostDate(Date postDate) {
+        this.postDate = postDate;
+    }
+    
 	/**
 	 * Verify if for this photo, there is a sound associated, that is, a sound
 	 * for the same sex and age
@@ -396,6 +421,8 @@ public class Photo implements Serializable {
 		buffer.append(id);
 		buffer.append(",");
 		buffer.append(date);
+        buffer.append(",");
+        buffer.append(postDate);
 		buffer.append(",");
 
 		if (user != null) {
@@ -435,19 +462,4 @@ public class Photo implements Serializable {
 
 		return buffer.toString();
 	}
-
-	/**
-	 * @return
-	 */
-	public Sound getSound() {
-		return sound;
-	}
-
-	/**
-	 * @param sound
-	 */
-	public void setSound(Sound sound) {
-		this.sound = sound;
-	}
-
 }

@@ -54,7 +54,7 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
      * SQL to select a photo by a given ID
      */
     private static final String SELECT_BY_ID = "SELECT p.id, p.date, p.place, p.city_id, p.camera, p.lens, p.film, "
-            + "p.image, p.w, p.h, p.imageSize, p.smallImage, p.sW, p.sH, p.smallImageSize, p.comment,"
+            + "p.image, p.w, p.h, p.imageSize, p.smallImage, p.sW, p.sH, p.smallImageSize, p.comment, p.post_date,"
             + "s.id s_id, s.name s_name, "
             + "f.id f_id, f.name f_name, f.subFamilyName f_sub_name, "
             + "p.user_id, p.age_id, p.sex_id, "
@@ -67,7 +67,7 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
      * retrieved
      */
     private static final String SELECT_THUMBNAIL_BY_ID = "SELECT p.id, p.date, p.place, p.city_id, p.camera, p.lens, p.film, "
-            + "p.imageSize, p.smallImage, p.sW, p.sH, p.smallImageSize, p.comment,"
+            + "p.imageSize, p.smallImage, p.sW, p.sH, p.smallImageSize, p.comment, p.post_date,"
             + "s.id s_id, s.name s_name, "
             + "f.id f_id, f.name f_name, f.subFamilyName f_sub_name, "
             + "p.user_id, p.age_id, p.sex_id, "
@@ -433,6 +433,7 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
 
         photo.setId(rs.getInt(ID_COLUMN));
         photo.setDate(getDate(rs, DATE_COLUMN));
+        photo.setPostDate(getDate(rs, POST_DATE_COLUMN));
         photo.setLocation(rs.getString(LOCATION_COLUMN));
         photo.setCamera(rs.getString(CAMERA_COLUMN));
         photo.setLens(rs.getString(LENS_COLUMN));
@@ -483,6 +484,7 @@ public class PhotoDAO extends AbstractDAO implements PhotoConstants {
 
         photo.setId(rs.getInt(ID_COLUMN));
         photo.setDate(getDate(rs, DATE_COLUMN));
+        photo.setPostDate(getDate(rs, POST_DATE_COLUMN));
         photo.setLocation(rs.getString(LOCATION_COLUMN));
         photo.setCamera(rs.getString(CAMERA_COLUMN));
         photo.setLens(rs.getString(LENS_COLUMN));

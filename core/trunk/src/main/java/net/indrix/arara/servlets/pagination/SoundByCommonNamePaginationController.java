@@ -25,7 +25,12 @@ public class SoundByCommonNamePaginationController extends
     protected List retrieveAllData() throws DatabaseDownException, SQLException {
         logger.debug("SoundByCommonNamePaginationController.retrieveAllData : retrieving all sounds for id = " + getId());
         List listOfSounds = null;
-        listOfSounds = model.retrieveSoundIDsForCommonName(getId());
+
+        if (id != -1){
+            listOfSounds = model.retrieveIDsForCommonName(getId());
+        } else {
+            listOfSounds = model.retrieveIDsForCommonNameByName(getText());
+        }
         logger.debug("SoundByCommonNamePaginationController.retrieveAllData : " + listOfSounds.size() + " sounds retrieved...");
         return listOfSounds;
     }

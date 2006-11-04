@@ -70,8 +70,11 @@ table.comBordaSimples tr {
 						align="bottom" />
 					</a> 
 					</td>
+					
+					<!-- INSERTING SPECIE DATA -->
 	        		<td colspan="1" rowspan="4" align="left">
 						<c:if test="${photo.specie.id != -1}">
+							<!-- INSERTING family name -->
 							<font size="1" face="Verdana"><br><fmt:message key="family" />: 
 							<c:if test="${photo.specie.family.subFamilyName == null}">
 								<a href="<c:url value="/servlet/searchPhotosByFamily?id=${photo.specie.family.id}&action=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${photo.specie.family.name}
@@ -83,10 +86,12 @@ table.comBordaSimples tr {
 							</c:if> 
 							</font>
 							
+							<!-- INSERTING specie name -->
 							<font size="1" face="Verdana"><br><fmt:message key="specie" />: 
 								<a href="<c:url value="/servlet/searchPhotosBySpecie?id=${photo.specie.id}&action=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>"><i>${photo.specie.name}</i>
 								</a>
 							</font> 
+							<!-- INSERTING specie common name -->
 							<font size="1" face="Verdana"><br><fmt:message key="common.name" />: 
 								<a href="<c:url value="/servlet/searchPhotosBySpecie?id=${photo.specie.id}&action=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${photo.specie.commonNameString}
 								</a>
@@ -96,6 +101,7 @@ table.comBordaSimples tr {
 							<b><font color="#FF0000" size="1" face="Verdana"><br><fmt:message key="photo.not.identified.title" /> 
 							</font></b>
 						</c:if> 
+						<!-- INSERTING user login -->
 						<font size="1" face="Verdana"><br><fmt:message key="user.title" />: 
 							<a href="<c:url value="/servlet/searchPhotosByUser?id=${photo.user.id}&action=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${photo.user.login}
 							</a>

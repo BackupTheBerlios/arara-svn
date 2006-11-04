@@ -45,8 +45,6 @@ public class SendPasswordServlet extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
 
-		List erros = new ArrayList();
-
 		// retrieve data from request
 		String login = req.getParameter("login");
 		logger
@@ -55,9 +53,8 @@ public class SendPasswordServlet extends HttpServlet {
 
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
-		String msg = null;
 		String nextPage = null;
-		List errors = new ArrayList();
+		List <String>errors = new ArrayList<String>();
 
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute(ServletConstants.USER_KEY);
@@ -68,23 +65,25 @@ public class SendPasswordServlet extends HttpServlet {
 					+ req.getRemoteAddr() + " has requested his/her password.");
 			userModel.setLocale(req.getLocale());
 			user = userModel.sendPassword(login);
-			nextPage = ServletConstants.PASSWORD_SENT_PAGE;
+            req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, "/jsp/user/doPasswordSent.jsp");
 		} catch (DatabaseDownException e) {
-			erros.add(ServletConstants.DATABASE_ERROR);
+            errors.add(ServletConstants.DATABASE_ERROR);
 		} catch (SQLException e) {
-			erros.add(ServletConstants.DATABASE_ERROR);
+            errors.add(ServletConstants.DATABASE_ERROR);
 		} catch (UserNotFoundException e) {
 			// invalid password
-			erros.add(ServletConstants.USER_NOT_FOUND);
+            errors.add(ServletConstants.USER_NOT_FOUND);
 		}
 
-		if (!erros.isEmpty()) {
+        nextPage = ServletConstants.FRAME_PAGE;
+        
+		if (!errors.isEmpty()) {
 			// coloca erros no request para registrar.jsp processar e apresentar
 			// mensagem de erro
-			req.setAttribute(ServletConstants.ERRORS_KEY, erros);
+			req.setAttribute(ServletConstants.ERRORS_KEY, errors);
 			req.setAttribute(ServletConstants.USER_KEY, null);
 
-			nextPage = ServletConstants.SEND_PASSWORD_PAGE;
+            req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, "/jsp/user/doForgotPassword.jsp");
 		}
 
 		dispatcher = context.getRequestDispatcher(nextPage);

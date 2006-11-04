@@ -63,6 +63,10 @@ public class ServletConstants {
 	public static final String LAST = "LAST";
 
 	public static final String NEXT_RESOURCE_AFTER_LOGIN = "nextResource";
+    
+    public static final String FINISH_IDENTIFICATION_KEY = "finishIdentification";    
+
+    
 
 	// KEYS
 	public static final String PHOTO_PAGINATION_CONTROLLER_KEY = "photoPaginationController";
@@ -221,6 +225,6 @@ public class ServletConstants {
     
     public static final String CITY_NAME = "city.name";    
     
-    public static final String CITY_INFO = "city.info";    
+    public static final String CITY_INFO = "city.info";
 
 }

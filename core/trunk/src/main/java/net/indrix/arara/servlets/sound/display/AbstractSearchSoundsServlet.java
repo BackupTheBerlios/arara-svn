@@ -80,7 +80,7 @@ public abstract class AbstractSearchSoundsServlet extends HttpServlet {
         User user = (User) session.getAttribute(ServletConstants.USER_KEY);
 
         String idStr = (String) req.getParameter(ServletConstants.ID);
-        String textToSearch = ServletUtil.retrieveTextToSearch(req);
+        String textToSearch = retrieveTextToSearch(req);
         String action = req.getParameter(ServletConstants.ACTION);
         logger.debug("Retrieved action " + action);
         int id = -1;
@@ -138,6 +138,17 @@ public abstract class AbstractSearchSoundsServlet extends HttpServlet {
         dispatcher = context.getRequestDispatcher(nextPage);
         logger.debug("Dispatching to " + nextPage);
         dispatcher.forward(req, res);
+    }
+
+    /**
+     * Retrieve and do any needed treatment to the text to search
+     * 
+     * @param req The request from user
+     * 
+     * @return The String with the text entered by user
+     */
+    protected String retrieveTextToSearch(HttpServletRequest req) {
+        return ServletUtil.retrieveTextToSearch(req);
     }
 
     protected abstract int getPaginationConstant();

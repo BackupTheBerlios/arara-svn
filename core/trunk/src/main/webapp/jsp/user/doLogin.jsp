@@ -40,9 +40,11 @@
 	</tr>
 	<tr align="center">
 		<td width="${col1}"></td>
-		<td align="left" colspan="2" width="90%"><fmt:message key="user.login.password.msg" /><a
-			href="<c:url value="/jsp/user/forgotPassword.jsp"/>"><fmt:message
-			key="user.login.password.msg.link" /></a></td>
+		<td align="left" colspan="2" width="90%">
+			<fmt:message key="user.login.password.msg" />
+			<a href="<c:url value="/frame.jsp?pageToShow=/jsp/user/doForgotPassword.jsp"/>"><fmt:message
+			key="user.login.password.msg.link" /></a>
+		</td>
 	</tr>
 	<tr height="5">
 		<td colspan="3"></td>

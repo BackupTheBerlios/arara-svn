@@ -48,13 +48,13 @@ public class SoundPaginationController extends PaginationController {
         for (i = currentIndex; (i < end) && (i < size); i++) {
             int id = ((Integer) listOfData.get(i)).intValue();
             Sound sound = null;
-            logger.debug("SoundPaginationController.retrieveDataForPage: retrieving sound " + id);
+            logger.debug("retrieving sound " + id);
             sound = model.retrieve(id);
             if (sound != null) {
-                logger.debug("SoundPaginationController.retrieveDataForPage: sound retrieved. Adding to list");
+                logger.debug("sound retrieved. Adding to list");
                 viewOfList.add(sound);
             } else {
-                logger.debug("SoundPaginationController.retrieveDataForPage: sound not found");
+                logger.debug("sound not found");
                 end++;
             }
         }
@@ -66,10 +66,10 @@ public class SoundPaginationController extends PaginationController {
      * @see net.indrix.arara.servlets.pagination.PaginationController#retrieveAllData()
      */
     protected List retrieveAllData() throws DatabaseDownException, SQLException {
-        logger.debug("SoundPaginationController.retrieveAllData : retrieving all sounds...");
+        logger.debug("Retrieving all sounds...");
         List listOfSounds = null;
         listOfSounds = model.retrieveSoundsIDs();
-        logger.debug("SoundPaginationController.retrieveAllData : " + listOfSounds.size() + " sounds retrieved...");
+        logger.debug(listOfSounds.size() + " sounds retrieved...");
         return listOfSounds;
     }
 

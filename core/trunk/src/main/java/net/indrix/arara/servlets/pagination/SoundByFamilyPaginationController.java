@@ -9,11 +9,13 @@ public class SoundByFamilyPaginationController extends
         SoundPaginationController {
 
     /**
-     * Creates a new PaginationController object, with the given number of elements per page, and
-     * with the flag identification
+     * Creates a new PaginationController object, with the given number of
+     * elements per page, and with the flag identification
      * 
-     * @param soundsPerPage The amount of sounds per page
-     * @param identification The flag for identification
+     * @param soundsPerPage
+     *            The amount of sounds per page
+     * @param identification
+     *            The flag for identification
      */
     public SoundByFamilyPaginationController(int soundsPerPage,
             boolean identification) {
@@ -22,15 +24,15 @@ public class SoundByFamilyPaginationController extends
 
     @Override
     protected List retrieveAllData() throws DatabaseDownException, SQLException {
-        logger.debug("SoundPaginationController.retrieveAllData : retrieving all sounds...");
+        logger.debug("Retrieving all sounds for family: " + getId() + " | " + getText());
         List listOfSounds = null;
-        if (id != -1){
-            listOfSounds = model.retrieveIDsForFamily(getId());            
+        if (id != -1) {
+            listOfSounds = model.retrieveIDsForFamily(getId());
         } else {
-            listOfSounds = model.retrieveIDsForFamilyName(getText());            
+            listOfSounds = model.retrieveIDsForFamilyName(getText());
         }
-        logger.debug("SoundPaginationController.retrieveAllData : "
-                + listOfSounds.size() + " sounds retrieved...");
+        int s = listOfSounds.size();
+        logger.debug(s + " sounds retrieved...");
         return listOfSounds;
     }
 

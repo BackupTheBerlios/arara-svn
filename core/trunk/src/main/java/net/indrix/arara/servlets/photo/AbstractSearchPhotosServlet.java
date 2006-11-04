@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.servlets.ServletUtil;
 import net.indrix.arara.servlets.pagination.PaginationController;
 import net.indrix.arara.servlets.pagination.PhotoByCommonNamePaginationController;
 import net.indrix.arara.servlets.pagination.PhotoByFamilyPaginationController;
@@ -86,7 +87,7 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
         } 
         
         String idStr = (String) req.getParameter(ServletConstants.ID);
-        String textToSearch = retrieveTextToSearch(req);
+        String textToSearch = ServletUtil.retrieveTextToSearch(req);
         int id = -1;
         if ((idStr != null) && (idStr.trim().length() > 0)) {
             id = Integer.parseInt(idStr);
@@ -96,7 +97,6 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
             PhotoPaginationController controller = (PhotoPaginationController) getPaginationController(
                     session, false, getPaginationConstant());
             controller.setId(id);
-            logger.debug("Setting text to search = " + textToSearch);
             controller.setText(textToSearch);                
             try {
                 list = controller.doAction(action);
@@ -149,26 +149,6 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
         logger.debug("Dispatching to " + nextPage);
         logger.debug("Data on request: " + nextPage + " | " + pageToShow + " | " + action);
         dispatcher.forward(req, res);
-    }
-
-    /**
-     * Retrieve and do any needed treatment to the text to search
-     * 
-     * @param req The request from user
-     * 
-     * @return The String with the text entered by user
-     */
-    protected String retrieveTextToSearch(HttpServletRequest req) {
-        String text = req.getParameter(ServletConstants.TEXT_ID);
-        if (text == null){
-            text = "";
-        } else {
-            text = text.trim().toLowerCase();
-            if (text.length() > 0){
-                text += "%";                
-            }
-        }
-        return text;
     }
 
     protected abstract String getServletToCall();

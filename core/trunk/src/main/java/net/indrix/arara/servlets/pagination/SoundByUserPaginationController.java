@@ -24,7 +24,9 @@ public class SoundByUserPaginationController extends SoundPaginationController {
     protected List retrieveAllData() throws DatabaseDownException, SQLException {
         logger.debug("SoundByUserPaginationController.retrieveAllData : retrieving all sounds...");
         List listOfSounds = null;
-        listOfSounds = model.retrieveSoundIDsForUser(getId());
+        
+        listOfSounds = model.retrieveIDsForUser(getId());
+        
         logger.debug("SoundByUserPaginationController.retrieveAllData : "
                 + listOfSounds.size() + " sounds retrieved...");
         return listOfSounds;

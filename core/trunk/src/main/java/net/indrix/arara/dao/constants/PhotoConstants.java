@@ -17,6 +17,8 @@ public interface PhotoConstants extends DAOConstants {
 
 	public static final String DATE_COLUMN = "date";
 
+    public static final String POST_DATE_COLUMN = "post_date";
+
 	public static final String CAMERA_COLUMN = "camera";
 
 	public static final String LENS_COLUMN = "lens";

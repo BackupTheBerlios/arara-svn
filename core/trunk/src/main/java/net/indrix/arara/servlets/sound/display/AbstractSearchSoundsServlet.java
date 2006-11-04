@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.servlets.ServletUtil;
 import net.indrix.arara.servlets.pagination.PaginationController;
 import net.indrix.arara.servlets.pagination.SoundByCommonNamePaginationController;
 import net.indrix.arara.servlets.pagination.SoundByFamilyPaginationController;
@@ -64,10 +65,10 @@ public abstract class AbstractSearchSoundsServlet extends HttpServlet {
     }
 
     public void doPost(HttpServletRequest req, HttpServletResponse res)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         doGet(req, res);
     }
-    
+
     public void doGet(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
 
@@ -79,41 +80,53 @@ public abstract class AbstractSearchSoundsServlet extends HttpServlet {
         User user = (User) session.getAttribute(ServletConstants.USER_KEY);
 
         String idStr = (String) req.getParameter(ServletConstants.ID);
+        String textToSearch = ServletUtil.retrieveTextToSearch(req);
         String action = req.getParameter(ServletConstants.ACTION);
-        logger.debug(this.getClass() + ".doGet retrieved action " + action);
+        logger.debug("Retrieved action " + action);
         int id = -1;
 
-        PaginationController controller = getPaginationController(session, false, getPaginationConstant());
+        PaginationController controller = getPaginationController(session,
+                false, getPaginationConstant());
 
-        if (idStr != null){
+        if ((idStr != null) && (idStr.trim().length() > 0)) {
             id = Integer.parseInt(idStr);
+        }
+        if ((id != -1) || (textToSearch.trim().length() > 0)
+                || !ServletConstants.BEGIN.equals(action)) {
+            logger.debug("Setting id = " + id);
             controller.setId(id);
-        }
+            logger.debug("Setting text = " + textToSearch);
+            controller.setText(textToSearch);
 
-        List list = null;
-        try {
-            list = controller.doAction(action);
-        } catch (InvalidControllerException e) {
+            List list = null;
             try {
-                list = controller.doAction(ServletConstants.BEGIN);
-            } catch (InvalidControllerException e1) {
-                // this should never happend
-                logger.fatal("InvalidControllerException when doing BEGIN action...", e1);
+                list = controller.doAction(action);
+            } catch (InvalidControllerException e) {
+                try {
+                    list = controller.doAction(ServletConstants.BEGIN);
+                } catch (InvalidControllerException e1) {
+                    // this should never happend
+                    logger.fatal("Exception when doing BEGIN action...", e1);
+                }
             }
-        }
-        logger.debug("List of sounds retrieved...");
-        logger.debug("Putting list of sounds in session");
-        session.setAttribute(ServletConstants.SOUNDS_LIST, list);
+            logger.debug("Putting list of sounds in session");
+            session.setAttribute(ServletConstants.SOUNDS_LIST, list);
 
-        session.setAttribute(ServletConstants.SERVLET_TO_CALL_KEY, "/servlet/searchSounds");
-        nextPage = ServletConstants.ALL_SOUNDS_PAGE;
+            session.setAttribute(ServletConstants.SERVLET_TO_CALL_KEY,
+                    getServletToCall());
+            nextPage = ServletConstants.ALL_SOUNDS_PAGE;
+        } else {
+            errors.add(ServletConstants.SELECT_VALUE_ERROR);
+        }
 
         if (user != null) {
-            loggerActions.info("User " + user.getLogin() + " has selected sounds - " + getPaginationConstant());
+            loggerActions.info("User " + user.getLogin()
+                    + " has selected sounds - " + getPaginationConstant());
         } else {
             String ip = req.getRemoteAddr();
             Locale locale = req.getLocale();
-            loggerActions.info("Anonymous " + " from IP " + ip + "(" + locale + ") has selected sounds - " + getPaginationConstant());
+            loggerActions.info("Anonymous " + " from IP " + ip + "(" + locale
+                    + ") has selected sounds - " + getPaginationConstant());
         }
         if (!errors.isEmpty()) {
             logger.debug("errors is not null.");
@@ -135,27 +148,30 @@ public abstract class AbstractSearchSoundsServlet extends HttpServlet {
         // the key is the key string plus the target
         String key = ServletConstants.SOUND_PAGINATION_CONTROLLER_KEY + target
                 + identification;
-        logger
-                .debug("AbstractSearchSoundsServlet.getPaginationController: retrieving controller with key "
-                        + key);
+        logger.debug("retrieving controller with key " + key);
         PaginationController c = (PaginationController) session
                 .getAttribute(key);
         if (c == null) {
             switch (target) {
             case PAGINATION_FOR_ALL_SOUNDS:
-                c = new SoundPaginationController(SOUNDS_PER_PAGE, identification);
+                c = new SoundPaginationController(SOUNDS_PER_PAGE,
+                        identification);
                 break;
             case PAGINATION_FOR_FAMILY:
-                c = new SoundByFamilyPaginationController(SOUNDS_PER_PAGE, identification);
+                c = new SoundByFamilyPaginationController(SOUNDS_PER_PAGE,
+                        identification);
                 break;
             case PAGINATION_FOR_SPECIE:
-                c = new SoundBySpeciePaginationController(SOUNDS_PER_PAGE, identification);
+                c = new SoundBySpeciePaginationController(SOUNDS_PER_PAGE,
+                        identification);
                 break;
             case PAGINATION_FOR_COMMON_NAME:
-                c = new SoundByCommonNamePaginationController(SOUNDS_PER_PAGE, identification);
+                c = new SoundByCommonNamePaginationController(SOUNDS_PER_PAGE,
+                        identification);
                 break;
             case PAGINATION_FOR_USER:
-                c = new SoundByUserPaginationController(SOUNDS_PER_PAGE, identification);
+                c = new SoundByUserPaginationController(SOUNDS_PER_PAGE,
+                        identification);
                 break;
             }
             logger.debug("PaginationController just created");
@@ -167,4 +183,6 @@ public abstract class AbstractSearchSoundsServlet extends HttpServlet {
                 c);
         return c;
     }
+
+    abstract protected String getServletToCall();
 }

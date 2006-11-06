@@ -86,11 +86,21 @@
 </table>
 <table class="formBorder" width="100%" border="0" cellspacing="2">
 	<tr>
-		<td width="10%"><font size="${fontSize}" face="Verdana"><b><fmt:message
-			key="photo.identify.comment" /></b></font></td>
-		<td width="80%"><!-- <textarea rows="3 cols="70" name="comment">${identificationPhotoBean.comment}</textarea> -->
-		<input type="text" name="comment"
-			value="${identificationPhotoBean.comment}" size="100" maxlength="256">
+		<td width="10%">
+			<font size="${fontSize}" face="Verdana">
+				<b><fmt:message	key="photo.identify.comment" /></b>
+			</font>
+		</td>
+		<td width="80%">
+			<c:if test="${user.admin == true}">
+				<input type="text" name="comment"
+					value="${identificationPhotoBean.comment}" size="60" maxlength="256">
+				<input type="checkbox" name="finishIdentification"><fmt:message	key="photo.identify.finish" />					
+			</c:if>
+			<c:if test="${user.admin != true}">
+				<input type="text" name="comment"
+					value="${identificationPhotoBean.comment}" size="100" maxlength="256">
+			</c:if>
 		</td>
 		<td width="10%">
 		<div align="left"><input type="SUBMIT"

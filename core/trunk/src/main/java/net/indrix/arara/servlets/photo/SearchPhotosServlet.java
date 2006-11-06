@@ -51,7 +51,6 @@ public class SearchPhotosServlet extends AbstractSearchPhotosServlet {
 
 		String action = req.getParameter(ServletConstants.ACTION);       
 		String identificationStr = req.getParameter(ServletConstants.IDENTIFICATION_KEY);
-        String servletToCall = req.getParameter(ServletConstants.SERVLET_TO_CALL_KEY);
         String nextPage = req.getParameter(ServletConstants.NEXT_PAGE_KEY);
         if (nextPage == null){
             nextPage = ServletConstants.FRAME_PAGE;
@@ -78,7 +77,7 @@ public class SearchPhotosServlet extends AbstractSearchPhotosServlet {
         req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);
         req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
         req.setAttribute(ServletConstants.ACTION, action);
-        req.setAttribute(ServletConstants.SERVLET_TO_CALL_KEY, servletToCall);
+        req.setAttribute(ServletConstants.SERVLET_TO_CALL_KEY, "/servlet/searchPhotos");
         
 		if (user != null) {
 			loggerActions.info("User " + user.getLogin() + " has selected all photos.");

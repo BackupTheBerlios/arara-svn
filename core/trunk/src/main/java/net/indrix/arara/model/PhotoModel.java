@@ -301,7 +301,7 @@ public class PhotoModel extends MediaModel {
                 // send an email to everyone that identified the photo that the
                 // identification has
                 // finished
-                sendFinalEmailToIdentifiers(photoAuthor, identification);
+                sendFinalEmailToIdentifiers(photoAuthor, identification, finishIdentification);
 
                 finishedIdentification = true;
             } else {
@@ -618,7 +618,7 @@ public class PhotoModel extends MediaModel {
      *            The new identification
      */
     private void sendFinalEmailToIdentifiers(User photoAuthor,
-            PhotoIdentification photoIdentification) {
+            PhotoIdentification photoIdentification, boolean finishIdentification) {
         logger.debug("Entering method...");
         String server = PropertiesManager.getProperty("email.server");
         String fromAdd = PropertiesManager.getProperty("email.from");
@@ -652,7 +652,8 @@ public class PhotoModel extends MediaModel {
                 fromText = bundle.getString(
                         "email.close.identification.to.photo.fromText", locale);
 
-                if (!user.equals(photoAuthor)) {
+                
+                if (finishIdentification || !user.equals(photoAuthor)) {
                     sender.setMessageTextBody(getMessage(user, body,
                             photoIdentification));
                     sender.setSubject(subject);

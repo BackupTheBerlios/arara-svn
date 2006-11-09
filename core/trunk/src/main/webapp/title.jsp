@@ -64,8 +64,8 @@
 		</td>		
 	</tr>
 	<tr bgcolor="${mainBgColor}">	
-		<td align="left" colspan="3">
-			<img width="100%" src="<c:url value="/images/top.jpg"/>">
+		<td align="left" colspan="3" height="10" bgcolor="#333300">
+<!-- 			<img width="100%" src="<c:url value="/images/top.jpg"/>"> -->
 		</td>
 	</tr>
 </table>

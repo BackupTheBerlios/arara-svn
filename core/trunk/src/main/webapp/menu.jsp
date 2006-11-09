@@ -29,6 +29,7 @@
 	      <c:import url="/menuVideos.jsp" />				      
 		</div>
 	  </div>
+<!-- 
 	<div id="panel4">
 	  <div id="panel3Header">
 	     <img src="<c:url value="/images/eclub.png"/>" alt="" width="20" height="20">
@@ -37,8 +38,8 @@
 		<div id="panel4Content">
 	      <c:import url="/menueClub.jsp" />				      
 		</div>
-	  </div>
-
+	</div>
+ -->	  
 	  
 </div>
 <script> new Rico.Accordion( 'accordionExample', {panelHeight:210, expandedBg:'#FF6600', hoverBg:'#FF6600', collapsedBg:'#000000' } );  </script>

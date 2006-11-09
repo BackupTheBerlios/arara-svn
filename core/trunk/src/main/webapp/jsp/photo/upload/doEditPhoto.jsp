@@ -3,7 +3,7 @@
 
 <SCRIPT language="JavaScript"> 
     function familySelected() { 
-       document.editForm.action = "<c:url value="/servlet/retrieveSpecies?toPage=/jsp/photo/upload/editPhoto.jsp&data=PHOTO&action=EDIT"/>"; 
+       document.editForm.action = "<c:url value="/servlet/retrieveSpecies?nextPage=/frame.jsp&pageToShow=/jsp/photo/upload/doEditPhoto.jsp&data=PHOTO&action=EDIT"/>"; 
        document.editForm.submit(); 
     } 
 

@@ -5,7 +5,7 @@
 <c:set var="col2" value="${15}"/>
 <c:set var="col3" value="${80}"/>
 
-<div align="center"></div>
+<br><br>
 <table class="formBorder" width="90%" align="center" border="0" cellspacing="2" bgcolor="${mainBgColor}">
 	<tr height="10" bgcolor="${formTitleColor}">
 		<td colspan="3"></td>
@@ -50,6 +50,8 @@
 				<br>
 				<fmt:message key="user.registered.no.emailOnNewSound" />
 			</c:if>
+			<br><br>
+			<fmt:message key="user.registered.send.photo.info" />
 		</td>
 	</tr>
 </table>

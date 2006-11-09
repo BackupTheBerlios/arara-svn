@@ -15,17 +15,21 @@
 		das aves do Brasil.</p>
 		<p>Sugestões, críticas e idéias são muito bem-vindas. Envie seus
 		comentários para o email <a href="mailto:webmaster@aves.brasil.nom.br">webmaster</a></p>
+		<br>
+		<br>
+		<p>Ajude este site a crescer, contribuindo com fotos e sons. 
+		<a href="<c:url value="/frame.jsp?pageToShow=/jsp/user/doRegister.jsp"/>">Registre-se</a> e envie um email 
+		para <a href="mailto:webmaster@aves.brasil.nom.br">webmaster</a> pedindo permissão para o
+		envio de fotos e sons.</p>
+		<br>
+		<br>
 		<b>O site segue a nomenclatura e a lista do CBRO </b> <br>
 		<br>
 		<br>
 		<br>
-		<br>
-		<br>
-		<br>
-		<br>
 
-		<a href="<c:url value="/jsp/language.jsp?lang=en"/>">English version</a>
 		<hr>
+		<a href="<c:url value="/jsp/language.jsp?lang=en"/>">English version</a>
 		</td>
 	</tr>
 	<tr>

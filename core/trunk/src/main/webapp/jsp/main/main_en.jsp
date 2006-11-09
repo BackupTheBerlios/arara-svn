@@ -4,7 +4,7 @@
 <table width="100%" border="0" cellspacing="2" height="100%">
 	<tr>
 		<td>
-		<p>Brazilian Birds Database System, version 03.00</p>
+		<p>Brazilian Birds Database System, version 04.00</p>
 		<hr>
 		<p>Welcome to <b>Brazilian Birds System</b>.</p>
 		<p>The goal of this project is to provide an easy way for those
@@ -12,18 +12,23 @@
 		from other authors, making this system a Brazilian Birds database.</p>
 		<p>Sugestions, critics and ideas are welcome. Send your comments to
 		email <a href="mailto:webmaster@aves.brasil.nom.br">webmaster</a></p>
+		<br>
+		<br>
+		<p>Help this site to grow, contributing with photos and sounds. 
+		<a href="<c:url value="/frame.jsp?pageToShow=/jsp/user/doRegister.jsp"/>">Register</a> and then send 
+		an email to <a href="mailto:webmaster@aves.brasil.nom.br">webmaster</a> asking for 
+		permission to send files.</p>
+		<br>
+		<br>
+		<br>
 		<b>This system follows the name convention of CBRO </b> <br>
 		<br>
 		<br>
 		<br>
-		<br>
-		<br>
-		<br>
-		<br>
 
+		<hr>
 		<a href="<c:url value="/jsp/language.jsp?lang=pt"/>">Versão em
 		Português</a>
-		<hr>
 		</td>
 	</tr>
 	<tr>

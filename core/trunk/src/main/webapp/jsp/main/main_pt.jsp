@@ -32,20 +32,20 @@
 		<a href="<c:url value="/jsp/language.jsp?lang=en"/>">English version</a>
 		</td>
 	</tr>
+<!-- 
 	<tr>
 		<td>
-<!-- 
-		<div align="center"><a href="http://www.avistarbrasil.com.br" target="_BLANK"> 
-		<img src="/jsp/images/3bannersveio.jpg"	align="bottom"> </a> 
-		<a href="http://www.birdingtop500.com/cgi-bin/topsite/topsite.cgi?user=jeffersonsilva">
-		<img src="http://www.birdingtop500.com/cgi-bin/topsite/counter.cgi?user=jeffersonsilva"	alt="Birding Top 500 Counter" border=1> </a> 
-		 <img src="/jsp/images/PicaPauzinho1.jpg" width="160" height="107" align="bottom">
-              <img src="/jsp/images/PicaPauzinho2.jpg" width="160" height="107" align="bottom"> 
-        -->
-		</div>
-
+			<div align="center">
+				<a href="http://www.avistarbrasil.com.br" target="_BLANK"> 
+					<img src="/jsp/images/3bannersveio.jpg"	align="bottom"> 
+				</a> 
+				<a href="http://www.birdingtop500.com/cgi-bin/topsite/topsite.cgi?user=jeffersonsilva">
+					<img src="http://www.birdingtop500.com/cgi-bin/topsite/counter.cgi?user=jeffersonsilva"	alt="Birding Top 500 Counter" border=1>
+				</a> 
+			</div>
 		</td>
 	</tr>
+-->
 </table>
 </div>
 

@@ -100,7 +100,10 @@ public class Statistics {
         try {
             PhotoModel model = new PhotoModel();
             List listOfPhotos = null;
-            listOfPhotos = model.retrievePhotoIDs();
+            
+            // listOfPhotos = model.retrievePhotoIDs();
+            listOfPhotos = model.retrievePhotoIDsForSlideShow();
+            
             Collections.shuffle(listOfPhotos);
             int maxSize = 10;
             if (maxSize > listOfPhotos.size()){

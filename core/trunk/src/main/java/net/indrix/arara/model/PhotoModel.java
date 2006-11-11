@@ -156,6 +156,23 @@ public class PhotoModel extends MediaModel {
     }
 
     /**
+     * This method retrieves the id of all photos from database for Slide Show
+     * 
+     * @return An ArrayList object with Integer objects
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public List retrievePhotoIDsForSlideShow() throws DatabaseDownException, SQLException {
+        logger.debug("Retrieving photo ids...");
+        List list = ((PhotoDAO) dao).retrieveIDsForSlideShow();
+        logger.debug("Photo ids retrieved.");
+        return list;
+    }
+    
+    /**
      * This method retrieves a <code>List</code> object with
      * <code>Integer</code> objects, of photos more recently added to database
      * 

@@ -127,8 +127,6 @@ function GetObject(id){
 * 
 */
 
-var xmldoc;
-
 function makeRequest(url) {
 	if (window.XMLHttpRequest) 
 	{ // for mozilla and firefox

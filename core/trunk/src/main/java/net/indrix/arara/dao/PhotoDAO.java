@@ -90,6 +90,11 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
             + "order by f_name, s_name";
 
     /**
+     * SQL to select id of all photos for slide show (imgWidth="150" imgHeight="115")
+     */
+    private static final String SELECT_IDS_FOR_SLIDE_SHOW = "SELECT p.id from photo p where (p.sW/p.sH) BETWEEN 1.1 AND 1.5";
+    
+    /**
      * SQL to select id of all photos, order by post date (desc)
      */
     private static final String SELECT_IDS_FOR_ALL_BY_DATE = "SELECT p.id from photo p order by post_date desc";
@@ -256,6 +261,21 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
             conn.close();
         }
         return object;
+    }
+
+    /**
+     * This method retrieves a <code>List</code> object with
+     * <code>Integer</code> objects, of photos more recently added to database
+     * 
+     * @return a <code>List</code> object with <code>Photo</code> objects
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    public List retrieveIDsForSlideShow() throws DatabaseDownException,
+            SQLException {
+        List list = retrieveIDs(SELECT_IDS_FOR_SLIDE_SHOW);
+        return list;
     }
 
     /**

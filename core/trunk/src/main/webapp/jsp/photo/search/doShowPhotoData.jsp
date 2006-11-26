@@ -47,6 +47,7 @@
 		<td width="20%"><font size="${fontSize}" face="Verdana"><b>
 			<fmt:message key="city" /></b></font>
 		</td>
+<!-- 
 		<td>
 			<FORM> 
 			<font size="${fontSize}" face="Verdana">${currentPhoto.city.name} - ${currentPhoto.city.state.acronym}
@@ -54,6 +55,7 @@
 			</FORM> 
 			</font>
 		</td>
+ -->		
 	</tr>
 	<tr>
 		<td width="20%"><font size="${fontSize}" face="Verdana"><b><fmt:message

@@ -180,7 +180,7 @@ div.channeltitle a:hover
     </td>
   </tr>
   <tr>
-    <td width="150" align="left" valign="top">
+    <td width="20%" align="left" valign="top">
     	<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="${mainBgColor}">
       		<tr>
         		<td align="left">
@@ -205,28 +205,19 @@ div.channeltitle a:hover
         		</td>
       		</tr>
     	</table>
-      </td>
-      <td colspan="2" valign="top" height="100%">
-    	<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="${mainBgColor}">
+    </td>
+    <td width="80%" colspan="2" valign="top" align="left" height="100%">
+    	<table align="left" width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="${mainBgColor}">
       		<tr>
-        		<td valign="top">
+        		<td align="left" valign="top">
         			<!--  ${nextPage} | ${pageToShow} | ${page} | ${param.pageToShow} -->
         			<c:import url="/jsp/showErrors.jsp" /> 
 				    <c:import url="/jsp/showMessages.jsp" /> 
 				    <c:import url="${page}" />        
 		        </td>
-<!-- 
-        		<td width="250">
-<script>RSSRequest();</script>        		
-<h3>Fale</h3>
-<div id="status" style="display:none"></div>
-<div id="ajaxreader"></div>
-
-	       </td>        				        
- -->
       		</tr>
     	</table>
-      </td>
+    </td>
   </tr>
   <tr>
     <td colspan="3">

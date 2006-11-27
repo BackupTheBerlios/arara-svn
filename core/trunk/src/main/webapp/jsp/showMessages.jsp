@@ -14,8 +14,8 @@
 		<td colspan="2"></td>
 	</tr>
 	<tr>
-		<td width="${col1}" align="left"></td>
-    	<td width="${col2}" align="left">
+		<td width="${col1}%" align="left"></td>
+    	<td width="${col2}%" align="left">
 			<h3><fmt:message key="messages.title" /></h3>
 			<c:forEach items="${messages}" var="msg">
 				<li style="margin-left: 40px;">

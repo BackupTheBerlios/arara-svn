@@ -4,7 +4,7 @@
 
 <c:if test="${erros != null && !empty erros}">
 <c:set var="col1" value="${5}"/>
-<c:set var="col2" value="${15}"/>
+<c:set var="col2" value="${95}"/>
 <br>
 <table class="formBorder" width="90%" align="center" border="0" cellspacing="2" bgcolor="${mainBgColor}">
 	<tr height="10" bgcolor="${formTitleColor}">
@@ -14,8 +14,8 @@
 		<td colspan="2"></td>
 	</tr>
 	<tr>
-		<td width="${col1}" align="left"></td>
-    	<td width="${col2}" align="left">
+		<td width="${col1}%" align="left"></td>
+    	<td width="${col2}%" align="left">
 			<h3><fmt:message key="errors.title" /></h3>
 			<c:forEach items="${erros}" var="erro">
 				<li style="margin-left: 40px;">

@@ -2,9 +2,9 @@
 <%@ taglib uri="/fmt" prefix="fmt"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
 
-<c:set var="col1" value="${5}"/>
-<c:set var="col2" value="${30}"/>
-<c:set var="col3" value="${65}"/>
+<c:set var="col1" value="${5}%"/>
+<c:set var="col2" value="${30}%"/>
+<c:set var="col3" value="${65}%"/>
 
 <form method="post" action="<c:url value="/servlet/sendPassword"/>">
 

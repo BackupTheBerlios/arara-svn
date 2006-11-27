@@ -1,9 +1,9 @@
 <%@ taglib uri="/core" prefix="c"%>
 <%@ taglib uri="/fmt" prefix="fmt"%>
 
-<c:set var="col1" value="${5}"/>
-<c:set var="col2" value="${15}"/>
-<c:set var="col3" value="${80}"/>
+<c:set var="col1" value="${5}%"/>
+<c:set var="col2" value="${15}%"/>
+<c:set var="col3" value="${80}%"/>
 
 <br><br>
 <table class="formBorder" width="90%" align="center" border="0" cellspacing="2" bgcolor="${mainBgColor}">

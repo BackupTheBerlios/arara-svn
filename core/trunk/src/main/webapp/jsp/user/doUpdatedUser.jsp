@@ -1,8 +1,8 @@
 <%@ taglib uri="/core" prefix="c"%>
 <%@ taglib uri="/fmt" prefix="fmt"%>
 
-<c:set var="col1" value="${5}"/>
-<c:set var="col2" value="${95}"/>
+<c:set var="col1" value="${5}%"/>
+<c:set var="col2" value="${95}%"/>
 
 <br><br>
 <table align="center" class="formBorder" width="90%" border="0" cellspacing="2">

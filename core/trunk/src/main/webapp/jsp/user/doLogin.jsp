@@ -1,9 +1,9 @@
 <%@ taglib uri="/core" prefix="c"%>
 <%@ taglib uri="/fmt" prefix="fmt"%>
 
-<c:set var="col1" value="${10}"/>
-<c:set var="col2" value="${15}"/>
-<c:set var="col3" value="${75}"/>
+<c:set var="col1" value="${10}%"/>
+<c:set var="col2" value="${15}%"/>
+<c:set var="col3" value="${75}%"/>
 
 <form method="post" action="<c:url value="/servlet/login"/>"><input
 	type=hidden name="nextResource" value="${nextResource}">

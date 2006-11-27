@@ -39,11 +39,11 @@
 		<td colspan="3"></td>
 	</tr>
 	<tr>
-		<td width="${col1}"></td>
-	    <td width="${col2}">
+		<td width="${col1}%"></td>
+	    <td width="${col2}%">
 			<b><fmt:message key="family" /></b>
 		</td>
-		<td width="${col3}">
+		<td width="${col3}%">
 			<select name="familyId" onChange="familySelected()">
 				<c:forEach items="${editBean.familyList}" var="familyBean">
 					<c:if test="${selectedFamilyId != null && selectedFamilyId == familyBean.value}">
@@ -57,11 +57,11 @@
 		</td>
 	</tr>
 	<tr>
-		<td width="${col1}"></td>
-	    <td width="${col2}">
+		<td width="${col1}%"></td>
+	    <td width="${col2}%">
 			<b><fmt:message key="specie" /></b>
 		</td>
-		<td width="${col3}">
+		<td width="${col3}%">
 			<select name="specieId">
 				<c:forEach items="${editBean.specieList}" var="specieBean">
 					<c:if
@@ -77,11 +77,11 @@
 		</td>
 	</tr>
 	<tr>
-		<td width="${col1}"></td>
-	    <td width="${col2}">
+		<td width="${col1}%"></td>
+	    <td width="${col2}%">
 			<b><fmt:message key="specie.age" /></b>
 		</td>
-		<td width="${col3}">
+		<td width="${col3}%">
 			<select name="ageId">
 				<c:forEach items="${ageList}" var="age">
 					<option value="${age.id}">${age.age}</option>
@@ -90,11 +90,11 @@
 		</td>
 	</tr>
 	<tr>
-		<td width="${col1}"></td>
-	    <td width="${col2}">
+		<td width="${col1}%"></td>
+	    <td width="${col2}%">
 			<b><fmt:message key="specie.sex" /></b>
 		</td>
-		<td width="${col3}">
+		<td width="${col3}%">
 			<select name="sexId">
 				<c:forEach items="${sexList}" var="sex">
 					<option value="${sex.id}">${sex.sex}</option>
@@ -104,46 +104,46 @@
 	</tr>
   </c:if>
 	<tr>
-		<td width="${col1}"></td>
-	    <td width="${col2}">
+		<td width="${col1}%"></td>
+	    <td width="${col2}%">
 			<b><fmt:message key="photo.camera" /></b>
 		</td>
-		<td width="${col3}"><input type="text" name="camera"
+		<td width="${col3}%"><input type="text" name="camera"
 			value="${editBean.camera}" size="64" maxlength="64"></td>
 	</tr>
 	<tr>
-		<td width="${col1}"></td>
-	    <td width="${col2}">
+		<td width="${col1}%"></td>
+	    <td width="${col2}%">
 	    	<b><fmt:message key="photo.len" /></b>
 	    </td>
-		<td width="${col3}"><input type="text" name="lens"
+		<td width="${col3}%"><input type="text" name="lens"
 			value="${editBean.lens}" size="64" maxlength="64"></td>
 	</tr>
 	<tr>
-		<td width="${col1}"></td>
-	    <td width="${col2}">
+		<td width="${col1}%"></td>
+	    <td width="${col2}%">
 	    	<b><fmt:message key="photo.film" /></b>
 	    </td>
-		<td width="${col3}"><input type="text" name="film"
+		<td width="${col3}%"><input type="text" name="film"
 			value="${editBean.film}" size="64" maxlength="64"></td>
 	</tr>
 	<tr>
-		<td width="${col1}"></td>
-	    <td width="${col2}">
+		<td width="${col1}%"></td>
+	    <td width="${col2}%">
 	    	<b><fmt:message key="photo.location" /></b>
 	    </td>
-		<td width="${col3}">
+		<td width="${col3}%">
 			<input type="text" name="location"
 			value="${editBean.location}" size="64" maxlength="64">
 		</td>
 	</tr>
 
 	<tr>
-		<td width="${col1}"></td>
-	    <td width="${col2}">
+		<td width="${col1}%"></td>
+	    <td width="${col2}%">
 	    	<b><fmt:message key="state" /></b>
 	    </td>
-		<td width="${col3}"><select name="stateId" onChange="stateSelected()">
+		<td width="${col3}%"><select name="stateId" onChange="stateSelected()">
 			<c:forEach items="${editBean.statesList}" var="stateBean">
 				<c:if
 					test="${selectedStateId != null && selectedStateId == stateBean.value}">
@@ -168,24 +168,24 @@
 	</tr>
 
 	<tr>
-		<td width="${col1}"></td>
-	    <td width="${col2}">
+		<td width="${col1}%"></td>
+	    <td width="${col2}%">
 	    	<b><fmt:message key="photo.date" /></b>
 	    </td>
-		<td width="${col3}"><input type="text" name="date"
+		<td width="${col3}%"><input type="text" name="date"
 			value="${editBean.date}" size="16" maxlength="16"></td>
 	</tr>
 	<tr>
-		<td width="${col1}"></td>
-	    <td width="${col2}">
+		<td width="${col1}%"></td>
+	    <td width="${col2}%">
 	    	<b><fmt:message key="photo.author.comment" /></b>
 	    </td>
-		<td width="${col3}"><textarea rows="5" cols="70" name="comment">${editBean.comment}</textarea>
+		<td width="${col3}%"><textarea rows="5" cols="70" name="comment">${editBean.comment}</textarea>
 		</td>
 	</tr>
 	<tr>
-		<td width="${col1}"></td>
-	    <td width="${col2}">
+		<td width="${col1}%"></td>
+	    <td width="${col2}%">
 		<td>
 		<div align="left"><input type="SUBMIT"
 			value="<fmt:message key="photo.submit"/>"></div>

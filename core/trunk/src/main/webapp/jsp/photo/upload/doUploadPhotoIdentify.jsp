@@ -11,9 +11,9 @@
 <c:set var="selectedStateId" value="${uploadPhotoBean.selectedStateId}" />
 <c:set var="selectedCityId" value="${uploadPhotoBean.selectedCityId}" />
 
-<c:set var="col1" value="${5}"/>
-<c:set var="col2" value="${15}"/>
-<c:set var="col3" value="${80}"/>
+<c:set var="col1" value="${5}%"/>
+<c:set var="col2" value="${15}%"/>
+<c:set var="col3" value="${80}%"/>
 <br><br>
 <form name="uploadForm" method="post"
 	action="<c:url value="/servlet/uploadPhotoIdentify"/>"

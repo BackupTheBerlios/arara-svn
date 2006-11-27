@@ -22,9 +22,9 @@
 <c:set var="selectedAgeId" value="${uploadSoundBean.selectedAgeId}" />
 <c:set var="selectedSexId" value="${uploadSoundBean.selectedSexId}" />
 
-<c:set var="col1" value="${5}"/>
-<c:set var="col2" value="${15}"/>
-<c:set var="col3" value="${80}"/>
+<c:set var="col1" value="${5}%"/>
+<c:set var="col2" value="${15}%"/>
+<c:set var="col3" value="${80}%"/>
 <br><br>
 <form name="uploadForm" method="post"
 	action="<c:url value="/servlet/uploadSound"/>"

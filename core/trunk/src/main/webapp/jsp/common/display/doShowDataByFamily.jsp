@@ -14,11 +14,11 @@
 		<td colspan="3"></td>
 	</tr>
 	<tr align="center">
-		<td width="${col1}"></td>
-		<td align="left" width="${col2}">
+		<td width="${col1}%"></td>
+		<td align="left" width="${col2}%">
 			<br><b><fmt:message key="family" /></b>
 		</td>
-		<td align="left" width="${col3}">
+		<td align="left" width="${col3}%">
 			<select name="id">
 				<c:forEach items="${familyList.list}" var="familyBean">
 					<c:if
@@ -34,9 +34,9 @@
 		</td>
 	</tr>
 	<tr align="center">
-		<td width="${col1}"></td>
-		<td align="left" width="${col2}"></td>
-		<td align="left" width="${col3}">
+		<td width="${col1}%"></td>
+		<td align="left" width="${col2}%"></td>
+		<td align="left" width="${col3}%">
 			<input name="text" type="text" size="30"/>
 		</td>
 	</tr>
@@ -44,9 +44,9 @@
 		<td colspan="3"></td>
 	</tr>
 	<tr align="center">
-		<td width="${col1}"></td>
-		<td align="left" width="${col2}"></td>
-		<td align="left" width="${col3}">
+		<td width="${col1}%"></td>
+		<td align="left" width="${col2}%"></td>
+		<td align="left" width="${col3}%">
 			<input type="SUBMIT" value="<fmt:message key="button.submit.send"/>">
 		</td>
 	</tr>

@@ -28,7 +28,7 @@
 		<td colspan="3"></td>
 	</tr>
 	<tr align="center">
-		<td width="${col1}%">${nextPage}</td>
+		<td width="${col1}%"></td>
 		<td align="left" width="${col2}%">
 			<b><fmt:message key="family" /></b>
 		</td>

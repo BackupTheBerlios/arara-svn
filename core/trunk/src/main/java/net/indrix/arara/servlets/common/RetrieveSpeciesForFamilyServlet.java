@@ -66,12 +66,14 @@ public class RetrieveSpeciesForFamilyServlet extends AbstractServlet {
         String servletToCall = req.getParameter(ServletConstants.SERVLET_TO_CALL_KEY);
         String action = req.getParameter(ServletConstants.ACTION);
 
+        logger.debug("Entering doPost method...");
 		HttpSession session = req.getSession();
 		Map data = null;
 		try {
 			data = parseMultiPartFormData(req);
 			String familyId = (String) data.get(ServletConstants.FAMILY_ID);
 			if ((familyId == null) || (familyId.equals(""))) {
+                logger.debug("family id not found...");
 				errors.add(ServletConstants.SELECT_FAMILY_ERROR);
                 ListBean listBean = (ListBean) session.getAttribute(ServletConstants.FAMILY_LIST_KEY);
                 listBean.setSelectedId(null);
@@ -89,6 +91,7 @@ public class RetrieveSpeciesForFamilyServlet extends AbstractServlet {
                         req.setAttribute(ServletConstants.SERVLET_TO_CALL_KEY, servletToCall);
                         req.setAttribute(ServletConstants.ACTION, action);
                         req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
+                        req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);
                         logger.debug(servletToCall + " | " + action + " | " + pageToShow);
 					} else {
 						logger.debug("Specie list not found...");
@@ -107,11 +110,11 @@ public class RetrieveSpeciesForFamilyServlet extends AbstractServlet {
 				req.setAttribute(ServletConstants.ERRORS_KEY, errors);
 			}
 		} catch (ServletException e) {
-			e.printStackTrace();
+            logger.error("ServletException", e);
 		} catch (IOException e) {
-			e.printStackTrace();
+            logger.error("IOException", e);
 		} catch (FileUploadException e) {
-			e.printStackTrace();
+            logger.error("FileUploadException", e);
 		}
         logger.debug("Forwarding to page " + nextPage);
 		dispatcher = context.getRequestDispatcher(nextPage);

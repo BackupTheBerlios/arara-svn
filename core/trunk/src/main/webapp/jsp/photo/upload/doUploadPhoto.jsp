@@ -1,6 +1,7 @@
 <%@ taglib uri="/core" prefix="c"%>
 <%@ taglib uri="/fmt" prefix="fmt"%>
 <SCRIPT language="JavaScript"> 
+
     function familySelected() { 
        document.uploadForm.action = "<c:url value="/servlet/retrieveSpecies?nextPage=/jsp/photo/upload/uploadPhoto.jsp&data=PHOTO&action=UPLOAD"/>"; 
        document.uploadForm.submit(); 
@@ -9,7 +10,7 @@
     function stateSelected() { 
        document.uploadForm.action = "<c:url value="/servlet/retrieveCitiesForState?toPage=/jsp/photo/upload/uploadPhoto.jsp&data=PHOTO&action=UPLOAD"/>"; 
        document.uploadForm.submit(); 
-    } 
+    }    
 </script> 
 
 
@@ -24,7 +25,8 @@
 <c:set var="col2" value="${15}"/>
 <c:set var="col3" value="${80}"/>
 <br>
-<form name="uploadForm" method="post" 
+<form onsubmit="return submit_form()"
+	  name="uploadForm" method="post" 
       action="<c:url value="/servlet/uploadPhoto"/>"
       enctype="multipart/form-data">
       

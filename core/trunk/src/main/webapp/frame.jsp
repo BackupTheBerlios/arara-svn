@@ -28,6 +28,8 @@
 <script type="text/javascript" src="<c:url value="/rssajax.js"/>"></script>
 
 <script language="javascript">
+var form_submitted = false;
+
 function change(source){
 	if(document.getElementById("alerta"+quem+"").className=='hidden') {
 		document.getElementById("alerta"+quem+"").className='show';
@@ -35,6 +37,17 @@ function change(source){
 		document.getElementById("alerta"+quem+"").className='hidden';
 	};
 }
+
+function submit_form ( ){
+  if ( form_submitted ){
+    alert ( "Processando. Aguarde..." );
+   	return false;
+  }	else {
+    form_submitted = true;
+   	return true;
+  }
+}
+
 </script>
 
 <style type="text/css">

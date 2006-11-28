@@ -15,7 +15,8 @@
 
 <br><br>
 <form name="initShowPhotosBySpecieForm" method="get"
-	action="<c:url value="${servletToCall}"/>">
+	action="<c:url value="${servletToCall}"/>"
+	enctype="multipart/form-data">
 
 <c:import url="/jsp/common/display/hiddenFields.jsp"/>
 
@@ -27,7 +28,7 @@
 		<td colspan="3"></td>
 	</tr>
 	<tr align="center">
-		<td width="${col1}%"></td>
+		<td width="${col1}%">${nextPage}</td>
 		<td align="left" width="${col2}%">
 			<b><fmt:message key="family" /></b>
 		</td>

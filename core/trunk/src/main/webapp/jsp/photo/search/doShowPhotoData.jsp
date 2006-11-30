@@ -47,15 +47,16 @@
 		<td width="20%"><font size="${fontSize}" face="Verdana"><b>
 			<fmt:message key="city" /></b></font>
 		</td>
-<!-- 
 		<td>
+			<font size="${fontSize}" face="Verdana">
+				${currentPhoto.city.name} - ${currentPhoto.city.state.acronym}
+			</font>
+<!-- 
 			<FORM> 
-			<font size="${fontSize}" face="Verdana">${currentPhoto.city.name} - ${currentPhoto.city.state.acronym}
 			<INPUT type="button" value="<fmt:message key="map" />" onClick="window.open('<%= request.getContextPath()%>/servlet/cityFind?city=${currentPhoto.city.name}/${currentPhoto.city.state.acronym}','Map','height=600,width=600,status=yes,scrollbars=yes')"> 
 			</FORM> 
-			</font>
-		</td>
  -->		
+		</td>
 	</tr>
 	<tr>
 		<td width="20%"><font size="${fontSize}" face="Verdana"><b><fmt:message

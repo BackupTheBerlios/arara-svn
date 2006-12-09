@@ -26,7 +26,7 @@ import net.indrix.arara.tools.email.NoRecipientException;
 import net.indrix.arara.tools.email.WrongNumberOfValuesException;
 import net.indrix.arara.utils.PropertiesManager;
 import net.indrix.arara.vo.Sound;
-import net.indrix.arara.vo.User;
+import net.indrix.arara.vo.LightUser;
 
 /**
  * @author Jeff
@@ -54,8 +54,8 @@ public class SoundEmailSender extends AbstractSoundEmailSender {
             if (!list.isEmpty()) {
                 Iterator it = list.iterator();
                 while (it.hasNext()) {
-                    User user = (User) it.next();
-                    if (!user.equals(sound.getUser())) {
+                    LightUser user = (LightUser) it.next();
+                    if (user.getId() != sound.getUser().getId()) {
                         logger.debug("SoundEmailSender.run : sending email to user " + user.getLogin());
                         sendEmailToUser(user, sound);
                     }
@@ -78,7 +78,7 @@ public class SoundEmailSender extends AbstractSoundEmailSender {
      * @param sound
      *            The new sound just added
      */
-    private void sendEmailToUser(User user, Sound sound) {
+    private void sendEmailToUser(LightUser user, Sound sound) {
         Locale l = new Locale(user.getLanguage());
         EmailResourceBundle bundle = (EmailResourceBundle) EmailResourceBundle.getInstance();
         String server = PropertiesManager.getProperty("email.server");
@@ -132,7 +132,7 @@ public class SoundEmailSender extends AbstractSoundEmailSender {
      * 
      * @return A string message with the content of the email
      */
-    private String getMessage(String body, User user, Sound sound) {
+    private String getMessage(String body, LightUser user, Sound sound) {
         String bodyFormatted = "";
         ArrayList <String>list = new ArrayList<String>();
         list.add(user.getName());

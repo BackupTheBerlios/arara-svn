@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Arara">
+	<bannerLeft>
+		<name>Indrix</name>
+		<src>http://www.indrix.net/images/indrixlogo.gif</src>
+		<href>http://www.indrix.net/</href>
+	</bannerLeft>
+	<bannerRight>
+		<name>Berlios</name>
+		<src>http://developer.berlios.de/sflogo.php?group_id=0</src>
+		<href>http://developer.berlios.de</href>
+	</bannerRight>
+	<body>
+		<links>
+			<item name="Arara-Portugues" href="pt/index.html" />
+			<item name="Aves do Brasil"
+				href="http://www.aves.brasil.nom.br/" />
+			<item name="Indrix" href="http://www.indrix.net" />
+			<item name="Maven 2" href="http://maven.apache.org/maven2/" />
+			<item name="Eclipse" href="http://www.eclipse.org/" />
+		</links>
+
+		<menu name="Arara">
+			<item name="Introduction" href="index.html" />
+			<item name="How to Start" href="howtostart.html" />
+			<item name="FAQs" href="faq.html" />
+			<item name="Best Practices" href="best-practices.html" />
+			<item name="Download"
+				href="http://developer.berlios.de/project/showfiles.php?group_id=5593" />
+			<item name="Road Map"
+				href="http://developer.berlios.de/feature/?group_id=5593" />
+			<item name="Developer Site"
+				href="http://developer.berlios.de/projects/arara/" />
+		</menu>
+
+		${reports}
+
+	</body>
+</project>

@@ -1,0 +1,23 @@
+   <!-- Servlet that act as programs (main) -->
+   <servlet>
+      <servlet-name>addCommonName</servlet-name>
+      <servlet-class>net.indrix.servlets.utils.AddCommonNameServlet</servlet-class>
+      <load-on-startup>0</load-on-startup>
+   </servlet>
+
+   <servlet>
+      <servlet-name>loadData</servlet-name>
+      <servlet-class>net.indrix.servlets.utils.LoadDataServlet</servlet-class>
+      <load-on-startup>0</load-on-startup>
+   </servlet>
+
+   <!-- Servlet that act as programs (main) -->
+   <servlet-mapping>
+      <servlet-name>addCommonName</servlet-name>
+      <url-pattern>/servlet/addCommonName</url-pattern>
+   </servlet-mapping>
+   <servlet-mapping>
+      <servlet-name>loadData</servlet-name>
+      <url-pattern>/servlet/loadData</url-pattern>
+   </servlet-mapping>
+

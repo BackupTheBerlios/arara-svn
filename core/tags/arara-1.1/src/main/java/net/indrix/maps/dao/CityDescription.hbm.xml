@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 16/09/2006 18:01:28 by Hibernate Tools 3.1.0.beta5 -->
+<hibernate-mapping>
+    <class name="net.indrix.maps.dao.CityDescription" table="city_description">
+        <id name="name" type="string">
+            <column name="name" length="50" />
+            <generator class="assigned" />
+        </id>
+        <property name="description" type="string">
+            <column name="description"/>
+        </property>
+        <property name="coordinates" type="string">
+            <column name="coordinates" length="50"/>
+        </property>
+    </class>
+</hibernate-mapping>

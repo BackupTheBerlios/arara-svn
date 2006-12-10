@@ -265,16 +265,6 @@
                     <groupId>net.sf</groupId>
                     <artifactId>stat-scm</artifactId>
             </plugin>
-           <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-scm-plugin</artifactId>
-              <version>1.0-SNAPSHOT</version>
-              <configuration>
-                 <username>rafaelmc</username>
-                 <password>qwwqqa788774</password>
-              </configuration>
-           </plugin>
-            
 			
 		</plugins>
 	</reporting>

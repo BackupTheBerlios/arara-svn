@@ -3,7 +3,7 @@
 	<groupId>net.indrix.arara</groupId>
 	<artifactId>arara</artifactId>
 	<packaging>war</packaging>
-	<version>1.1-SNAPSHOT</version>
+	<version>1.1</version>
 	<name>Indrix-Arara</name>
 	<url>http://www.aves.com.br</url>
 	<description>
@@ -265,6 +265,16 @@
                     <groupId>net.sf</groupId>
                     <artifactId>stat-scm</artifactId>
             </plugin>
+           <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-scm-plugin</artifactId>
+              <version>1.0-SNAPSHOT</version>
+              <configuration>
+                 <username>rafaelmc</username>
+                 <password>qwwqqa788774</password>
+              </configuration>
+           </plugin>
+            
 			
 		</plugins>
 	</reporting>
@@ -279,9 +289,9 @@
 		</repository>
 	</distributionManagement>
 	<scm>
-		<connection>scm:svn:https://indrix@svn.berlios.de/svnroot/repos/arara/core</connection>
-		<developerConnection>scm:svn:https://indrix@svn.berlios.de/svnroot/repos/arara/core</developerConnection>
-		<url>https://iarara.berlios.de</url>
+		<connection>scm:svn:https://rafaelmc@svn.berlios.de/svnroot/repos/arara/core/tags/arara-1.1</connection>
+		<developerConnection>scm:svn:https://rafaelmc@svn.berlios.de/svnroot/repos/arara/core/tags/arara-1.1</developerConnection>
+		<url>https://arara.berlios.de/tags/arara-1.1</url>
 	</scm>
 	<issueManagement>
 		<system>Berlios</system>

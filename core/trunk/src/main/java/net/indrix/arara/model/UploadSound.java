@@ -11,10 +11,12 @@ import java.sql.SQLException;
 
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.dao.SoundDAO;
+import net.indrix.arara.dao.SpecieDAO;
 import net.indrix.arara.model.email.SoundEmailSender;
 import net.indrix.arara.model.exceptions.SoundProcessingException;
 import net.indrix.arara.model.file.SoundFileManager;
 import net.indrix.arara.vo.Sound;
+import net.indrix.arara.vo.Specie;
 
 /**
  * @author Jeff
@@ -41,6 +43,11 @@ public class UploadSound extends AbstractUpload {
 		try {
 			SoundFileManager manager = new SoundFileManager(sound);
 			manager.writeFile();
+            
+            // retrieve data from database, so all data will be loaded
+            SpecieDAO sDao = new SpecieDAO();
+            Specie s = sDao.retrieve(sound.getSpecie().getId());
+            sound.setSpecie(s);
             
             // send email to users
             logger.debug("Sending email");

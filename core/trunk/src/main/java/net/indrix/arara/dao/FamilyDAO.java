@@ -28,11 +28,11 @@ public class FamilyDAO extends AbstractDAO {
 
 	private static final String INSERT = "INSERT INTO family (name, subFamilyName) values (?,?)";
 
-	private static final String SELECT_BY_NAME = "SELECT * FROM family WHERE name=? ORDER BY name";
+	private static final String SELECT_BY_NAME = "SELECT * FROM family WHERE name=? and id != -1 ORDER BY name";
 
 	private static final String SELECT_BY_ID = "SELECT * FROM family WHERE id=? ORDER BY name";
 
-	private static final String SELECT_ALL = "SELECT * FROM family ORDER BY name";
+	private static final String SELECT_ALL = "SELECT * FROM family WHERE name != 'indefinido' ORDER BY name";
 
 	/**
 	 * The list of families to be kept in memory

@@ -45,7 +45,7 @@ public class SpecieDAO extends AbstractDAO {
 
 	private static final String SELECT_FOR_FAMILY = "SELECT * FROM specie where family_id = ? ORDER BY name";
 
-	private static final String SELECT_ALL = "SELECT s.id, s.name, s.family_id, f.name f_name from specie s, family f where s.family_id=f.id ORDER BY name";
+	private static final String SELECT_ALL = "SELECT s.id, s.name, s.family_id, f.name f_name from specie s, family f where s.family_id=f.id and s.id != -1 ORDER BY name";
 
 	/**
 	 * The list of species to be kept in memory

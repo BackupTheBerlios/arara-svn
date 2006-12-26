@@ -1,7 +1,7 @@
 <%@ taglib uri="/core" prefix="c"%>
 <%@ taglib uri="functions" prefix="f"%>
 <%@ taglib uri="/fmt" prefix="fmt"%>
-
+<!--
 <font size="0" face="Verdana"> 
     <c:choose>
         <c:when test='${statistics == "1"}'>
@@ -24,3 +24,25 @@
         </c:otherwise>
     </c:choose>
 </font>   			
+-->
+<font size="2" face="Verdana"> 
+<table width="100%">
+	<tr>
+		<td width="5%"></td>
+		<td width="95%"><fmt:message key="stat.users" />:${f:numberOfUsers()}</td>
+	</tr>
+	<tr>
+		<td width="5%"></td>
+		<td width="95%"><fmt:message key="stat.photos" /> : ${f:numberOfPhotos()}</td>
+	</tr>
+	<tr>
+		<td width="5%"></td>
+		<td width="95%"><fmt:message key="family.with.photos" /> :${f:numberOfFamilies()}</td>
+	</tr>
+	<tr>
+		<td width="5%"></td>
+		<td width="95%"><fmt:message key="species.with.photos" /> :	${f:numberOfSpecies()}</td>
+	</tr>
+</table>
+</font> 
+

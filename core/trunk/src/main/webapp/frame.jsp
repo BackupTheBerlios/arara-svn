@@ -208,13 +208,16 @@ div.channeltitle a:hover
 			        <c:import url="/menu.jsp" />		
 					<hr>	
 					<img src="<c:url value="/images/chart.png"/>" alt="" width="20" height="20"><b><fmt:message key="menu.statistics.statistics"/></b><br/>
+			        <c:import url="/statistics.jsp" />		
+					<!--  
 					<div id="statistics" style="position: relative;">
 					<div id="updatesponsor">
 					<p>
 					<fmt:message key="menu.statistics.load"/>
 					</p>
 					</div>
-					</div>              
+					</div>
+					-->              
         		</td>
       		</tr>
     	</table>

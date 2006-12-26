@@ -51,7 +51,7 @@ public class DatabaseManager {
 	/**
 	 * Database Manager
 	 */
-	public static BasicDataSource datasource = null;
+	public static DataSource datasource = null;
 
 	private static boolean initialized = false;
 	/**
@@ -60,10 +60,15 @@ public class DatabaseManager {
 	static {
 		logger.debug("Reading DB driver class...");
 		try {
-			String classToUse = getClassToUse();
-			logger.info("Driver to use:" + classToUse);
-			Class.forName(classToUse);
-			logger.info("Driver loaded");
+            
+            String classToUse = getClassToUse();
+            logger.info("Driver to use:" + classToUse);
+            Class.forName(classToUse);
+            logger.info("Driver loaded");
+
+            Context context = new InitialContext();
+            Context lautx = (Context) context.lookup("java:comp/env");
+            datasource = (DataSource)lautx.lookup("jdbc/avesbrasil1");                
 		} catch (Exception e) {
 			logger.error("Erro reading driver class " + e);
 		}
@@ -101,20 +106,20 @@ public class DatabaseManager {
 
 		if (SO.getSO() == SO.WIN) {
 			// if (eTeste()) {
-			// logger.error("Retrieving connection for WIN");
-			// c =
-			// DriverManager.getConnection(
-			// "jdbc:mysql://localhost/passaros?autoReconnect=true",
-			// "jeff",
-			// "jeff");
+			 c = DriverManager.getConnection("jdbc:mysql://localhost/passaros?autoReconnect=true",
+			 "jeff",
+			 "jeff");
 			// } else {
+            /*
             logger.info("Conection by Context");            
 			Context initContext = new InitialContext();
 			Context envContext = (Context) initContext.lookup("java:/comp/env");
 			DataSource ds = (DataSource) envContext.lookup("jdbc/aves");
 			c = ds.getConnection();
+            */
 			// }
 		} else {
+            /*
 			if (!initialized) {
 				logger.error("DatabaseManager.retrieveConnection : initializing...");
 				initialize();
@@ -124,21 +129,18 @@ public class DatabaseManager {
 			String url = "jdbc:mysql://" + site + "/" + database
 					+ "?autoReconnect=true";
 			c = DriverManager.getConnection(url, user, password);
-		}
-		return c;
+            */
+            
+            try {
+                c = datasource.getConnection();
+            } catch (SQLException sqle) {
+                logger.fatal("Could not retrieve a conection", sqle);
+                c = null;
+            } 
+        }
+        return c;
 
 	}
-
-	// /**
-	// * @return
-	// */
-	// private static boolean eTeste() {
-	// String property = System.getProperty("java.home");
-	// if ("C:\\Arquivos de programas\\Java\\j2re1.4.2_08".equals(property)){
-	// return true;
-	// }
-	// return false;
-	// }
 
 	/**
 	 * 

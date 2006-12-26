@@ -172,13 +172,13 @@ public class ServletUtil {
         Iterator it = list.iterator();
         while (it.hasNext()) {
             User user = (User) it.next();
-            LabelValueBean bean = new LabelValueBean(user.getName(), user.getId());
+            LabelValueBean bean = new LabelValueBean(user.getName() + " (" + user.getLogin() + ")", user.getId());
             newList.add(bean);
             logger.debug("adding bean to list " + bean);
         }
         return newList;
     }
-    
+      
 	/**
 	 * @param list
 	 * @return

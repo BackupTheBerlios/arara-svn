@@ -38,6 +38,10 @@ table.comBordaSimples tr {
 		<c:set var="newLine" value="${true}" />
 		<c:set var="w" value="${100}" />
 		<c:forEach items="${listOfPhotos}" var="photo">
+			<c:if test="${photo.specie.id == -1}">
+				<c:set var="identification" value="${true}" />
+			</c:if>
+		
 			<c:set var="index" value="${index + 1}" />
 			<c:if test="${newLine == true}">
 				<c:set var="newLine" value="${false}" />

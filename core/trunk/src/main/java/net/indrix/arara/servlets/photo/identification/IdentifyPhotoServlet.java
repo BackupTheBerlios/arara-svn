@@ -154,6 +154,7 @@ public class IdentifyPhotoServlet extends AbstractIdentificationServlet {
             nextPage = ServletConstants.FRAME_PAGE;
             String pageToShow = "/jsp/photo/search/doShowOnePhoto.jsp";
             req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
+            req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);
 
             if (!errors.isEmpty()) {
                 // coloca erros no request para registrar.jsp processar e

@@ -207,10 +207,10 @@ div.channeltitle a:hover
 					<hr>		
 			        <c:import url="/menu.jsp" />		
 					<hr>	
+			        <c:import url="/jsp/marketing.jsp" />
+			        <hr>
 					<img src="<c:url value="/images/chart.png"/>" alt="" width="20" height="20"><b><fmt:message key="menu.statistics.statistics"/></b><br/>
 			        <c:import url="/statistics.jsp" />
-			        <hr>
-			        <c:import url="/jsp/marketing.jsp" />
 					<!--  
 					<div id="statistics" style="position: relative;">
 					<div id="updatesponsor">

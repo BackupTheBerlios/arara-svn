@@ -146,7 +146,9 @@ public class ServletConstants {
 
 	public static final String LOGOUT_PAGE = "/jsp/user/logout.jsp";
 
-	public static final String DELETED_PAGE = "/jsp/photo/search/deleted.jsp";
+	public static final String DELETED_PHOTO_PAGE = "/jsp/photo/search/deleted.jsp";
+
+    public static final String DELETED_SOUND_PAGE = "/jsp/sound/delete/doDeleted.jsp";
 
 	public static final String LIST_PAGE = "/jsp/user/listUsers.jsp";
 

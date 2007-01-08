@@ -44,4 +44,6 @@ public class UploadSoundConstants extends UploadConstants {
 
 	public static final String INVALID_FILE_SIZE = "invalid.sound.file.size";
 
+    public static final String ERROR_PROCESSING_SOUND_FILE = "error.processing.sound.file";
+
 }

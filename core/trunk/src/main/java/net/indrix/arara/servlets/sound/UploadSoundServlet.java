@@ -98,7 +98,7 @@ public class UploadSoundServlet extends AbstractUploadServlet {
 						errors.add(ServletConstants.DATABASE_ERROR);
 					} catch (SoundProcessingException e) {
 						logger.debug("SoundProcessingException .....", e);
-						errors.add(UploadSoundConstants.INVALID_FILE);
+						errors.add(UploadSoundConstants.ERROR_PROCESSING_SOUND_FILE);
 					}
 				}
 			} catch (ServletException e) {

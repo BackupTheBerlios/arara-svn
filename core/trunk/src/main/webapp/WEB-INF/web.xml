@@ -327,6 +327,14 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>deleteSound</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.sound.DeleteSoundServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
 		<servlet-name>searchSounds</servlet-name>
 		<servlet-class>
 			net.indrix.arara.servlets.sound.display.SearchSoundsServlet
@@ -586,6 +594,11 @@
 	<servlet-mapping>
 		<servlet-name>initUploadSounds</servlet-name>
 		<url-pattern>/servlet/initUploadSounds</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>deleteSound</servlet-name>
+		<url-pattern>/servlet/deleteSound</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

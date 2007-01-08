@@ -8,6 +8,7 @@ package net.indrix.arara.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Enumeration;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -93,17 +94,22 @@ public class PropertiesManager {
 //			java.io.FileInputStream input = new java.io.FileInputStream(url.getFile());
 //			InputStream input = PropertiesManager.class.getResource(file);
 			
-			ClassLoader cl = PropertiesManager.class.getClassLoader();
-			InputStream input = cl.getResourceAsStream(file);
+			InputStream input = PropertiesManager.class.getResourceAsStream(file);
 			
 			logger.debug("InputStream = " + input);
 			
 			if (input != null){
 				properties = new Properties();
-				properties.load(input);				
+				properties.load(input);
+                Enumeration<Object> enumeration = properties.keys();
+                while (enumeration.hasMoreElements()){
+                    String key = (String)enumeration.nextElement();
+                    String value = properties.getProperty(key);
+                    logger.debug("Properties: " + key + " = " + value);
+                }
 			}
 			else {
-				logger.error("File=" + file + "input=" + input + "Classloader=" + cl.toString());
+				logger.error("File=" + file + "input=" + input);
 				throw new IOException("Error reading " + file);
 			}
 		} catch (IOException e) {

@@ -70,10 +70,20 @@
 							<td width="22%"><font size="1" face="Verdana">${sound.specie.commonNameString}</font></td>
 							<td width="8%"><font size="1" face="Verdana">${sound.sex.sex}</font></td>
 							<td width="8%"><font size="1" face="Verdana">${sound.age.age}</font></td>
-							<td width="8%"><a
-								href="<c:url value="${linkKey}${sound.relativePathAsLink}"/>"
-								target="_blank"> <font size="1" face="Verdana"> <fmt:message
-								key="sound.link.lable" /> </font> </a></td>
+							<td width="8%">
+								<font size="1" face="Verdana"> 
+								<a href="<c:url value="${linkKey}${sound.relativePathAsLink}"/>" target="_blank"><fmt:message key="sound.link.lable" /></a>
+								</font>
+								<c:if test="${(sound.user.id == user.id) or (user.admin == true)}">
+									<a href="<c:url value="/jsp/sound/delete/deleteSound.jsp?soundId=${sound.id}"/>"> 
+										<font size="1" face="Verdana"> 
+											<fmt:message key="button.delete.sound.tooltip" var="deleteToolTip"/>
+											<img hspace="3" title="${deleteToolTip}" src="<c:url value="/jsp/images/delete.gif"/>" width="20" height="20"> 
+										</font>
+									</a>
+								</c:if>
+							</td>
+							
 						</tr>
 						<tr>
 							<td width="10%" align="left"><font size="1" face="Verdana"><fmt:message

@@ -394,7 +394,6 @@ public class Photo implements Serializable {
 	public boolean isSoundAvailable() {
 		boolean is = false;
 		if (specie.isSoundAvailable()) {
-			System.out.println("Specie isSoundAvailable = true");
 			int ageId = age.getId();
 			int sexId = sex.getId();
 

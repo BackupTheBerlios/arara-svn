@@ -59,7 +59,7 @@ public class DeletePhotoServlet extends HttpServlet {
             User user = (User) session.getAttribute(ServletConstants.USER_KEY);           
             loggerActions.info("User " + user.getLogin() + " from IP " + req.getRemoteAddr() + " has deleted the photo " + photoId);
 
-			nextPage = ServletConstants.DELETED_PAGE;
+			nextPage = ServletConstants.DELETED_PHOTO_PAGE;
 		} catch (DatabaseDownException e) {
 			logger.debug("DatabaseDownException.....");
 			errors.add(ServletConstants.DATABASE_ERROR);

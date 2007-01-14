@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.servlets.pagination.PaginationBean;
 import net.indrix.arara.servlets.pagination.PaginationController;
 import net.indrix.arara.servlets.pagination.exceptions.InvalidControllerException;
 import net.indrix.arara.vo.User;
@@ -71,6 +72,11 @@ public class SearchPhotosServlet extends AbstractSearchPhotosServlet {
 		logger.debug("Putting list of photos in session");
 		req.setAttribute("identification", identificationStr);
 		session.setAttribute(ServletConstants.PHOTOS_LIST, list);
+        
+        PaginationBean bean = controller.getPaginationBean();
+        logger.debug("number of pages: " + bean.getNumberOfPages());
+        logger.debug("current page: " + bean.getCurrentPage());
+        session.setAttribute("paginationBean", bean);
         
         String pageToShow = "/jsp/photo/search/doShowAllPhotos.jsp";
 

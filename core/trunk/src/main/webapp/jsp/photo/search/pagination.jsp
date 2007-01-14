@@ -2,8 +2,10 @@
 <%@ taglib uri="/fmt" prefix="fmt"%>
 
 <%@ page import="net.indrix.arara.servlets.pagination.*"%>
+
 <tr>
 	<td align="center">
+		[Página ${paginationBean.currentPage} de ${paginationBean.numberOfPages}]
 		<% PaginationController p = (PaginationController)session.getAttribute("photoPaginationController");
         boolean previous = false;
         boolean next = false;

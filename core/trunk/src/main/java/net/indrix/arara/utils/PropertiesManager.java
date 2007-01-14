@@ -90,10 +90,6 @@ public class PropertiesManager {
 	private static void loadPropertiesFromFile() {
 		String file = getFileToUse();
 		try {
-//			java.net.URL url = PropertiesManager.class.getResource(file);
-//			java.io.FileInputStream input = new java.io.FileInputStream(url.getFile());
-//			InputStream input = PropertiesManager.class.getResource(file);
-			
 			InputStream input = PropertiesManager.class.getResourceAsStream(file);
 			
 			logger.debug("InputStream = " + input);
@@ -109,7 +105,7 @@ public class PropertiesManager {
                 }
 			}
 			else {
-				logger.error("File=" + file + "input=" + input);
+				logger.error("File=" + file + ", input=" + input);
 				throw new IOException("Error reading " + file);
 			}
 		} catch (IOException e) {

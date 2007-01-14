@@ -154,6 +154,11 @@ div.channeltitle a:hover
 <c:set var="mainBgColor" value="#669900" scope="application" />
 <c:set var="formTitleColor" value="#000000" scope="application" />
 
+<!-- DEBUG
+PageToShow:${pageToShow}<br>
+param.pageToShow:${param.pageToShow}
+-->
+
 <c:if test="${pageToShow != null && pageToShow != ''}">
 	<c:set var="page" value="${pageToShow}" />
 </c:if>

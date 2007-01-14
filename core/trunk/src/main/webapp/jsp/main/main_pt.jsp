@@ -10,12 +10,10 @@
 		<p>Seja bem-vindo ao <b>Sistema de Informações de Aves do Brasil</b>.
 		</p>
 		<p>O objetivo deste projeto é disponibilizar um meio fácil para que
-		interessados em aves possam compartilhar suas fotos, ou visualizar
-		fotos de outros autores, tornando o site um banco de dados de imagens
-		das aves do Brasil.</p>
+		interessados em aves possam compartilhar suas fotos e sons, ou visualizar
+		fotos e sons de outros autores, tornando o site um banco de dados das aves do Brasil.</p>
 		<p>Sugestões, críticas e idéias são muito bem-vindas. Envie seus
 		comentários para o email <a href="mailto:webmaster@aves.brasil.nom.br">webmaster</a></p>
-		<br>
 		<p>Ajude este site a crescer, contribuindo com fotos e sons. 
 		<a href="<c:url value="/frame.jsp?pageToShow=/jsp/user/doRegister.jsp"/>">Registre-se</a> e envie um email 
 		para <a href="mailto:webmaster@aves.brasil.nom.br">webmaster</a> pedindo permissão para o
@@ -24,14 +22,12 @@
 		<br>
 		<b>O site segue a nomenclatura e a lista do CBRO </b> <br>
 		<br>
-		<br>
-		<a href="<c:url value="/jsp/language.jsp?lang=en"/>">English version</a>
 		<hr>
 		</td>
 	</tr>
 	<tr>
 		<td>
-			<font color="#FF0000">Apoie esse projeto, seja um patrocinador deste site!</font>
+			<b>Apoie esse projeto, seja um patrocinador deste site!</b><br><br>
 			<table width="100%" class="formBorder" >
 				<tr>
 					<td align="center">
@@ -80,6 +76,15 @@
 			</table>
 		</td>
 	</tr>
+	<tr>
+		<td>
+			<hr>
+			<br>
+			<a href="<c:url value="/jsp/language.jsp?lang=en"/>">English version</a>
+		</td>
+	</tr>
+	
+
 <!-- 
 	<tr>
 		<td>

@@ -38,7 +38,7 @@ public class SoundModel extends MediaModel{
 	 *             If some SQL Exception occurs
 	 */
 	public void delete(int soundId) throws DatabaseDownException, SQLException {
-		logger.debug("PhotoModel.delete | soundId " + soundId);
+		logger.debug("SoundModel.delete | soundId " + soundId);
 		dao.delete(soundId);
 	}
 

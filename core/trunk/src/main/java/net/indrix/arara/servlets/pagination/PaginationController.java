@@ -60,6 +60,8 @@ public abstract class PaginationController {
      */
     protected String text;
 
+    protected PaginationBean paginationBean; 
+    
     /**
      * Creates a new PaginationController object, with the given number of elements per page, and
      * with the flag identification
@@ -70,6 +72,7 @@ public abstract class PaginationController {
 	public PaginationController(int dataPerPage, boolean identification) {
 		this.dataPerPage = dataPerPage;
         this.identification = identification;
+        paginationBean = new PaginationBean();
 	}
 
 	/**
@@ -293,5 +296,16 @@ public abstract class PaginationController {
 
     public void setText(String text) {
         this.text = text;
+    }
+    
+    /**
+     * Returns the amount of data retrieved
+     * 
+     * @return the amount of data retrieved
+     */
+    public PaginationBean getPaginationBean(){
+        paginationBean.setNumberOfPages((listOfData.size() / dataPerPage) + 1);
+        paginationBean.setCurrentPage((currentIndex / dataPerPage) + 1);
+        return paginationBean;
     }
 }

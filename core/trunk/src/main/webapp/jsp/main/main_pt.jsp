@@ -16,7 +16,6 @@
 		<p>Sugestões, críticas e idéias são muito bem-vindas. Envie seus
 		comentários para o email <a href="mailto:webmaster@aves.brasil.nom.br">webmaster</a></p>
 		<br>
-		<br>
 		<p>Ajude este site a crescer, contribuindo com fotos e sons. 
 		<a href="<c:url value="/frame.jsp?pageToShow=/jsp/user/doRegister.jsp"/>">Registre-se</a> e envie um email 
 		para <a href="mailto:webmaster@aves.brasil.nom.br">webmaster</a> pedindo permissão para o
@@ -26,10 +25,59 @@
 		<b>O site segue a nomenclatura e a lista do CBRO </b> <br>
 		<br>
 		<br>
-		<br>
-
-		<hr>
 		<a href="<c:url value="/jsp/language.jsp?lang=en"/>">English version</a>
+		<hr>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<font color="#FF0000">Apoie esse projeto, seja um patrocinador deste site!</font>
+			<table width="100%" class="formBorder" >
+				<tr>
+					<td align="center">
+						<a href="mailto:webmaster@aves.brasil.nom.br?subject=Patrocinio"> 
+							<img src="<c:url value="/jsp/images/Propaganda.jpg"/>"	align="bottom"> 
+						</a> 
+					</td>
+					<td align="center">
+						<a href="mailto:webmaster@aves.brasil.nom.br?subject=Patrocinio"> 
+							<img src="<c:url value="/jsp/images/Propaganda.jpg"/>"	align="bottom"> 
+						</a> 
+					</td>
+					<td align="center">
+						<a href="mailto:webmaster@aves.brasil.nom.br?subject=Patrocinio"> 
+							<img src="<c:url value="/jsp/images/Propaganda.jpg"/>"	align="bottom"> 
+						</a> 
+					</td>
+					<td align="center">
+						<a href="mailto:webmaster@aves.brasil.nom.br?subject=Patrocinio"> 
+							<img src="<c:url value="/jsp/images/Propaganda.jpg"/>"	align="bottom"> 
+						</a> 
+					</td>
+				</tr>
+				<tr>
+					<td align="center">
+						<a href="mailto:webmaster@aves.brasil.nom.br?subject=Patrocinio"> 
+							<img src="<c:url value="/jsp/images/Propaganda.jpg"/>"	align="bottom"> 
+						</a> 
+					</td>
+					<td align="center">
+						<a href="mailto:webmaster@aves.brasil.nom.br?subject=Patrocinio"> 
+							<img src="<c:url value="/jsp/images/Propaganda.jpg"/>"	align="bottom"> 
+						</a> 
+					</td>
+					<td align="center">
+						<a href="mailto:webmaster@aves.brasil.nom.br?subject=Patrocinio"> 
+							<img src="<c:url value="/jsp/images/Propaganda.jpg"/>"	align="bottom"> 
+						</a> 
+					</td>
+					<td align="center">
+						<a href="mailto:webmaster@aves.brasil.nom.br?subject=Patrocinio"> 
+							<img src="<c:url value="/jsp/images/Propaganda.jpg"/>"	align="bottom"> 
+						</a> 
+					</td>
+				</tr>
+			</table>
 		</td>
 	</tr>
 <!-- 

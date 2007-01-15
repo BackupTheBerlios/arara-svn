@@ -668,10 +668,10 @@
 		<taglib-location>/WEB-INF/tags/fmt.tld</taglib-location>
 	</taglib>
 
-
+	<!--
 	<session-config>
 		<session-timeout>1</session-timeout>
 	</session-config>
-
+	-->
 </web-app>
 

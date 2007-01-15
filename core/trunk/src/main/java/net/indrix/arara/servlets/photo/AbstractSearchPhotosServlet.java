@@ -21,6 +21,7 @@ import javax.servlet.http.HttpSession;
 
 import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.servlets.ServletUtil;
+import net.indrix.arara.servlets.pagination.PaginationBean;
 import net.indrix.arara.servlets.pagination.PaginationController;
 import net.indrix.arara.servlets.pagination.PhotoByCommonNamePaginationController;
 import net.indrix.arara.servlets.pagination.PhotoByFamilyPaginationController;
@@ -98,7 +99,7 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
             PhotoPaginationController controller = (PhotoPaginationController) getPaginationController(
                     session, false, getPaginationConstant());
             controller.setId(id);
-            controller.setText(textToSearch);
+            controller.setText(textToSearch);           
             try {
                 list = controller.doAction(action);
             } catch (InvalidControllerException e) {
@@ -112,6 +113,10 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
                                     e1);
                 }
             }
+            PaginationBean bean = controller.getPaginationBean();
+            logger.debug("number of pages: " + bean.getNumberOfPages());
+            logger.debug("current page: " + bean.getCurrentPage());
+            session.setAttribute("paginationBean", bean);                
 
             logger.debug("List of photos retrieved...");
             logger.debug("Putting list of photos in session");

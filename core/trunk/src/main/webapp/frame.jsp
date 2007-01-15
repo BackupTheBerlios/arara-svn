@@ -213,6 +213,8 @@ param.pageToShow:${param.pageToShow}
 			        <c:import url="/menu.jsp" />		
 					<hr>	
 			        <c:import url="/jsp/marketing.jsp" />
+					<hr>	
+					&nbsp;<a href="<c:url value="/frame.jsp?pageToShow=/jsp/colaboradores.html"/>">Colaboradores do site</a>
 			        <hr>
 					<img src="<c:url value="/images/chart.png"/>" alt="" width="20" height="20"><b><fmt:message key="menu.statistics.statistics"/></b><br/>
 			        <c:import url="/statistics.jsp" />

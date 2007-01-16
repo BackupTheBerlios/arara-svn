@@ -21,6 +21,7 @@ import javax.servlet.http.HttpSession;
 
 import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.servlets.ServletUtil;
+import net.indrix.arara.servlets.pagination.PaginationBean;
 import net.indrix.arara.servlets.pagination.PaginationController;
 import net.indrix.arara.servlets.pagination.SoundByCommonNamePaginationController;
 import net.indrix.arara.servlets.pagination.SoundByFamilyPaginationController;
@@ -109,6 +110,11 @@ public abstract class AbstractSearchSoundsServlet extends HttpServlet {
                     logger.fatal("Exception when doing BEGIN action...", e1);
                 }
             }
+            PaginationBean bean = controller.getPaginationBean();
+            logger.debug("number of pages: " + bean.getNumberOfPages());
+            logger.debug("current page: " + bean.getCurrentPage());
+            session.setAttribute("paginationBean", bean);                
+            
             logger.debug("Putting list of sounds in session");
             session.setAttribute(ServletConstants.SOUNDS_LIST, list);
 

@@ -5,7 +5,7 @@
 
 <tr>
 	<td align="center">
-		[Página ${paginationBean.currentPage} de ${paginationBean.numberOfPages}]
+		[<fmt:message	key="pagination.page"/> ${paginationBean.currentPage} <fmt:message key="pagination.page.of"/> ${paginationBean.numberOfPages}]
 		<% PaginationController p = (PaginationController)session.getAttribute("photoPaginationController");
         boolean previous = false;
         boolean next = false;

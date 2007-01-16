@@ -4,7 +4,9 @@
 
 <font face="Verdana" color="#ffffff" size="-1">
 <tr>
-	<td align="center"><% PaginationController p = (PaginationController)session.getAttribute("soundPaginationController");
+	<td align="center">
+		[<fmt:message	key="pagination.page"/> ${paginationBean.currentPage} <fmt:message key="pagination.page.of"/> ${paginationBean.numberOfPages}]
+		<% PaginationController p = (PaginationController)session.getAttribute("soundPaginationController");
           boolean previous = false;
           boolean next = false;
           if ((p != null) && (p.hasPrevious())){

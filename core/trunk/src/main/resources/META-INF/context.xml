@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context path="/Passaros">
+<Context path="/arara">
+  <Resource name="jdbc/aves" auth="Container"
+            type="javax.sql.DataSource" username="passaro" password="passaro"
+            driverClassName="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/passaro?autoReconnect=true"
+            maxActive="100" maxIdle="30" maxWait="10000"/>            
 	<Logger className="org.apache.catalina.logger.FileLogger"
-		prefix="Passaros." suffix=".log" timestamp="true" />
+		prefix="arara." suffix=".log" timestamp="true" />
 </Context>

@@ -55,14 +55,14 @@ table.comBordaSimples tr {
 						<a  href="<c:url value="${linkKey}${photo.sound.relativePathAsLink}"/>" target="_blank"> 
 							<font size="1" face="Verdana"> 
 								<fmt:message key="button.sound.tooltip" var="soundToolTip"/>
-								<img title="${soundToolTip}" src="<c:url value="/jsp/images/sound.gif"/>" width="20" height="20"> 
+								<img title="${soundToolTip}" src="<c:url value="/jsp/images/sound.gif"/>" width="20" height="20" border="0"> 
 							</font> 
 						</a>
 					</c:if> 
 					<c:if test="${photo.soundAvailable == false}">
 							<font size="1" face="Verdana"> 
 								<fmt:message key="button.noSound.tooltip" var="soundToolTip"/>
-								<img title="${soundToolTip}" src="<c:url value="/jsp/images/noSound.gif"/>" width="20" height="20"> 
+								<img title="${soundToolTip}" src="<c:url value="/jsp/images/noSound.gif"/>" width="20" height="20" border="0"> 
 							</font> 
 					</c:if> 
 					</td>
@@ -71,7 +71,7 @@ table.comBordaSimples tr {
 					<img src="<c:url value="/servlet/getThumbnail?photoId=${photo.id}&identification=${identification}"/>"
 						width="${f:thumbnailWidth(w, photo.smallImage.width, photo.smallImage.height)}"
 						height="${f:thumbnailHeight(w, photo.smallImage.width, photo.smallImage.height)}"
-						align="bottom" />
+						align="bottom" border="0"/>
 					</a> 
 					</td>
 					
@@ -107,8 +107,14 @@ table.comBordaSimples tr {
 						</c:if> 
 						<!-- INSERTING user login -->
 						<font size="1" face="Verdana"><br><fmt:message key="user.title" />: 
-							<a href="<c:url value="/servlet/searchPhotosByUser?id=${photo.user.id}&action=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${photo.user.login}
-							</a>
+							<a href="<c:url value="/servlet/searchPhotosByUser?id=${photo.user.id}&action=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${photo.user.login}</a>
+
+							<c:if test="${(photo.user.id == user.id) or (user.admin == true)}">
+								<a  href="<c:url value="/frame.jsp?pageToShow=/jsp/email/doWriteEmail.jsp&loginTo=${photo.user.login}"/>"> 
+									<fmt:message key="button.sound.tooltip" var="soundToolTip"/>
+									<img align="middle" title="${soundToolTip}" src="<c:url value="/jsp/images/mail_write.png"/>" width="20" height="20" border="0"> 
+								</a>							
+							</c:if> 
 						</font> 
 						<c:if test="${photo.specie.id == -1}">
 							<font size="1" face="Verdana"><br>
@@ -123,7 +129,7 @@ table.comBordaSimples tr {
 					<a href="<c:url value="/servlet/initCommentPhoto?photoId=${photo.id}&identification=${identification}"/>"> 
 						<font size="1" face="Verdana"> 
 							<fmt:message key="button.comment.tooltip" var="commentToolTip"/>
-							<img title="${commentToolTip}" src="<c:url value="/jsp/images/comment.gif"/>" width="20" height="20"> 
+							<img title="${commentToolTip}" src="<c:url value="/jsp/images/comment.gif"/>" width="20" height="20" border="0"> 
 						</font>
 					</a>
 				</td>
@@ -135,7 +141,7 @@ table.comBordaSimples tr {
 						<a href="<c:url value="/servlet/initEditPhoto?photoId=${photo.id}&identification=${identification}"/>"> 
 							<font size="1" face="Verdana"> 
 								<fmt:message key="button.edit.tooltip" var="editToolTip"/>
-								<img title="${editToolTip}"src="<c:url value="/jsp/images/edit.gif"/>" width="20" height="20"> 
+								<img title="${editToolTip}"src="<c:url value="/jsp/images/edit.gif"/>" width="20" height="20" border="0"> 
 							</font>
 						</a>
 					</td>
@@ -145,7 +151,7 @@ table.comBordaSimples tr {
 						<a href="<c:url value="/jsp/photo/search/deletePhoto.jsp?photoId=${photo.id}"/>"> 
 							<font size="1" face="Verdana"> 
 								<fmt:message key="button.delete.tooltip" var="deleteToolTip"/>
-								<img title="${deleteToolTip}" src="<c:url value="/jsp/images/delete.gif"/>" width="20" height="20"> 
+								<img title="${deleteToolTip}" src="<c:url value="/jsp/images/delete.gif"/>" width="20" height="20" border="0"> 
 							</font>
 						</a>
 					</td>
@@ -156,7 +162,7 @@ table.comBordaSimples tr {
 					<td align="right">
 						<font size="1" face="Verdana"> 
 							<fmt:message key="button.noEdit.tooltip" var="editToolTip"/>
-							<img title="${editToolTip}"src="<c:url value="/jsp/images/noEdit.gif"/>" width="20" height="20"> 
+							<img title="${editToolTip}"src="<c:url value="/jsp/images/noEdit.gif"/>" width="20" height="20" border="0"> 
 						</font>
 					</td>
 					</tr>
@@ -164,7 +170,7 @@ table.comBordaSimples tr {
 					<td align="right">
 						<font size="1" face="Verdana"> 
 							<fmt:message key="button.noDelete.tooltip" var="deleteToolTip"/>
-							<img title="${deleteToolTip}" src="<c:url value="/jsp/images/noDelete.gif"/>" width="20" height="20"> 
+							<img title="${deleteToolTip}" src="<c:url value="/jsp/images/noDelete.gif"/>" width="20" height="20" border="0"> 
 						</font>
 					</td>
 					</tr>

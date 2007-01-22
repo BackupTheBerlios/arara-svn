@@ -1,3 +1,8 @@
-<%@ taglib uri="/fmt" prefix="fmt"%>
+<%@ taglib uri="/core" prefix="c"%>
 
-<fmt:message key="user.logout.error" />
+
+<c:set var="messageKey" value="user.logout.error" scope="request"/>
+<c:import url="/jsp/common/doShowMessage.jsp"/>
+
+
+

@@ -61,6 +61,34 @@
 			
 		  </div>
 		  </div>
+<!--
+
+			<a href="<c:url value="/index.jsp"/>">
+				<img border="0" src="<c:url value="/images/home.png"/>" title="<fmt:message key="menu.common.home" />"/>
+			</a>
+
+			<c:if test="${user == null}">
+				<a href="<c:url value="/frame.jsp?pageToShow=/jsp/user/doLogin.jsp"/>">
+					<img border="0" src="<c:url value="/images/login.png"/>" title="<fmt:message key="menu.common.login" />"/>
+				</a>
+				<a href="<c:url value="/frame.jsp?pageToShow=/jsp/user/doRegister.jsp"/>">
+					<img border="0" src="<c:url value="/images/users.png"/>" title="<fmt:message key="menu.common.register" />"/>
+				</a>
+			</c:if>
+			<c:if test="${user != null}">
+				<a href="<c:url value="/servlet/logout"/>">
+					<img border="0" src="<c:url value="/images/logout.png"/>" title="<fmt:message key="menu.common.logout" />"/>
+				</a>
+				<a href="<c:url value="/frame.jsp?pageToShow=/jsp/user/doUpdateUser.jsp"/>">
+					<img border="0" src="<c:url value="/images/edit.png"/>" title="<fmt:message key="menu.common.updateUser" />"/>
+				</a>
+				<a href="<c:url value="/frame.jsp?pageToShow=/jsp/user/doChangePassword.jsp"/>">
+					<img border="0" src="<c:url value="/images/key.png"/>" title="<fmt:message key="menu.common.changePassword"/>"/>
+				</a>
+			</c:if>
+-->
+
+		  
 		</td>		
 	</tr>
 	<tr bgcolor="${mainBgColor}">	

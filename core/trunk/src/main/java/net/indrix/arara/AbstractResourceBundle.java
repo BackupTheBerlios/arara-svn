@@ -42,6 +42,21 @@ public abstract class AbstractResourceBundle {
 		return null;
 	}
 
+    /**
+     * This method retrieves the value for the given key, for the given locale
+     * 
+     * @param key
+     *            The key to search
+     * @param l
+     *            The locale
+     * 
+     * @return The value corresponding to the key
+     */
+    public String getString(String key) {
+        Locale l = new Locale("pt");
+        return getString(key, l);
+    }
+    
 	/**
 	 * This method retrieves the value for the given key, for the given locale
 	 * 

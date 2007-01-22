@@ -69,7 +69,7 @@ public class MailSender extends Thread {
 	/**
 	 * Add a new message in the buffer of messages
 	 */
-	synchronized public void sendMessage(Message m, boolean sendNow) {
+	synchronized public void sendMessage(Message m, boolean sendNow) throws MessagingException{
 		logger.info("MainSender.sendMessage: entering method with flag = "
 				+ sendNow);
 		if (sendNow) {
@@ -78,14 +78,11 @@ public class MailSender extends Thread {
 						.info("MainSender.sendMessage: calling Transport.send...");
 				Transport.send(m);
 			} catch (SendFailedException e) {
-				logger.debug("MainSender.sendMessage: error to send email : "
-						+ e);
-				System.out.println(e.getInvalidAddresses());
-				System.out.println(e.getValidSentAddresses());
-				System.out.println(e.getValidUnsentAddresses());
+				logger.debug("MainSender.sendMessage: error to send email : " + e);
+                throw e;
 			} catch (MessagingException e) {
-				logger.debug("MainSender.sendMessage: error to send email : "
-						+ e);
+				logger.debug("MainSender.sendMessage: error to send email : " + e);
+                throw e;
 			}
 		} else {
 			logger.debug("MainSender.sendMessage: adding msg to the queue");

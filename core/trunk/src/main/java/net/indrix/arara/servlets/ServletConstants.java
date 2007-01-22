@@ -120,6 +120,8 @@ public class ServletConstants {
 	public static final String CURRENT_PHOTO = "currentPhoto";
 
 	public static final String USERS_ON_LINE = "usersOnLine";
+    
+    public static final String SEND_EMAIL_MESSAGE_KEY = "messageKey";
 
 	// Pages
 	public static final String INITIAL_PAGE = "/index.jsp";
@@ -158,6 +160,8 @@ public class ServletConstants {
 
 	public static final String ERROR_LOGOUT = "/jsp/user/logoutError.jsp";
 
+    public static final String SHOW_MESSAGE_PAGE = "/jsp/common/doShowMessage.jsp";
+    
 	public static final String DATABASE_ERROR_PAGE = "/databaseError.jsp";
 
 	// PHOTOS
@@ -229,4 +233,5 @@ public class ServletConstants {
     
     public static final String CITY_INFO = "city.info";
 
+    public static final String SEND_EMAIL_ERROR = "send.email.general.error";
 }

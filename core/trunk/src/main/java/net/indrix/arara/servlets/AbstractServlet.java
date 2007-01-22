@@ -38,6 +38,8 @@ public class AbstractServlet extends HttpServlet {
 	 */
 	protected static Logger logger = Logger.getLogger("net.indrix.aves");
 
+    protected static Logger loggerActions = Logger.getLogger("net.indrix.actions");
+    
 	protected HashMap parseMultiPartFormData(HttpServletRequest request)
 			throws ServletException, IOException, FileUploadException {
 		logger.debug(" - Entering parseMultiPartFormData(HttpServletRequest)");

@@ -1,7439 +1,6414 @@
-if(typeof dojo == "undefined"){
+/*
+	Copyright (c) 2004-2006, The Dojo Foundation
+	All Rights Reserved.
 
-/**
-* @file bootstrap1.js
-*
-* summary: First file that is loaded that 'bootstraps' the entire dojo library suite.
-* note:  Must run before hostenv_*.js file.
-*
-* @author  Copyright 2004 Mark D. Anderson (mda@discerning.com)
-* TODOC: should the copyright be changed to Dojo Foundation?
-* @license Licensed under the Academic Free License 2.1 http://www.opensource.org/licenses/afl-2.1.php
-*
-* $Id: bootstrap1.js 4342 2006-06-11 23:03:30Z alex $
-*/
+	Licensed under the Academic Free License version 2.1 or above OR the
+	modified BSD license. For more information on Dojo licensing, see:
 
-// TODOC: HOW TO DOC THE BELOW?
-// @global: djConfig
-// summary:  
-//		Application code can set the global 'djConfig' prior to loading
-//		the library to override certain global settings for how dojo works.  
-// description:  The variables that can be set are as follows:
-//			- isDebug: false
-//			- allowQueryConfig: false
-//			- baseScriptUri: ""
-//			- baseRelativePath: ""
-//			- libraryScriptUri: ""
-//			- iePreventClobber: false
-//			- ieClobberMinimal: true
-//			- preventBackButtonFix: true
-//			- searchIds: []
-//			- parseWidgets: true
-// TODOC: HOW TO DOC THESE VARIABLES?
-// TODOC: IS THIS A COMPLETE LIST?
-// note:
-//		'djConfig' does not exist under 'dojo.*' so that it can be set before the 
-//		'dojo' variable exists.  
-// note:
-//		Setting any of these variables *after* the library has loaded does nothing at all. 
-// TODOC: is this still true?  Release notes for 0.3 indicated they could be set after load.
-//
-
-
-
-//TODOC:  HOW TO DOC THIS?
-// @global: dj_global
-// summary: 
-//		an alias for the top-level global object in the host environment
-//		(e.g., the window object in a browser).
-// description:  
-//		Refer to 'dj_global' rather than referring to window to ensure your
-//		code runs correctly in contexts other than web browsers (eg: Rhino on a server).
-var dj_global = this;
-
-
-
-function dj_undef(/*String*/ name, /*Object?*/ object){
-	//summary: Returns true if 'name' is defined on 'object' (or globally if 'object' is null).
-	//description: Note that 'defined' and 'exists' are not the same concept.
-	if(object==null){ object = dj_global; }
-	// exception if object is not an Object
-	return (typeof object[name] == "undefined");	// Boolean
-}
-
-
-// make sure djConfig is defined
-if(dj_undef("djConfig")){ 
-	var djConfig = {}; 
-}
-
-
-//TODOC:  HOW TO DOC THIS?
-// dojo is the root variable of (almost all) our public symbols -- make sure it is defined.
-if(dj_undef("dojo")){ 
-	var dojo = {}; 
-}
-
-//TODOC:  HOW TO DOC THIS?
-dojo.version = {
-	// summary: version number of this instance of dojo.
-	major: 0, minor: 3, patch: 1, flag: "",
-	revision: Number("$Rev: 4342 $".match(/[0-9]+/)[0]),
-	toString: function(){
-		with(dojo.version){
-			return major + "." + minor + "." + patch + flag + " (" + revision + ")";	// String
-		}
-	}
-}
-
-dojo.evalProp = function(/*String*/ name, /*Object*/ object, /*Boolean?*/ create){
-	// summary: Returns 'object[name]'.  If not defined and 'create' is true, will return a new Object.
-	// description: 
-	//		Returns null if 'object[name]' is not defined and 'create' is not true.
-	// 		Note: 'defined' and 'exists' are not the same concept.	
-	return (object && !dj_undef(name, object) ? object[name] : (create ? (object[name]={}) : undefined));	// mixed
-}
-
-
-dojo.parseObjPath = function(/*String*/ path, /*Object?*/ context, /*Boolean?*/ create){
-	// summary: Parse string path to an object, and return corresponding object reference and property name.
-	// description: 
-	//		Returns an object with two properties, 'obj' and 'prop'.  
-	//		'obj[prop]' is the reference indicated by 'path'.
-	// path: Path to an object, in the form "A.B.C".
-	// context: Object to use as root of path.  Defaults to 'dj_global'.
-	// create: If true, Objects will be created at any point along the 'path' that is undefined.
-	var object = (context != null ? context : dj_global);
-	var names = path.split('.');
-	var prop = names.pop();
-	for (var i=0,l=names.length;i<l && object;i++){
-		object = dojo.evalProp(names[i], object, create);
-	}
-	return {obj: object, prop: prop};	// Object: {obj: Object, prop: String}
-}
-
-
-dojo.evalObjPath = function(/*String*/ path, /*Boolean?*/ create){
-	// summary: Return the value of object at 'path' in the global scope, without using 'eval()'.
-	// path: Path to an object, in the form "A.B.C".
-	// create: If true, Objects will be created at any point along the 'path' that is undefined.
-	if(typeof path != "string"){ 
-		return dj_global; 
-	}
-	// fast path for no periods
-	if(path.indexOf('.') == -1){
-		return dojo.evalProp(path, dj_global, create);		// mixed
-	}
-
-	//MOW: old 'with' syntax was confusing and would throw an error if parseObjPath returned null.
-	var ref = dojo.parseObjPath(path, dj_global, create);
-	if(ref){
-		return dojo.evalProp(ref.prop, ref.obj, create);	// mixed
-	}
-	return null;
-}
-
-// ****************************************************************
-// global public utils
-// TODOC: DO WE WANT TO NOTE THAT THESE ARE GLOBAL PUBLIC UTILS?
-// ****************************************************************
-
-dojo.errorToString = function(/*Error*/ exception){
-	// summary: Return an exception's 'message', 'description' or text.
-
-	// TODO: overriding Error.prototype.toString won't accomplish this?
- 	// 		... since natively generated Error objects do not always reflect such things?
-	if(!dj_undef("message", exception)){
-		return exception.message;		// String
-	}else if(!dj_undef("description", exception)){
-		return exception.description;	// String
-	}else{
-		return exception;				// Error
-	}
-}
-
-
-dojo.raise = function(/*String*/ message, /*Error?*/ exception){
-	// summary: Throw an error message, appending text of 'exception' if provided.
-	// note: Also prints a message to the user using 'dojo.hostenv.println'.
-	if(exception){
-		message = message + ": "+dojo.errorToString(exception);
-	}
-
-	// print the message to the user if hostenv.println is defined
-	try {	dojo.hostenv.println("FATAL: "+message); } catch (e) {}
-
-	throw Error(message);
-}
-
-//Stub functions so things don't break.
-//TODOC:  HOW TO DOC THESE?
-dojo.debug = function(){}
-dojo.debugShallow = function(obj){}
-dojo.profile = { start: function(){}, end: function(){}, stop: function(){}, dump: function(){} };
-
-
-function dj_eval(/*String*/ scriptFragment){ 
-	// summary: Perform an evaluation in the global scope.  Use this rather than calling 'eval()' directly.
-	// description: Placed in a separate function to minimize size of trapped evaluation context.
-	// note:
-	//	 - JSC eval() takes an optional second argument which can be 'unsafe'.
-	//	 - Mozilla/SpiderMonkey eval() takes an optional second argument which is the
-	//  	 scope object for new symbols.
-	return dj_global.eval ? dj_global.eval(scriptFragment) : eval(scriptFragment); 	// mixed
-}
-
-
-
-dojo.unimplemented = function(/*String*/ funcname, /*String?*/ extra){
-	// summary: Throw an exception because some function is not implemented.
-	// extra: Text to append to the exception message.
-	var message = "'" + funcname + "' not implemented";
-	if (extra != null) { message += " " + extra; }
-	dojo.raise(message);
-}
-
-
-dojo.deprecated = function(/*String*/ behaviour, /*String?*/ extra, /*String?*/ removal){
-	// summary: Log a debug message to indicate that a behavior has been deprecated.
-	// extra: Text to append to the message.
-	// removal: Text to indicate when in the future the behavior will be removed.
-	var message = "DEPRECATED: " + behaviour;
-	if(extra){ message += " " + extra; }
-	if(removal){ message += " -- will be removed in version: " + removal; }
-	dojo.debug(message);
-}
-
-
-
-dojo.inherits = function(/*Function*/ subclass, /*Function*/ superclass){
-	// summary: Set up inheritance between two classes.
-	if(typeof superclass != 'function'){ 
-		dojo.raise("dojo.inherits: superclass argument ["+superclass+"] must be a function (subclass: [" + subclass + "']");
-	}
-	subclass.prototype = new superclass();
-	subclass.prototype.constructor = subclass;
-	subclass.superclass = superclass.prototype;
-	// DEPRICATED: super is a reserved word, use 'superclass'
-	subclass['super'] = superclass.prototype;
-}
-
-dojo.render = (function(){
-	//TODOC: HOW TO DOC THIS?
-	// summary: Details rendering support, OS and browser of the current environment.
-	// TODOC: is this something many folks will interact with?  If so, we should doc the structure created...
-	function vscaffold(prefs, names){
-		var tmp = {
-			capable: false,
-			support: {
-				builtin: false,
-				plugin: false
-			},
-			prefixes: prefs
-		};
-		for(var prop in names){
-			tmp[prop] = false;
-		}
-		return tmp;
-	}
-
-	return {
-		name: "",
-		ver: dojo.version,
-		os: { win: false, linux: false, osx: false },
-		html: vscaffold(["html"], ["ie", "opera", "khtml", "safari", "moz"]),
-		svg: vscaffold(["svg"], ["corel", "adobe", "batik"]),
-		vml: vscaffold(["vml"], ["ie"]),
-		swf: vscaffold(["Swf", "Flash", "Mm"], ["mm"]),
-		swt: vscaffold(["Swt"], ["ibm"])
-	};
-})();
-
-// ****************************************************************
-// dojo.hostenv methods that must be defined in hostenv_*.js
-// ****************************************************************
-
-/**
- * The interface definining the interaction with the EcmaScript host environment.
+		http://dojotoolkit.org/community/licensing.shtml
 */
 
 /*
- * None of these methods should ever be called directly by library users.
- * Instead public methods such as loadModule should be called instead.
- */
-dojo.hostenv = (function(){
-	// TODOC:  HOW TO DOC THIS?
-	// summary: Provides encapsulation of behavior that changes across different 'host environments' 
-	//			(different browsers, server via Rhino, etc).
-	// description: None of these methods should ever be called directly by library users.
-	//				Use public methods such as 'loadModule' instead.
-	
-	// default configuration options
-	var config = {
-		isDebug: false,
-		allowQueryConfig: false,
-		baseScriptUri: "",
-		baseRelativePath: "",
-		libraryScriptUri: "",
-		iePreventClobber: false,
-		ieClobberMinimal: true,
-		preventBackButtonFix: true,
-		searchIds: [],
-		parseWidgets: true
-	};
+	This is a compiled version of Dojo, built for deployment and not for
+	development. To get an editable version, please visit:
 
-	if (typeof djConfig == "undefined") { djConfig = config; }
-	else {
-		for (var option in config) {
-			if (typeof djConfig[option] == "undefined") {
-				djConfig[option] = config[option];
-			}
-		}
-	}
+		http://dojotoolkit.org
 
-	return {
-		name_: '(unset)',
-		version_: '(unset)',
-
-
-		getName: function(){ 
-			// sumary: Return the name of the host environment.
-			return this.name_; 	// String
-		},
-
-
-		getVersion: function(){ 
-			// summary: Return the version of the hostenv.
-			return this.version_; // String
-		},
-
-		getText: function(/*String*/ uri){
-			// summary:	Read the plain/text contents at the specified 'uri'.
-			// description: 
-			//			If 'getText()' is not implemented, then it is necessary to override 
-			//			'loadUri()' with an implementation that doesn't rely on it.
-
-			dojo.unimplemented('getText', "uri=" + uri);
-		}
-	};
-})();
-
-
-dojo.hostenv.getBaseScriptUri = function(){
-	// summary: Return the base script uri that other scripts are found relative to.
-	// TODOC: HUH?  This comment means nothing to me.  What other scripts? Is this the path to other dojo libraries?
-	//		MAYBE:  Return the base uri to scripts in the dojo library.	 ???
-	// return: Empty string or a path ending in '/'.
-	if(djConfig.baseScriptUri.length){ 
-		return djConfig.baseScriptUri;
-	}
-
-	// MOW: Why not:
-	//			uri = djConfig.libraryScriptUri || djConfig.baseRelativePath
-	//		??? Why 'new String(...)'
-	var uri = new String(djConfig.libraryScriptUri||djConfig.baseRelativePath);
-	if (!uri) { dojo.raise("Nothing returned by getLibraryScriptUri(): " + uri); }
-
-	// MOW: uri seems to not be actually used.  Seems to be hard-coding to djConfig.baseRelativePath... ???
-	var lastslash = uri.lastIndexOf('/');		// MOW ???
-	djConfig.baseScriptUri = djConfig.baseRelativePath;
-	return djConfig.baseScriptUri;	// String
-}
-
-/*
- * loader.js - runs before the hostenv_*.js file. Contains all of the package loading methods.
- */
-
-//A semi-colon is at the start of the line because after doing a build, this function definition
-//get compressed onto the same line as the last line in bootstrap1.js. That list line is just a
-//curly bracket, and the browser complains about that syntax. The semicolon fixes it. Putting it
-//here instead of at the end of bootstrap1.js, since it is more of an issue for this file, (using
-//the closure), and bootstrap1.js could change in the future.
-;(function(){
-	//Additional properties for dojo.hostenv
-	var _addHostEnv = {
-		pkgFileName: "__package__",
-	
-		// for recursion protection
-		loading_modules_: {},
-		loaded_modules_: {},
-		addedToLoadingCount: [],
-		removedFromLoadingCount: [],
-	
-		inFlightCount: 0,
-	
-		// FIXME: it should be possible to pull module prefixes in from djConfig
-		modulePrefixes_: {
-			dojo: {name: "dojo", value: "src"}
-		},
-	
-	
-		setModulePrefix: function(module, prefix){
-			this.modulePrefixes_[module] = {name: module, value: prefix};
-		},
-	
-		getModulePrefix: function(module){
-			var mp = this.modulePrefixes_;
-			if((mp[module])&&(mp[module]["name"])){
-				return mp[module].value;
-			}
-			return module;
-		},
-
-		getTextStack: [],
-		loadUriStack: [],
-		loadedUris: [],
-	
-		//WARNING: This variable is referenced by packages outside of bootstrap: FloatingPane.js and undo/browser.js
-		post_load_: false,
-		
-		//Egad! Lots of test files push on this directly instead of using dojo.addOnLoad.
-		modulesLoadedListeners: [],
-		unloadListeners: [],
-		loadNotifying: false
-	};
-	
-	//Add all of these properties to dojo.hostenv
-	for(var param in _addHostEnv){
-		dojo.hostenv[param] = _addHostEnv[param];
-	}
-})();
-
-/**
- * Loads and interprets the script located at relpath, which is relative to the
- * script root directory.  If the script is found but its interpretation causes
- * a runtime exception, that exception is not caught by us, so the caller will
- * see it.  We return a true value if and only if the script is found.
- *
- * For now, we do not have an implementation of a true search path.  We
- * consider only the single base script uri, as returned by getBaseScriptUri().
- *
- * @param relpath A relative path to a script (no leading '/', and typically
- * ending in '.js').
- * @param module A module whose existance to check for after loading a path.
- * Can be used to determine success or failure of the load.
- * @param cb a function to pass the result of evaluating the script (optional)
- */
-dojo.hostenv.loadPath = function(relpath, module /*optional*/, cb /*optional*/){
-	var uri;
-	if((relpath.charAt(0) == '/')||(relpath.match(/^\w+:/))){
-		// dojo.raise("relpath '" + relpath + "'; must be relative");
-		uri = relpath;
-	}else{
-		uri = this.getBaseScriptUri() + relpath;
-	}
-	if(djConfig.cacheBust && dojo.render.html.capable){
-		uri += "?" + String(djConfig.cacheBust).replace(/\W+/g,"");
-	}
-	try{
-		return ((!module) ? this.loadUri(uri, cb) : this.loadUriAndCheck(uri, module, cb));
-	}catch(e){
-		dojo.debug(e);
-		return false;
-	}
-}
-
-/**
- * Reads the contents of the URI, and evaluates the contents.
- * Returns true if it succeeded. Returns false if the URI reading failed.
- * Throws if the evaluation throws.
- * The result of the eval is not available to the caller TODO: now it is; was this a deliberate restriction?
- *
- * @param uri a uri which points at the script to be loaded
- * @param cb a function to process the result of evaluating the script as an expression (optional)
- */
-dojo.hostenv.loadUri = function(uri, cb /*optional*/){
-	if(this.loadedUris[uri]){
-		return 1;
-	}
-	var contents = this.getText(uri, null, true);
-	if(contents == null){ return 0; }
-	this.loadedUris[uri] = true;
-	if(cb){ contents = '('+contents+')'; }
-	var value = dj_eval(contents);
-	if(cb){
-		cb(value);
-	}
-	return 1;
-}
-
-// FIXME: probably need to add logging to this method
-dojo.hostenv.loadUriAndCheck = function(uri, module, cb){
-	var ok = true;
-	try{
-		ok = this.loadUri(uri, cb);
-	}catch(e){
-		dojo.debug("failed loading ", uri, " with error: ", e);
-	}
-	return ((ok)&&(this.findModule(module, false))) ? true : false;
-}
-
-dojo.loaded = function(){ }
-dojo.unloaded = function(){ }
-
-dojo.hostenv.loaded = function(){
-	this.loadNotifying = true;
-	this.post_load_ = true;
-	var mll = this.modulesLoadedListeners;
-	for(var x=0; x<mll.length; x++){
-		mll[x]();
-	}
-
-	//Clear listeners so new ones can be added
-	//For other xdomain package loads after the initial load.
-	this.modulesLoadedListeners = [];
-	this.loadNotifying = false;
-
-	dojo.loaded();
-}
-
-dojo.hostenv.unloaded = function(){
-	var mll = this.unloadListeners;
-	while(mll.length){
-		(mll.pop())();
-	}
-	dojo.unloaded();
-}
-
-/*
-Call styles:
-	dojo.addOnLoad(functionPointer)
-	dojo.addOnLoad(object, "functionName")
+	for documentation and information on getting the source.
 */
-dojo.addOnLoad = function(obj, fcnName) {
-	var dh = dojo.hostenv;
-	if(arguments.length == 1) {
-		dh.modulesLoadedListeners.push(obj);
-	} else if(arguments.length > 1) {
-		dh.modulesLoadedListeners.push(function() {
-			obj[fcnName]();
-		});
-	}
 
-	//Added for xdomain loading. dojo.addOnLoad is used to
-	//indicate callbacks after doing some dojo.require() statements.
-	//In the xdomain case, if all the requires are loaded (after initial
-	//page load), then immediately call any listeners.
-	if(dh.post_load_ && dh.inFlightCount == 0 && !dh.loadNotifying){
-		dh.callLoaded();
-	}
+if(typeof dojo=="undefined"){
+var dj_global=this;
+var dj_currentContext=this;
+function dj_undef(_1,_2){
+return (typeof (_2||dj_currentContext)[_1]=="undefined");
 }
-
-dojo.addOnUnload = function(obj, fcnName){
-	var dh = dojo.hostenv;
-	if(arguments.length == 1){
-		dh.unloadListeners.push(obj);
-	} else if(arguments.length > 1) {
-		dh.unloadListeners.push(function() {
-			obj[fcnName]();
-		});
-	}
+if(dj_undef("djConfig",this)){
+var djConfig={};
 }
-
-dojo.hostenv.modulesLoaded = function(){
-	if(this.post_load_){ return; }
-	if((this.loadUriStack.length==0)&&(this.getTextStack.length==0)){
-		if(this.inFlightCount > 0){ 
-			dojo.debug("files still in flight!");
-			return;
-		}
-		dojo.hostenv.callLoaded();
-	}
+if(dj_undef("dojo",this)){
+var dojo={};
 }
-
-dojo.hostenv.callLoaded = function(){
-	if(typeof setTimeout == "object"){
-		setTimeout("dojo.hostenv.loaded();", 0);
-	}else{
-		dojo.hostenv.loaded();
-	}
-}
-
-dojo.hostenv.getModuleSymbols = function(modulename) {
-	var syms = modulename.split(".");
-	for(var i = syms.length - 1; i > 0; i--){
-		var parentModule = syms.slice(0, i).join(".");
-		var parentModulePath = this.getModulePrefix(parentModule);
-		if(parentModulePath != parentModule){
-			syms.splice(0, i, parentModulePath);
-			break;
-		}
-	}
-	return syms;
-}
-
-/**
-* loadModule("A.B") first checks to see if symbol A.B is defined. 
-* If it is, it is simply returned (nothing to do).
-*
-* If it is not defined, it will look for "A/B.js" in the script root directory,
-* followed by "A.js".
-*
-* It throws if it cannot find a file to load, or if the symbol A.B is not
-* defined after loading.
-*
-* It returns the object A.B.
-*
-* This does nothing about importing symbols into the current package.
-* It is presumed that the caller will take care of that. For example, to import
-* all symbols:
-*
-*    with (dojo.hostenv.loadModule("A.B")) {
-*       ...
-*    }
-*
-* And to import just the leaf symbol:
-*
-*    var B = dojo.hostenv.loadModule("A.B");
-*    ...
-*
-* dj_load is an alias for dojo.hostenv.loadModule
-*/
-dojo.hostenv._global_omit_module_check = false;
-dojo.hostenv.loadModule = function(modulename, exact_only, omit_module_check){
-	if(!modulename){ return; }
-	omit_module_check = this._global_omit_module_check || omit_module_check;
-	var module = this.findModule(modulename, false);
-	if(module){
-		return module;
-	}
-
-	// protect against infinite recursion from mutual dependencies
-	if(dj_undef(modulename, this.loading_modules_)){
-		this.addedToLoadingCount.push(modulename);
-	}
-	this.loading_modules_[modulename] = 1;
-
-	// convert periods to slashes
-	var relpath = modulename.replace(/\./g, '/') + '.js';
-
-	var syms = this.getModuleSymbols(modulename);
-	var startedRelative = ((syms[0].charAt(0) != '/')&&(!syms[0].match(/^\w+:/)));
-	var last = syms[syms.length - 1];
-	// figure out if we're looking for a full package, if so, we want to do
-	// things slightly diffrently
-	var nsyms = modulename.split(".");
-	if(last=="*"){
-		modulename = (nsyms.slice(0, -1)).join('.');
-
-		while(syms.length){
-			syms.pop();
-			syms.push(this.pkgFileName);
-			relpath = syms.join("/") + '.js';
-			if(startedRelative && (relpath.charAt(0)=="/")){
-				relpath = relpath.slice(1);
-			}
-			ok = this.loadPath(relpath, ((!omit_module_check) ? modulename : null));
-			if(ok){ break; }
-			syms.pop();
-		}
-	}else{
-		relpath = syms.join("/") + '.js';
-		modulename = nsyms.join('.');
-		var ok = this.loadPath(relpath, ((!omit_module_check) ? modulename : null));
-		if((!ok)&&(!exact_only)){
-			syms.pop();
-			while(syms.length){
-				relpath = syms.join('/') + '.js';
-				ok = this.loadPath(relpath, ((!omit_module_check) ? modulename : null));
-				if(ok){ break; }
-				syms.pop();
-				relpath = syms.join('/') + '/'+this.pkgFileName+'.js';
-				if(startedRelative && (relpath.charAt(0)=="/")){
-					relpath = relpath.slice(1);
-				}
-				ok = this.loadPath(relpath, ((!omit_module_check) ? modulename : null));
-				if(ok){ break; }
-			}
-		}
-
-		if((!ok)&&(!omit_module_check)){
-			dojo.raise("Could not load '" + modulename + "'; last tried '" + relpath + "'");
-		}
-	}
-
-	// check that the symbol was defined
-	//Don't bother if we're doing xdomain (asynchronous) loading.
-	if(!omit_module_check && !this["isXDomain"]){
-		// pass in false so we can give better error
-		module = this.findModule(modulename, false);
-		if(!module){
-			dojo.raise("symbol '" + modulename + "' is not defined after loading '" + relpath + "'"); 
-		}
-	}
-
-	return module;
-}
-
-/**
-* startPackage("A.B") follows the path, and at each level creates a new empty
-* object or uses what already exists. It returns the result.
-*/
-dojo.hostenv.startPackage = function(packname){
-	var modref = dojo.evalObjPath((packname.split(".").slice(0, -1)).join('.'));
-	this.loaded_modules_[(new String(packname)).toLowerCase()] = modref;
-
-	var syms = packname.split(/\./);
-	if(syms[syms.length-1]=="*"){
-		syms.pop();
-	}
-	return dojo.evalObjPath(syms.join("."), true);
-}
-
-/**
- * findModule("A.B") returns the object A.B if it exists, otherwise null.
- * @param modulename A string like 'A.B'.
- * @param must_exist Optional, defualt false. throw instead of returning null
- * if the module does not currently exist.
- */
-dojo.hostenv.findModule = function(modulename, must_exist){
-	// check cache
-	/*
-	if(!dj_undef(modulename, this.modules_)){
-		return this.modules_[modulename];
-	}
-	*/
-
-	var lmn = (new String(modulename)).toLowerCase();
-
-	if(this.loaded_modules_[lmn]){
-		return this.loaded_modules_[lmn];
-	}
-
-	// see if symbol is defined anyway
-	var module = dojo.evalObjPath(modulename);
-	if((modulename)&&(typeof module != 'undefined')&&(module)){
-		this.loaded_modules_[lmn] = module;
-		return module;
-	}
-
-	if(must_exist){
-		dojo.raise("no loaded module named '" + modulename + "'");
-	}
-	return null;
-}
-
-//Start of old bootstrap2:
-
-/*
- * This method taks a "map" of arrays which one can use to optionally load dojo
- * modules. The map is indexed by the possible dojo.hostenv.name_ values, with
- * two additional values: "default" and "common". The items in the "default"
- * array will be loaded if none of the other items have been choosen based on
- * the hostenv.name_ item. The items in the "common" array will _always_ be
- * loaded, regardless of which list is chosen.  Here's how it's normally
- * called:
- *
- *	dojo.kwCompoundRequire({
- *		browser: [
- *			["foo.bar.baz", true, true], // an example that passes multiple args to loadModule()
- *			"foo.sample.*",
- *			"foo.test,
- *		],
- *		default: [ "foo.sample.*" ],
- *		common: [ "really.important.module.*" ]
- *	});
- */
-dojo.kwCompoundRequire = function(modMap){
-	var common = modMap["common"]||[];
-	var result = (modMap[dojo.hostenv.name_]) ? common.concat(modMap[dojo.hostenv.name_]||[]) : common.concat(modMap["default"]||[]);
-
-	for(var x=0; x<result.length; x++){
-		var curr = result[x];
-		if(curr.constructor == Array){
-			dojo.hostenv.loadModule.apply(dojo.hostenv, curr);
-		}else{
-			dojo.hostenv.loadModule(curr);
-		}
-	}
-}
-
-dojo.require = function(){
-	dojo.hostenv.loadModule.apply(dojo.hostenv, arguments);
-}
-
-dojo.requireIf = function(){
-	if((arguments[0] === true)||(arguments[0]=="common")||(arguments[0] && dojo.render[arguments[0]].capable)){
-		var args = [];
-		for (var i = 1; i < arguments.length; i++) { args.push(arguments[i]); }
-		dojo.require.apply(dojo, args);
-	}
-}
-
-dojo.requireAfterIf = dojo.requireIf;
-
-dojo.provide = function(){
-	return dojo.hostenv.startPackage.apply(dojo.hostenv, arguments);
-}
-
-dojo.setModulePrefix = function(module, prefix){
-	return dojo.hostenv.setModulePrefix(module, prefix);
-}
-
-// determine if an object supports a given method
-// useful for longer api chains where you have to test each object in the chain
-dojo.exists = function(obj, name){
-	var p = name.split(".");
-	for(var i = 0; i < p.length; i++){
-	if(!(obj[p[i]])) return false;
-		obj = obj[p[i]];
-	}
-	return true;
-}
-
+dojo.global=function(){
+return dj_currentContext;
 };
-
-if(typeof window == 'undefined'){
-	dojo.raise("no window object");
+dojo.locale=djConfig.locale;
+dojo.version={major:0,minor:4,patch:1,flag:"",revision:Number("$Rev: 6824 $".match(/[0-9]+/)[0]),toString:function(){
+with(dojo.version){
+return major+"."+minor+"."+patch+flag+" ("+revision+")";
 }
-
-// attempt to figure out the path to dojo if it isn't set in the config
-(function() {
-	// before we get any further with the config options, try to pick them out
-	// of the URL. Most of this code is from NW
-	if(djConfig.allowQueryConfig){
-		var baseUrl = document.location.toString(); // FIXME: use location.query instead?
-		var params = baseUrl.split("?", 2);
-		if(params.length > 1){
-			var paramStr = params[1];
-			var pairs = paramStr.split("&");
-			for(var x in pairs){
-				var sp = pairs[x].split("=");
-				// FIXME: is this eval dangerous?
-				if((sp[0].length > 9)&&(sp[0].substr(0, 9) == "djConfig.")){
-					var opt = sp[0].substr(9);
-					try{
-						djConfig[opt]=eval(sp[1]);
-					}catch(e){
-						djConfig[opt]=sp[1];
-					}
-				}
-			}
-		}
-	}
-
-	if(((djConfig["baseScriptUri"] == "")||(djConfig["baseRelativePath"] == "")) &&(document && document.getElementsByTagName)){
-		var scripts = document.getElementsByTagName("script");
-		var rePkg = /(__package__|dojo|bootstrap1)\.js([\?\.]|$)/i;
-		for(var i = 0; i < scripts.length; i++) {
-			var src = scripts[i].getAttribute("src");
-			if(!src) { continue; }
-			var m = src.match(rePkg);
-			if(m) {
-				var root = src.substring(0, m.index);
-				if(src.indexOf("bootstrap1") > -1) { root += "../"; }
-				if(!this["djConfig"]) { djConfig = {}; }
-				if(djConfig["baseScriptUri"] == "") { djConfig["baseScriptUri"] = root; }
-				if(djConfig["baseRelativePath"] == "") { djConfig["baseRelativePath"] = root; }
-				break;
-			}
-		}
-	}
-
-	// fill in the rendering support information in dojo.render.*
-	var dr = dojo.render;
-	var drh = dojo.render.html;
-	var drs = dojo.render.svg;
-	var dua = drh.UA = navigator.userAgent;
-	var dav = drh.AV = navigator.appVersion;
-	var t = true;
-	var f = false;
-	drh.capable = t;
-	drh.support.builtin = t;
-
-	dr.ver = parseFloat(drh.AV);
-	dr.os.mac = dav.indexOf("Macintosh") >= 0;
-	dr.os.win = dav.indexOf("Windows") >= 0;
-	// could also be Solaris or something, but it's the same browser
-	dr.os.linux = dav.indexOf("X11") >= 0;
-
-	drh.opera = dua.indexOf("Opera") >= 0;
-	drh.khtml = (dav.indexOf("Konqueror") >= 0)||(dav.indexOf("Safari") >= 0);
-	drh.safari = dav.indexOf("Safari") >= 0;
-	var geckoPos = dua.indexOf("Gecko");
-	drh.mozilla = drh.moz = (geckoPos >= 0)&&(!drh.khtml);
-	if (drh.mozilla) {
-		// gecko version is YYYYMMDD
-		drh.geckoVersion = dua.substring(geckoPos + 6, geckoPos + 14);
-	}
-	drh.ie = (document.all)&&(!drh.opera);
-	drh.ie50 = drh.ie && dav.indexOf("MSIE 5.0")>=0;
-	drh.ie55 = drh.ie && dav.indexOf("MSIE 5.5")>=0;
-	drh.ie60 = drh.ie && dav.indexOf("MSIE 6.0")>=0;
-	drh.ie70 = drh.ie && dav.indexOf("MSIE 7.0")>=0;
-
-	// TODO: is the HTML LANG attribute relevant?
-	dojo.locale = (drh.ie ? navigator.userLanguage : navigator.language).toLowerCase();
-
-	dr.vml.capable=drh.ie;
-	drs.capable = f;
-	drs.support.plugin = f;
-	drs.support.builtin = f;
-	if (document.implementation
-		&& document.implementation.hasFeature
-		&& document.implementation.hasFeature("org.w3c.dom.svg", "1.0")
-	){
-		drs.capable = t;
-		drs.support.builtin = t;
-		drs.support.plugin = f;
-	}
-})();
-
-dojo.hostenv.startPackage("dojo.hostenv");
-
-dojo.render.name = dojo.hostenv.name_ = 'browser';
-dojo.hostenv.searchIds = [];
-
-// These are in order of decreasing likelihood; this will change in time.
-dojo.hostenv._XMLHTTP_PROGIDS = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP', 'Msxml2.XMLHTTP.4.0'];
-
-dojo.hostenv.getXmlhttpObject = function(){
-    var http = null;
-	var last_e = null;
-	try{ http = new XMLHttpRequest(); }catch(e){}
-    if(!http){
-		for(var i=0; i<3; ++i){
-			var progid = dojo.hostenv._XMLHTTP_PROGIDS[i];
-			try{
-				http = new ActiveXObject(progid);
-			}catch(e){
-				last_e = e;
-			}
-
-			if(http){
-				dojo.hostenv._XMLHTTP_PROGIDS = [progid];  // so faster next time
-				break;
-			}
-		}
-
-		/*if(http && !http.toString) {
-			http.toString = function() { "[object XMLHttpRequest]"; }
-		}*/
-	}
-
-	if(!http){
-		return dojo.raise("XMLHTTP not available", last_e);
-	}
-
-	return http;
+}};
+dojo.evalProp=function(_3,_4,_5){
+if((!_4)||(!_3)){
+return undefined;
 }
-
-/**
- * Read the contents of the specified uri and return those contents.
- *
- * @param uri A relative or absolute uri. If absolute, it still must be in the
- * same "domain" as we are.
- *
- * @param async_cb If not specified, load synchronously. If specified, load
- * asynchronously, and use async_cb as the progress handler which takes the
- * xmlhttp object as its argument. If async_cb, this function returns null.
- *
- * @param fail_ok Default false. If fail_ok and !async_cb and loading fails,
- * return null instead of throwing.
- */
-dojo.hostenv.getText = function(uri, async_cb, fail_ok){
-
-	var http = this.getXmlhttpObject();
-
-	if(async_cb){
-		http.onreadystatechange = function(){
-			if(4==http.readyState){
-				if((!http["status"])||((200 <= http.status)&&(300 > http.status))){
-					// dojo.debug("LOADED URI: "+uri);
-					async_cb(http.responseText);
-				}
-			}
-		}
-	}
-
-	http.open('GET', uri, async_cb ? true : false);
-	try{
-		http.send(null);
-		if(async_cb){
-			return null;
-		}
-		if((http["status"])&&((200 > http.status)||(300 <= http.status))){
-			throw Error("Unable to load "+uri+" status:"+ http.status);
-		}
-	}catch(e){
-		if((fail_ok)&&(!async_cb)){
-			return null;
-		}else{
-			throw e;
-		}
-	}
-
-	return http.responseText;
+if(!dj_undef(_3,_4)){
+return _4[_3];
 }
-
-/*
- * It turns out that if we check *right now*, as this script file is being loaded,
- * then the last script element in the window DOM is ourselves.
- * That is because any subsequent script elements haven't shown up in the document
- * object yet.
- */
- /*
-function dj_last_script_src() {
-    var scripts = window.document.getElementsByTagName('script');
-    if(scripts.length < 1){
-		dojo.raise("No script elements in window.document, so can't figure out my script src");
-	}
-    var script = scripts[scripts.length - 1];
-    var src = script.src;
-    if(!src){
-		dojo.raise("Last script element (out of " + scripts.length + ") has no src");
-	}
-    return src;
-}
-
-if(!dojo.hostenv["library_script_uri_"]){
-	dojo.hostenv.library_script_uri_ = dj_last_script_src();
-}
-*/
-
-dojo.hostenv.defaultDebugContainerId = 'dojoDebug';
-dojo.hostenv._println_buffer = [];
-dojo.hostenv._println_safe = false;
-dojo.hostenv.println = function (line){
-	if(!dojo.hostenv._println_safe){
-		dojo.hostenv._println_buffer.push(line);
-	}else{
-		try {
-			var console = document.getElementById(djConfig.debugContainerId ?
-				djConfig.debugContainerId : dojo.hostenv.defaultDebugContainerId);
-			if(!console) { console = document.getElementsByTagName("body")[0] || document.body; }
-
-			var div = document.createElement("div");
-			div.appendChild(document.createTextNode(line));
-			console.appendChild(div);
-		} catch (e) {
-			try{
-				// safari needs the output wrapped in an element for some reason
-				document.write("<div>" + line + "</div>");
-			}catch(e2){
-				window.status = line;
-			}
-		}
-	}
-}
-
-dojo.addOnLoad(function(){
-	dojo.hostenv._println_safe = true;
-	while(dojo.hostenv._println_buffer.length > 0){
-		dojo.hostenv.println(dojo.hostenv._println_buffer.shift());
-	}
-});
-
-function dj_addNodeEvtHdlr(node, evtName, fp, capture){
-	var oldHandler = node["on"+evtName] || function(){};
-	node["on"+evtName] = function(){
-		fp.apply(node, arguments);
-		oldHandler.apply(node, arguments);
-	}
-	return true;
-}
-
-
-/* Uncomment this to allow init after DOMLoad, not after window.onload
-
-// Mozilla exposes the event we could use
-if (dojo.render.html.mozilla) {
-   document.addEventListener("DOMContentLoaded", dj_load_init, null);
-}
-// for Internet Explorer. readyState will not be achieved on init call, but dojo doesn't need it
-//Tighten up the comments below to allow init after DOMLoad, not after window.onload
-/ * @cc_on @ * /
-/ * @if (@_win32)
-    document.write("<script defer>dj_load_init()<"+"/script>");
-/ * @end @ * /
-*/
-
-// default for other browsers
-// potential TODO: apply setTimeout approach for other browsers
-// that will cause flickering though ( document is loaded and THEN is processed)
-// maybe show/hide required in this case..
-// TODO: other browsers may support DOMContentLoaded/defer attribute. Add them to above.
-dj_addNodeEvtHdlr(window, "load", function(){
-	// allow multiple calls, only first one will take effect
-	if(arguments.callee.initialized){ return; }
-	arguments.callee.initialized = true;
-
-	var initFunc = function(){
-		//perform initialization
-		if(dojo.render.html.ie){
-			dojo.hostenv.makeWidgets();
-		}
-	};
-
-	if(dojo.hostenv.inFlightCount == 0){
-		initFunc();
-		dojo.hostenv.modulesLoaded();
-	}else{
-		dojo.addOnLoad(initFunc);
-	}
-});
-
-dj_addNodeEvtHdlr(window, "unload", function(){
-	dojo.hostenv.unloaded();
-});
-
-dojo.hostenv.makeWidgets = function(){
-	// you can put searchIds in djConfig and dojo.hostenv at the moment
-	// we should probably eventually move to one or the other
-	var sids = [];
-	if(djConfig.searchIds && djConfig.searchIds.length > 0) {
-		sids = sids.concat(djConfig.searchIds);
-	}
-	if(dojo.hostenv.searchIds && dojo.hostenv.searchIds.length > 0) {
-		sids = sids.concat(dojo.hostenv.searchIds);
-	}
-
-	if((djConfig.parseWidgets)||(sids.length > 0)){
-		if(dojo.evalObjPath("dojo.widget.Parse")){
-			// we must do this on a delay to avoid:
-			//	http://www.shaftek.org/blog/archives/000212.html
-			// IE is such a tremendous peice of shit.
-				var parser = new dojo.xml.Parse();
-				if(sids.length > 0){
-					for(var x=0; x<sids.length; x++){
-						var tmpNode = document.getElementById(sids[x]);
-						if(!tmpNode){ continue; }
-						var frag = parser.parseElement(tmpNode, null, true);
-						dojo.widget.getParser().createComponents(frag);
-					}
-				}else if(djConfig.parseWidgets){
-					var frag  = parser.parseElement(document.getElementsByTagName("body")[0] || document.body, null, true);
-					dojo.widget.getParser().createComponents(frag);
-				}
-		}
-	}
-}
-
-dojo.addOnLoad(function(){
-	if(!dojo.render.html.ie) {
-		dojo.hostenv.makeWidgets();
-	}
-});
-
-try {
-	if (dojo.render.html.ie) {
-		document.write('<style>v\:*{ behavior:url(#default#VML); }</style>');
-		document.write('<xml:namespace ns="urn:schemas-microsoft-com:vml" prefix="v"/>');
-	}
-} catch (e) { }
-
-// stub, over-ridden by debugging code. This will at least keep us from
-// breaking when it's not included
-dojo.hostenv.writeIncludes = function(){}
-
-dojo.byId = function(id, doc){
-	if(id && (typeof id == "string" || id instanceof String)){
-		if(!doc){ doc = document; }
-		return doc.getElementById(id);
-	}
-	return id; // assume it's a node
-}
-
-//Semicolon is for when this file is integrated with a custom build on one line
-//with some other file's contents. Sometimes that makes things not get defined
-//properly, particularly with the using the closure below to do all the work.
-;(function(){
-	//Don't do this work if dojo.js has already done it.
-	if(typeof dj_usingBootstrap != "undefined"){
-		return;
-	}
-
-	var isRhino = false;
-	var isSpidermonkey = false;
-	var isDashboard = false;
-	if((typeof this["load"] == "function")&&((typeof this["Packages"] == "function")||(typeof this["Packages"] == "object"))){
-		isRhino = true;
-	}else if(typeof this["load"] == "function"){
-		isSpidermonkey  = true;
-	}else if(window.widget){
-		isDashboard = true;
-	}
-
-	var tmps = [];
-	if((this["djConfig"])&&((djConfig["isDebug"])||(djConfig["debugAtAllCosts"]))){
-		tmps.push("debug.js");
-	}
-
-	if((this["djConfig"])&&(djConfig["debugAtAllCosts"])&&(!isRhino)&&(!isDashboard)){
-		tmps.push("browser_debug.js");
-	}
-
-	//Support compatibility packages. Right now this only allows setting one
-	//compatibility package. Might need to revisit later down the line to support
-	//more than one.
-	if((this["djConfig"])&&(djConfig["compat"])){
-		tmps.push("compat/" + djConfig["compat"] + ".js");
-	}
-
-	var loaderRoot = djConfig["baseScriptUri"];
-	if((this["djConfig"])&&(djConfig["baseLoaderUri"])){
-		loaderRoot = djConfig["baseLoaderUri"];
-	}
-
-	for(var x=0; x < tmps.length; x++){
-		var spath = loaderRoot+"src/"+tmps[x];
-		if(isRhino||isSpidermonkey){
-			load(spath);
-		} else {
-			try {
-				document.write("<scr"+"ipt type='text/javascript' src='"+spath+"'></scr"+"ipt>");
-			} catch (e) {
-				var script = document.createElement("script");
-				script.src = spath;
-				document.getElementsByTagName("head")[0].appendChild(script);
-			}
-		}
-	}
-})();
-
-// Localization routines
-
-/**
- * The locale to look for string bundles if none are defined for your locale.  Translations for all strings
- * should be provided in this locale.
- */
-//TODO: this really belongs in translation metadata, not in code
-dojo.fallback_locale = 'en';
-
-/**
- * Returns canonical form of locale, as used by Dojo.  All variants are case-insensitive and are separated by '-'
- * as specified in RFC 3066
- */
-dojo.normalizeLocale = function(locale) {
-	return locale ? locale.toLowerCase() : dojo.locale;
+return (_5?(_4[_3]={}):undefined);
 };
-
-/**
- * requireLocalization() is for loading translated bundles provided within a package in the namespace.
- * Contents are typically strings, but may be any name/value pair, represented in JSON format.
- * A bundle is structured in a program as follows:
- *
- * <package>/
- *  nls/
- *   de/
- *    mybundle.js
- *   de-at/
- *    mybundle.js
- *   en/
- *    mybundle.js
- *   en-us/
- *    mybundle.js
- *   en-gb/
- *    mybundle.js
- *   es/
- *    mybundle.js
- *  ...etc
- *
- * where package is part of the namespace as used by dojo.require().  Each directory is named for a
- * locale as specified by RFC 3066, (http://www.ietf.org/rfc/rfc3066.txt), normalized in lowercase.
- *
- * For a given locale, string bundles will be loaded for that locale and all general locales above it, as well
- * as a system-specified fallback.  For example, "de_at" will also load "de" and "en".  Lookups will traverse
- * the locales in this order.  A build step can preload the bundles to avoid data redundancy and extra network hits.
- *
- * @param modulename package in which the bundle is found
- * @param bundlename bundle name, typically the filename without the '.js' suffix
- * @param locale the locale to load (optional)  By default, the browser's user locale as defined
- *	in dojo.locale
- */
-dojo.requireLocalization = function(modulename, bundlename, locale /*optional*/){
-
-	dojo.debug("EXPERIMENTAL: dojo.requireLocalization"); //dojo.experimental
-
-	var syms = dojo.hostenv.getModuleSymbols(modulename);
-	var modpath = syms.concat("nls").join("/");
-
-	locale = dojo.normalizeLocale(locale);
-
-	var elements = locale.split('-');
-	var searchlist = [];
-	for(var i = elements.length; i > 0; i--){
-		searchlist.push(elements.slice(0, i).join('-'));
-	}
-	if(searchlist[searchlist.length-1] != dojo.fallback_locale){
-		searchlist.push(dojo.fallback_locale);
-	}
-
-	var bundlepackage = [modulename, "_nls", bundlename].join(".");
-	var bundle = dojo.hostenv.startPackage(bundlepackage);
-	dojo.hostenv.loaded_modules_[bundlepackage] = bundle;
-	
-	var inherit = false;
-	for(var i = searchlist.length - 1; i >= 0; i--){
-		var loc = searchlist[i];
-		var pkg = [bundlepackage, loc].join(".");
-		var loaded = false;
-		if(!dojo.hostenv.findModule(pkg)){
-			// Mark loaded whether it's found or not, so that further load attempts will not be made
-			dojo.hostenv.loaded_modules_[pkg] = null;
-
-			var filespec = [modpath, loc, bundlename].join("/") + '.js';
-			loaded = dojo.hostenv.loadPath(filespec, null, function(hash) {
- 				bundle[loc] = hash;
- 				if(inherit){
-					// Use mixins approach to copy string references from inherit bundle, but skip overrides.
-					for(var x in inherit){
-						if(!bundle[loc][x]){
-							bundle[loc][x] = inherit[x];
-						}
-					}
- 				}
-/*
-				// Use prototype to point to other bundle, then copy in result from loadPath
-				bundle[loc] = new function(){};
-				if(inherit){ bundle[loc].prototype = inherit; }
-				for(var i in hash){ bundle[loc][i] = hash[i]; }
-*/
-			});
-		}else{
-			loaded = true;
-		}
-		if(loaded && bundle[loc]){
-			inherit = bundle[loc];
-		}
-	}
+dojo.parseObjPath=function(_6,_7,_8){
+var _9=(_7||dojo.global());
+var _a=_6.split(".");
+var _b=_a.pop();
+for(var i=0,l=_a.length;i<l&&_9;i++){
+_9=dojo.evalProp(_a[i],_9,_8);
+}
+return {obj:_9,prop:_b};
 };
-
-dojo.provide("dojo.string.common");
-
-dojo.require("dojo.string");
-
-/**
- * Trim whitespace from 'str'. If 'wh' > 0,
- * only trim from start, if 'wh' < 0, only trim
- * from end, otherwise trim both ends
- */
-dojo.string.trim = function(str, wh){
-	if(!str.replace){ return str; }
-	if(!str.length){ return str; }
-	var re = (wh > 0) ? (/^\s+/) : (wh < 0) ? (/\s+$/) : (/^\s+|\s+$/g);
-	return str.replace(re, "");
+dojo.evalObjPath=function(_e,_f){
+if(typeof _e!="string"){
+return dojo.global();
 }
-
-/**
- * Trim whitespace at the beginning of 'str'
- */
-dojo.string.trimStart = function(str) {
-	return dojo.string.trim(str, 1);
+if(_e.indexOf(".")==-1){
+return dojo.evalProp(_e,dojo.global(),_f);
 }
-
-/**
- * Trim whitespace at the end of 'str'
- */
-dojo.string.trimEnd = function(str) {
-	return dojo.string.trim(str, -1);
+var ref=dojo.parseObjPath(_e,dojo.global(),_f);
+if(ref){
+return dojo.evalProp(ref.prop,ref.obj,_f);
 }
-
-/**
- * Return 'str' repeated 'count' times, optionally
- * placing 'separator' between each rep
- */
-dojo.string.repeat = function(str, count, separator) {
-	var out = "";
-	for(var i = 0; i < count; i++) {
-		out += str;
-		if(separator && i < count - 1) {
-			out += separator;
-		}
-	}
-	return out;
-}
-
-/**
- * Pad 'str' to guarantee that it is at least 'len' length
- * with the character 'c' at either the start (dir=1) or
- * end (dir=-1) of the string
- */
-dojo.string.pad = function(str, len/*=2*/, c/*='0'*/, dir/*=1*/) {
-	var out = String(str);
-	if(!c) {
-		c = '0';
-	}
-	if(!dir) {
-		dir = 1;
-	}
-	while(out.length < len) {
-		if(dir > 0) {
-			out = c + out;
-		} else {
-			out += c;
-		}
-	}
-	return out;
-}
-
-/** same as dojo.string.pad(str, len, c, 1) */
-dojo.string.padLeft = function(str, len, c) {
-	return dojo.string.pad(str, len, c, 1);
-}
-
-/** same as dojo.string.pad(str, len, c, -1) */
-dojo.string.padRight = function(str, len, c) {
-	return dojo.string.pad(str, len, c, -1);
-}
-
-dojo.provide("dojo.string");
-dojo.require("dojo.string.common");
-
-dojo.provide("dojo.lang.common");
-dojo.require("dojo.lang");
-
-/*
- * Adds the given properties/methods to the specified object
- */
-dojo.lang._mixin = function(obj, props){
-	var tobj = {};
-	for(var x in props){
-		// the "tobj" condition avoid copying properties in "props"
-		// inherited from Object.prototype.  For example, if obj has a custom
-		// toString() method, don't overwrite it with the toString() method
-		// that props inherited from Object.protoype
-		if(typeof tobj[x] == "undefined" || tobj[x] != props[x]) {
-			obj[x] = props[x];
-		}
-	}
-	// IE doesn't recognize custom toStrings in for..in
-	if(dojo.render.html.ie && dojo.lang.isFunction(props["toString"]) && props["toString"] != obj["toString"]) {
-		obj.toString = props.toString;
-	}
-	return obj;
-}
-
-/*
- * Adds the properties/methods of argument Objects to obj
- */
-dojo.lang.mixin = function(obj, props /*, props, ..., props */){
-	for(var i=1, l=arguments.length; i<l; i++){
-		dojo.lang._mixin(obj, arguments[i]);
-	}
-	return obj;
-}
-
-/*
- * Adds the properties/methods of argument Objects to ctor's prototype
- */
-dojo.lang.extend = function(ctor /*function*/, props /*, props, ..., props */){
-	for(var i=1, l=arguments.length; i<l; i++){
-		dojo.lang._mixin(ctor.prototype, arguments[i]);
-	}
-	return ctor;
-}
-
-/**
- * See if val is in arr. Call signatures:
- *  find(array, value, identity) // recommended
- *  find(value, array, identity)
-**/
-dojo.lang.find = function(	/*Array*/	arr, 
-							/*Object*/	val,
-							/*boolean*/	identity,
-							/*boolean*/	findLast){
-	// support both (arr, val) and (val, arr)
-	if(!dojo.lang.isArrayLike(arr) && dojo.lang.isArrayLike(val)) {
-		var a = arr;
-		arr = val;
-		val = a;
-	}
-	var isString = dojo.lang.isString(arr);
-	if(isString) { arr = arr.split(""); }
-
-	if(findLast) {
-		var step = -1;
-		var i = arr.length - 1;
-		var end = -1;
-	} else {
-		var step = 1;
-		var i = 0;
-		var end = arr.length;
-	}
-	if(identity){
-		while(i != end) {
-			if(arr[i] === val){ return i; }
-			i += step;
-		}
-	}else{
-		while(i != end) {
-			if(arr[i] == val){ return i; }
-			i += step;
-		}
-	}
-	return -1;
-}
-
-dojo.lang.indexOf = dojo.lang.find;
-
-dojo.lang.findLast = function(/*Array*/ arr, /*Object*/ val, /*boolean*/ identity){
-	return dojo.lang.find(arr, val, identity, true);
-}
-
-dojo.lang.lastIndexOf = dojo.lang.findLast;
-
-dojo.lang.inArray = function(arr /*Array*/, val /*Object*/){
-	return dojo.lang.find(arr, val) > -1; // return: boolean
-}
-
-/**
- * Partial implmentation of is* functions from
- * http://www.crockford.com/javascript/recommend.html
- * NOTE: some of these may not be the best thing to use in all situations
- * as they aren't part of core JS and therefore can't work in every case.
- * See WARNING messages inline for tips.
- *
- * The following is* functions are fairly "safe"
- */
-
-dojo.lang.isObject = function(wh){
-	if(typeof wh == "undefined"){ return false; }
-	return (typeof wh == "object" || wh === null || dojo.lang.isArray(wh) || dojo.lang.isFunction(wh));
-}
-
-dojo.lang.isArray = function(wh){
-	return (wh instanceof Array || typeof wh == "array");
-}
-
-dojo.lang.isArrayLike = function(wh){
-	if(dojo.lang.isString(wh)){ return false; }
-	if(dojo.lang.isFunction(wh)){ return false; } // keeps out built-in ctors (Number, String, ...) which have length properties
-	if(dojo.lang.isArray(wh)){ return true; }
-	if(typeof wh != "undefined" && wh
-		&& dojo.lang.isNumber(wh.length) && isFinite(wh.length)){ return true; }
-	return false;
-}
-
-dojo.lang.isFunction = function(wh){
-	if(!wh){ return false; }
-	return (wh instanceof Function || typeof wh == "function");
-}
-
-dojo.lang.isString = function(wh){
-	return (wh instanceof String || typeof wh == "string");
-}
-
-dojo.lang.isAlien = function(wh){
-	if(!wh){ return false; }
-	return !dojo.lang.isFunction() && /\{\s*\[native code\]\s*\}/.test(String(wh));
-}
-
-dojo.lang.isBoolean = function(wh){
-	return (wh instanceof Boolean || typeof wh == "boolean");
-}
-
-/**
- * The following is***() functions are somewhat "unsafe". Fortunately,
- * there are workarounds the the language provides and are mentioned
- * in the WARNING messages.
- *
- * WARNING: In most cases, isNaN(wh) is sufficient to determine whether or not
- * something is a number or can be used as such. For example, a number or string
- * can be used interchangably when accessing array items (arr["1"] is the same as
- * arr[1]) and isNaN will return false for both values ("1" and 1). Should you
- * use isNumber("1"), that will return false, which is generally not too useful.
- * Also, isNumber(NaN) returns true, again, this isn't generally useful, but there
- * are corner cases (like when you want to make sure that two things are really
- * the same type of thing). That is really where isNumber "shines".
- *
- * RECOMMENDATION: Use isNaN(wh) when possible
- */
-dojo.lang.isNumber = function(wh){
-	return (wh instanceof Number || typeof wh == "number");
-}
-
-/**
- * WARNING: In some cases, isUndefined will not behave as you
- * might expect. If you do isUndefined(foo) and there is no earlier
- * reference to foo, an error will be thrown before isUndefined is
- * called. It behaves correctly if you scope yor object first, i.e.
- * isUndefined(foo.bar) where foo is an object and bar isn't a
- * property of the object.
- *
- * RECOMMENDATION: Use `typeof foo == "undefined"` when possible
- *
- * FIXME: Should isUndefined go away since it is error prone?
- */
-dojo.lang.isUndefined = function(wh){
-	return ((wh == undefined)&&(typeof wh == "undefined"));
-}
-
-// end Crockford functions
-
-dojo.provide("dojo.lang.extras");
-
-dojo.require("dojo.lang.common");
-
-/**
- * Sets a timeout in milliseconds to execute a function in a given context
- * with optional arguments.
- *
- * setTimeout (Object context, function func, number delay[, arg1[, ...]]);
- * setTimeout (function func, number delay[, arg1[, ...]]);
- */
-dojo.lang.setTimeout = function(func, delay){
-	var context = window, argsStart = 2;
-	if(!dojo.lang.isFunction(func)){
-		context = func;
-		func = delay;
-		delay = arguments[2];
-		argsStart++;
-	}
-
-	if(dojo.lang.isString(func)){
-		func = context[func];
-	}
-	
-	var args = [];
-	for (var i = argsStart; i < arguments.length; i++) {
-		args.push(arguments[i]);
-	}
-	return setTimeout(function () { func.apply(context, args); }, delay);
-}
-
-dojo.lang.getNameInObj = function(ns, item){
-	if(!ns){ ns = dj_global; }
-
-	for(var x in ns){
-		if(ns[x] === item){
-			return new String(x);
-		}
-	}
-	return null;
-}
-
-dojo.lang.shallowCopy = function(obj) {
-	var ret = {}, key;
-	for(key in obj) {
-		if(dojo.lang.isUndefined(ret[key])) {
-			ret[key] = obj[key];
-		}
-	}
-	return ret;
-}
-
-/**
- * Return the first argument that isn't undefined
- */
-dojo.lang.firstValued = function(/* ... */) {
-	for(var i = 0; i < arguments.length; i++) {
-		if(typeof arguments[i] != "undefined") {
-			return arguments[i];
-		}
-	}
-	return undefined;
-}
-
-/**
- * Get a value from a reference specified as a string descriptor,
- * (e.g. "A.B") in the given context.
- * 
- * getObjPathValue(String objpath [, Object context, Boolean create])
- *
- * If context is not specified, dj_global is used
- * If create is true, undefined objects in the path are created.
- */
-dojo.lang.getObjPathValue = function(objpath, context, create){
-	with(dojo.parseObjPath(objpath, context, create)){
-		return dojo.evalProp(prop, obj, create);
-	}
-}
-
-/**
- * Set a value on a reference specified as a string descriptor. 
- * (e.g. "A.B") in the given context.
- * 
- * setObjPathValue(String objpath, value [, Object context, Boolean create])
- *
- * If context is not specified, dj_global is used
- * If create is true, undefined objects in the path are created.
- */
-dojo.lang.setObjPathValue = function(objpath, value, context, create){
-	if(arguments.length < 4){
-		create = true;
-	}
-	with(dojo.parseObjPath(objpath, context, create)){
-		if(obj && (create || (prop in obj))){
-			obj[prop] = value;
-		}
-	}
-}
-
-dojo.provide("dojo.io.IO");
-dojo.require("dojo.string");
-dojo.require("dojo.lang.extras");
-
-/******************************************************************************
- *	Notes about dojo.io design:
- *	
- *	The dojo.io.* package has the unenviable task of making a lot of different
- *	types of I/O feel natural, despite a universal lack of good (or even
- *	reasonable!) I/O capability in the host environment. So lets pin this down
- *	a little bit further.
- *
- *	Rhino:
- *		perhaps the best situation anywhere. Access to Java classes allows you
- *		to do anything one might want in terms of I/O, both synchronously and
- *		async. Can open TCP sockets and perform low-latency client/server
- *		interactions. HTTP transport is available through Java HTTP client and
- *		server classes. Wish it were always this easy.
- *
- *	xpcshell:
- *		XPCOM for I/O. A cluster-fuck to be sure.
- *
- *	spidermonkey:
- *		S.O.L.
- *
- *	Browsers:
- *		Browsers generally do not provide any useable filesystem access. We are
- *		therefore limited to HTTP for moving information to and from Dojo
- *		instances living in a browser.
- *
- *		XMLHTTP:
- *			Sync or async, allows reading of arbitrary text files (including
- *			JS, which can then be eval()'d), writing requires server
- *			cooperation and is limited to HTTP mechanisms (POST and GET).
- *
- *		<iframe> hacks:
- *			iframe document hacks allow browsers to communicate asynchronously
- *			with a server via HTTP POST and GET operations. With significant
- *			effort and server cooperation, low-latency data transit between
- *			client and server can be acheived via iframe mechanisms (repubsub).
- *
- *		SVG:
- *			Adobe's SVG viewer implements helpful primitives for XML-based
- *			requests, but receipt of arbitrary text data seems unlikely w/o
- *			<![CDATA[]]> sections.
- *
- *
- *	A discussion between Dylan, Mark, Tom, and Alex helped to lay down a lot
- *	the IO API interface. A transcript of it can be found at:
- *		http://dojotoolkit.org/viewcvs/viewcvs.py/documents/irc/irc_io_api_log.txt?rev=307&view=auto
- *	
- *	Also referenced in the design of the API was the DOM 3 L&S spec:
- *		http://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407/load-save.html
- ******************************************************************************/
-
-// a map of the available transport options. Transports should add themselves
-// by calling add(name)
-dojo.io.transports = [];
-dojo.io.hdlrFuncNames = [ "load", "error", "timeout" ]; // we're omitting a progress() event for now
-
-dojo.io.Request = function(url, mimetype, transport, changeUrl){
-	if((arguments.length == 1)&&(arguments[0].constructor == Object)){
-		this.fromKwArgs(arguments[0]);
-	}else{
-		this.url = url;
-		if(mimetype){ this.mimetype = mimetype; }
-		if(transport){ this.transport = transport; }
-		if(arguments.length >= 4){ this.changeUrl = changeUrl; }
-	}
-}
-
-dojo.lang.extend(dojo.io.Request, {
-
-	/** The URL to hit */
-	url: "",
-	
-	/** The mime type used to interrpret the response body */
-	mimetype: "text/plain",
-	
-	/** The HTTP method to use */
-	method: "GET",
-	
-	/** An Object containing key-value pairs to be included with the request */
-	content: undefined, // Object
-	
-	/** The transport medium to use */
-	transport: undefined, // String
-	
-	/** If defined the URL of the page is physically changed */
-	changeUrl: undefined, // String
-	
-	/** A form node to use in the request */
-	formNode: undefined, // HTMLFormElement
-	
-	/** Whether the request should be made synchronously */
-	sync: false,
-	
-	bindSuccess: false,
-
-	/** Cache/look for the request in the cache before attempting to request?
-	 *  NOTE: this isn't a browser cache, this is internal and would only cache in-page
-	 */
-	useCache: false,
-
-	/** Prevent the browser from caching this by adding a query string argument to the URL */
-	preventCache: false,
-	
-	// events stuff
-	load: function(type, data, evt){ },
-	error: function(type, error){ },
-	timeout: function(type){ },
-	handle: function(){ },
-
-	//FIXME: change BrowserIO.js to use timeouts? IframeIO?
-	// The number of seconds to wait until firing a timeout callback.
-	// If it is zero, that means, don't do a timeout check.
-	timeoutSeconds: 0,
-	
-	// the abort method needs to be filled in by the transport that accepts the
-	// bind() request
-	abort: function(){ },
-	
-	// backButton: function(){ },
-	// forwardButton: function(){ },
-
-	fromKwArgs: function(kwArgs){
-		// normalize args
-		if(kwArgs["url"]){ kwArgs.url = kwArgs.url.toString(); }
-		if(kwArgs["formNode"]) { kwArgs.formNode = dojo.byId(kwArgs.formNode); }
-		if(!kwArgs["method"] && kwArgs["formNode"] && kwArgs["formNode"].method) {
-			kwArgs.method = kwArgs["formNode"].method;
-		}
-		
-		// backwards compatibility
-		if(!kwArgs["handle"] && kwArgs["handler"]){ kwArgs.handle = kwArgs.handler; }
-		if(!kwArgs["load"] && kwArgs["loaded"]){ kwArgs.load = kwArgs.loaded; }
-		if(!kwArgs["changeUrl"] && kwArgs["changeURL"]) { kwArgs.changeUrl = kwArgs.changeURL; }
-
-		// encoding fun!
-		kwArgs.encoding = dojo.lang.firstValued(kwArgs["encoding"], djConfig["bindEncoding"], "");
-
-		kwArgs.sendTransport = dojo.lang.firstValued(kwArgs["sendTransport"], djConfig["ioSendTransport"], false);
-
-		var isFunction = dojo.lang.isFunction;
-		for(var x=0; x<dojo.io.hdlrFuncNames.length; x++){
-			var fn = dojo.io.hdlrFuncNames[x];
-			if(isFunction(kwArgs[fn])){ continue; }
-			if(isFunction(kwArgs["handle"])){
-				kwArgs[fn] = kwArgs.handle;
-			}
-			// handler is aliased above, shouldn't need this check
-			/* else if(dojo.lang.isObject(kwArgs.handler)){
-				if(isFunction(kwArgs.handler[fn])){
-					kwArgs[fn] = kwArgs.handler[fn]||kwArgs.handler["handle"]||function(){};
-				}
-			}*/
-		}
-		dojo.lang.mixin(this, kwArgs);
-	}
-
-});
-
-dojo.io.Error = function(msg, type, num){
-	this.message = msg;
-	this.type =  type || "unknown"; // must be one of "io", "parse", "unknown"
-	this.number = num || 0; // per-substrate error number, not normalized
-}
-
-dojo.io.transports.addTransport = function(name){
-	this.push(name);
-	// FIXME: do we need to handle things that aren't direct children of the
-	// dojo.io namespace? (say, dojo.io.foo.fooTransport?)
-	this[name] = dojo.io[name];
-}
-
-// binding interface, the various implementations register their capabilities
-// and the bind() method dispatches
-dojo.io.bind = function(request){
-	// if the request asks for a particular implementation, use it
-	if(!(request instanceof dojo.io.Request)){
-		try{
-			request = new dojo.io.Request(request);
-		}catch(e){ dojo.debug(e); }
-	}
-	var tsName = "";
-	if(request["transport"]){
-		tsName = request["transport"];
-		// FIXME: it would be good to call the error handler, although we'd
-		// need to use setTimeout or similar to accomplish this and we can't
-		// garuntee that this facility is available.
-		if(!this[tsName]){ return request; }
-	}else{
-		// otherwise we do our best to auto-detect what available transports
-		// will handle 
-		for(var x=0; x<dojo.io.transports.length; x++){
-			var tmp = dojo.io.transports[x];
-			if((this[tmp])&&(this[tmp].canHandle(request))){
-				tsName = tmp;
-			}
-		}
-		if(tsName == ""){ return request; }
-	}
-	this[tsName].bind(request);
-	request.bindSuccess = true;
-	return request;
-}
-
-dojo.io.queueBind = function(request){
-	if(!(request instanceof dojo.io.Request)){
-		try{
-			request = new dojo.io.Request(request);
-		}catch(e){ dojo.debug(e); }
-	}
-
-	// make sure we get called if/when we get a response
-	var oldLoad = request.load;
-	request.load = function(){
-		dojo.io._queueBindInFlight = false;
-		var ret = oldLoad.apply(this, arguments);
-		dojo.io._dispatchNextQueueBind();
-		return ret;
-	}
-
-	var oldErr = request.error;
-	request.error = function(){
-		dojo.io._queueBindInFlight = false;
-		var ret = oldErr.apply(this, arguments);
-		dojo.io._dispatchNextQueueBind();
-		return ret;
-	}
-
-	dojo.io._bindQueue.push(request);
-	dojo.io._dispatchNextQueueBind();
-	return request;
-}
-
-dojo.io._dispatchNextQueueBind = function(){
-	if(!dojo.io._queueBindInFlight){
-		dojo.io._queueBindInFlight = true;
-		if(dojo.io._bindQueue.length > 0){
-			dojo.io.bind(dojo.io._bindQueue.shift());
-		}else{
-			dojo.io._queueBindInFlight = false;
-		}
-	}
-}
-dojo.io._bindQueue = [];
-dojo.io._queueBindInFlight = false;
-
-dojo.io.argsFromMap = function(map, encoding, last){
-	var enc = /utf/i.test(encoding||"") ? encodeURIComponent : dojo.string.encodeAscii;
-	var mapped = [];
-	var control = new Object();
-	for(var name in map){
-		var domap = function(elt){
-			var val = enc(name)+"="+enc(elt);
-			mapped[(last == name) ? "push" : "unshift"](val);
-		}
-		if(!control[name]){
-			var value = map[name];
-			// FIXME: should be isArrayLike?
-			if (dojo.lang.isArray(value)){
-				dojo.lang.forEach(value, domap);
-			}else{
-				domap(value);
-			}
-		}
-	}
-	return mapped.join("&");
-}
-
-dojo.io.setIFrameSrc = function(iframe, src, replace){
-	try{
-		var r = dojo.render.html;
-		// dojo.debug(iframe);
-		if(!replace){
-			if(r.safari){
-				iframe.location = src;
-			}else{
-				frames[iframe.name].location = src;
-			}
-		}else{
-			// Fun with DOM 0 incompatibilities!
-			var idoc;
-			if(r.ie){
-				idoc = iframe.contentWindow.document;
-			}else if(r.safari){
-				idoc = iframe.document;
-			}else{ //  if(r.moz){
-				idoc = iframe.contentWindow;
-			}
-
-			//For Safari (at least 2.0.3) and Opera, if the iframe
-			//has just been created but it doesn't have content
-			//yet, then iframe.document may be null. In that case,
-			//use iframe.location and return.
-			if(!idoc){
-				iframe.location = src;
-				return;
-			}else{
-				idoc.location.replace(src);
-			}
-		}
-	}catch(e){ 
-		dojo.debug(e); 
-		dojo.debug("setIFrameSrc: "+e); 
-	}
-}
-
-/*
-dojo.io.sampleTranport = new function(){
-	this.canHandle = function(kwArgs){
-		// canHandle just tells dojo.io.bind() if this is a good transport to
-		// use for the particular type of request.
-		if(	
-			(
-				(kwArgs["mimetype"] == "text/plain") ||
-				(kwArgs["mimetype"] == "text/html") ||
-				(kwArgs["mimetype"] == "text/javascript")
-			)&&(
-				(kwArgs["method"] == "get") ||
-				( (kwArgs["method"] == "post") && (!kwArgs["formNode"]) )
-			)
-		){
-			return true;
-		}
-
-		return false;
-	}
-
-	this.bind = function(kwArgs){
-		var hdlrObj = {};
-
-		// set up a handler object
-		for(var x=0; x<dojo.io.hdlrFuncNames.length; x++){
-			var fn = dojo.io.hdlrFuncNames[x];
-			if(typeof kwArgs.handler == "object"){
-				if(typeof kwArgs.handler[fn] == "function"){
-					hdlrObj[fn] = kwArgs.handler[fn]||kwArgs.handler["handle"];
-				}
-			}else if(typeof kwArgs[fn] == "function"){
-				hdlrObj[fn] = kwArgs[fn];
-			}else{
-				hdlrObj[fn] = kwArgs["handle"]||function(){};
-			}
-		}
-
-		// build a handler function that calls back to the handler obj
-		var hdlrFunc = function(evt){
-			if(evt.type == "onload"){
-				hdlrObj.load("load", evt.data, evt);
-			}else if(evt.type == "onerr"){
-				var errObj = new dojo.io.Error("sampleTransport Error: "+evt.msg);
-				hdlrObj.error("error", errObj);
-			}
-		}
-
-		// the sample transport would attach the hdlrFunc() when sending the
-		// request down the pipe at this point
-		var tgtURL = kwArgs.url+"?"+dojo.io.argsFromMap(kwArgs.content);
-		// sampleTransport.sendRequest(tgtURL, hdlrFunc);
-	}
-
-	dojo.io.transports.addTransport("sampleTranport");
-}
-*/
-
-dojo.provide("dojo.lang.array");
-
-dojo.require("dojo.lang.common");
-
-// FIXME: Is this worthless since you can do: if(name in obj)
-// is this the right place for this?
-dojo.lang.has = function(obj, name){
-	try{
-		return (typeof obj[name] != "undefined");
-	}catch(e){ return false; }
-}
-
-dojo.lang.isEmpty = function(obj) {
-	if(dojo.lang.isObject(obj)) {
-		var tmp = {};
-		var count = 0;
-		for(var x in obj){
-			if(obj[x] && (!tmp[x])){
-				count++;
-				break;
-			} 
-		}
-		return (count == 0);
-	} else if(dojo.lang.isArrayLike(obj) || dojo.lang.isString(obj)) {
-		return obj.length == 0;
-	}
-}
-
-dojo.lang.map = function(arr, obj, unary_func){
-	var isString = dojo.lang.isString(arr);
-	if(isString){
-		arr = arr.split("");
-	}
-	if(dojo.lang.isFunction(obj)&&(!unary_func)){
-		unary_func = obj;
-		obj = dj_global;
-	}else if(dojo.lang.isFunction(obj) && unary_func){
-		// ff 1.5 compat
-		var tmpObj = obj;
-		obj = unary_func;
-		unary_func = tmpObj;
-	}
-	if(Array.map){
-	 	var outArr = Array.map(arr, unary_func, obj);
-	}else{
-		var outArr = [];
-		for(var i=0;i<arr.length;++i){
-			outArr.push(unary_func.call(obj, arr[i]));
-		}
-	}
-	if(isString) {
-		return outArr.join("");
-	} else {
-		return outArr;
-	}
-}
-
-// http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Global_Objects:Array:forEach
-dojo.lang.forEach = function(anArray /* Array */, callback /* Function */, thisObject /* Object */){
-	if(dojo.lang.isString(anArray)){ 
-		anArray = anArray.split(""); 
-	}
-	if(Array.forEach){
-		Array.forEach(anArray, callback, thisObject);
-	}else{
-		// FIXME: there are several ways of handilng thisObject. Is dj_global always the default context?
-		if(!thisObject){
-			thisObject=dj_global;
-		}
-		for(var i=0,l=anArray.length; i<l; i++){ 
-			callback.call(thisObject, anArray[i], i, anArray);
-		}
-	}
-}
-
-dojo.lang._everyOrSome = function(every, arr, callback, thisObject){
-	if(dojo.lang.isString(arr)){ 
-		arr = arr.split(""); 
-	}
-	if(Array.every){
-		return Array[ (every) ? "every" : "some" ](arr, callback, thisObject);
-	}else{
-		if(!thisObject){
-			thisObject = dj_global;
-		}
-		for(var i=0,l=arr.length; i<l; i++){
-			var result = callback.call(thisObject, arr[i], i, arr);
-			if((every)&&(!result)){
-				return false;
-			}else if((!every)&&(result)){
-				return true;
-			}
-		}
-		return (every) ? true : false;
-	}
-}
-
-dojo.lang.every = function(arr, callback, thisObject){
-	return this._everyOrSome(true, arr, callback, thisObject);
-}
-
-dojo.lang.some = function(arr, callback, thisObject){
-	return this._everyOrSome(false, arr, callback, thisObject);
-}
-
-dojo.lang.filter = function(arr, callback, thisObject) {
-	var isString = dojo.lang.isString(arr);
-	if(isString) { arr = arr.split(""); }
-	if(Array.filter) {
-		var outArr = Array.filter(arr, callback, thisObject);
-	} else {
-		if(!thisObject) {
-			if(arguments.length >= 3) { dojo.raise("thisObject doesn't exist!"); }
-			thisObject = dj_global;
-		}
-
-		var outArr = [];
-		for(var i = 0; i < arr.length; i++) {
-			if(callback.call(thisObject, arr[i], i, arr)) {
-				outArr.push(arr[i]);
-			}
-		}
-	}
-	if(isString) {
-		return outArr.join("");
-	} else {
-		return outArr;
-	}
-}
-
-/**
- * Creates a 1-D array out of all the arguments passed,
- * unravelling any array-like objects in the process
- *
- * Ex:
- * unnest(1, 2, 3) ==> [1, 2, 3]
- * unnest(1, [2, [3], [[[4]]]]) ==> [1, 2, 3, 4]
- */
-dojo.lang.unnest = function(/* ... */) {
-	var out = [];
-	for(var i = 0; i < arguments.length; i++) {
-		if(dojo.lang.isArrayLike(arguments[i])) {
-			var add = dojo.lang.unnest.apply(this, arguments[i]);
-			out = out.concat(add);
-		} else {
-			out.push(arguments[i]);
-		}
-	}
-	return out;
-}
-
-/**
- * Converts an array-like object (i.e. arguments, DOMCollection)
- * to an array
-**/
-dojo.lang.toArray = function(arrayLike, startOffset) {
-	var array = [];
-	for(var i = startOffset||0; i < arrayLike.length; i++) {
-		array.push(arrayLike[i]);
-	}
-	return array;
-}
-
-dojo.provide("dojo.lang.func");
-
-dojo.require("dojo.lang.common");
-
-/**
- * Runs a function in a given scope (thisObject), can
- * also be used to preserve scope.
- *
- * hitch(foo, "bar"); // runs foo.bar() in the scope of foo
- * hitch(foo, myFunction); // runs myFunction in the scope of foo
- */
-dojo.lang.hitch = function(thisObject, method) {
-	if(dojo.lang.isString(method)) {
-		var fcn = thisObject[method];
-	} else {
-		var fcn = method;
-	}
-
-	return function() {
-		return fcn.apply(thisObject, arguments);
-	}
-}
-
-dojo.lang.anonCtr = 0;
-dojo.lang.anon = {};
-dojo.lang.nameAnonFunc = function(anonFuncPtr, namespaceObj, searchForNames){
-	var nso = (namespaceObj || dojo.lang.anon);
-	if( (searchForNames) ||
-		((dj_global["djConfig"])&&(djConfig["slowAnonFuncLookups"] == true)) ){
-		for(var x in nso){
-			if(nso[x] === anonFuncPtr){
-				return x;
-			}
-		}
-	}
-	var ret = "__"+dojo.lang.anonCtr++;
-	while(typeof nso[ret] != "undefined"){
-		ret = "__"+dojo.lang.anonCtr++;
-	}
-	nso[ret] = anonFuncPtr;
-	return ret;
-}
-
-dojo.lang.forward = function(funcName){
-	// Returns a function that forwards a method call to this.func(...)
-	return function(){
-		return this[funcName].apply(this, arguments);
-	};
-}
-
-dojo.lang.curry = function(ns, func /* args ... */){
-	var outerArgs = [];
-	ns = ns||dj_global;
-	if(dojo.lang.isString(func)){
-		func = ns[func];
-	}
-	for(var x=2; x<arguments.length; x++){
-		outerArgs.push(arguments[x]);
-	}
-	// since the event system replaces the original function with a new
-	// join-point runner with an arity of 0, we check to see if it's left us
-	// any clues about the original arity in lieu of the function's actual
-	// length property
-	var ecount = (func["__preJoinArity"]||func.length) - outerArgs.length;
-	// borrowed from svend tofte
-	function gather(nextArgs, innerArgs, expected){
-		var texpected = expected;
-		var totalArgs = innerArgs.slice(0); // copy
-		for(var x=0; x<nextArgs.length; x++){
-			totalArgs.push(nextArgs[x]);
-		}
-		// check the list of provided nextArgs to see if it, plus the
-		// number of innerArgs already supplied, meets the total
-		// expected.
-		expected = expected-nextArgs.length;
-		if(expected<=0){
-			var res = func.apply(ns, totalArgs);
-			expected = texpected;
-			return res;
-		}else{
-			return function(){
-				return gather(arguments,// check to see if we've been run
-										// with enough args
-							totalArgs,	// a copy
-							expected);	// how many more do we need to run?;
-			}
-		}
-	}
-	return gather([], outerArgs, ecount);
-}
-
-dojo.lang.curryArguments = function(ns, func, args, offset){
-	var targs = [];
-	var x = offset||0;
-	for(x=offset; x<args.length; x++){
-		targs.push(args[x]); // ensure that it's an arr
-	}
-	return dojo.lang.curry.apply(dojo.lang, [ns, func].concat(targs));
-}
-
-dojo.lang.tryThese = function(){
-	for(var x=0; x<arguments.length; x++){
-		try{
-			if(typeof arguments[x] == "function"){
-				var ret = (arguments[x]());
-				if(ret){
-					return ret;
-				}
-			}
-		}catch(e){
-			dojo.debug(e);
-		}
-	}
-}
-
-dojo.lang.delayThese = function(farr, cb, delay, onend){
-	/**
-	 * alternate: (array funcArray, function callback, function onend)
-	 * alternate: (array funcArray, function callback)
-	 * alternate: (array funcArray)
-	 */
-	if(!farr.length){ 
-		if(typeof onend == "function"){
-			onend();
-		}
-		return;
-	}
-	if((typeof delay == "undefined")&&(typeof cb == "number")){
-		delay = cb;
-		cb = function(){};
-	}else if(!cb){
-		cb = function(){};
-		if(!delay){ delay = 0; }
-	}
-	setTimeout(function(){
-		(farr.shift())();
-		cb();
-		dojo.lang.delayThese(farr, cb, delay, onend);
-	}, delay);
-}
-
-dojo.provide("dojo.string.extras");
-
-dojo.require("dojo.string.common");
-dojo.require("dojo.lang");
-
-/**
- * Performs parameterized substitutions on a string.  For example,
- *   dojo.string.substituteParams("File '%{0}' is not found in directory '%{1}'.","foo.html","/temp");
- * returns
- *   "File 'foo.html' is not found in directory '/temp'."
- * 
- * @param template the original string template with %{values} to be replaced
- * @param hash name/value pairs (type object) to provide substitutions.  Alternatively, substitutions may be
- *  included as arguments 1..n to this function, corresponding to template parameters 0..n-1
- * @return the completed string. Throws an exception if any parameter is unmatched
- */
-//TODO: use ${} substitution syntax instead, like widgets do?
-dojo.string.substituteParams = function(template /*string */, hash /* object - optional or ... */) {
-	var map = (typeof hash == 'object') ? hash : dojo.lang.toArray(arguments, 1);
-
-	return template.replace(/\%\{(\w+)\}/g, function(match, key){
-		return map[key] || dojo.raise("Substitution not found: " + key);
-	});
+return null;
 };
-
-/**
- * Parameterized string function
- * str - formatted string with %{values} to be replaces
- * pairs - object of name: "value" value pairs
- * killExtra - remove all remaining %{values} after pairs are inserted
- */
-dojo.string.paramString = function(str, pairs, killExtra) {
-	dojo.deprecated("dojo.string.paramString",
-		"use dojo.string.substituteParams instead", "0.4");
-
-	for(var name in pairs) {
-		var re = new RegExp("\\%\\{" + name + "\\}", "g");
-		str = str.replace(re, pairs[name]);
-	}
-
-	if(killExtra) { str = str.replace(/%\{([^\}\s]+)\}/g, ""); }
-	return str;
+dojo.errorToString=function(_11){
+if(!dj_undef("message",_11)){
+return _11.message;
+}else{
+if(!dj_undef("description",_11)){
+return _11.description;
+}else{
+return _11;
 }
-
-/** Uppercases the first letter of each word */
-dojo.string.capitalize = function (str) {
-	if (!dojo.lang.isString(str)) { return ""; }
-	if (arguments.length == 0) { str = this; }
-
-	var words = str.split(' ');
-	for(var i=0; i<words.length; i++){
-		words[i] = words[i].charAt(0).toUpperCase() + words[i].substring(1);
-	}
-	return words.join(" ");
 }
-
-/**
- * Return true if the entire string is whitespace characters
- */
-dojo.string.isBlank = function (str) {
-	if(!dojo.lang.isString(str)) { return true; }
-	return (dojo.string.trim(str).length == 0);
-}
-
-dojo.string.encodeAscii = function(str) {
-	if(!dojo.lang.isString(str)) { return str; }
-	var ret = "";
-	var value = escape(str);
-	var match, re = /%u([0-9A-F]{4})/i;
-	while((match = value.match(re))) {
-		var num = Number("0x"+match[1]);
-		var newVal = escape("&#" + num + ";");
-		ret += value.substring(0, match.index) + newVal;
-		value = value.substring(match.index+match[0].length);
-	}
-	ret += value.replace(/\+/g, "%2B");
-	return ret;
-}
-
-dojo.string.escape = function(type, str) {
-	var args = dojo.lang.toArray(arguments, 1);
-	switch(type.toLowerCase()) {
-		case "xml":
-		case "html":
-		case "xhtml":
-			return dojo.string.escapeXml.apply(this, args);
-		case "sql":
-			return dojo.string.escapeSql.apply(this, args);
-		case "regexp":
-		case "regex":
-			return dojo.string.escapeRegExp.apply(this, args);
-		case "javascript":
-		case "jscript":
-		case "js":
-			return dojo.string.escapeJavaScript.apply(this, args);
-		case "ascii":
-			// so it's encode, but it seems useful
-			return dojo.string.encodeAscii.apply(this, args);
-		default:
-			return str;
-	}
-}
-
-dojo.string.escapeXml = function(str, noSingleQuotes) {
-	str = str.replace(/&/gm, "&amp;").replace(/</gm, "&lt;")
-		.replace(/>/gm, "&gt;").replace(/"/gm, "&quot;");
-	if(!noSingleQuotes) { str = str.replace(/'/gm, "&#39;"); }
-	return str;
-}
-
-dojo.string.escapeSql = function(str) {
-	return str.replace(/'/gm, "''");
-}
-
-dojo.string.escapeRegExp = function(str) {
-	return str.replace(/\\/gm, "\\\\").replace(/([\f\b\n\t\r[\^$|?*+(){}])/gm, "\\$1");
-}
-
-dojo.string.escapeJavaScript = function(str) {
-	return str.replace(/(["'\f\b\n\t\r])/gm, "\\$1");
-}
-
-dojo.string.escapeString = function(str){ 
-	return ('"' + str.replace(/(["\\])/g, '\\$1') + '"'
-		).replace(/[\f]/g, "\\f"
-		).replace(/[\b]/g, "\\b"
-		).replace(/[\n]/g, "\\n"
-		).replace(/[\t]/g, "\\t"
-		).replace(/[\r]/g, "\\r");
-}
-
-// TODO: make an HTML version
-dojo.string.summary = function(str, len) {
-	if(!len || str.length <= len) {
-		return str;
-	} else {
-		return str.substring(0, len).replace(/\.+$/, "") + "...";
-	}
-}
-
-/**
- * Returns true if 'str' ends with 'end'
- */
-dojo.string.endsWith = function(str, end, ignoreCase) {
-	if(ignoreCase) {
-		str = str.toLowerCase();
-		end = end.toLowerCase();
-	}
-	if((str.length - end.length) < 0){
-		return false;
-	}
-	return str.lastIndexOf(end) == str.length - end.length;
-}
-
-/**
- * Returns true if 'str' ends with any of the arguments[2 -> n]
- */
-dojo.string.endsWithAny = function(str /* , ... */) {
-	for(var i = 1; i < arguments.length; i++) {
-		if(dojo.string.endsWith(str, arguments[i])) {
-			return true;
-		}
-	}
-	return false;
-}
-
-/**
- * Returns true if 'str' starts with 'start'
- */
-dojo.string.startsWith = function(str, start, ignoreCase) {
-	if(ignoreCase) {
-		str = str.toLowerCase();
-		start = start.toLowerCase();
-	}
-	return str.indexOf(start) == 0;
-}
-
-/**
- * Returns true if 'str' starts with any of the arguments[2 -> n]
- */
-dojo.string.startsWithAny = function(str /* , ... */) {
-	for(var i = 1; i < arguments.length; i++) {
-		if(dojo.string.startsWith(str, arguments[i])) {
-			return true;
-		}
-	}
-	return false;
-}
-
-/**
- * Returns true if 'str' contains any of the arguments 2 -> n
- */
-dojo.string.has = function(str /* , ... */) {
-	for(var i = 1; i < arguments.length; i++) {
-		if(str.indexOf(arguments[i]) > -1){
-			return true;
-		}
-	}
-	return false;
-}
-
-dojo.string.normalizeNewlines = function (text,newlineChar) {
-	if (newlineChar == "\n") {
-		text = text.replace(/\r\n/g, "\n");
-		text = text.replace(/\r/g, "\n");
-	} else if (newlineChar == "\r") {
-		text = text.replace(/\r\n/g, "\r");
-		text = text.replace(/\n/g, "\r");
-	} else {
-		text = text.replace(/([^\r])\n/g, "$1\r\n");
-		text = text.replace(/\r([^\n])/g, "\r\n$1");
-	}
-	return text;
-}
-
-dojo.string.splitEscaped = function (str,charac) {
-	var components = [];
-	for (var i = 0, prevcomma = 0; i < str.length; i++) {
-		if (str.charAt(i) == '\\') { i++; continue; }
-		if (str.charAt(i) == charac) {
-			components.push(str.substring(prevcomma, i));
-			prevcomma = i + 1;
-		}
-	}
-	components.push(str.substr(prevcomma));
-	return components;
-}
-
-dojo.provide("dojo.dom");
-dojo.require("dojo.lang.array");
-
-dojo.dom.ELEMENT_NODE                  = 1;
-dojo.dom.ATTRIBUTE_NODE                = 2;
-dojo.dom.TEXT_NODE                     = 3;
-dojo.dom.CDATA_SECTION_NODE            = 4;
-dojo.dom.ENTITY_REFERENCE_NODE         = 5;
-dojo.dom.ENTITY_NODE                   = 6;
-dojo.dom.PROCESSING_INSTRUCTION_NODE   = 7;
-dojo.dom.COMMENT_NODE                  = 8;
-dojo.dom.DOCUMENT_NODE                 = 9;
-dojo.dom.DOCUMENT_TYPE_NODE            = 10;
-dojo.dom.DOCUMENT_FRAGMENT_NODE        = 11;
-dojo.dom.NOTATION_NODE                 = 12;
-	
-dojo.dom.dojoml = "http://www.dojotoolkit.org/2004/dojoml";
-
-/**
- *	comprehensive list of XML namespaces
-**/
-dojo.dom.xmlns = {
-	svg : "http://www.w3.org/2000/svg",
-	smil : "http://www.w3.org/2001/SMIL20/",
-	mml : "http://www.w3.org/1998/Math/MathML",
-	cml : "http://www.xml-cml.org",
-	xlink : "http://www.w3.org/1999/xlink",
-	xhtml : "http://www.w3.org/1999/xhtml",
-	xul : "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul",
-	xbl : "http://www.mozilla.org/xbl",
-	fo : "http://www.w3.org/1999/XSL/Format",
-	xsl : "http://www.w3.org/1999/XSL/Transform",
-	xslt : "http://www.w3.org/1999/XSL/Transform",
-	xi : "http://www.w3.org/2001/XInclude",
-	xforms : "http://www.w3.org/2002/01/xforms",
-	saxon : "http://icl.com/saxon",
-	xalan : "http://xml.apache.org/xslt",
-	xsd : "http://www.w3.org/2001/XMLSchema",
-	dt: "http://www.w3.org/2001/XMLSchema-datatypes",
-	xsi : "http://www.w3.org/2001/XMLSchema-instance",
-	rdf : "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-	rdfs : "http://www.w3.org/2000/01/rdf-schema#",
-	dc : "http://purl.org/dc/elements/1.1/",
-	dcq: "http://purl.org/dc/qualifiers/1.0",
-	"soap-env" : "http://schemas.xmlsoap.org/soap/envelope/",
-	wsdl : "http://schemas.xmlsoap.org/wsdl/",
-	AdobeExtensions : "http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
 };
-
-dojo.dom.isNode = function(wh){
-	if(typeof Element == "object") {
-		try {
-			return wh instanceof Element;
-		} catch(E) {}
-	} else {
-		// best-guess
-		return wh && !isNaN(wh.nodeType);
-	}
+dojo.raise=function(_12,_13){
+if(_13){
+_12=_12+": "+dojo.errorToString(_13);
+}else{
+_12=dojo.errorToString(_12);
 }
-
-dojo.dom.getTagName = function(node){
-	dojo.deprecated("dojo.dom.getTagName", "use node.tagName instead", "0.4");
-
-	var tagName = node.tagName;
-	if(tagName.substr(0,5).toLowerCase()!="dojo:"){
-		
-		if(tagName.substr(0,4).toLowerCase()=="dojo"){
-			// FIXME: this assuumes tag names are always lower case
-			return "dojo:" + tagName.substring(4).toLowerCase();
-		}
-
-		// allow lower-casing
-		var djt = node.getAttribute("dojoType")||node.getAttribute("dojotype");
-		if(djt){
-			return "dojo:"+djt.toLowerCase();
-		}
-		
-		if((node.getAttributeNS)&&(node.getAttributeNS(this.dojoml,"type"))){
-			return "dojo:" + node.getAttributeNS(this.dojoml,"type").toLowerCase();
-		}
-		try{
-			// FIXME: IE really really doesn't like this, so we squelch
-			// errors for it
-			djt = node.getAttribute("dojo:type");
-		}catch(e){ /* FIXME: log? */ }
-		if(djt){
-			return "dojo:"+djt.toLowerCase();
-		}
-
-		if((!dj_global["djConfig"])||(!djConfig["ignoreClassNames"])){
-			// FIXME: should we make this optionally enabled via djConfig?
-			var classes = node.className||node.getAttribute("class");
-			// FIXME: following line, without check for existence of classes.indexOf
-			// breaks firefox 1.5's svg widgets
-			if((classes)&&(classes.indexOf)&&(classes.indexOf("dojo-") != -1)){
-				var aclasses = classes.split(" ");
-				for(var x=0; x<aclasses.length; x++){
-					if((aclasses[x].length>5)&&(aclasses[x].indexOf("dojo-")>=0)){
-						return "dojo:"+aclasses[x].substr(5).toLowerCase();
-					}
-				}
-			}
-		}
-
-	}
-	return tagName.toLowerCase();
-}
-
-dojo.dom.getUniqueId = function(){
-	do {
-		var id = "dj_unique_" + (++arguments.callee._idIncrement);
-	}while(document.getElementById(id));
-	return id;
-}
-dojo.dom.getUniqueId._idIncrement = 0;
-
-dojo.dom.firstElement = dojo.dom.getFirstChildElement = function(parentNode, tagName){
-	var node = parentNode.firstChild;
-	while(node && node.nodeType != dojo.dom.ELEMENT_NODE){
-		node = node.nextSibling;
-	}
-	if(tagName && node && node.tagName && node.tagName.toLowerCase() != tagName.toLowerCase()) {
-		node = dojo.dom.nextElement(node, tagName);
-	}
-	return node;
-}
-
-dojo.dom.lastElement = dojo.dom.getLastChildElement = function(parentNode, tagName){
-	var node = parentNode.lastChild;
-	while(node && node.nodeType != dojo.dom.ELEMENT_NODE) {
-		node = node.previousSibling;
-	}
-	if(tagName && node && node.tagName && node.tagName.toLowerCase() != tagName.toLowerCase()) {
-		node = dojo.dom.prevElement(node, tagName);
-	}
-	return node;
-}
-
-dojo.dom.nextElement = dojo.dom.getNextSiblingElement = function(node, tagName){
-	if(!node) { return null; }
-	do {
-		node = node.nextSibling;
-	} while(node && node.nodeType != dojo.dom.ELEMENT_NODE);
-
-	if(node && tagName && tagName.toLowerCase() != node.tagName.toLowerCase()) {
-		return dojo.dom.nextElement(node, tagName);
-	}
-	return node;
-}
-
-dojo.dom.prevElement = dojo.dom.getPreviousSiblingElement = function(node, tagName){
-	if(!node) { return null; }
-	if(tagName) { tagName = tagName.toLowerCase(); }
-	do {
-		node = node.previousSibling;
-	} while(node && node.nodeType != dojo.dom.ELEMENT_NODE);
-
-	if(node && tagName && tagName.toLowerCase() != node.tagName.toLowerCase()) {
-		return dojo.dom.prevElement(node, tagName);
-	}
-	return node;
-}
-
-// TODO: hmph
-/*this.forEachChildTag = function(node, unaryFunc) {
-	var child = this.getFirstChildTag(node);
-	while(child) {
-		if(unaryFunc(child) == "break") { break; }
-		child = this.getNextSiblingTag(child);
-	}
-}*/
-
-dojo.dom.moveChildren = function(srcNode, destNode, trim){
-	var count = 0;
-	if(trim) {
-		while(srcNode.hasChildNodes() &&
-			srcNode.firstChild.nodeType == dojo.dom.TEXT_NODE) {
-			srcNode.removeChild(srcNode.firstChild);
-		}
-		while(srcNode.hasChildNodes() &&
-			srcNode.lastChild.nodeType == dojo.dom.TEXT_NODE) {
-			srcNode.removeChild(srcNode.lastChild);
-		}
-	}
-	while(srcNode.hasChildNodes()){
-		destNode.appendChild(srcNode.firstChild);
-		count++;
-	}
-	return count;
-}
-
-dojo.dom.copyChildren = function(srcNode, destNode, trim){
-	var clonedNode = srcNode.cloneNode(true);
-	return this.moveChildren(clonedNode, destNode, trim);
-}
-
-dojo.dom.removeChildren = function(node){
-	var count = node.childNodes.length;
-	while(node.hasChildNodes()){ node.removeChild(node.firstChild); }
-	return count;
-}
-
-dojo.dom.replaceChildren = function(node, newChild){
-	// FIXME: what if newChild is an array-like object?
-	dojo.dom.removeChildren(node);
-	node.appendChild(newChild);
-}
-
-dojo.dom.removeNode = function(node){
-	if(node && node.parentNode){
-		// return a ref to the removed child
-		return node.parentNode.removeChild(node);
-	}
-}
-
-dojo.dom.getAncestors = function(node, filterFunction, returnFirstHit) {
-	var ancestors = [];
-	var isFunction = dojo.lang.isFunction(filterFunction);
-	while(node) {
-		if (!isFunction || filterFunction(node)) {
-			ancestors.push(node);
-		}
-		if (returnFirstHit && ancestors.length > 0) { return ancestors[0]; }
-		
-		node = node.parentNode;
-	}
-	if (returnFirstHit) { return null; }
-	return ancestors;
-}
-
-dojo.dom.getAncestorsByTag = function(node, tag, returnFirstHit) {
-	tag = tag.toLowerCase();
-	return dojo.dom.getAncestors(node, function(el){
-		return ((el.tagName)&&(el.tagName.toLowerCase() == tag));
-	}, returnFirstHit);
-}
-
-dojo.dom.getFirstAncestorByTag = function(node, tag) {
-	return dojo.dom.getAncestorsByTag(node, tag, true);
-}
-
-dojo.dom.isDescendantOf = function(node, ancestor, guaranteeDescendant){
-	// guaranteeDescendant allows us to be a "true" isDescendantOf function
-	if(guaranteeDescendant && node) { node = node.parentNode; }
-	while(node) {
-		if(node == ancestor){ return true; }
-		node = node.parentNode;
-	}
-	return false;
-}
-
-dojo.dom.innerXML = function(node){
-	if(node.innerXML){
-		return node.innerXML;
-	}else if (node.xml){
-		return node.xml;
-	}else if(typeof XMLSerializer != "undefined"){
-		return (new XMLSerializer()).serializeToString(node);
-	}
-}
-
-dojo.dom.createDocument = function(){
-	var doc = null;
-
-	if(!dj_undef("ActiveXObject")){
-		var prefixes = [ "MSXML2", "Microsoft", "MSXML", "MSXML3" ];
-		for(var i = 0; i<prefixes.length; i++){
-			try{
-				doc = new ActiveXObject(prefixes[i]+".XMLDOM");
-			}catch(e){ /* squelch */ };
-
-			if(doc){ break; }
-		}
-	}else if((document.implementation)&&
-		(document.implementation.createDocument)){
-		doc = document.implementation.createDocument("", "", null);
-	}
-	
-	return doc;
-}
-
-dojo.dom.createDocumentFromText = function(str, mimetype){
-	if(!mimetype){ mimetype = "text/xml"; }
-	if(!dj_undef("DOMParser")){
-		var parser = new DOMParser();
-		return parser.parseFromString(str, mimetype);
-	}else if(!dj_undef("ActiveXObject")){
-		var domDoc = dojo.dom.createDocument();
-		if(domDoc){
-			domDoc.async = false;
-			domDoc.loadXML(str);
-			return domDoc;
-		}else{
-			dojo.debug("toXml didn't work?");
-		}
-	/*
-	}else if((dojo.render.html.capable)&&(dojo.render.html.safari)){
-		// FIXME: this doesn't appear to work!
-		// from: http://web-graphics.com/mtarchive/001606.php
-		// var xml = '<?xml version="1.0"?>'+str;
-		var mtype = "text/xml";
-		var xml = '<?xml version="1.0"?>'+str;
-		var url = "data:"+mtype+";charset=utf-8,"+encodeURIComponent(xml);
-		var req = new XMLHttpRequest();
-		req.open("GET", url, false);
-		req.overrideMimeType(mtype);
-		req.send(null);
-		return req.responseXML;
-	*/
-	}else if(document.createElement){
-		// FIXME: this may change all tags to uppercase!
-		var tmp = document.createElement("xml");
-		tmp.innerHTML = str;
-		if(document.implementation && document.implementation.createDocument) {
-			var xmlDoc = document.implementation.createDocument("foo", "", null);
-			for(var i = 0; i < tmp.childNodes.length; i++) {
-				xmlDoc.importNode(tmp.childNodes.item(i), true);
-			}
-			return xmlDoc;
-		}
-		// FIXME: probably not a good idea to have to return an HTML fragment
-		// FIXME: the tmp.doc.firstChild is as tested from IE, so it may not
-		// work that way across the board
-		return ((tmp.document)&&
-			(tmp.document.firstChild ?  tmp.document.firstChild : tmp));
-	}
-	return null;
-}
-
-dojo.dom.prependChild = function(node, parent) {
-	if(parent.firstChild) {
-		parent.insertBefore(node, parent.firstChild);
-	} else {
-		parent.appendChild(node);
-	}
-	return true;
-}
-
-dojo.dom.insertBefore = function(node, ref, force){
-	if (force != true &&
-		(node === ref || node.nextSibling === ref)){ return false; }
-	var parent = ref.parentNode;
-	parent.insertBefore(node, ref);
-	return true;
-}
-
-dojo.dom.insertAfter = function(node, ref, force){
-	var pn = ref.parentNode;
-	if(ref == pn.lastChild){
-		if((force != true)&&(node === ref)){
-			return false;
-		}
-		pn.appendChild(node);
-	}else{
-		return this.insertBefore(node, ref.nextSibling, force);
-	}
-	return true;
-}
-
-dojo.dom.insertAtPosition = function(node, ref, position){
-	if((!node)||(!ref)||(!position)){ return false; }
-	switch(position.toLowerCase()){
-		case "before":
-			return dojo.dom.insertBefore(node, ref);
-		case "after":
-			return dojo.dom.insertAfter(node, ref);
-		case "first":
-			if(ref.firstChild){
-				return dojo.dom.insertBefore(node, ref.firstChild);
-			}else{
-				ref.appendChild(node);
-				return true;
-			}
-			break;
-		default: // aka: last
-			ref.appendChild(node);
-			return true;
-	}
-}
-
-dojo.dom.insertAtIndex = function(node, containingNode, insertionIndex){
-	var siblingNodes = containingNode.childNodes;
-
-	// if there aren't any kids yet, just add it to the beginning
-
-	if (!siblingNodes.length){
-		containingNode.appendChild(node);
-		return true;
-	}
-
-	// otherwise we need to walk the childNodes
-	// and find our spot
-
-	var after = null;
-
-	for(var i=0; i<siblingNodes.length; i++){
-
-		var sibling_index = siblingNodes.item(i)["getAttribute"] ? parseInt(siblingNodes.item(i).getAttribute("dojoinsertionindex")) : -1;
-
-		if (sibling_index < insertionIndex){
-			after = siblingNodes.item(i);
-		}
-	}
-
-	if (after){
-		// add it after the node in {after}
-
-		return dojo.dom.insertAfter(node, after);
-	}else{
-		// add it to the start
-
-		return dojo.dom.insertBefore(node, siblingNodes.item(0));
-	}
-}
-	
-/**
- * implementation of the DOM Level 3 attribute.
- * 
- * @param node The node to scan for text
- * @param text Optional, set the text to this value.
- */
-dojo.dom.textContent = function(node, text){
-	if (text) {
-		dojo.dom.replaceChildren(node, document.createTextNode(text));
-		return text;
-	} else {
-		var _result = "";
-		if (node == null) { return _result; }
-		for (var i = 0; i < node.childNodes.length; i++) {
-			switch (node.childNodes[i].nodeType) {
-				case 1: // ELEMENT_NODE
-				case 5: // ENTITY_REFERENCE_NODE
-					_result += dojo.dom.textContent(node.childNodes[i]);
-					break;
-				case 3: // TEXT_NODE
-				case 2: // ATTRIBUTE_NODE
-				case 4: // CDATA_SECTION_NODE
-					_result += node.childNodes[i].nodeValue;
-					break;
-				default:
-					break;
-			}
-		}
-		return _result;
-	}
-}
-
-dojo.dom.collectionToArray = function(collection){
-	dojo.deprecated("dojo.dom.collectionToArray", "use dojo.lang.toArray instead", "0.4");
-	return dojo.lang.toArray(collection);
-}
-
-dojo.dom.hasParent = function (node) {
-	return node && node.parentNode && dojo.dom.isNode(node.parentNode);
-}
-
-/**
- * Determines if node has any of the provided tag names and
- * returns the tag name that matches, empty string otherwise.
- *
- * Examples:
- *
- * myFooNode = <foo />
- * isTag(myFooNode, "foo"); // returns "foo"
- * isTag(myFooNode, "bar"); // returns ""
- * isTag(myFooNode, "FOO"); // returns ""
- * isTag(myFooNode, "hey", "foo", "bar"); // returns "foo"
-**/
-dojo.dom.isTag = function(node /* ... */) {
-	if(node && node.tagName) {
-		var arr = dojo.lang.toArray(arguments, 1);
-		return arr[ dojo.lang.find(node.tagName, arr) ] || "";
-	}
-	return "";
-}
-
-dojo.provide("dojo.undo.browser");
-dojo.require("dojo.io");
-
 try{
-	if((!djConfig["preventBackButtonFix"])&&(!dojo.hostenv.post_load_)){
-		document.write("<iframe style='border: 0px; width: 1px; height: 1px; position: absolute; bottom: 0px; right: 0px; visibility: visible;' name='djhistory' id='djhistory' src='"+(dojo.hostenv.getBaseScriptUri()+'iframe_history.html')+"'></iframe>");
-	}
-}catch(e){/* squelch */}
-
-if(dojo.render.html.opera){
-	dojo.debug("Opera is not supported with dojo.undo.browser, so back/forward detection will not work.");
+if(djConfig.isDebug){
+dojo.hostenv.println("FATAL exception raised: "+_12);
 }
-
-/* NOTES:
- *  Safari 1.2: 
- *	back button "works" fine, however it's not possible to actually
- *	DETECT that you've moved backwards by inspecting window.location.
- *	Unless there is some other means of locating.
- *	FIXME: perhaps we can poll on history.length?
- *  Safari 2.0.3+ (and probably 1.3.2+):
- *	works fine, except when changeUrl is used. When changeUrl is used,
- *	Safari jumps all the way back to whatever page was shown before
- *	the page that uses dojo.undo.browser support.
- *  IE 5.5 SP2:
- *	back button behavior is macro. It does not move back to the
- *	previous hash value, but to the last full page load. This suggests
- *	that the iframe is the correct way to capture the back button in
- *	these cases.
- *	Don't test this page using local disk for MSIE. MSIE will not create 
- *	a history list for iframe_history.html if served from a file: URL. 
- *	The XML served back from the XHR tests will also not be properly 
- *	created if served from local disk. Serve the test pages from a web 
- *	server to test in that browser.
- *  IE 6.0:
- *	same behavior as IE 5.5 SP2
- * Firefox 1.0:
- *	the back button will return us to the previous hash on the same
- *	page, thereby not requiring an iframe hack, although we do then
- *	need to run a timer to detect inter-page movement.
- */
-dojo.undo.browser = {
-	initialHref: window.location.href,
-	initialHash: window.location.hash,
-
-	moveForward: false,
-	historyStack: [],
-	forwardStack: [],
-	historyIframe: null,
-	bookmarkAnchor: null,
-	locationTimer: null,
-
-	/**
-	 * setInitialState sets the state object and back callback for the very first page that is loaded.
-	 * It is recommended that you call this method as part of an event listener that is registered via
-	 * dojo.addOnLoad().
-	 */
-	setInitialState: function(args){
-		this.initialState = {"url": this.initialHref, "kwArgs": args, "urlHash": this.initialHash};
-	},
-
-	//FIXME: Would like to support arbitrary back/forward jumps. Have to rework iframeLoaded among other things.
-	//FIXME: is there a slight race condition in moz using change URL with the timer check and when
-	//       the hash gets set? I think I have seen a back/forward call in quick succession, but not consistent.
-	/**
-	 * addToHistory takes one argument, and it is an object that defines the following functions:
-	 * - To support getting back button notifications, the object argument should implement a
-	 *   function called either "back", "backButton", or "handle". The string "back" will be
-	 *   passed as the first and only argument to this callback.
-	 * - To support getting forward button notifications, the object argument should implement a
-	 *   function called either "forward", "forwardButton", or "handle". The string "forward" will be
-	 *   passed as the first and only argument to this callback.
-	 * - If you want the browser location string to change, define "changeUrl" on the object. If the
-	 *   value of "changeUrl" is true, then a unique number will be appended to the URL as a fragment
-	 *   identifier (http://some.domain.com/path#uniquenumber). If it is any other value that does
-	 *   not evaluate to false, that value will be used as the fragment identifier. For example,
-	 *   if changeUrl: 'page1', then the URL will look like: http://some.domain.com/path#page1
-	 *   
-	 * Full example:
-	 * 
-	 * dojo.undo.browser.addToHistory({
-	 *   back: function() { alert('back pressed'); },
-	 *   forward: function() { alert('forward pressed'); },
-	 *   changeUrl: true
-	 * });
-	 */
-	addToHistory: function(args){
-		var hash = null;
-		if(!this.historyIframe){
-			this.historyIframe = window.frames["djhistory"];
-		}
-		if(!this.bookmarkAnchor){
-			this.bookmarkAnchor = document.createElement("a");
-			(document.body||document.getElementsByTagName("body")[0]).appendChild(this.bookmarkAnchor);
-			this.bookmarkAnchor.style.display = "none";
-		}
-		if((!args["changeUrl"])||(dojo.render.html.ie)){
-			var url = dojo.hostenv.getBaseScriptUri()+"iframe_history.html?"+(new Date()).getTime();
-			this.moveForward = true;
-			dojo.io.setIFrameSrc(this.historyIframe, url, false);
-		}
-		if(args["changeUrl"]){
-			this.changingUrl = true;
-			hash = "#"+ ((args["changeUrl"]!==true) ? args["changeUrl"] : (new Date()).getTime());
-			setTimeout("window.location.href = '"+hash+"'; dojo.undo.browser.changingUrl = false;", 1);
-			this.bookmarkAnchor.href = hash;
-			
-			if(dojo.render.html.ie){
-				var oldCB = args["back"]||args["backButton"]||args["handle"];
-
-				//The function takes handleName as a parameter, in case the
-				//callback we are overriding was "handle". In that case,
-				//we will need to pass the handle name to handle.
-				var tcb = function(handleName){
-					if(window.location.hash != ""){
-						setTimeout("window.location.href = '"+hash+"';", 1);
-					}
-					//Use apply to set "this" to args, and to try to avoid memory leaks.
-					oldCB.apply(this, [handleName]);
-				}
-		
-				//Set interceptor function in the right place.
-				if(args["back"]){
-					args.back = tcb;
-				}else if(args["backButton"]){
-					args.backButton = tcb;
-				}else if(args["handle"]){
-					args.handle = tcb;
-				}
-		
-				//If addToHistory is called, then that means we prune the
-				//forward stack -- the user went back, then wanted to
-				//start a new forward path.
-				this.forwardStack = []; 
-				var oldFW = args["forward"]||args["forwardButton"]||args["handle"];
-		
-				//The function takes handleName as a parameter, in case the
-				//callback we are overriding was "handle". In that case,
-				//we will need to pass the handle name to handle.
-				var tfw = function(handleName){
-					if(window.location.hash != ""){
-						window.location.href = hash;
-					}
-					if(oldFW){ // we might not actually have one
-						//Use apply to set "this" to args, and to try to avoid memory leaks.
-						oldFW.apply(this, [handleName]);
-					}
-				}
-
-				//Set interceptor function in the right place.
-				if(args["forward"]){
-					args.forward = tfw;
-				}else if(args["forwardButton"]){
-					args.forwardButton = tfw;
-				}else if(args["handle"]){
-					args.handle = tfw;
-				}
-
-			}else if(dojo.render.html.moz){
-				// start the timer
-				if(!this.locationTimer){
-					this.locationTimer = setInterval("dojo.undo.browser.checkLocation();", 200);
-				}
-			}
-		}
-
-		this.historyStack.push({"url": url, "kwArgs": args, "urlHash": hash});
-	},
-
-	checkLocation: function(){
-		if (!this.changingUrl){
-			var hsl = this.historyStack.length;
-
-			if((window.location.hash == this.initialHash||window.location.href == this.initialHref)&&(hsl == 1)){
-				// FIXME: could this ever be a forward button?
-				// we can't clear it because we still need to check for forwards. Ugg.
-				// clearInterval(this.locationTimer);
-				this.handleBackButton();
-				return;
-			}
-			// first check to see if we could have gone forward. We always halt on
-			// a no-hash item.
-			if(this.forwardStack.length > 0){
-				if(this.forwardStack[this.forwardStack.length-1].urlHash == window.location.hash){
-					this.handleForwardButton();
-					return;
-				}
-			}
-	
-			// ok, that didn't work, try someplace back in the history stack
-			if((hsl >= 2)&&(this.historyStack[hsl-2])){
-				if(this.historyStack[hsl-2].urlHash==window.location.hash){
-					this.handleBackButton();
-					return;
-				}
-			}
-		}
-	},
-
-	iframeLoaded: function(evt, ifrLoc){
-		if(!dojo.render.html.opera){
-			var query = this._getUrlQuery(ifrLoc.href);
-			if(query == null){ 
-				// alert("iframeLoaded");
-				// we hit the end of the history, so we should go back
-				if(this.historyStack.length == 1){
-					this.handleBackButton();
-				}
-				return;
-			}
-			if(this.moveForward){
-				// we were expecting it, so it's not either a forward or backward movement
-				this.moveForward = false;
-				return;
-			}
-	
-			//Check the back stack first, since it is more likely.
-			//Note that only one step back or forward is supported.
-			if(this.historyStack.length >= 2 && query == this._getUrlQuery(this.historyStack[this.historyStack.length-2].url)){
-				this.handleBackButton();
-			}
-			else if(this.forwardStack.length > 0 && query == this._getUrlQuery(this.forwardStack[this.forwardStack.length-1].url)){
-				this.handleForwardButton();
-			}
-		}
-	},
-
-	handleBackButton: function(){
-		//The "current" page is always at the top of the history stack.
-		var current = this.historyStack.pop();
-		if(!current){ return; }
-		var last = this.historyStack[this.historyStack.length-1];
-		if(!last && this.historyStack.length == 0){
-			last = this.initialState;
-		}
-		if (last){
-			if(last.kwArgs["back"]){
-				last.kwArgs["back"]();
-			}else if(last.kwArgs["backButton"]){
-				last.kwArgs["backButton"]();
-			}else if(last.kwArgs["handle"]){
-				last.kwArgs.handle("back");
-			}
-		}
-		this.forwardStack.push(current);
-	},
-
-	handleForwardButton: function(){
-		var last = this.forwardStack.pop();
-		if(!last){ return; }
-		if(last.kwArgs["forward"]){
-			last.kwArgs.forward();
-		}else if(last.kwArgs["forwardButton"]){
-			last.kwArgs.forwardButton();
-		}else if(last.kwArgs["handle"]){
-			last.kwArgs.handle("forward");
-		}
-		this.historyStack.push(last);
-	},
-
-	_getUrlQuery: function(url){
-		var segments = url.split("?");
-		if (segments.length < 2){
-			return null;
-		}
-		else{
-			return segments[1];
-		}
-	}
 }
-
-dojo.provide("dojo.io.BrowserIO");
-
-dojo.require("dojo.io");
-dojo.require("dojo.lang.array");
-dojo.require("dojo.lang.func");
-dojo.require("dojo.string.extras");
-dojo.require("dojo.dom");
-dojo.require("dojo.undo.browser");
-
-dojo.io.checkChildrenForFile = function(node){
-	var hasFile = false;
-	var inputs = node.getElementsByTagName("input");
-	dojo.lang.forEach(inputs, function(input){
-		if(hasFile){ return; }
-		if(input.getAttribute("type")=="file"){
-			hasFile = true;
-		}
-	});
-	return hasFile;
+catch(e){
 }
-
-dojo.io.formHasFile = function(formNode){
-	return dojo.io.checkChildrenForFile(formNode);
-}
-
-dojo.io.updateNode = function(node, urlOrArgs){
-	node = dojo.byId(node);
-	var args = urlOrArgs;
-	if(dojo.lang.isString(urlOrArgs)){
-		args = { url: urlOrArgs };
-	}
-	args.mimetype = "text/html";
-	args.load = function(t, d, e){
-		while(node.firstChild){
-			if(dojo["event"]){
-				try{
-					dojo.event.browser.clean(node.firstChild);
-				}catch(e){}
-			}
-			node.removeChild(node.firstChild);
-		}
-		node.innerHTML = d;
-	};
-	dojo.io.bind(args);
-}
-
-dojo.io.formFilter = function(node) {
-	var type = (node.type||"").toLowerCase();
-	return !node.disabled && node.name
-		&& !dojo.lang.inArray(type, ["file", "submit", "image", "reset", "button"]);
-}
-
-// TODO: Move to htmlUtils
-dojo.io.encodeForm = function(formNode, encoding, formFilter){
-	if((!formNode)||(!formNode.tagName)||(!formNode.tagName.toLowerCase() == "form")){
-		dojo.raise("Attempted to encode a non-form element.");
-	}
-	if(!formFilter) { formFilter = dojo.io.formFilter; }
-	var enc = /utf/i.test(encoding||"") ? encodeURIComponent : dojo.string.encodeAscii;
-	var values = [];
-
-	for(var i = 0; i < formNode.elements.length; i++){
-		var elm = formNode.elements[i];
-		if(!elm || elm.tagName.toLowerCase() == "fieldset" || !formFilter(elm)) { continue; }
-		var name = enc(elm.name);
-		var type = elm.type.toLowerCase();
-
-		if(type == "select-multiple"){
-			for(var j = 0; j < elm.options.length; j++){
-				if(elm.options[j].selected) {
-					values.push(name + "=" + enc(elm.options[j].value));
-				}
-			}
-		}else if(dojo.lang.inArray(type, ["radio", "checkbox"])){
-			if(elm.checked){
-				values.push(name + "=" + enc(elm.value));
-			}
-		}else{
-			values.push(name + "=" + enc(elm.value));
-		}
-	}
-
-	// now collect input type="image", which doesn't show up in the elements array
-	var inputs = formNode.getElementsByTagName("input");
-	for(var i = 0; i < inputs.length; i++) {
-		var input = inputs[i];
-		if(input.type.toLowerCase() == "image" && input.form == formNode
-			&& formFilter(input)) {
-			var name = enc(input.name);
-			values.push(name + "=" + enc(input.value));
-			values.push(name + ".x=0");
-			values.push(name + ".y=0");
-		}
-	}
-	return values.join("&") + "&";
-}
-
-dojo.io.FormBind = function(args) {
-	this.bindArgs = {};
-
-	if(args && args.formNode) {
-		this.init(args);
-	} else if(args) {
-		this.init({formNode: args});
-	}
-}
-dojo.lang.extend(dojo.io.FormBind, {
-	form: null,
-
-	bindArgs: null,
-
-	clickedButton: null,
-
-	init: function(args) {
-		var form = dojo.byId(args.formNode);
-
-		if(!form || !form.tagName || form.tagName.toLowerCase() != "form") {
-			throw new Error("FormBind: Couldn't apply, invalid form");
-		} else if(this.form == form) {
-			return;
-		} else if(this.form) {
-			throw new Error("FormBind: Already applied to a form");
-		}
-
-		dojo.lang.mixin(this.bindArgs, args);
-		this.form = form;
-
-		this.connect(form, "onsubmit", "submit");
-
-		for(var i = 0; i < form.elements.length; i++) {
-			var node = form.elements[i];
-			if(node && node.type && dojo.lang.inArray(node.type.toLowerCase(), ["submit", "button"])) {
-				this.connect(node, "onclick", "click");
-			}
-		}
-
-		var inputs = form.getElementsByTagName("input");
-		for(var i = 0; i < inputs.length; i++) {
-			var input = inputs[i];
-			if(input.type.toLowerCase() == "image" && input.form == form) {
-				this.connect(input, "onclick", "click");
-			}
-		}
-	},
-
-	onSubmit: function(form) {
-		return true;
-	},
-
-	submit: function(e) {
-		e.preventDefault();
-		if(this.onSubmit(this.form)) {
-			dojo.io.bind(dojo.lang.mixin(this.bindArgs, {
-				formFilter: dojo.lang.hitch(this, "formFilter")
-			}));
-		}
-	},
-
-	click: function(e) {
-		var node = e.currentTarget;
-		if(node.disabled) { return; }
-		this.clickedButton = node;
-	},
-
-	formFilter: function(node) {
-		var type = (node.type||"").toLowerCase();
-		var accept = false;
-		if(node.disabled || !node.name) {
-			accept = false;
-		} else if(dojo.lang.inArray(type, ["submit", "button", "image"])) {
-			if(!this.clickedButton) { this.clickedButton = node; }
-			accept = node == this.clickedButton;
-		} else {
-			accept = !dojo.lang.inArray(type, ["file", "submit", "reset", "button"]);
-		}
-		return accept;
-	},
-
-	// in case you don't have dojo.event.* pulled in
-	connect: function(srcObj, srcFcn, targetFcn) {
-		if(dojo.evalObjPath("dojo.event.connect")) {
-			dojo.event.connect(srcObj, srcFcn, this, targetFcn);
-		} else {
-			var fcn = dojo.lang.hitch(this, targetFcn);
-			srcObj[srcFcn] = function(e) {
-				if(!e) { e = window.event; }
-				if(!e.currentTarget) { e.currentTarget = e.srcElement; }
-				if(!e.preventDefault) { e.preventDefault = function() { window.event.returnValue = false; } }
-				fcn(e);
-			}
-		}
-	}
-});
-
-dojo.io.XMLHTTPTransport = new function(){
-	var _this = this;
-
-	var _cache = {}; // FIXME: make this public? do we even need to?
-	this.useCache = false; // if this is true, we'll cache unless kwArgs.useCache = false
-	this.preventCache = false; // if this is true, we'll always force GET requests to cache
-
-	// FIXME: Should this even be a function? or do we just hard code it in the next 2 functions?
-	function getCacheKey(url, query, method) {
-		return url + "|" + query + "|" + method.toLowerCase();
-	}
-
-	function addToCache(url, query, method, http) {
-		_cache[getCacheKey(url, query, method)] = http;
-	}
-
-	function getFromCache(url, query, method) {
-		return _cache[getCacheKey(url, query, method)];
-	}
-
-	this.clearCache = function() {
-		_cache = {};
-	}
-
-	// moved successful load stuff here
-	function doLoad(kwArgs, http, url, query, useCache) {
-		if(	((http.status>=200)&&(http.status<300))|| 	// allow any 2XX response code
-			(http.status==304)|| 						// get it out of the cache
-			(location.protocol=="file:" && (http.status==0 || http.status==undefined))||
-			(location.protocol=="chrome:" && (http.status==0 || http.status==undefined))
-		){
-			var ret;
-			if(kwArgs.method.toLowerCase() == "head"){
-				var headers = http.getAllResponseHeaders();
-				ret = {};
-				ret.toString = function(){ return headers; }
-				var values = headers.split(/[\r\n]+/g);
-				for(var i = 0; i < values.length; i++) {
-					var pair = values[i].match(/^([^:]+)\s*:\s*(.+)$/i);
-					if(pair) {
-						ret[pair[1]] = pair[2];
-					}
-				}
-			}else if(kwArgs.mimetype == "text/javascript"){
-				try{
-					ret = dj_eval(http.responseText);
-				}catch(e){
-					dojo.debug(e);
-					dojo.debug(http.responseText);
-					ret = null;
-				}
-			}else if(kwArgs.mimetype == "text/json"){
-				try{
-					ret = dj_eval("("+http.responseText+")");
-				}catch(e){
-					dojo.debug(e);
-					dojo.debug(http.responseText);
-					ret = false;
-				}
-			}else if((kwArgs.mimetype == "application/xml")||
-						(kwArgs.mimetype == "text/xml")){
-				ret = http.responseXML;
-				if(!ret || typeof ret == "string" || !http.getResponseHeader("Content-Type")) {
-					ret = dojo.dom.createDocumentFromText(http.responseText);
-				}
-			}else{
-				ret = http.responseText;
-			}
-
-			if(useCache){ // only cache successful responses
-				addToCache(url, query, kwArgs.method, http);
-			}
-			kwArgs[(typeof kwArgs.load == "function") ? "load" : "handle"]("load", ret, http, kwArgs);
-		}else{
-			var errObj = new dojo.io.Error("XMLHttpTransport Error: "+http.status+" "+http.statusText);
-			kwArgs[(typeof kwArgs.error == "function") ? "error" : "handle"]("error", errObj, http, kwArgs);
-		}
-	}
-
-	// set headers (note: Content-Type will get overriden if kwArgs.contentType is set)
-	function setHeaders(http, kwArgs){
-		if(kwArgs["headers"]) {
-			for(var header in kwArgs["headers"]) {
-				if(header.toLowerCase() == "content-type" && !kwArgs["contentType"]) {
-					kwArgs["contentType"] = kwArgs["headers"][header];
-				} else {
-					http.setRequestHeader(header, kwArgs["headers"][header]);
-				}
-			}
-		}
-	}
-
-	this.inFlight = [];
-	this.inFlightTimer = null;
-
-	this.startWatchingInFlight = function(){
-		if(!this.inFlightTimer){
-			this.inFlightTimer = setInterval("dojo.io.XMLHTTPTransport.watchInFlight();", 10);
-		}
-	}
-
-	this.watchInFlight = function(){
-		var now = null;
-		for(var x=this.inFlight.length-1; x>=0; x--){
-			var tif = this.inFlight[x];
-			if(!tif){ this.inFlight.splice(x, 1); continue; }
-			if(4==tif.http.readyState){
-				// remove it so we can clean refs
-				this.inFlight.splice(x, 1);
-				doLoad(tif.req, tif.http, tif.url, tif.query, tif.useCache);
-			}else if (tif.startTime){
-				//See if this is a timeout case.
-				if(!now){
-					now = (new Date()).getTime();
-				}
-				if(tif.startTime + (tif.req.timeoutSeconds * 1000) < now){
-					//Stop the request.
-					if(typeof tif.http.abort == "function"){
-						tif.http.abort();
-					}
-
-					// remove it so we can clean refs
-					this.inFlight.splice(x, 1);
-					tif.req[(typeof tif.req.timeout == "function") ? "timeout" : "handle"]("timeout", null, tif.http, tif.req);
-				}
-			}
-		}
-
-		if(this.inFlight.length == 0){
-			clearInterval(this.inFlightTimer);
-			this.inFlightTimer = null;
-		}
-	}
-
-	var hasXmlHttp = dojo.hostenv.getXmlhttpObject() ? true : false;
-	this.canHandle = function(kwArgs){
-		// canHandle just tells dojo.io.bind() if this is a good transport to
-		// use for the particular type of request.
-
-		// FIXME: we need to determine when form values need to be
-		// multi-part mime encoded and avoid using this transport for those
-		// requests.
-		return hasXmlHttp
-			&& dojo.lang.inArray((kwArgs["mimetype"].toLowerCase()||""), ["text/plain", "text/html", "application/xml", "text/xml", "text/javascript", "text/json"])
-			&& !( kwArgs["formNode"] && dojo.io.formHasFile(kwArgs["formNode"]) );
-	}
-
-	this.multipartBoundary = "45309FFF-BD65-4d50-99C9-36986896A96F";	// unique guid as a boundary value for multipart posts
-
-	this.bind = function(kwArgs){
-		if(!kwArgs["url"]){
-			// are we performing a history action?
-			if( !kwArgs["formNode"]
-				&& (kwArgs["backButton"] || kwArgs["back"] || kwArgs["changeUrl"] || kwArgs["watchForURL"])
-				&& (!djConfig.preventBackButtonFix)) {
-        dojo.deprecated("Using dojo.io.XMLHTTPTransport.bind() to add to browser history without doing an IO request",
-        				"Use dojo.undo.browser.addToHistory() instead.", "0.4");
-				dojo.undo.browser.addToHistory(kwArgs);
-				return true;
-			}
-		}
-
-		// build this first for cache purposes
-		var url = kwArgs.url;
-		var query = "";
-		if(kwArgs["formNode"]){
-			var ta = kwArgs.formNode.getAttribute("action");
-			if((ta)&&(!kwArgs["url"])){ url = ta; }
-			var tp = kwArgs.formNode.getAttribute("method");
-			if((tp)&&(!kwArgs["method"])){ kwArgs.method = tp; }
-			query += dojo.io.encodeForm(kwArgs.formNode, kwArgs.encoding, kwArgs["formFilter"]);
-		}
-
-		if(url.indexOf("#") > -1) {
-			dojo.debug("Warning: dojo.io.bind: stripping hash values from url:", url);
-			url = url.split("#")[0];
-		}
-
-		if(kwArgs["file"]){
-			// force post for file transfer
-			kwArgs.method = "post";
-		}
-
-		if(!kwArgs["method"]){
-			kwArgs.method = "get";
-		}
-
-		// guess the multipart value		
-		if(kwArgs.method.toLowerCase() == "get"){
-			// GET cannot use multipart
-			kwArgs.multipart = false;
-		}else{
-			if(kwArgs["file"]){
-				// enforce multipart when sending files
-				kwArgs.multipart = true;
-			}else if(!kwArgs["multipart"]){
-				// default 
-				kwArgs.multipart = false;
-			}
-		}
-
-		if(kwArgs["backButton"] || kwArgs["back"] || kwArgs["changeUrl"]){
-			dojo.undo.browser.addToHistory(kwArgs);
-		}
-
-		var content = kwArgs["content"] || {};
-
-		if(kwArgs.sendTransport) {
-			content["dojo.transport"] = "xmlhttp";
-		}
-
-		do { // break-block
-			if(kwArgs.postContent){
-				query = kwArgs.postContent;
-				break;
-			}
-
-			if(content) {
-				query += dojo.io.argsFromMap(content, kwArgs.encoding);
-			}
-			
-			if(kwArgs.method.toLowerCase() == "get" || !kwArgs.multipart){
-				break;
-			}
-
-			var	t = [];
-			if(query.length){
-				var q = query.split("&");
-				for(var i = 0; i < q.length; ++i){
-					if(q[i].length){
-						var p = q[i].split("=");
-						t.push(	"--" + this.multipartBoundary,
-								"Content-Disposition: form-data; name=\"" + p[0] + "\"", 
-								"",
-								p[1]);
-					}
-				}
-			}
-
-			if(kwArgs.file){
-				if(dojo.lang.isArray(kwArgs.file)){
-					for(var i = 0; i < kwArgs.file.length; ++i){
-						var o = kwArgs.file[i];
-						t.push(	"--" + this.multipartBoundary,
-								"Content-Disposition: form-data; name=\"" + o.name + "\"; filename=\"" + ("fileName" in o ? o.fileName : o.name) + "\"",
-								"Content-Type: " + ("contentType" in o ? o.contentType : "application/octet-stream"),
-								"",
-								o.content);
-					}
-				}else{
-					var o = kwArgs.file;
-					t.push(	"--" + this.multipartBoundary,
-							"Content-Disposition: form-data; name=\"" + o.name + "\"; filename=\"" + ("fileName" in o ? o.fileName : o.name) + "\"",
-							"Content-Type: " + ("contentType" in o ? o.contentType : "application/octet-stream"),
-							"",
-							o.content);
-				}
-			}
-
-			if(t.length){
-				t.push("--"+this.multipartBoundary+"--", "");
-				query = t.join("\r\n");
-			}
-		}while(false);
-
-		// kwArgs.Connection = "close";
-
-		var async = kwArgs["sync"] ? false : true;
-
-		var preventCache = kwArgs["preventCache"] ||
-			(this.preventCache == true && kwArgs["preventCache"] != false);
-		var useCache = kwArgs["useCache"] == true ||
-			(this.useCache == true && kwArgs["useCache"] != false );
-
-		// preventCache is browser-level (add query string junk), useCache
-		// is for the local cache. If we say preventCache, then don't attempt
-		// to look in the cache, but if useCache is true, we still want to cache
-		// the response
-		if(!preventCache && useCache){
-			var cachedHttp = getFromCache(url, query, kwArgs.method);
-			if(cachedHttp){
-				doLoad(kwArgs, cachedHttp, url, query, false);
-				return;
-			}
-		}
-
-		// much of this is from getText, but reproduced here because we need
-		// more flexibility
-		var http = dojo.hostenv.getXmlhttpObject(kwArgs);	
-		var received = false;
-
-		// build a handler function that calls back to the handler obj
-		if(async){
-			var startTime = 
-			// FIXME: setting up this callback handler leaks on IE!!!
-			this.inFlight.push({
-				"req":		kwArgs,
-				"http":		http,
-				"url":	 	url,
-				"query":	query,
-				"useCache":	useCache,
-				"startTime": kwArgs.timeoutSeconds ? (new Date()).getTime() : 0
-			});
-			this.startWatchingInFlight();
-		}
-
-		if(kwArgs.method.toLowerCase() == "post"){
-			// FIXME: need to hack in more flexible Content-Type setting here!
-			http.open("POST", url, async);
-			setHeaders(http, kwArgs);
-			http.setRequestHeader("Content-Type", kwArgs.multipart ? ("multipart/form-data; boundary=" + this.multipartBoundary) : 
-				(kwArgs.contentType || "application/x-www-form-urlencoded"));
-			try{
-				http.send(query);
-			}catch(e){
-				if(typeof http.abort == "function"){
-					http.abort();
-				}
-				doLoad(kwArgs, {status: 404}, url, query, useCache);
-			}
-		}else{
-			var tmpUrl = url;
-			if(query != "") {
-				tmpUrl += (tmpUrl.indexOf("?") > -1 ? "&" : "?") + query;
-			}
-			if(preventCache) {
-				tmpUrl += (dojo.string.endsWithAny(tmpUrl, "?", "&")
-					? "" : (tmpUrl.indexOf("?") > -1 ? "&" : "?")) + "dojo.preventCache=" + new Date().valueOf();
-			}
-			http.open(kwArgs.method.toUpperCase(), tmpUrl, async);
-			setHeaders(http, kwArgs);
-			try {
-				http.send(null);
-			}catch(e)	{
-				if(typeof http.abort == "function"){
-					http.abort();
-				}
-				doLoad(kwArgs, {status: 404}, url, query, useCache);
-			}
-		}
-
-		if( !async ) {
-			doLoad(kwArgs, http, url, query, useCache);
-		}
-
-		kwArgs.abort = function(){
-			return http.abort();
-		}
-
-		return;
-	}
-	dojo.io.transports.addTransport("XMLHTTPTransport");
-}
-
-dojo.provide("dojo.event");
-
-dojo.require("dojo.lang.array");
-dojo.require("dojo.lang.extras");
-dojo.require("dojo.lang.func");
-
-dojo.event = new function(){
-	this.canTimeout = dojo.lang.isFunction(dj_global["setTimeout"])||dojo.lang.isAlien(dj_global["setTimeout"]);
-
-	// FIXME: where should we put this method (not here!)?
-	function interpolateArgs(args, searchForNames){
-		var dl = dojo.lang;
-		var ao = {
-			srcObj: dj_global,
-			srcFunc: null,
-			adviceObj: dj_global,
-			adviceFunc: null,
-			aroundObj: null,
-			aroundFunc: null,
-			adviceType: (args.length>2) ? args[0] : "after",
-			precedence: "last",
-			once: false,
-			delay: null,
-			rate: 0,
-			adviceMsg: false
-		};
-
-		switch(args.length){
-			case 0: return;
-			case 1: return;
-			case 2:
-				ao.srcFunc = args[0];
-				ao.adviceFunc = args[1];
-				break;
-			case 3:
-				if((dl.isObject(args[0]))&&(dl.isString(args[1]))&&(dl.isString(args[2]))){
-					ao.adviceType = "after";
-					ao.srcObj = args[0];
-					ao.srcFunc = args[1];
-					ao.adviceFunc = args[2];
-				}else if((dl.isString(args[1]))&&(dl.isString(args[2]))){
-					ao.srcFunc = args[1];
-					ao.adviceFunc = args[2];
-				}else if((dl.isObject(args[0]))&&(dl.isString(args[1]))&&(dl.isFunction(args[2]))){
-					ao.adviceType = "after";
-					ao.srcObj = args[0];
-					ao.srcFunc = args[1];
-					var tmpName  = dl.nameAnonFunc(args[2], ao.adviceObj, searchForNames);
-					ao.adviceFunc = tmpName;
-				}else if((dl.isFunction(args[0]))&&(dl.isObject(args[1]))&&(dl.isString(args[2]))){
-					ao.adviceType = "after";
-					ao.srcObj = dj_global;
-					var tmpName  = dl.nameAnonFunc(args[0], ao.srcObj, searchForNames);
-					ao.srcFunc = tmpName;
-					ao.adviceObj = args[1];
-					ao.adviceFunc = args[2];
-				}
-				break;
-			case 4:
-				if((dl.isObject(args[0]))&&(dl.isObject(args[2]))){
-					// we can assume that we've got an old-style "connect" from
-					// the sigslot school of event attachment. We therefore
-					// assume after-advice.
-					ao.adviceType = "after";
-					ao.srcObj = args[0];
-					ao.srcFunc = args[1];
-					ao.adviceObj = args[2];
-					ao.adviceFunc = args[3];
-				}else if((dl.isString(args[0]))&&(dl.isString(args[1]))&&(dl.isObject(args[2]))){
-					ao.adviceType = args[0];
-					ao.srcObj = dj_global;
-					ao.srcFunc = args[1];
-					ao.adviceObj = args[2];
-					ao.adviceFunc = args[3];
-				}else if((dl.isString(args[0]))&&(dl.isFunction(args[1]))&&(dl.isObject(args[2]))){
-					ao.adviceType = args[0];
-					ao.srcObj = dj_global;
-					var tmpName  = dl.nameAnonFunc(args[1], dj_global, searchForNames);
-					ao.srcFunc = tmpName;
-					ao.adviceObj = args[2];
-					ao.adviceFunc = args[3];
-				}else if((dl.isString(args[0]))&&(dl.isObject(args[1]))&&(dl.isString(args[2]))&&(dl.isFunction(args[3]))){
-					ao.srcObj = args[1];
-					ao.srcFunc = args[2];
-					var tmpName  = dl.nameAnonFunc(args[3], dj_global, searchForNames);
-					ao.adviceObj = dj_global;
-					ao.adviceFunc = tmpName;
-				}else if(dl.isObject(args[1])){
-					ao.srcObj = args[1];
-					ao.srcFunc = args[2];
-					ao.adviceObj = dj_global;
-					ao.adviceFunc = args[3];
-				}else if(dl.isObject(args[2])){
-					ao.srcObj = dj_global;
-					ao.srcFunc = args[1];
-					ao.adviceObj = args[2];
-					ao.adviceFunc = args[3];
-				}else{
-					ao.srcObj = ao.adviceObj = ao.aroundObj = dj_global;
-					ao.srcFunc = args[1];
-					ao.adviceFunc = args[2];
-					ao.aroundFunc = args[3];
-				}
-				break;
-			case 6:
-				ao.srcObj = args[1];
-				ao.srcFunc = args[2];
-				ao.adviceObj = args[3]
-				ao.adviceFunc = args[4];
-				ao.aroundFunc = args[5];
-				ao.aroundObj = dj_global;
-				break;
-			default:
-				ao.srcObj = args[1];
-				ao.srcFunc = args[2];
-				ao.adviceObj = args[3]
-				ao.adviceFunc = args[4];
-				ao.aroundObj = args[5];
-				ao.aroundFunc = args[6];
-				ao.once = args[7];
-				ao.delay = args[8];
-				ao.rate = args[9];
-				ao.adviceMsg = args[10];
-				break;
-		}
-
-		if(dl.isFunction(ao.aroundFunc)){
-			var tmpName  = dl.nameAnonFunc(ao.aroundFunc, ao.aroundObj, searchForNames);
-			ao.aroundFunc = tmpName;
-		}
-
-		if(dl.isFunction(ao.srcFunc)){
-			ao.srcFunc = dl.getNameInObj(ao.srcObj, ao.srcFunc);
-		}
-
-		if(dl.isFunction(ao.adviceFunc)){
-			ao.adviceFunc = dl.getNameInObj(ao.adviceObj, ao.adviceFunc);
-		}
-
-		if((ao.aroundObj)&&(dl.isFunction(ao.aroundFunc))){
-			ao.aroundFunc = dl.getNameInObj(ao.aroundObj, ao.aroundFunc);
-		}
-
-		if(!ao.srcObj){
-			dojo.raise("bad srcObj for srcFunc: "+ao.srcFunc);
-		}
-		if(!ao.adviceObj){
-			dojo.raise("bad adviceObj for adviceFunc: "+ao.adviceFunc);
-		}
-		return ao;
-	}
-
-	this.connect = function(){
-		if(arguments.length == 1){
-			var ao = arguments[0];
-		}else{
-			var ao = interpolateArgs(arguments, true);
-		}
-
-		if(dojo.lang.isArray(ao.srcObj) && ao.srcObj!=""){
-			var tmpAO = {};
-			for(var x in ao){
-				tmpAO[x] = ao[x];
-			}
-			var mjps = [];
-			dojo.lang.forEach(ao.srcObj, function(src){
-				if((dojo.render.html.capable)&&(dojo.lang.isString(src))){
-					src = dojo.byId(src);
-					// dojo.debug(src);
-				}
-				tmpAO.srcObj = src;
-				// dojo.debug(tmpAO.srcObj, tmpAO.srcFunc);
-				// dojo.debug(tmpAO.adviceObj, tmpAO.adviceFunc);
-				mjps.push(dojo.event.connect.call(dojo.event, tmpAO));
-			});
-			return mjps;
-		}
-
-		// FIXME: just doing a "getForMethod()" seems to be enough to put this into infinite recursion!!
-		var mjp = dojo.event.MethodJoinPoint.getForMethod(ao.srcObj, ao.srcFunc);
-		if(ao.adviceFunc){
-			var mjp2 = dojo.event.MethodJoinPoint.getForMethod(ao.adviceObj, ao.adviceFunc);
-		}
-
-		mjp.kwAddAdvice(ao);
-
-		return mjp;	// advanced users might want to fsck w/ the join point
-					// manually
-	}
-
-	this.log = function(a1, a2){
-		var kwArgs;
-		if((arguments.length == 1)&&(typeof a1 == "object")){
-			kwArgs = a1;
-		}else{
-			kwArgs = {
-				srcObj: a1,
-				srcFunc: a2
-			};
-		}
-		kwArgs.adviceFunc = function(){
-			var argsStr = [];
-			for(var x=0; x<arguments.length; x++){
-				argsStr.push(arguments[x]);
-			}
-			dojo.debug("("+kwArgs.srcObj+")."+kwArgs.srcFunc, ":", argsStr.join(", "));
-		}
-		this.kwConnect(kwArgs);
-	}
-
-	this.connectBefore = function(){
-		var args = ["before"];
-		for(var i = 0; i < arguments.length; i++) { args.push(arguments[i]); }
-		return this.connect.apply(this, args);
-	}
-
-	this.connectAround = function(){
-		var args = ["around"];
-		for(var i = 0; i < arguments.length; i++) { args.push(arguments[i]); }
-		return this.connect.apply(this, args);
-	}
-
-	this.connectOnce = function(){
-		var ao = interpolateArgs(arguments, true);
-		ao.once = true;
-		return this.connect(ao);
-	}
-
-	this._kwConnectImpl = function(kwArgs, disconnect){
-		var fn = (disconnect) ? "disconnect" : "connect";
-		if(typeof kwArgs["srcFunc"] == "function"){
-			kwArgs.srcObj = kwArgs["srcObj"]||dj_global;
-			var tmpName  = dojo.lang.nameAnonFunc(kwArgs.srcFunc, kwArgs.srcObj, true);
-			kwArgs.srcFunc = tmpName;
-		}
-		if(typeof kwArgs["adviceFunc"] == "function"){
-			kwArgs.adviceObj = kwArgs["adviceObj"]||dj_global;
-			var tmpName  = dojo.lang.nameAnonFunc(kwArgs.adviceFunc, kwArgs.adviceObj, true);
-			kwArgs.adviceFunc = tmpName;
-		}
-		return dojo.event[fn](	(kwArgs["type"]||kwArgs["adviceType"]||"after"),
-									kwArgs["srcObj"]||dj_global,
-									kwArgs["srcFunc"],
-									kwArgs["adviceObj"]||kwArgs["targetObj"]||dj_global,
-									kwArgs["adviceFunc"]||kwArgs["targetFunc"],
-									kwArgs["aroundObj"],
-									kwArgs["aroundFunc"],
-									kwArgs["once"],
-									kwArgs["delay"],
-									kwArgs["rate"],
-									kwArgs["adviceMsg"]||false );
-	}
-
-	this.kwConnect = function(kwArgs){
-		return this._kwConnectImpl(kwArgs, false);
-
-	}
-
-	this.disconnect = function(){
-		var ao = interpolateArgs(arguments, true);
-		if(!ao.adviceFunc){ return; } // nothing to disconnect
-		var mjp = dojo.event.MethodJoinPoint.getForMethod(ao.srcObj, ao.srcFunc);
-		return mjp.removeAdvice(ao.adviceObj, ao.adviceFunc, ao.adviceType, ao.once);
-	}
-
-	this.kwDisconnect = function(kwArgs){
-		return this._kwConnectImpl(kwArgs, true);
-	}
-}
-
-// exactly one of these is created whenever a method with a joint point is run,
-// if there is at least one 'around' advice.
-dojo.event.MethodInvocation = function(join_point, obj, args) {
-	this.jp_ = join_point;
-	this.object = obj;
-	this.args = [];
-	for(var x=0; x<args.length; x++){
-		this.args[x] = args[x];
-	}
-	// the index of the 'around' that is currently being executed.
-	this.around_index = -1;
-}
-
-dojo.event.MethodInvocation.prototype.proceed = function() {
-	this.around_index++;
-	if(this.around_index >= this.jp_.around.length){
-		return this.jp_.object[this.jp_.methodname].apply(this.jp_.object, this.args);
-		// return this.jp_.run_before_after(this.object, this.args);
-	}else{
-		var ti = this.jp_.around[this.around_index];
-		var mobj = ti[0]||dj_global;
-		var meth = ti[1];
-		return mobj[meth].call(mobj, this);
-	}
-} 
-
-
-dojo.event.MethodJoinPoint = function(obj, methname){
-	this.object = obj||dj_global;
-	this.methodname = methname;
-	this.methodfunc = this.object[methname];
-	this.before = [];
-	this.after = [];
-	this.around = [];
-}
-
-dojo.event.MethodJoinPoint.getForMethod = function(obj, methname) {
-	// if(!(methname in obj)){
-	if(!obj){ obj = dj_global; }
-	if(!obj[methname]){
-		// supply a do-nothing method implementation
-		obj[methname] = function(){};
-		if(!obj[methname]){
-			// e.g. cannot add to inbuilt objects in IE6
-			dojo.raise("Cannot set do-nothing method on that object "+methname);
-		}
-	}else if((!dojo.lang.isFunction(obj[methname]))&&(!dojo.lang.isAlien(obj[methname]))){
-		return null; // FIXME: should we throw an exception here instead?
-	}
-	// we hide our joinpoint instance in obj[methname + '$joinpoint']
-	var jpname = methname + "$joinpoint";
-	var jpfuncname = methname + "$joinpoint$method";
-	var joinpoint = obj[jpname];
-	if(!joinpoint){
-		var isNode = false;
-		if(dojo.event["browser"]){
-			if( (obj["attachEvent"])||
-				(obj["nodeType"])||
-				(obj["addEventListener"]) ){
-				isNode = true;
-				dojo.event.browser.addClobberNodeAttrs(obj, [jpname, jpfuncname, methname]);
-			}
-		}
-		var origArity = obj[methname].length;
-		obj[jpfuncname] = obj[methname];
-		// joinpoint = obj[jpname] = new dojo.event.MethodJoinPoint(obj, methname);
-		joinpoint = obj[jpname] = new dojo.event.MethodJoinPoint(obj, jpfuncname);
-		obj[methname] = function(){ 
-			var args = [];
-
-			if((isNode)&&(!arguments.length)){
-				var evt = null;
-				try{
-					if(obj.ownerDocument){
-						evt = obj.ownerDocument.parentWindow.event;
-					}else if(obj.documentElement){
-						evt = obj.documentElement.ownerDocument.parentWindow.event;
-					}else{
-						evt = window.event;
-					}
-				}catch(e){
-					evt = window.event;
-				}
-
-				if(evt){
-					args.push(dojo.event.browser.fixEvent(evt, this));
-				}
-			}else{
-				for(var x=0; x<arguments.length; x++){
-					if((x==0)&&(isNode)&&(dojo.event.browser.isEvent(arguments[x]))){
-						args.push(dojo.event.browser.fixEvent(arguments[x], this));
-					}else{
-						args.push(arguments[x]);
-					}
-				}
-			}
-			// return joinpoint.run.apply(joinpoint, arguments); 
-			return joinpoint.run.apply(joinpoint, args); 
-		}
-		obj[methname].__preJoinArity = origArity;
-	}
-	return joinpoint;
-}
-
-dojo.lang.extend(dojo.event.MethodJoinPoint, {
-	unintercept: function(){
-		this.object[this.methodname] = this.methodfunc;
-		this.before = [];
-		this.after = [];
-		this.around = [];
-	},
-
-	disconnect: dojo.lang.forward("unintercept"),
-
-	run: function() {
-		var obj = this.object||dj_global;
-		var args = arguments;
-
-		// optimization. We only compute once the array version of the arguments
-		// pseudo-arr in order to prevent building it each time advice is unrolled.
-		var aargs = [];
-		for(var x=0; x<args.length; x++){
-			aargs[x] = args[x];
-		}
-
-		var unrollAdvice  = function(marr){ 
-			if(!marr){
-				dojo.debug("Null argument to unrollAdvice()");
-				return;
-			}
-		  
-			var callObj = marr[0]||dj_global;
-			var callFunc = marr[1];
-			
-			if(!callObj[callFunc]){
-				dojo.raise("function \"" + callFunc + "\" does not exist on \"" + callObj + "\"");
-			}
-			
-			var aroundObj = marr[2]||dj_global;
-			var aroundFunc = marr[3];
-			var msg = marr[6];
-			var undef;
-
-			var to = {
-				args: [],
-				jp_: this,
-				object: obj,
-				proceed: function(){
-					return callObj[callFunc].apply(callObj, to.args);
-				}
-			};
-			to.args = aargs;
-
-			var delay = parseInt(marr[4]);
-			var hasDelay = ((!isNaN(delay))&&(marr[4]!==null)&&(typeof marr[4] != "undefined"));
-			if(marr[5]){
-				var rate = parseInt(marr[5]);
-				var cur = new Date();
-				var timerSet = false;
-				if((marr["last"])&&((cur-marr.last)<=rate)){
-					if(dojo.event.canTimeout){
-						if(marr["delayTimer"]){
-							clearTimeout(marr.delayTimer);
-						}
-						var tod = parseInt(rate*2); // is rate*2 naive?
-						var mcpy = dojo.lang.shallowCopy(marr);
-						marr.delayTimer = setTimeout(function(){
-							// FIXME: on IE at least, event objects from the
-							// browser can go out of scope. How (or should?) we
-							// deal with it?
-							mcpy[5] = 0;
-							unrollAdvice(mcpy);
-						}, tod);
-					}
-					return;
-				}else{
-					marr.last = cur;
-				}
-			}
-
-			// FIXME: need to enforce rates for a connection here!
-
-			if(aroundFunc){
-				// NOTE: around advice can't delay since we might otherwise depend
-				// on execution order!
-				aroundObj[aroundFunc].call(aroundObj, to);
-			}else{
-				// var tmjp = dojo.event.MethodJoinPoint.getForMethod(obj, methname);
-				if((hasDelay)&&((dojo.render.html)||(dojo.render.svg))){  // FIXME: the render checks are grotty!
-					dj_global["setTimeout"](function(){
-						if(msg){
-							callObj[callFunc].call(callObj, to); 
-						}else{
-							callObj[callFunc].apply(callObj, args); 
-						}
-					}, delay);
-				}else{ // many environments can't support delay!
-					if(msg){
-						callObj[callFunc].call(callObj, to); 
-					}else{
-						callObj[callFunc].apply(callObj, args); 
-					}
-				}
-			}
-		}
-
-		if(this.before.length>0){
-			dojo.lang.forEach(this.before, unrollAdvice);
-		}
-
-		var result;
-		if(this.around.length>0){
-			var mi = new dojo.event.MethodInvocation(this, obj, args);
-			result = mi.proceed();
-		}else if(this.methodfunc){
-			result = this.object[this.methodname].apply(this.object, args);
-		}
-
-		if(this.after.length>0){
-			dojo.lang.forEach(this.after, unrollAdvice);
-		}
-
-		return (this.methodfunc) ? result : null;
-	},
-
-	getArr: function(kind){
-		var arr = this.after;
-		// FIXME: we should be able to do this through props or Array.in()
-		if((typeof kind == "string")&&(kind.indexOf("before")!=-1)){
-			arr = this.before;
-		}else if(kind=="around"){
-			arr = this.around;
-		}
-		return arr;
-	},
-
-	kwAddAdvice: function(args){
-		this.addAdvice(	args["adviceObj"], args["adviceFunc"], 
-						args["aroundObj"], args["aroundFunc"], 
-						args["adviceType"], args["precedence"], 
-						args["once"], args["delay"], args["rate"], 
-						args["adviceMsg"]);
-	},
-
-	addAdvice: function(	thisAdviceObj, thisAdvice, 
-							thisAroundObj, thisAround, 
-							advice_kind, precedence, 
-							once, delay, rate, asMessage){
-		var arr = this.getArr(advice_kind);
-		if(!arr){
-			dojo.raise("bad this: " + this);
-		}
-
-		var ao = [thisAdviceObj, thisAdvice, thisAroundObj, thisAround, delay, rate, asMessage];
-		
-		if(once){
-			if(this.hasAdvice(thisAdviceObj, thisAdvice, advice_kind, arr) >= 0){
-				return;
-			}
-		}
-
-		if(precedence == "first"){
-			arr.unshift(ao);
-		}else{
-			arr.push(ao);
-		}
-	},
-
-	hasAdvice: function(thisAdviceObj, thisAdvice, advice_kind, arr){
-		if(!arr){ arr = this.getArr(advice_kind); }
-		var ind = -1;
-		for(var x=0; x<arr.length; x++){
-			var aao = (typeof thisAdvice == "object") ? (new String(thisAdvice)).toString() : thisAdvice;
-			var a1o = (typeof arr[x][1] == "object") ? (new String(arr[x][1])).toString() : arr[x][1];
-			if((arr[x][0] == thisAdviceObj)&&(a1o == aao)){
-				ind = x;
-			}
-		}
-		return ind;
-	},
-
-	removeAdvice: function(thisAdviceObj, thisAdvice, advice_kind, once){
-		var arr = this.getArr(advice_kind);
-		var ind = this.hasAdvice(thisAdviceObj, thisAdvice, advice_kind, arr);
-		if(ind == -1){
-			return false;
-		}
-		while(ind != -1){
-			arr.splice(ind, 1);
-			if(once){ break; }
-			ind = this.hasAdvice(thisAdviceObj, thisAdvice, advice_kind, arr);
-		}
-		return true;
-	}
-});
-
-dojo.require("dojo.event");
-dojo.provide("dojo.event.topic");
-
-dojo.event.topic = new function(){
-	this.topics = {};
-
-	this.getTopic = function(topicName){
-		if(!this.topics[topicName]){
-			this.topics[topicName] = new this.TopicImpl(topicName);
-		}
-		return this.topics[topicName];
-	}
-
-	this.registerPublisher = function(topic, obj, funcName){
-		var topic = this.getTopic(topic);
-		topic.registerPublisher(obj, funcName);
-	}
-
-	this.subscribe = function(topic, obj, funcName){
-		var topic = this.getTopic(topic);
-		topic.subscribe(obj, funcName);
-	}
-
-	this.unsubscribe = function(topic, obj, funcName){
-		var topic = this.getTopic(topic);
-		topic.unsubscribe(obj, funcName);
-	}
-
-	this.destroy = function(topic){
-		this.getTopic(topic).destroy();
-		delete this.topics[topic];
-	}
-
-	this.publishApply = function(topic, args){
-		var topic = this.getTopic(topic);
-		topic.sendMessage.apply(topic, args);
-	}
-
-	this.publish = function(topic, message){
-		var topic = this.getTopic(topic);
-		// if message is an array, we treat it as a set of arguments,
-		// otherwise, we just pass on the arguments passed in as-is
-		var args = [];
-		// could we use concat instead here?
-		for(var x=1; x<arguments.length; x++){
-			args.push(arguments[x]);
-		}
-		topic.sendMessage.apply(topic, args);
-	}
-}
-
-dojo.event.topic.TopicImpl = function(topicName){
-	this.topicName = topicName;
-
-	this.subscribe = function(listenerObject, listenerMethod){
-		var tf = listenerMethod||listenerObject;
-		var to = (!listenerMethod) ? dj_global : listenerObject;
-		dojo.event.kwConnect({
-			srcObj:		this, 
-			srcFunc:	"sendMessage", 
-			adviceObj:	to,
-			adviceFunc: tf
-		});
-	}
-
-	this.unsubscribe = function(listenerObject, listenerMethod){
-		var tf = (!listenerMethod) ? listenerObject : listenerMethod;
-		var to = (!listenerMethod) ? null : listenerObject;
-		dojo.event.kwDisconnect({
-			srcObj:		this, 
-			srcFunc:	"sendMessage", 
-			adviceObj:	to,
-			adviceFunc: tf
-		});
-	}
-
-	this.destroy = function(){
-		dojo.event.MethodJoinPoint.getForMethod(this, "sendMessage").disconnect();
-	}
-
-	this.registerPublisher = function(publisherObject, publisherMethod){
-		dojo.event.connect(publisherObject, publisherMethod, this, "sendMessage");
-	}
-
-	this.sendMessage = function(message){
-		// The message has been propagated
-	}
-}
-
-
-dojo.provide("dojo.event.browser");
-dojo.require("dojo.event");
-
-// FIXME: any particular reason this is in the global scope?
-dojo._ie_clobber = new function(){
-	this.clobberNodes = [];
-
-	function nukeProp(node, prop){
-		// try{ node.removeAttribute(prop); 	}catch(e){ /* squelch */ }
-		try{ node[prop] = null; 			}catch(e){ /* squelch */ }
-		try{ delete node[prop]; 			}catch(e){ /* squelch */ }
-		// FIXME: JotLive needs this, but I'm not sure if it's too slow or not
-		try{ node.removeAttribute(prop);	}catch(e){ /* squelch */ }
-	}
-
-	this.clobber = function(nodeRef){
-		var na;
-		var tna;
-		if(nodeRef){
-			tna = nodeRef.all || nodeRef.getElementsByTagName("*");
-			na = [nodeRef];
-			for(var x=0; x<tna.length; x++){
-				// if we're gonna be clobbering the thing, at least make sure
-				// we aren't trying to do it twice
-				if(tna[x]["__doClobber__"]){
-					na.push(tna[x]);
-				}
-			}
-		}else{
-			try{ window.onload = null; }catch(e){}
-			na = (this.clobberNodes.length) ? this.clobberNodes : document.all;
-		}
-		tna = null;
-		var basis = {};
-		for(var i = na.length-1; i>=0; i=i-1){
-			var el = na[i];
-			if(el["__clobberAttrs__"]){
-				for(var j=0; j<el.__clobberAttrs__.length; j++){
-					nukeProp(el, el.__clobberAttrs__[j]);
-				}
-				nukeProp(el, "__clobberAttrs__");
-				nukeProp(el, "__doClobber__");
-			}
-		}
-		na = null;
-	}
-}
-
-if(dojo.render.html.ie){
-	dojo.addOnUnload(function(){
-		dojo._ie_clobber.clobber();
-		try{
-			if((dojo["widget"])&&(dojo.widget["manager"])){
-				dojo.widget.manager.destroyAll();
-			}
-		}catch(e){}
-		try{ window.onload = null; }catch(e){}
-		try{ window.onunload = null; }catch(e){}
-		dojo._ie_clobber.clobberNodes = [];
-		// CollectGarbage();
-	});
-}
-
-dojo.event.browser = new function(){
-
-	var clobberIdx = 0;
-
-	this.clean = function(node){
-		if(dojo.render.html.ie){ 
-			dojo._ie_clobber.clobber(node);
-		}
-	}
-
-	this.addClobberNode = function(node){
-		if(!dojo.render.html.ie){ return; }
-		if(!node["__doClobber__"]){
-			node.__doClobber__ = true;
-			dojo._ie_clobber.clobberNodes.push(node);
-			// this might not be the most efficient thing to do, but it's
-			// much less error prone than other approaches which were
-			// previously tried and failed
-			node.__clobberAttrs__ = [];
-		}
-	}
-
-	this.addClobberNodeAttrs = function(node, props){
-		if(!dojo.render.html.ie){ return; }
-		this.addClobberNode(node);
-		for(var x=0; x<props.length; x++){
-			node.__clobberAttrs__.push(props[x]);
-		}
-	}
-
-	this.removeListener = function(node, evtName, fp, capture){
-		if(!capture){ var capture = false; }
-		evtName = evtName.toLowerCase();
-		if(evtName.substr(0,2)=="on"){ evtName = evtName.substr(2); }
-		// FIXME: this is mostly a punt, we aren't actually doing anything on IE
-		if(node.removeEventListener){
-			node.removeEventListener(evtName, fp, capture);
-		}
-	}
-
-	this.addListener = function(node, evtName, fp, capture, dontFix){
-		if(!node){ return; } // FIXME: log and/or bail?
-		if(!capture){ var capture = false; }
-		evtName = evtName.toLowerCase();
-		if(evtName.substr(0,2)!="on"){ evtName = "on"+evtName; }
-
-		if(!dontFix){
-			// build yet another closure around fp in order to inject fixEvent
-			// around the resulting event
-			var newfp = function(evt){
-				if(!evt){ evt = window.event; }
-				var ret = fp(dojo.event.browser.fixEvent(evt, this));
-				if(capture){
-					dojo.event.browser.stopEvent(evt);
-				}
-				return ret;
-			}
-		}else{
-			newfp = fp;
-		}
-
-		if(node.addEventListener){ 
-			node.addEventListener(evtName.substr(2), newfp, capture);
-			return newfp;
-		}else{
-			if(typeof node[evtName] == "function" ){
-				var oldEvt = node[evtName];
-				node[evtName] = function(e){
-					oldEvt(e);
-					return newfp(e);
-				}
-			}else{
-				node[evtName]=newfp;
-			}
-			if(dojo.render.html.ie){
-				this.addClobberNodeAttrs(node, [evtName]);
-			}
-			return newfp;
-		}
-	}
-
-	this.isEvent = function(obj){
-		// FIXME: event detection hack ... could test for additional attributes
-		// if necessary
-		return (typeof obj != "undefined")&&(typeof Event != "undefined")&&(obj.eventPhase);
-		// Event does not support instanceof in Opera, otherwise:
-		//return (typeof Event != "undefined")&&(obj instanceof Event);
-	}
-
-	this.currentEvent = null;
-	
-	this.callListener = function(listener, curTarget){
-		if(typeof listener != 'function'){
-			dojo.raise("listener not a function: " + listener);
-		}
-		dojo.event.browser.currentEvent.currentTarget = curTarget;
-		return listener.call(curTarget, dojo.event.browser.currentEvent);
-	}
-
-	this.stopPropagation = function(){
-		dojo.event.browser.currentEvent.cancelBubble = true;
-	}
-
-	this.preventDefault = function(){
-	  dojo.event.browser.currentEvent.returnValue = false;
-	}
-
-	this.keys = {
-		KEY_BACKSPACE: 8,
-		KEY_TAB: 9,
-		KEY_ENTER: 13,
-		KEY_SHIFT: 16,
-		KEY_CTRL: 17,
-		KEY_ALT: 18,
-		KEY_PAUSE: 19,
-		KEY_CAPS_LOCK: 20,
-		KEY_ESCAPE: 27,
-		KEY_SPACE: 32,
-		KEY_PAGE_UP: 33,
-		KEY_PAGE_DOWN: 34,
-		KEY_END: 35,
-		KEY_HOME: 36,
-		KEY_LEFT_ARROW: 37,
-		KEY_UP_ARROW: 38,
-		KEY_RIGHT_ARROW: 39,
-		KEY_DOWN_ARROW: 40,
-		KEY_INSERT: 45,
-		KEY_DELETE: 46,
-		KEY_LEFT_WINDOW: 91,
-		KEY_RIGHT_WINDOW: 92,
-		KEY_SELECT: 93,
-		KEY_F1: 112,
-		KEY_F2: 113,
-		KEY_F3: 114,
-		KEY_F4: 115,
-		KEY_F5: 116,
-		KEY_F6: 117,
-		KEY_F7: 118,
-		KEY_F8: 119,
-		KEY_F9: 120,
-		KEY_F10: 121,
-		KEY_F11: 122,
-		KEY_F12: 123,
-		KEY_NUM_LOCK: 144,
-		KEY_SCROLL_LOCK: 145
-	};
-
-	// reverse lookup
-	this.revKeys = [];
-	for(var key in this.keys){
-		this.revKeys[this.keys[key]] = key;
-	}
-
-	this.fixEvent = function(evt, sender){
-		if((!evt)&&(window["event"])){
-			var evt = window.event;
-		}
-		
-		if((evt["type"])&&(evt["type"].indexOf("key") == 0)){ // key events
-			evt.keys = this.revKeys;
-			// FIXME: how can we eliminate this iteration?
-			for(var key in this.keys) {
-				evt[key] = this.keys[key];
-			}
-			if((dojo.render.html.ie)&&(evt["type"] == "keypress")){
-				evt.charCode = evt.keyCode;
-			}
-		}
-	
-		if(dojo.render.html.ie){
-			if(!evt.target){ evt.target = evt.srcElement; }
-			if(!evt.currentTarget){ evt.currentTarget = (sender ? sender : evt.srcElement); }
-			if(!evt.layerX){ evt.layerX = evt.offsetX; }
-			if(!evt.layerY){ evt.layerY = evt.offsetY; }
-			// FIXME: scroll position query is duped from dojo.html to avoid dependency on that entire module
-			var docBody = ((dojo.render.html.ie55)||(document["compatMode"] == "BackCompat")) ? document.body : document.documentElement;
-			if(!evt.pageX){ evt.pageX = evt.clientX + (docBody.scrollLeft || 0) }
-			if(!evt.pageY){ evt.pageY = evt.clientY + (docBody.scrollTop || 0) }
-			// mouseover
-			if(evt.type == "mouseover"){ evt.relatedTarget = evt.fromElement; }
-			// mouseout
-			if(evt.type == "mouseout"){ evt.relatedTarget = evt.toElement; }
-			this.currentEvent = evt;
-			evt.callListener = this.callListener;
-			evt.stopPropagation = this.stopPropagation;
-			evt.preventDefault = this.preventDefault;
-		}
-		return evt;
-	}
-
-	this.stopEvent = function(ev) {
-		if(window.event){
-			ev.returnValue = false;
-			ev.cancelBubble = true;
-		}else{
-			ev.preventDefault();
-			ev.stopPropagation();
-		}
-	}
-}
-
-dojo.kwCompoundRequire({
-	common: ["dojo.event", "dojo.event.topic"],
-	browser: ["dojo.event.browser"],
-	dashboard: ["dojo.event.browser"]
-});
-dojo.provide("dojo.event.*");
-
-dojo.provide("dojo.lfx.Animation");
-dojo.provide("dojo.lfx.Line");
-
-dojo.require("dojo.lang.func");
-
-/*
-	Animation package based on Dan Pupius' work: http://pupius.co.uk/js/Toolkit.Drawing.js
-*/
-dojo.lfx.Line = function(start, end){
-	this.start = start;
-	this.end = end;
-	if(dojo.lang.isArray(start)){
-		var diff = [];
-		dojo.lang.forEach(this.start, function(s,i){
-			diff[i] = this.end[i] - s;
-		}, this);
-		
-		this.getValue = function(/*float*/ n){
-			var res = [];
-			dojo.lang.forEach(this.start, function(s, i){
-				res[i] = (diff[i] * n) + s;
-			}, this);
-			return res;
-		}
-	}else{
-		var diff = end - start;
-			
-		this.getValue = function(/*float*/ n){
-			//	summary: returns the point on the line
-			//	n: a floating point number greater than 0 and less than 1
-			return (diff * n) + this.start;
-		}
-	}
-}
-
-dojo.lfx.easeIn = function(n){
-	//	summary: returns the point on an easing curve
-	//	n: a floating point number greater than 0 and less than 1
-	return Math.pow(n, 3);
-}
-
-dojo.lfx.easeOut = function(n){
-	//	summary: returns the point on the line
-	//	n: a floating point number greater than 0 and less than 1
-	return ( 1 - Math.pow(1 - n, 3) );
-}
-
-dojo.lfx.easeInOut = function(n){
-	//	summary: returns the point on the line
-	//	n: a floating point number greater than 0 and less than 1
-	return ( (3 * Math.pow(n, 2)) - (2 * Math.pow(n, 3)) );
-}
-
-dojo.lfx.IAnimation = function(){}
-dojo.lang.extend(dojo.lfx.IAnimation, {
-	// public properties
-	curve: null,
-	duration: 1000,
-	easing: null,
-	repeatCount: 0,
-	rate: 25,
-	
-	// events
-	handler: null,
-	beforeBegin: null,
-	onBegin: null,
-	onAnimate: null,
-	onEnd: null,
-	onPlay: null,
-	onPause: null,
-	onStop: null,
-	
-	// public methods
-	play: null,
-	pause: null,
-	stop: null,
-	
-	fire: function(evt, args){
-		if(this[evt]){
-			this[evt].apply(this, (args||[]));
-		}
-	},
-	
-	// private properties
-	_active: false,
-	_paused: false
-});
-
-dojo.lfx.Animation = function(/*Object*/ handlers, /*int*/ duration, /*Array*/ curve, /*function*/ easing, /*int*/ repeatCount, /*int*/ rate){
-	//	summary
-	//		a generic animation object that fires callbacks into it's handlers
-	//		object at various states
-	//	handlers
-	//		object { 
-	//			handler: function(){}, 
-	//			onstart: function(){}, 
-	//			onstop: function(){}, 
-	//			onanimate: function(){}
-	//		}
-	dojo.lfx.IAnimation.call(this);
-	if(dojo.lang.isNumber(handlers)||(!handlers && duration.getValue)){
-		// no handlers argument:
-		rate = repeatCount;
-		repeatCount = easing;
-		easing = curve;
-		curve = duration;
-		duration = handlers;
-		handlers = null;
-	}else if(handlers.getValue||dojo.lang.isArray(handlers)){
-		// no handlers or duration:
-		rate = easing;
-		repeatCount = curve;
-		easing = duration;
-		curve = handlers;
-		duration = null;
-		handlers = null;
-	}
-	if(dojo.lang.isArray(curve)){
-		this.curve = new dojo.lfx.Line(curve[0], curve[1]);
-	}else{
-		this.curve = curve;
-	}
-	if(duration != null && duration > 0){ this.duration = duration; }
-	if(repeatCount){ this.repeatCount = repeatCount; }
-	if(rate){ this.rate = rate; }
-	if(handlers){
-		this.handler = handlers.handler;
-		this.beforeBegin = handlers.beforeBegin;
-		this.onBegin = handlers.onBegin;
-		this.onEnd = handlers.onEnd;
-		this.onPlay = handlers.onPlay;
-		this.onPause = handlers.onPause;
-		this.onStop = handlers.onStop;
-		this.onAnimate = handlers.onAnimate;
-	}
-	if(easing && dojo.lang.isFunction(easing)){
-		this.easing=easing;
-	}
-}
-dojo.inherits(dojo.lfx.Animation, dojo.lfx.IAnimation);
-dojo.lang.extend(dojo.lfx.Animation, {
-	// "private" properties
-	_startTime: null,
-	_endTime: null,
-	_timer: null,
-	_percent: 0,
-	_startRepeatCount: 0,
-
-	// public methods
-	play: function(delay, gotoStart){
-		if(gotoStart){
-			clearTimeout(this._timer);
-			this._active = false;
-			this._paused = false;
-			this._percent = 0;
-		}else if(this._active && !this._paused){
-			return this;
-		}
-		
-		this.fire("handler", ["beforeBegin"]);
-		this.fire("beforeBegin");
-
-		if(delay > 0){
-			setTimeout(dojo.lang.hitch(this, function(){ this.play(null, gotoStart); }), delay);
-			return this;
-		}
-		
-		this._startTime = new Date().valueOf();
-		if(this._paused){
-			this._startTime -= (this.duration * this._percent / 100);
-		}
-		this._endTime = this._startTime + this.duration;
-
-		this._active = true;
-		this._paused = false;
-		
-		var step = this._percent / 100;
-		var value = this.curve.getValue(step);
-		if( this._percent == 0 ) {
-			if(!this._startRepeatCount) {
-				this._startRepeatCount = this.repeatCount;
-			}
-			this.fire("handler", ["begin", value]);
-			this.fire("onBegin", [value]);
-		}
-
-		this.fire("handler", ["play", value]);
-		this.fire("onPlay", [value]);
-
-		this._cycle();
-		return this;
-	},
-
-	pause: function() {
-		clearTimeout(this._timer);
-		if(!this._active){ return this; }
-		this._paused = true;
-		var value = this.curve.getValue(this._percent / 100);
-		this.fire("handler", ["pause", value]);
-		this.fire("onPause", [value]);
-		return this;
-	},
-
-	gotoPercent: function(pct, andPlay) {
-		clearTimeout(this._timer);
-		this._active = true;
-		this._paused = true;
-		this._percent = pct;
-		if( andPlay ) { this.play(); }
-	},
-
-	stop: function(gotoEnd) {
-		clearTimeout(this._timer);
-		var step = this._percent / 100;
-		if( gotoEnd ) {
-			step = 1;
-		}
-		var value = this.curve.getValue(step);
-		this.fire("handler", ["stop", value]);
-		this.fire("onStop", [value]);
-		this._active = false;
-		this._paused = false;
-		return this;
-	},
-
-	status: function() {
-		if( this._active ) {
-			return this._paused ? "paused" : "playing";
-		} else {
-			return "stopped";
-		}
-	},
-
-	// "private" methods
-	_cycle: function() {
-		clearTimeout(this._timer);
-		if(this._active){
-			var curr = new Date().valueOf();
-			var step = (curr - this._startTime) / (this._endTime - this._startTime);
-
-			if(step >= 1){
-				step = 1;
-				this._percent = 100;
-			}else{
-				this._percent = step * 100;
-			}
-			
-			// Perform easing
-			if((this.easing)&&(dojo.lang.isFunction(this.easing))){
-				step = this.easing(step);
-			}
-
-			var value = this.curve.getValue(step);
-			this.fire("handler", ["animate", value]);
-			this.fire("onAnimate", [value]);
-
-			if( step < 1 ) {
-				this._timer = setTimeout(dojo.lang.hitch(this, "_cycle"), this.rate);
-			} else {
-				this._active = false;
-				this.fire("handler", ["end"]);
-				this.fire("onEnd");
-
-				if( this.repeatCount > 0 ) {
-					this.repeatCount--;
-					this.play(null, true);
-				} else if( this.repeatCount == -1 ) {
-					this.play(null, true);
-				} else {
-					if(this._startRepeatCount) {
-						this.repeatCount = this._startRepeatCount;
-						this._startRepeatCount = 0;
-					}
-				}
-			}
-		}
-		return this;
-	}
-});
-
-dojo.lfx.Combine = function(){
-	dojo.lfx.IAnimation.call(this);
-	this._anims = [];
-	this._animsEnded = 0;
-	
-	var anims = arguments;
-	if(anims.length == 1 && (dojo.lang.isArray(anims[0]) || dojo.lang.isArrayLike(anims[0]))){
-		anims = anims[0];
-	}
-	
-	var _this = this;
-	dojo.lang.forEach(anims, function(anim){
-		_this._anims.push(anim);
-		var oldOnEnd = (anim["onEnd"]) ? dojo.lang.hitch(anim, "onEnd") : function(){};
-		anim.onEnd = function(){ oldOnEnd(); _this._onAnimsEnded(); };
-	});
-}
-dojo.inherits(dojo.lfx.Combine, dojo.lfx.IAnimation);
-dojo.lang.extend(dojo.lfx.Combine, {
-	// private members
-	_animsEnded: 0,
-	
-	// public methods
-	play: function(delay, gotoStart){
-		if( !this._anims.length ){ return this; }
-
-		this.fire("beforeBegin");
-
-		if(delay > 0){
-			setTimeout(dojo.lang.hitch(this, function(){ this.play(null, gotoStart); }), delay);
-			return this;
-		}
-		
-		if(gotoStart || this._anims[0].percent == 0){
-			this.fire("onBegin");
-		}
-		this.fire("onPlay");
-		this._animsCall("play", null, gotoStart);
-		return this;
-	},
-	
-	pause: function(){
-		this.fire("onPause");
-		this._animsCall("pause"); 
-		return this;
-	},
-	
-	stop: function(gotoEnd){
-		this.fire("onStop");
-		this._animsCall("stop", gotoEnd);
-		return this;
-	},
-	
-	// private methods
-	_onAnimsEnded: function(){
-		this._animsEnded++;
-		if(this._animsEnded >= this._anims.length){
-			this.fire("onEnd");
-		}
-		return this;
-	},
-	
-	_animsCall: function(funcName){
-		var args = [];
-		if(arguments.length > 1){
-			for(var i = 1 ; i < arguments.length ; i++){
-				args.push(arguments[i]);
-			}
-		}
-		var _this = this;
-		dojo.lang.forEach(this._anims, function(anim){
-			anim[funcName](args);
-		}, _this);
-		return this;
-	}
-});
-
-dojo.lfx.Chain = function() {
-	dojo.lfx.IAnimation.call(this);
-	this._anims = [];
-	this._currAnim = -1;
-	
-	var anims = arguments;
-	if(anims.length == 1 && (dojo.lang.isArray(anims[0]) || dojo.lang.isArrayLike(anims[0]))){
-		anims = anims[0];
-	}
-	
-	var _this = this;
-	dojo.lang.forEach(anims, function(anim, i, anims_arr){
-		_this._anims.push(anim);
-		var oldOnEnd = (anim["onEnd"]) ? dojo.lang.hitch(anim, "onEnd") : function(){};
-		if(i < anims_arr.length - 1){
-			anim.onEnd = function(){ oldOnEnd(); _this._playNext(); };
-		}else{
-			anim.onEnd = function(){ oldOnEnd(); _this.fire("onEnd"); };
-		}
-	}, _this);
-}
-dojo.inherits(dojo.lfx.Chain, dojo.lfx.IAnimation);
-dojo.lang.extend(dojo.lfx.Chain, {
-	// private members
-	_currAnim: -1,
-	
-	// public methods
-	play: function(delay, gotoStart){
-		if( !this._anims.length ) { return this; }
-		if( gotoStart || !this._anims[this._currAnim] ) {
-			this._currAnim = 0;
-		}
-
-		var currentAnimation = this._anims[this._currAnim];
-
-		this.fire("beforeBegin");
-		if(delay > 0){
-			setTimeout(dojo.lang.hitch(this, function(){ this.play(null, gotoStart); }), delay);
-			return this;
-		}
-		
-		if(currentAnimation){
-			if(this._currAnim == 0){
-				this.fire("handler", ["begin", this._currAnim]);
-				this.fire("onBegin", [this._currAnim]);
-			}
-			this.fire("onPlay", [this._currAnim]);
-			currentAnimation.play(null, gotoStart);
-		}
-		return this;
-	},
-	
-	pause: function(){
-		if( this._anims[this._currAnim] ) {
-			this._anims[this._currAnim].pause();
-			this.fire("onPause", [this._currAnim]);
-		}
-		return this;
-	},
-	
-	playPause: function(){
-		if(this._anims.length == 0){ return this; }
-		if(this._currAnim == -1){ this._currAnim = 0; }
-		var currAnim = this._anims[this._currAnim];
-		if( currAnim ) {
-			if( !currAnim._active || currAnim._paused ) {
-				this.play();
-			} else {
-				this.pause();
-			}
-		}
-		return this;
-	},
-	
-	stop: function(){
-		var currAnim = this._anims[this._currAnim];
-		if(currAnim){
-			currAnim.stop();
-			this.fire("onStop", [this._currAnim]);
-		}
-		return currAnim;
-	},
-	
-	// private methods
-	_playNext: function(){
-		if( this._currAnim == -1 || this._anims.length == 0 ) { return this; }
-		this._currAnim++;
-		if( this._anims[this._currAnim] ){
-			this._anims[this._currAnim].play(null, true);
-		}
-		return this;
-	}
-});
-
-dojo.lfx.combine = function(){
-	var anims = arguments;
-	if(dojo.lang.isArray(arguments[0])){
-		anims = arguments[0];
-	}
-	return new dojo.lfx.Combine(anims);
-}
-
-dojo.lfx.chain = function(){
-	var anims = arguments;
-	if(dojo.lang.isArray(arguments[0])){
-		anims = arguments[0];
-	}
-	return new dojo.lfx.Chain(anims);
-}
-
-dojo.provide("dojo.graphics.color");
-dojo.require("dojo.lang.array");
-
-// TODO: rewrite the "x2y" methods to take advantage of the parsing
-//       abilities of the Color object. Also, beef up the Color
-//       object (as possible) to parse most common formats
-
-// takes an r, g, b, a(lpha) value, [r, g, b, a] array, "rgb(...)" string, hex string (#aaa, #aaaaaa, aaaaaaa)
-dojo.graphics.color.Color = function(r, g, b, a) {
-	// dojo.debug("r:", r[0], "g:", r[1], "b:", r[2]);
-	if(dojo.lang.isArray(r)) {
-		this.r = r[0];
-		this.g = r[1];
-		this.b = r[2];
-		this.a = r[3]||1.0;
-	} else if(dojo.lang.isString(r)) {
-		var rgb = dojo.graphics.color.extractRGB(r);
-		this.r = rgb[0];
-		this.g = rgb[1];
-		this.b = rgb[2];
-		this.a = g||1.0;
-	} else if(r instanceof dojo.graphics.color.Color) {
-		this.r = r.r;
-		this.b = r.b;
-		this.g = r.g;
-		this.a = r.a;
-	} else {
-		this.r = r;
-		this.g = g;
-		this.b = b;
-		this.a = a;
-	}
-}
-
-dojo.graphics.color.Color.fromArray = function(arr) {
-	return new dojo.graphics.color.Color(arr[0], arr[1], arr[2], arr[3]);
-}
-
-dojo.lang.extend(dojo.graphics.color.Color, {
-	toRgb: function(includeAlpha) {
-		if(includeAlpha) {
-			return this.toRgba();
-		} else {
-			return [this.r, this.g, this.b];
-		}
-	},
-
-	toRgba: function() {
-		return [this.r, this.g, this.b, this.a];
-	},
-
-	toHex: function() {
-		return dojo.graphics.color.rgb2hex(this.toRgb());
-	},
-
-	toCss: function() {
-		return "rgb(" + this.toRgb().join() + ")";
-	},
-
-	toString: function() {
-		return this.toHex(); // decent default?
-	},
-
-	blend: function(color, weight) {
-		return dojo.graphics.color.blend(this.toRgb(), new dojo.graphics.color.Color(color).toRgb(), weight);
-	}
-});
-
-dojo.graphics.color.named = {
-	white:      [255,255,255],
-	black:      [0,0,0],
-	red:        [255,0,0],
-	green:	    [0,255,0],
-	blue:       [0,0,255],
-	navy:       [0,0,128],
-	gray:       [128,128,128],
-	silver:     [192,192,192]
+throw _13||Error(_12);
 };
-
-// blend colors a and b (both as RGB array or hex strings) with weight from -1 to +1, 0 being a 50/50 blend
-dojo.graphics.color.blend = function(a, b, weight) {
-	if(typeof a == "string") { return dojo.graphics.color.blendHex(a, b, weight); }
-	if(!weight) { weight = 0; }
-	else if(weight > 1) { weight = 1; }
-	else if(weight < -1) { weight = -1; }
-	var c = new Array(3);
-	for(var i = 0; i < 3; i++) {
-		var half = Math.abs(a[i] - b[i])/2;
-		c[i] = Math.floor(Math.min(a[i], b[i]) + half + (half * weight));
-	}
-	return c;
-}
-
-// very convenient blend that takes and returns hex values
-// (will get called automatically by blend when blend gets strings)
-dojo.graphics.color.blendHex = function(a, b, weight) {
-	return dojo.graphics.color.rgb2hex(dojo.graphics.color.blend(dojo.graphics.color.hex2rgb(a), dojo.graphics.color.hex2rgb(b), weight));
-}
-
-// get RGB array from css-style color declarations
-dojo.graphics.color.extractRGB = function(color) {
-	var hex = "0123456789abcdef";
-	color = color.toLowerCase();
-	if( color.indexOf("rgb") == 0 ) {
-		var matches = color.match(/rgba*\((\d+), *(\d+), *(\d+)/i);
-		var ret = matches.splice(1, 3);
-		return ret;
-	} else {
-		var colors = dojo.graphics.color.hex2rgb(color);
-		if(colors) {
-			return colors;
-		} else {
-			// named color (how many do we support?)
-			return dojo.graphics.color.named[color] || [255, 255, 255];
-		}
-	}
-}
-
-dojo.graphics.color.hex2rgb = function(hex) {
-	var hexNum = "0123456789ABCDEF";
-	var rgb = new Array(3);
-	if( hex.indexOf("#") == 0 ) { hex = hex.substring(1); }
-	hex = hex.toUpperCase();
-	if(hex.replace(new RegExp("["+hexNum+"]", "g"), "") != "") {
-		return null;
-	}
-	if( hex.length == 3 ) {
-		rgb[0] = hex.charAt(0) + hex.charAt(0)
-		rgb[1] = hex.charAt(1) + hex.charAt(1)
-		rgb[2] = hex.charAt(2) + hex.charAt(2);
-	} else {
-		rgb[0] = hex.substring(0, 2);
-		rgb[1] = hex.substring(2, 4);
-		rgb[2] = hex.substring(4);
-	}
-	for(var i = 0; i < rgb.length; i++) {
-		rgb[i] = hexNum.indexOf(rgb[i].charAt(0)) * 16 + hexNum.indexOf(rgb[i].charAt(1));
-	}
-	return rgb;
-}
-
-dojo.graphics.color.rgb2hex = function(r, g, b) {
-	if(dojo.lang.isArray(r)) {
-		g = r[1] || 0;
-		b = r[2] || 0;
-		r = r[0] || 0;
-	}
-	var ret = dojo.lang.map([r, g, b], function(x) {
-		x = new Number(x);
-		var s = x.toString(16);
-		while(s.length < 2) { s = "0" + s; }
-		return s;
-	});
-	ret.unshift("#");
-	return ret.join("");
-}
-
-dojo.provide("dojo.uri.Uri");
-
-dojo.uri = new function() {
-	this.joinPath = function() {
-		// DEPRECATED: use the dojo.uri.Uri object instead
-		var arr = [];
-		for(var i = 0; i < arguments.length; i++) { arr.push(arguments[i]); }
-		return arr.join("/").replace(/\/{2,}/g, "/").replace(/((https*|ftps*):)/i, "$1/");
-	}
-	
-	this.dojoUri = function (uri) {
-		// returns a Uri object resolved relative to the dojo root
-		return new dojo.uri.Uri(dojo.hostenv.getBaseScriptUri(), uri);
-	}
-		
-	this.Uri = function (/*uri1, uri2, [...]*/) {
-		// An object representing a Uri.
-		// Each argument is evaluated in order relative to the next until
-		// a conanical uri is producued. To get an absolute Uri relative
-		// to the current document use
-		//      new dojo.uri.Uri(document.baseURI, uri)
-
-		// TODO: support for IPv6, see RFC 2732
-
-		// resolve uri components relative to each other
-		var uri = arguments[0];
-		for (var i = 1; i < arguments.length; i++) {
-			if(!arguments[i]) { continue; }
-
-			// Safari doesn't support this.constructor so we have to be explicit
-			var relobj = new dojo.uri.Uri(arguments[i].toString());
-			var uriobj = new dojo.uri.Uri(uri.toString());
-
-			if (relobj.path == "" && relobj.scheme == null &&
-				relobj.authority == null && relobj.query == null) {
-				if (relobj.fragment != null) { uriobj.fragment = relobj.fragment; }
-				relobj = uriobj;
-			} else if (relobj.scheme == null) {
-				relobj.scheme = uriobj.scheme;
-			
-				if (relobj.authority == null) {
-					relobj.authority = uriobj.authority;
-					
-					if (relobj.path.charAt(0) != "/") {
-						var path = uriobj.path.substring(0,
-							uriobj.path.lastIndexOf("/") + 1) + relobj.path;
-
-						var segs = path.split("/");
-						for (var j = 0; j < segs.length; j++) {
-							if (segs[j] == ".") {
-								if (j == segs.length - 1) { segs[j] = ""; }
-								else { segs.splice(j, 1); j--; }
-							} else if (j > 0 && !(j == 1 && segs[0] == "") &&
-								segs[j] == ".." && segs[j-1] != "..") {
-
-								if (j == segs.length - 1) { segs.splice(j, 1); segs[j - 1] = ""; }
-								else { segs.splice(j - 1, 2); j -= 2; }
-							}
-						}
-						relobj.path = segs.join("/");
-					}
-				}
-			}
-
-			uri = "";
-			if (relobj.scheme != null) { uri += relobj.scheme + ":"; }
-			if (relobj.authority != null) { uri += "//" + relobj.authority; }
-			uri += relobj.path;
-			if (relobj.query != null) { uri += "?" + relobj.query; }
-			if (relobj.fragment != null) { uri += "#" + relobj.fragment; }
-		}
-
-		this.uri = uri.toString();
-
-		// break the uri into its main components
-		var regexp = "^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?$";
-	    var r = this.uri.match(new RegExp(regexp));
-
-		this.scheme = r[2] || (r[1] ? "" : null);
-		this.authority = r[4] || (r[3] ? "" : null);
-		this.path = r[5]; // can never be undefined
-		this.query = r[7] || (r[6] ? "" : null);
-		this.fragment  = r[9] || (r[8] ? "" : null);
-		
-		if (this.authority != null) {
-			// server based naming authority
-			regexp = "^((([^:]+:)?([^@]+))@)?([^:]*)(:([0-9]+))?$";
-			r = this.authority.match(new RegExp(regexp));
-			
-			this.user = r[3] || null;
-			this.password = r[4] || null;
-			this.host = r[5];
-			this.port = r[7] || null;
-		}
-	
-		this.toString = function(){ return this.uri; }
-	}
+dojo.debug=function(){
 };
-
-dojo.provide("dojo.style");
-dojo.require("dojo.graphics.color");
-dojo.require("dojo.uri.Uri");
-dojo.require("dojo.lang.common");
-
-(function(){
-	var h = dojo.render.html;
-	var ds = dojo.style;
-	var db = document["body"]||document["documentElement"];
-
-	ds.boxSizing = {
-		MARGIN_BOX: "margin-box",
-		BORDER_BOX: "border-box",
-		PADDING_BOX: "padding-box",
-		CONTENT_BOX: "content-box"
-	};
-	var bs = ds.boxSizing;
-	
-	ds.getBoxSizing = function(node){
-		if((h.ie)||(h.opera)){ 
-			var cm = document["compatMode"];
-			if((cm == "BackCompat")||(cm == "QuirksMode")){ 
-				return bs.BORDER_BOX; 
-			}else{
-				return bs.CONTENT_BOX; 
-			}
-		}else{
-			if(arguments.length == 0){ node = document.documentElement; }
-			var sizing = ds.getStyle(node, "-moz-box-sizing");
-			if(!sizing){ sizing = ds.getStyle(node, "box-sizing"); }
-			return (sizing ? sizing : bs.CONTENT_BOX);
-		}
-	}
-
-	/*
-
-	The following several function use the dimensions shown below
-
-		+-------------------------+
-		|  margin                 |
-		| +---------------------+ |
-		| |  border             | |
-		| | +-----------------+ | |
-		| | |  padding        | | |
-		| | | +-------------+ | | |
-		| | | |   content   | | | |
-		| | | +-------------+ | | |
-		| | +-|-------------|-+ | |
-		| +-|-|-------------|-|-+ |
-		+-|-|-|-------------|-|-|-+
-		| | | |             | | | |
-		| | | |<- content ->| | | |
-		| |<------ inner ------>| |
-		|<-------- outer -------->|
-		+-------------------------+
-
-		* content-box
-
-		|m|b|p|             |p|b|m|
-		| |<------ offset ----->| |
-		| | |<---- client --->| | |
-		| | | |<-- width -->| | | |
-
-		* border-box
-
-		|m|b|p|             |p|b|m|
-		| |<------ offset ----->| |
-		| | |<---- client --->| | |
-		| |<------ width ------>| |
-	*/
-
-	/*
-		Notes:
-
-		General:
-			- Uncomputable values are returned as NaN.
-			- setOuterWidth/Height return *false* if the outer size could not
-			  be computed, otherwise *true*.
-			- (sjmiles) knows no way to find the calculated values for auto-margins. 
-			- All returned values are floating point in 'px' units. If a
-			  non-zero computed style value is not specified in 'px', NaN is
-			  returned.
-
-		FF:
-			- styles specified as '0' (unitless 0) show computed as '0pt'.
-
-		IE:
-			- clientWidth/Height are unreliable (0 unless the object has 'layout').
-			- margins must be specified in px, or 0 (in any unit) for any
-			  sizing function to work. Otherwise margins detect as 'auto'.
-			- padding can be empty or, if specified, must be in px, or 0 (in
-			  any unit) for any sizing function to work.
-
-		Safari:
-			- Safari defaults padding values to 'auto'.
-
-		See the unit tests for examples of (un)computable values in a given browser.
-
-	*/
-
-	// FIXME: these work for some elements (e.g. DIV) but not others (e.g. TABLE, TEXTAREA)
-
-	ds.isBorderBox = function(node){
-		return (ds.getBoxSizing(node) == bs.BORDER_BOX);
-	}
-
-	ds.getUnitValue = function(node, cssSelector, autoIsZero){
-		var s = ds.getComputedStyle(node, cssSelector);
-		if((!s)||((s == 'auto')&&(autoIsZero))){ return { value: 0, units: 'px' }; }
-		if(dojo.lang.isUndefined(s)){return ds.getUnitValue.bad;}
-		// FIXME: is regex inefficient vs. parseInt or some manual test? 
-		var match = s.match(/(\-?[\d.]+)([a-z%]*)/i);
-		if (!match){return ds.getUnitValue.bad;}
-		return { value: Number(match[1]), units: match[2].toLowerCase() };
-	}
-	// FIXME: 'bad' value should be 0?
-	ds.getUnitValue.bad = { value: NaN, units: '' };
-	
-	ds.getPixelValue = function(node, cssSelector, autoIsZero){
-		var result = ds.getUnitValue(node, cssSelector, autoIsZero);
-		// FIXME: there is serious debate as to whether or not this is the right solution
-		if(isNaN(result.value)){ return 0; }
-		// FIXME: code exists for converting other units to px (see Dean Edward's IE7) 
-		// but there are cross-browser complexities
-		if((result.value)&&(result.units != 'px')){ return NaN; }
-		return result.value;
-	}
-	
-	// FIXME: deprecated
-	ds.getNumericStyle = function() {
-		dojo.deprecated('dojo.(style|html).getNumericStyle', 'in favor of dojo.(style|html).getPixelValue', '0.4');
-		return ds.getPixelValue.apply(this, arguments); 
-	}
-
-	ds.setPositivePixelValue = function(node, selector, value){
-		if(isNaN(value)){return false;}
-		node.style[selector] = Math.max(0, value) + 'px'; 
-		return true;
-	}
-	
-	ds._sumPixelValues = function(node, selectors, autoIsZero){
-		var total = 0;
-		for(var x=0; x<selectors.length; x++){
-			total += ds.getPixelValue(node, selectors[x], autoIsZero);
-		}
-		return total;
-	}
-
-	ds.isPositionAbsolute = function(node){
-		return (ds.getComputedStyle(node, 'position') == 'absolute');
-	}
-
-	ds.getBorderExtent = function(node, side){
-		return (ds.getStyle(node, 'border-' + side + '-style') == 'none' ? 0 : ds.getPixelValue(node, 'border-' + side + '-width'));
-	}
-
-	ds.getMarginWidth = function(node){
-		return ds._sumPixelValues(node, ["margin-left", "margin-right"], ds.isPositionAbsolute(node));
-	}
-
-	ds.getBorderWidth = function(node){
-		return ds.getBorderExtent(node, 'left') + ds.getBorderExtent(node, 'right');
-	}
-
-	ds.getPaddingWidth = function(node){
-		return ds._sumPixelValues(node, ["padding-left", "padding-right"], true);
-	}
-
-	ds.getPadBorderWidth = function(node) {
-		return ds.getPaddingWidth(node) + ds.getBorderWidth(node);
-	}
-	
-	ds.getContentBoxWidth = function(node){
-		node = dojo.byId(node);
-		return node.offsetWidth - ds.getPadBorderWidth(node);
-	}
-
-	ds.getBorderBoxWidth = function(node){
-		node = dojo.byId(node);
-		return node.offsetWidth;
-	}
-
-	ds.getMarginBoxWidth = function(node){
-		return ds.getInnerWidth(node) + ds.getMarginWidth(node);
-	}
-
-	ds.setContentBoxWidth = function(node, pxWidth){
-		node = dojo.byId(node);
-		if (ds.isBorderBox(node)){
-			pxWidth += ds.getPadBorderWidth(node);
-		}
-		return ds.setPositivePixelValue(node, "width", pxWidth);
-	}
-
-	ds.setMarginBoxWidth = function(node, pxWidth){
-		node = dojo.byId(node);
-		if (!ds.isBorderBox(node)){
-			pxWidth -= ds.getPadBorderWidth(node);
-		}
-		pxWidth -= ds.getMarginWidth(node);
-		return ds.setPositivePixelValue(node, "width", pxWidth);
-	}
-
-	// FIXME: deprecate and remove
-	ds.getContentWidth = ds.getContentBoxWidth;
-	ds.getInnerWidth = ds.getBorderBoxWidth;
-	ds.getOuterWidth = ds.getMarginBoxWidth;
-	ds.setContentWidth = ds.setContentBoxWidth;
-	ds.setOuterWidth = ds.setMarginBoxWidth;
-
-	ds.getMarginHeight = function(node){
-		return ds._sumPixelValues(node, ["margin-top", "margin-bottom"], ds.isPositionAbsolute(node));
-	}
-
-	ds.getBorderHeight = function(node){
-		return ds.getBorderExtent(node, 'top') + ds.getBorderExtent(node, 'bottom');
-	}
-
-	ds.getPaddingHeight = function(node){
-		return ds._sumPixelValues(node, ["padding-top", "padding-bottom"], true);
-	}
-
-	ds.getPadBorderHeight = function(node) {
-		return ds.getPaddingHeight(node) + ds.getBorderHeight(node);
-	}
-	
-	ds.getContentBoxHeight = function(node){
-		node = dojo.byId(node);
-		return node.offsetHeight - ds.getPadBorderHeight(node);
-	}
-
-	ds.getBorderBoxHeight = function(node){
-		node = dojo.byId(node);
-		return node.offsetHeight; // FIXME: does this work?
-	}
-
-	ds.getMarginBoxHeight = function(node){
-		return ds.getInnerHeight(node) + ds.getMarginHeight(node);
-	}
-
-	ds.setContentBoxHeight = function(node, pxHeight){
-		node = dojo.byId(node);
-		if (ds.isBorderBox(node)){
-			pxHeight += ds.getPadBorderHeight(node);
-		}
-		return ds.setPositivePixelValue(node, "height", pxHeight);
-	}
-
-	ds.setMarginBoxHeight = function(node, pxHeight){
-		node = dojo.byId(node);
-		if (!ds.isBorderBox(node)){
-			pxHeight -= ds.getPadBorderHeight(node);
-		}
-		pxHeight -= ds.getMarginHeight(node);
-		return ds.setPositivePixelValue(node, "height", pxHeight);
-	}
-
-	// FIXME: deprecate and remove
-	ds.getContentHeight = ds.getContentBoxHeight;
-	ds.getInnerHeight = ds.getBorderBoxHeight;
-	ds.getOuterHeight = ds.getMarginBoxHeight;
-	ds.setContentHeight = ds.setContentBoxHeight;
-	ds.setOuterHeight = ds.setMarginBoxHeight;
-
-	/**
-	 * dojo.style.getAbsolutePosition(xyz, true) returns xyz's position relative to the document.
-	 * Itells you where you would position a node
-	 * inside document.body such that it was on top of xyz.  Most people set the flag to true when calling
-	 * getAbsolutePosition().
-	 *
-	 * dojo.style.getAbsolutePosition(xyz, false) returns xyz's position relative to the viewport.
-	 * It returns the position that would be returned
-	 * by event.clientX/Y if the mouse were directly over the top/left of this node.
-	 */
-	ds.getAbsolutePosition = ds.abs = function(node, includeScroll){
-		node = dojo.byId(node);
-		var ret = [];
-		ret.x = ret.y = 0;
-		var st = dojo.html.getScrollTop();
-		var sl = dojo.html.getScrollLeft();
-
-		if(h.ie){
-			with(node.getBoundingClientRect()){
-				ret.x = left-2;
-				ret.y = top-2;
-			}
-		}else if(document.getBoxObjectFor){
-			// mozilla
-			var bo = document.getBoxObjectFor(node);
-			ret.x = bo.x - ds.sumAncestorProperties(node, "scrollLeft");
-			ret.y = bo.y - ds.sumAncestorProperties(node, "scrollTop");
-		}else{
-			if(node["offsetParent"]){
-				var endNode;		
-				// in Safari, if the node is an absolutely positioned child of
-				// the body and the body has a margin the offset of the child
-				// and the body contain the body's margins, so we need to end
-				// at the body
-				if(	(h.safari)&&
-					(node.style.getPropertyValue("position") == "absolute")&&
-					(node.parentNode == db)){
-					endNode = db;
-				}else{
-					endNode = db.parentNode;
-				}
-
-				if(node.parentNode != db){
-					var nd = node;
-					if(window.opera){ nd = db; }
-					ret.x -= ds.sumAncestorProperties(nd, "scrollLeft");
-					ret.y -= ds.sumAncestorProperties(nd, "scrollTop");
-				}
-				do{
-					var n = node["offsetLeft"];
-					ret.x += isNaN(n) ? 0 : n;
-					var m = node["offsetTop"];
-					ret.y += isNaN(m) ? 0 : m;
-					node = node.offsetParent;
-				}while((node != endNode)&&(node != null));
-			}else if(node["x"]&&node["y"]){
-				ret.x += isNaN(node.x) ? 0 : node.x;
-				ret.y += isNaN(node.y) ? 0 : node.y;
-			}
-		}
-
-		// account for document scrolling!
-		if(includeScroll){
-			ret.y += st;
-			ret.x += sl;
-		}
-
-		ret[0] = ret.x;
-		ret[1] = ret.y;
-		return ret;
-	}
-
-	ds.sumAncestorProperties = function(node, prop){
-		node = dojo.byId(node);
-		if(!node){ return 0; } // FIXME: throw an error?
-		
-		var retVal = 0;
-		while(node){
-			var val = node[prop];
-			if(val){
-				retVal += val - 0;
-				if(node==document.body){ break; }// opera and khtml #body & #html has the same values, we only need one value
-			}
-			node = node.parentNode;
-		}
-		return retVal;
-	}
-
-	ds.getTotalOffset = function(node, type, includeScroll){
-		return ds.abs(node, includeScroll)[(type == "top") ? "y" : "x"];
-	}
-
-	ds.getAbsoluteX = ds.totalOffsetLeft = function(node, includeScroll){
-		return ds.getTotalOffset(node, "left", includeScroll);
-	}
-
-	ds.getAbsoluteY = ds.totalOffsetTop = function(node, includeScroll){
-		return ds.getTotalOffset(node, "top", includeScroll);
-	}
-
-	ds.styleSheet = null;
-
-	// FIXME: this is a really basic stub for adding and removing cssRules, but
-	// it assumes that you know the index of the cssRule that you want to add 
-	// or remove, making it less than useful.  So we need something that can 
-	// search for the selector that you you want to remove.
-	ds.insertCssRule = function(selector, declaration, index) {
-		if (!ds.styleSheet) {
-			if (document.createStyleSheet) { // IE
-				ds.styleSheet = document.createStyleSheet();
-			} else if (document.styleSheets[0]) { // rest
-				// FIXME: should create a new style sheet here
-				// fall back on an exsiting style sheet
-				ds.styleSheet = document.styleSheets[0];
-			} else { return null; } // fail
-		}
-
-		if (arguments.length < 3) { // index may == 0
-			if (ds.styleSheet.cssRules) { // W3
-				index = ds.styleSheet.cssRules.length;
-			} else if (ds.styleSheet.rules) { // IE
-				index = ds.styleSheet.rules.length;
-			} else { return null; } // fail
-		}
-
-		if (ds.styleSheet.insertRule) { // W3
-			var rule = selector + " { " + declaration + " }";
-			return ds.styleSheet.insertRule(rule, index);
-		} else if (ds.styleSheet.addRule) { // IE
-			return ds.styleSheet.addRule(selector, declaration, index);
-		} else { return null; } // fail
-	}
-
-	ds.removeCssRule = function(index){
-		if(!ds.styleSheet){
-			dojo.debug("no stylesheet defined for removing rules");
-			return false;
-		}
-		if(h.ie){
-			if(!index){
-				index = ds.styleSheet.rules.length;
-				ds.styleSheet.removeRule(index);
-			}
-		}else if(document.styleSheets[0]){
-			if(!index){
-				index = ds.styleSheet.cssRules.length;
-			}
-			ds.styleSheet.deleteRule(index);
-		}
-		return true;
-	}
-
-	// calls css by XmlHTTP and inserts it into DOM as <style [widgetType="widgetType"]> *downloaded cssText*</style>
-	ds.insertCssFile = function(URI, doc, checkDuplicates){
-		if(!URI){ return; }
-		if(!doc){ doc = document; }
-		var cssStr = dojo.hostenv.getText(URI);
-		cssStr = ds.fixPathsInCssText(cssStr, URI);
-
-		if(checkDuplicates){
-			var styles = doc.getElementsByTagName("style");
-			var cssText = "";
-			for(var i = 0; i<styles.length; i++){
-				cssText = (styles[i].styleSheet && styles[i].styleSheet.cssText) ? styles[i].styleSheet.cssText : styles[i].innerHTML;
-				if(cssStr == cssText){ return; }
-			}
-		}
-
-		var style = ds.insertCssText(cssStr);
-		// insert custom attribute ex dbgHref="../foo.css" usefull when debugging in DOM inspectors, no?
-		if(style && djConfig.isDebug){
-			style.setAttribute("dbgHref", URI);
-		}
-		return style
-	}
-
-	// DomNode Style  = insertCssText(String ".dojoMenu {color: green;}"[, DomDoc document, dojo.uri.Uri Url ])
-	ds.insertCssText = function(cssStr, doc, URI){
-		if(!cssStr){ return; }
-		if(!doc){ doc = document; }
-		if(URI){// fix paths in cssStr
-			cssStr = ds.fixPathsInCssText(cssStr, URI);
-		}
-		var style = doc.createElement("style");
-		style.setAttribute("type", "text/css");
-		// IE is b0rken enough to require that we add the element to the doc
-		// before changing it's properties
-		var head = doc.getElementsByTagName("head")[0];
-		if(!head){ // must have a head tag 
-			dojo.debug("No head tag in document, aborting styles");
-			return;
-		}else{
-			head.appendChild(style);
-		}
-		if(style.styleSheet){// IE
-			style.styleSheet.cssText = cssStr;
-		}else{ // w3c
-			var cssText = doc.createTextNode(cssStr);
-			style.appendChild(cssText);
-		}
-		return style;
-	}
-
-	// String cssText = fixPathsInCssText(String cssStr, dojo.uri.Uri URI)
-	// usage: cssText comes from dojoroot/src/widget/templates/HtmlFoobar.css
-	// 	it has .dojoFoo { background-image: url(images/bar.png);} 
-	//	then uri should point to dojoroot/src/widget/templates/
-	ds.fixPathsInCssText = function(cssStr, URI){
-		if(!cssStr || !URI){ return; }
-		var pos = 0; var str = ""; var url = "";
-		while(pos!=-1){
-			pos = 0;url = "";
-			pos = cssStr.indexOf("url(", pos);
-			if(pos<0){ break; }
-			str += cssStr.slice(0,pos+4);
-			cssStr = cssStr.substring(pos+4, cssStr.length);
-			url += cssStr.match(/^[\t\s\w()\/.\\'"-:#=&?]*\)/)[0]; // url string
-			cssStr = cssStr.substring(url.length-1, cssStr.length); // remove url from css string til next loop
-			url = url.replace(/^[\s\t]*(['"]?)([\w()\/.\\'"-:#=&?]*)\1[\s\t]*?\)/,"$2"); // clean string
-			if(url.search(/(file|https?|ftps?):\/\//)==-1){
-				url = (new dojo.uri.Uri(URI,url).toString());
-			}
-			str += url;
-		};
-		return str+cssStr;
-	}
-
-	ds.getBackgroundColor = function(node) {
-		node = dojo.byId(node);
-		var color;
-		do{
-			color = ds.getStyle(node, "background-color");
-			// Safari doesn't say "transparent"
-			if(color.toLowerCase() == "rgba(0, 0, 0, 0)") { color = "transparent"; }
-			if(node == document.getElementsByTagName("body")[0]) { node = null; break; }
-			node = node.parentNode;
-		}while(node && dojo.lang.inArray(color, ["transparent", ""]));
-		if(color == "transparent"){
-			color = [255, 255, 255, 0];
-		}else{
-			color = dojo.graphics.color.extractRGB(color);
-		}
-		return color;
-	}
-
-	ds.getComputedStyle = function(node, cssSelector, inValue){
-		node = dojo.byId(node);
-		// cssSelector may actually be in camel case, so force selector version
-		var cssSelector = ds.toSelectorCase(cssSelector);
-		var property = ds.toCamelCase(cssSelector);
-		if(!node || !node.style){
-			return inValue;
-		}else if(document.defaultView){ // W3, gecko, KHTML
-			try{			
-				var cs = document.defaultView.getComputedStyle(node, "");
-				if (cs){ 
-					return cs.getPropertyValue(cssSelector);
-				} 
-			}catch(e){ // reports are that Safari can throw an exception above
-				if (node.style.getPropertyValue){ // W3
-					return node.style.getPropertyValue(cssSelector);
-				}else return inValue;
-			}
-		}else if(node.currentStyle){ // IE
-			return node.currentStyle[property];
-		}if(node.style.getPropertyValue){ // W3
-			return node.style.getPropertyValue(cssSelector);
-		}else{
-			return inValue;
-		}
-	}
-
-	/** 
-	 * Retrieve a property value from a node's style object.
-	 */
-	ds.getStyleProperty = function(node, cssSelector){
-		node = dojo.byId(node);
-		// FIXME: should we use node.style.getPropertyValue over style[property]?
-		// style[property] works in all (modern) browsers, getPropertyValue is W3 but not supported in IE
-		// FIXME: what about runtimeStyle?
-		return (node && node.style ? node.style[ds.toCamelCase(cssSelector)] : undefined);
-	}
-
-	/** 
-	 * Retrieve a property value from a node's style object.
-	 */
-	ds.getStyle = function(node, cssSelector){
-		var value = ds.getStyleProperty(node, cssSelector);
-		return (value ? value : ds.getComputedStyle(node, cssSelector));
-	}
-
-	ds.setStyle = function(node, cssSelector, value){
-		node = dojo.byId(node);
-		if(node && node.style){
-			var camelCased = ds.toCamelCase(cssSelector);
-			node.style[camelCased] = value;
-		}
-	}
-
-	ds.toCamelCase = function(selector) {
-		var arr = selector.split('-'), cc = arr[0];
-		for(var i = 1; i < arr.length; i++) {
-			cc += arr[i].charAt(0).toUpperCase() + arr[i].substring(1);
-		}
-		return cc;		
-	}
-
-	ds.toSelectorCase = function(selector) {
-		return selector.replace(/([A-Z])/g, "-$1" ).toLowerCase() ;
-	}
-
-	/* float between 0.0 (transparent) and 1.0 (opaque) */
-	ds.setOpacity = function setOpacity(node, opacity, dontFixOpacity) {
-		node = dojo.byId(node);
-		if(!dontFixOpacity){
-			if( opacity >= 1.0){
-				if(h.ie){
-					ds.clearOpacity(node);
-					return;
-				}else{
-					opacity = 0.999999;
-				}
-			}else if( opacity < 0.0){ opacity = 0; }
-		}
-		if(h.ie){
-			if(node.nodeName.toLowerCase() == "tr"){
-				// FIXME: is this too naive? will we get more than we want?
-				var tds = node.getElementsByTagName("td");
-				for(var x=0; x<tds.length; x++){
-					tds[x].style.filter = "Alpha(Opacity="+opacity*100+")";
-				}
-			}
-			node.style.filter = "Alpha(Opacity="+opacity*100+")";
-		}else if(h.moz){
-			node.style.opacity = opacity; // ffox 1.0 directly supports "opacity"
-			node.style.MozOpacity = opacity;
-		}else if(h.safari){
-			node.style.opacity = opacity; // 1.3 directly supports "opacity"
-			node.style.KhtmlOpacity = opacity;
-		}else{
-			node.style.opacity = opacity;
-		}
-	}
-		
-	ds.getOpacity = function getOpacity (node){
-		node = dojo.byId(node);
-		if(h.ie){
-			var opac = (node.filters && node.filters.alpha &&
-				typeof node.filters.alpha.opacity == "number"
-				? node.filters.alpha.opacity : 100) / 100;
-		}else{
-			var opac = node.style.opacity || node.style.MozOpacity ||
-				node.style.KhtmlOpacity || 1;
-		}
-		return opac >= 0.999999 ? 1.0 : Number(opac);
-	}
-
-	ds.clearOpacity = function clearOpacity(node){
-		node = dojo.byId(node);
-		var ns = node.style;
-		if(h.ie){
-			try {
-				if( node.filters && node.filters.alpha ){
-					ns.filter = ""; // FIXME: may get rid of other filter effects
-				}
-			} catch(e) {
-				/*
-				 * IE7 gives error if node.filters not set;
-				 * don't know why or how to workaround (other than this)
-				 */
-			}
-		}else if(h.moz){
-			ns.opacity = 1;
-			ns.MozOpacity = 1;
-		}else if(h.safari){
-			ns.opacity = 1;
-			ns.KhtmlOpacity = 1;
-		}else{
-			ns.opacity = 1;
-		}
-	}
-
-	/** 
-	* Set the given style attributes for the node. 
-	* Patch submitted by Wolfram Kriesing, 22/03/2006.
-	*
-	* Ie. dojo.style.setStyleAttributes(myNode, "position:absolute; left:10px; top:10px;") 
-	* This just makes it easier to set a style directly without the need to  
-	* override it completely (as node.setAttribute() would). 
-	* If there is a dojo-method for an attribute, like for "opacity" there 
-	* is setOpacity, the dojo method is called instead. 
-	* For example: dojo.style.setStyleAttributes(myNode, "opacity: .4"); 
-	*  
-	* Additionally all the dojo.style.set* methods can also be used. 
-	* Ie. when attributes contains "outer-height: 10;" it will call dojo.style.setOuterHeight("10"); 
-	* 
-	* @param object The node to set the style attributes for. 
-	* @param string Ie. "position:absolute; left:10px; top:10px;" 
-	*/ 
-	ds.setStyleAttributes = function(node, attributes) { 
-		var methodMap={ 
-			"opacity":dojo.style.setOpacity,
-			"content-height":dojo.style.setContentHeight,
-			"content-width":dojo.style.setContentWidth,
-			"outer-height":dojo.style.setOuterHeight,
-			"outer-width":dojo.style.setOuterWidth 
-		} 
-
-		var splittedAttribs=attributes.replace(/(;)?\s*$/, "").split(";"); 
-		for(var i=0; i<splittedAttribs.length; i++){ 
-			var nameValue=splittedAttribs[i].split(":"); 
-			var name=nameValue[0].replace(/\s*$/, "").replace(/^\s*/, "").toLowerCase();
-			var value=nameValue[1].replace(/\s*$/, "").replace(/^\s*/, "");
-			if(dojo.lang.has(methodMap,name)) { 
-				methodMap[name](node,value); 
-			} else { 
-				node.style[dojo.style.toCamelCase(name)]=value; 
-			} 
-		} 
-	} 
-
-	ds._toggle = function(node, tester, setter){
-		node = dojo.byId(node);
-		setter(node, !tester(node));
-		return tester(node);
-	}
-
-	// show/hide are library constructs
-
-	// show() 
-	// if the node.style.display == 'none' then 
-	// set style.display to '' or the value cached by hide()
-	ds.show = function(node){
-		node = dojo.byId(node);
-		if(ds.getStyleProperty(node, 'display')=='none'){
-			ds.setStyle(node, 'display', (node.dojoDisplayCache||''));
-			node.dojoDisplayCache = undefined;	// cannot use delete on a node in IE6
-		}
-	}
-
-	// if the node.style.display == 'none' then 
-	// set style.display to '' or the value cached by hide()
-	ds.hide = function(node){
-		node = dojo.byId(node);
-		if(typeof node["dojoDisplayCache"] == "undefined"){ // it could == '', so we cannot say !node.dojoDisplayCount
-			var d = ds.getStyleProperty(node, 'display')
-			if(d!='none'){
-				node.dojoDisplayCache = d;
-			}
-		}
-		ds.setStyle(node, 'display', 'none');
-	}
-
-	// setShowing() calls show() if showing is true, hide() otherwise
-	ds.setShowing = function(node, showing){
-		ds[(showing ? 'show' : 'hide')](node);
-	}
-
-	// isShowing() is true if the node.style.display is not 'none'
-	// FIXME: returns true if node is bad, isHidden would be easier to make correct
-	ds.isShowing = function(node){
-		return (ds.getStyleProperty(node, 'display') != 'none');
-	}
-
-	// Call setShowing() on node with the complement of isShowing(), then return the new value of isShowing()
-	ds.toggleShowing = function(node){
-		return ds._toggle(node, ds.isShowing, ds.setShowing);
-	}
-
-	// display is a CSS concept
-
-	// Simple mapping of tag names to display values
-	// FIXME: simplistic 
-	ds.displayMap = { tr: '', td: '', th: '', img: 'inline', span: 'inline', input: 'inline', button: 'inline' };
-
-	// Suggest a value for the display property that will show 'node' based on it's tag
-	ds.suggestDisplayByTagName = function(node)
-	{
-		node = dojo.byId(node);
-		if(node && node.tagName){
-			var tag = node.tagName.toLowerCase();
-			return (tag in ds.displayMap ? ds.displayMap[tag] : 'block');
-		}
-	}
-
-	// setDisplay() sets the value of style.display to value of 'display' parameter if it is a string.
-	// Otherwise, if 'display' is false, set style.display to 'none'.
-	// Finally, set 'display' to a suggested display value based on the node's tag
-	ds.setDisplay = function(node, display){
-		ds.setStyle(node, 'display', (dojo.lang.isString(display) ? display : (display ? ds.suggestDisplayByTagName(node) : 'none')));
-	}
-
-	// isDisplayed() is true if the the computed display style for node is not 'none'
-	// FIXME: returns true if node is bad, isNotDisplayed would be easier to make correct
-	ds.isDisplayed = function(node){
-		return (ds.getComputedStyle(node, 'display') != 'none');
-	}
-
-	// Call setDisplay() on node with the complement of isDisplayed(), then
-	// return the new value of isDisplayed()
-	ds.toggleDisplay = function(node){
-		return ds._toggle(node, ds.isDisplayed, ds.setDisplay);
-	}
-
-	// visibility is a CSS concept
-
-	// setVisibility() sets the value of style.visibility to value of
-	// 'visibility' parameter if it is a string.
-	// Otherwise, if 'visibility' is false, set style.visibility to 'hidden'.
-	// Finally, set style.visibility to 'visible'.
-	ds.setVisibility = function(node, visibility){
-		ds.setStyle(node, 'visibility', (dojo.lang.isString(visibility) ? visibility : (visibility ? 'visible' : 'hidden')));
-	}
-
-	// isVisible() is true if the the computed visibility style for node is not 'hidden'
-	// FIXME: returns true if node is bad, isInvisible would be easier to make correct
-	ds.isVisible = function(node){
-		return (ds.getComputedStyle(node, 'visibility') != 'hidden');
-	}
-
-	// Call setVisibility() on node with the complement of isVisible(), then
-	// return the new value of isVisible()
-	ds.toggleVisibility = function(node){
-		return ds._toggle(node, ds.isVisible, ds.setVisibility);
-	}
-
-	// in: coordinate array [x,y,w,h] or dom node
-	// return: coordinate array
-	ds.toCoordinateArray = function(coords, includeScroll) {
-		if(dojo.lang.isArray(coords)){
-			// coords is already an array (of format [x,y,w,h]), just return it
-			while ( coords.length < 4 ) { coords.push(0); }
-			while ( coords.length > 4 ) { coords.pop(); }
-			var ret = coords;
-		} else {
-			// coords is an dom object (or dom object id); return it's coordinates
-			var node = dojo.byId(coords);
-			var pos = ds.getAbsolutePosition(node, includeScroll);
-			var ret = [
-				pos.x,
-				pos.y,
-				ds.getBorderBoxWidth(node),
-				ds.getBorderBoxHeight(node)
-			];
-		}
-		ret.x = ret[0];
-		ret.y = ret[1];
-		ret.w = ret[2];
-		ret.h = ret[3];
-		return ret;
-	};
+dojo.debugShallow=function(obj){
+};
+dojo.profile={start:function(){
+},end:function(){
+},stop:function(){
+},dump:function(){
+}};
+function dj_eval(_15){
+return dj_global.eval?dj_global.eval(_15):eval(_15);
+}
+dojo.unimplemented=function(_16,_17){
+var _18="'"+_16+"' not implemented";
+if(_17!=null){
+_18+=" "+_17;
+}
+dojo.raise(_18);
+};
+dojo.deprecated=function(_19,_1a,_1b){
+var _1c="DEPRECATED: "+_19;
+if(_1a){
+_1c+=" "+_1a;
+}
+if(_1b){
+_1c+=" -- will be removed in version: "+_1b;
+}
+dojo.debug(_1c);
+};
+dojo.render=(function(){
+function vscaffold(_1d,_1e){
+var tmp={capable:false,support:{builtin:false,plugin:false},prefixes:_1d};
+for(var i=0;i<_1e.length;i++){
+tmp[_1e[i]]=false;
+}
+return tmp;
+}
+return {name:"",ver:dojo.version,os:{win:false,linux:false,osx:false},html:vscaffold(["html"],["ie","opera","khtml","safari","moz"]),svg:vscaffold(["svg"],["corel","adobe","batik"]),vml:vscaffold(["vml"],["ie"]),swf:vscaffold(["Swf","Flash","Mm"],["mm"]),swt:vscaffold(["Swt"],["ibm"])};
 })();
-
-dojo.provide("dojo.html");
-
-dojo.require("dojo.lang.func");
-dojo.require("dojo.dom");
-dojo.require("dojo.style");
-dojo.require("dojo.string");
-
-dojo.lang.mixin(dojo.html, dojo.dom);
-dojo.lang.mixin(dojo.html, dojo.style);
-
-// FIXME: we are going to assume that we can throw any and every rendering
-// engine into the IE 5.x box model. In Mozilla, we do this w/ CSS.
-// Need to investigate for KHTML and Opera
-
-dojo.html.clearSelection = function(){
-	try{
-		if(window["getSelection"]){ 
-			if(dojo.render.html.safari){
-				// pulled from WebCore/ecma/kjs_window.cpp, line 2536
-				window.getSelection().collapse();
-			}else{
-				window.getSelection().removeAllRanges();
-			}
-		}else if(document.selection){
-			if(document.selection.empty){
-				document.selection.empty();
-			}else if(document.selection.clear){
-				document.selection.clear();
-			}
-		}
-		return true;
-	}catch(e){
-		dojo.debug(e);
-		return false;
-	}
+dojo.hostenv=(function(){
+var _21={isDebug:false,allowQueryConfig:false,baseScriptUri:"",baseRelativePath:"",libraryScriptUri:"",iePreventClobber:false,ieClobberMinimal:true,preventBackButtonFix:true,delayMozLoadingFix:false,searchIds:[],parseWidgets:true};
+if(typeof djConfig=="undefined"){
+djConfig=_21;
+}else{
+for(var _22 in _21){
+if(typeof djConfig[_22]=="undefined"){
+djConfig[_22]=_21[_22];
 }
-
-dojo.html.disableSelection = function(element){
-	element = dojo.byId(element)||document.body;
-	var h = dojo.render.html;
-	
-	if(h.mozilla){
-		element.style.MozUserSelect = "none";
-	}else if(h.safari){
-		element.style.KhtmlUserSelect = "none"; 
-	}else if(h.ie){
-		element.unselectable = "on";
-	}else{
-		return false;
-	}
-	return true;
 }
-
-dojo.html.enableSelection = function(element){
-	element = dojo.byId(element)||document.body;
-	
-	var h = dojo.render.html;
-	if(h.mozilla){ 
-		element.style.MozUserSelect = ""; 
-	}else if(h.safari){
-		element.style.KhtmlUserSelect = "";
-	}else if(h.ie){
-		element.unselectable = "off";
-	}else{
-		return false;
-	}
-	return true;
 }
-
-dojo.html.selectElement = function(element){
-	element = dojo.byId(element);
-	if(document.selection && document.body.createTextRange){ // IE
-		var range = document.body.createTextRange();
-		range.moveToElementText(element);
-		range.select();
-	}else if(window["getSelection"]){
-		var selection = window.getSelection();
-		// FIXME: does this work on Safari?
-		if(selection["selectAllChildren"]){ // Mozilla
-			selection.selectAllChildren(element);
-		}
-	}
+return {name_:"(unset)",version_:"(unset)",getName:function(){
+return this.name_;
+},getVersion:function(){
+return this.version_;
+},getText:function(uri){
+dojo.unimplemented("getText","uri="+uri);
+}};
+})();
+dojo.hostenv.getBaseScriptUri=function(){
+if(djConfig.baseScriptUri.length){
+return djConfig.baseScriptUri;
 }
-
-dojo.html.selectInputText = function(element){
-	element = dojo.byId(element);
-	if(document.selection && document.body.createTextRange){ // IE
-		var range = element.createTextRange();
-		range.moveStart("character", 0);
-		range.moveEnd("character", element.value.length);
-		range.select();
-	}else if(window["getSelection"]){
-		var selection = window.getSelection();
-		// FIXME: does this work on Safari?
-		element.setSelectionRange(0, element.value.length);
-	}
-	element.focus();
+var uri=new String(djConfig.libraryScriptUri||djConfig.baseRelativePath);
+if(!uri){
+dojo.raise("Nothing returned by getLibraryScriptUri(): "+uri);
 }
-
-
-dojo.html.isSelectionCollapsed = function(){
-	if(document["selection"]){ // IE
-		return document.selection.createRange().text == "";
-	}else if(window["getSelection"]){
-		var selection = window.getSelection();
-		if(dojo.lang.isString(selection)){ // Safari
-			return selection == "";
-		}else{ // Mozilla/W3
-			return selection.isCollapsed;
-		}
-	}
+var _25=uri.lastIndexOf("/");
+djConfig.baseScriptUri=djConfig.baseRelativePath;
+return djConfig.baseScriptUri;
+};
+(function(){
+var _26={pkgFileName:"__package__",loading_modules_:{},loaded_modules_:{},addedToLoadingCount:[],removedFromLoadingCount:[],inFlightCount:0,modulePrefixes_:{dojo:{name:"dojo",value:"src"}},setModulePrefix:function(_27,_28){
+this.modulePrefixes_[_27]={name:_27,value:_28};
+},moduleHasPrefix:function(_29){
+var mp=this.modulePrefixes_;
+return Boolean(mp[_29]&&mp[_29].value);
+},getModulePrefix:function(_2b){
+if(this.moduleHasPrefix(_2b)){
+return this.modulePrefixes_[_2b].value;
 }
-
-dojo.html.getEventTarget = function(evt){
-	if(!evt) { evt = window.event || {} };
-	var t = (evt.srcElement ? evt.srcElement : (evt.target ? evt.target : null));
-	while((t)&&(t.nodeType!=1)){ t = t.parentNode; }
-	return t;
+return _2b;
+},getTextStack:[],loadUriStack:[],loadedUris:[],post_load_:false,modulesLoadedListeners:[],unloadListeners:[],loadNotifying:false};
+for(var _2c in _26){
+dojo.hostenv[_2c]=_26[_2c];
 }
-
-dojo.html.getDocumentWidth = function(){
-	dojo.deprecated("dojo.html.getDocument*", "replaced by dojo.html.getViewport*", "0.4");
-	return dojo.html.getViewportWidth();
+})();
+dojo.hostenv.loadPath=function(_2d,_2e,cb){
+var uri;
+if(_2d.charAt(0)=="/"||_2d.match(/^\w+:/)){
+uri=_2d;
+}else{
+uri=this.getBaseScriptUri()+_2d;
 }
-
-dojo.html.getDocumentHeight = function(){
-	dojo.deprecated("dojo.html.getDocument*", "replaced by dojo.html.getViewport*", "0.4");
-	return dojo.html.getViewportHeight();
+if(djConfig.cacheBust&&dojo.render.html.capable){
+uri+="?"+String(djConfig.cacheBust).replace(/\W+/g,"");
 }
-
-dojo.html.getDocumentSize = function(){
-	dojo.deprecated("dojo.html.getDocument*", "replaced of dojo.html.getViewport*", "0.4");
-	return dojo.html.getViewportSize();
+try{
+return !_2e?this.loadUri(uri,cb):this.loadUriAndCheck(uri,_2e,cb);
 }
-
-dojo.html.getViewportWidth = function(){
-	var w = 0;
-
-	if(window.innerWidth){
-		w = window.innerWidth;
-	}
-
-	if(dojo.exists(document, "documentElement.clientWidth")){
-		// IE6 Strict
-		var w2 = document.documentElement.clientWidth;
-		// this lets us account for scrollbars
-		if(!w || w2 && w2 < w) {
-			w = w2;
-		}
-		return w;
-	}
-
-	if(document.body){
-		// IE
-		return document.body.clientWidth;
-	}
-
-	return 0;
+catch(e){
+dojo.debug(e);
+return false;
 }
-
-dojo.html.getViewportHeight = function(){
-	if (window.innerHeight){
-		return window.innerHeight;
-	}
-
-	if (dojo.exists(document, "documentElement.clientHeight")){
-		// IE6 Strict
-		return document.documentElement.clientHeight;
-	}
-
-	if (document.body){
-		// IE
-		return document.body.clientHeight;
-	}
-
-	return 0;
+};
+dojo.hostenv.loadUri=function(uri,cb){
+if(this.loadedUris[uri]){
+return true;
 }
-
-dojo.html.getViewportSize = function(){
-	var ret = [dojo.html.getViewportWidth(), dojo.html.getViewportHeight()];
-	ret.w = ret[0];
-	ret.h = ret[1];
-	return ret;
+var _33=this.getText(uri,null,true);
+if(!_33){
+return false;
 }
-
-dojo.html.getScrollTop = function(){
-	return window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+this.loadedUris[uri]=true;
+if(cb){
+_33="("+_33+")";
 }
-
-dojo.html.getScrollLeft = function(){
-	return window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0;
+var _34=dj_eval(_33);
+if(cb){
+cb(_34);
 }
-
-dojo.html.getScrollOffset = function(){
-	var off = [dojo.html.getScrollLeft(), dojo.html.getScrollTop()];
-	off.x = off[0];
-	off.y = off[1];
-	return off;
+return true;
+};
+dojo.hostenv.loadUriAndCheck=function(uri,_36,cb){
+var ok=true;
+try{
+ok=this.loadUri(uri,cb);
 }
-
-dojo.html.getParentOfType = function(node, type){
-	dojo.deprecated("dojo.html.getParentOfType", "replaced by dojo.html.getParentByType*", "0.4");
-	return dojo.html.getParentByType(node, type);
+catch(e){
+dojo.debug("failed loading ",uri," with error: ",e);
 }
-
-dojo.html.getParentByType = function(node, type) {
-	var parent = dojo.byId(node);
-	type = type.toLowerCase();
-	while((parent)&&(parent.nodeName.toLowerCase()!=type)){
-		if(parent==(document["body"]||document["documentElement"])){
-			return null;
-		}
-		parent = parent.parentNode;
-	}
-	return parent;
+return Boolean(ok&&this.findModule(_36,false));
+};
+dojo.loaded=function(){
+};
+dojo.unloaded=function(){
+};
+dojo.hostenv.loaded=function(){
+this.loadNotifying=true;
+this.post_load_=true;
+var mll=this.modulesLoadedListeners;
+for(var x=0;x<mll.length;x++){
+mll[x]();
 }
-
-// RAR: this function comes from nwidgets and is more-or-less unmodified.
-// We should probably look ant Burst and f(m)'s equivalents
-dojo.html.getAttribute = function(node, attr){
-	node = dojo.byId(node);
-	// FIXME: need to add support for attr-specific accessors
-	if((!node)||(!node.getAttribute)){
-		// if(attr !== 'nwType'){
-		//	alert("getAttr of '" + attr + "' with bad node"); 
-		// }
-		return null;
-	}
-	var ta = typeof attr == 'string' ? attr : new String(attr);
-
-	// first try the approach most likely to succeed
-	var v = node.getAttribute(ta.toUpperCase());
-	if((v)&&(typeof v == 'string')&&(v!="")){ return v; }
-
-	// try returning the attributes value, if we couldn't get it as a string
-	if(v && v.value){ return v.value; }
-
-	// this should work on Opera 7, but it's a little on the crashy side
-	if((node.getAttributeNode)&&(node.getAttributeNode(ta))){
-		return (node.getAttributeNode(ta)).value;
-	}else if(node.getAttribute(ta)){
-		return node.getAttribute(ta);
-	}else if(node.getAttribute(ta.toLowerCase())){
-		return node.getAttribute(ta.toLowerCase());
-	}
-	return null;
+this.modulesLoadedListeners=[];
+this.loadNotifying=false;
+dojo.loaded();
+};
+dojo.hostenv.unloaded=function(){
+var mll=this.unloadListeners;
+while(mll.length){
+(mll.pop())();
 }
-	
-/**
- *	Determines whether or not the specified node carries a value for the
- *	attribute in question.
- */
-dojo.html.hasAttribute = function(node, attr){
-	node = dojo.byId(node);
-	return dojo.html.getAttribute(node, attr) ? true : false;
-}
-	
-/**
- * Returns the string value of the list of CSS classes currently assigned
- * directly to the node in question. Returns an empty string if no class attribute
- * is found;
- */
-dojo.html.getClass = function(node){
-	node = dojo.byId(node);
-	if(!node){ return ""; }
-	var cs = "";
-	if(node.className){
-		cs = node.className;
-	}else if(dojo.html.hasAttribute(node, "class")){
-		cs = dojo.html.getAttribute(node, "class");
-	}
-	return dojo.string.trim(cs);
-}
-
-/**
- * Returns an array of CSS classes currently assigned
- * directly to the node in question. Returns an empty array if no classes
- * are found;
- */
-dojo.html.getClasses = function(node) {
-	var c = dojo.html.getClass(node);
-	return (c == "") ? [] : c.split(/\s+/g);
-}
-
-/**
- * Returns whether or not the specified classname is a portion of the
- * class list currently applied to the node. Does not cover cascaded
- * styles, only classes directly applied to the node.
- */
-dojo.html.hasClass = function(node, classname){
-	return dojo.lang.inArray(dojo.html.getClasses(node), classname);
-}
-
-/**
- * Adds the specified class to the beginning of the class list on the
- * passed node. This gives the specified class the highest precidence
- * when style cascading is calculated for the node. Returns true or
- * false; indicating success or failure of the operation, respectively.
- */
-dojo.html.prependClass = function(node, classStr){
-	classStr += " " + dojo.html.getClass(node);
-	return dojo.html.setClass(node, classStr);
-}
-
-/**
- * Adds the specified class to the end of the class list on the
- *	passed &node;. Returns &true; or &false; indicating success or failure.
- */
-dojo.html.addClass = function(node, classStr){
-	if (dojo.html.hasClass(node, classStr)) {
-	  return false;
-	}
-	classStr = dojo.string.trim(dojo.html.getClass(node) + " " + classStr);
-	return dojo.html.setClass(node, classStr);
-}
-
-/**
- *	Clobbers the existing list of classes for the node, replacing it with
- *	the list given in the 2nd argument. Returns true or false
- *	indicating success or failure.
- */
-dojo.html.setClass = function(node, classStr){
-	node = dojo.byId(node);
-	var cs = new String(classStr);
-	try{
-		if(typeof node.className == "string"){
-			node.className = cs;
-		}else if(node.setAttribute){
-			node.setAttribute("class", classStr);
-			node.className = cs;
-		}else{
-			return false;
-		}
-	}catch(e){
-		dojo.debug("dojo.html.setClass() failed", e);
-	}
-	return true;
-}
-
-/**
- * Removes the className from the node;. Returns
- * true or false indicating success or failure.
- */ 
-dojo.html.removeClass = function(node, classStr, allowPartialMatches){
-	var classStr = dojo.string.trim(new String(classStr));
-
-	try{
-		var cs = dojo.html.getClasses(node);
-		var nca	= [];
-		if(allowPartialMatches){
-			for(var i = 0; i<cs.length; i++){
-				if(cs[i].indexOf(classStr) == -1){ 
-					nca.push(cs[i]);
-				}
-			}
-		}else{
-			for(var i=0; i<cs.length; i++){
-				if(cs[i] != classStr){ 
-					nca.push(cs[i]);
-				}
-			}
-		}
-		dojo.html.setClass(node, nca.join(" "));
-	}catch(e){
-		dojo.debug("dojo.html.removeClass() failed", e);
-	}
-
-	return true;
-}
-
-/**
- * Replaces 'oldClass' and adds 'newClass' to node
- */
-dojo.html.replaceClass = function(node, newClass, oldClass) {
-	dojo.html.removeClass(node, oldClass);
-	dojo.html.addClass(node, newClass);
-}
-
-// Enum type for getElementsByClass classMatchType arg:
-dojo.html.classMatchType = {
-	ContainsAll : 0, // all of the classes are part of the node's class (default)
-	ContainsAny : 1, // any of the classes are part of the node's class
-	IsOnly : 2 // only all of the classes are part of the node's class
-}
-
-
-/**
- * Returns an array of nodes for the given classStr, children of a
- * parent, and optionally of a certain nodeType
- */
-dojo.html.getElementsByClass = function(classStr, parent, nodeType, classMatchType, useNonXpath){
-	parent = dojo.byId(parent) || document;
-	var classes = classStr.split(/\s+/g);
-	var nodes = [];
-	if( classMatchType != 1 && classMatchType != 2 ) classMatchType = 0; // make it enum
-	var reClass = new RegExp("(\\s|^)((" + classes.join(")|(") + "))(\\s|$)");
-	var candidateNodes = [];
-	
-	if(!useNonXpath && document.evaluate) { // supports dom 3 xpath
-		var xpath = "//" + (nodeType || "*") + "[contains(";
-		if(classMatchType != dojo.html.classMatchType.ContainsAny){
-			xpath += "concat(' ',@class,' '), ' " +
-			classes.join(" ') and contains(concat(' ',@class,' '), ' ") +
-			" ')]";
-		}else{
-			xpath += "concat(' ',@class,' '), ' " +
-			classes.join(" ')) or contains(concat(' ',@class,' '), ' ") +
-			" ')]";
-		}
-		var xpathResult = document.evaluate(xpath, parent, null, XPathResult.ANY_TYPE, null);
-		var result = xpathResult.iterateNext();
-		while(result){
-			try{
-				candidateNodes.push(result);
-				result = xpathResult.iterateNext();
-			}catch(e){ break; }
-		}
-		return candidateNodes;
-	}else{
-		if(!nodeType){
-			nodeType = "*";
-		}
-		candidateNodes = parent.getElementsByTagName(nodeType);
-
-		var node, i = 0;
-		outer:
-		while(node = candidateNodes[i++]){
-			var nodeClasses = dojo.html.getClasses(node);
-			if(nodeClasses.length == 0){ continue outer; }
-			var matches = 0;
-	
-			for(var j = 0; j < nodeClasses.length; j++){
-				if(reClass.test(nodeClasses[j])){
-					if(classMatchType == dojo.html.classMatchType.ContainsAny){
-						nodes.push(node);
-						continue outer;
-					}else{
-						matches++;
-					}
-				}else{
-					if(classMatchType == dojo.html.classMatchType.IsOnly){
-						continue outer;
-					}
-				}
-			}
-	
-			if(matches == classes.length){
-				if(	(classMatchType == dojo.html.classMatchType.IsOnly)&&
-					(matches == nodeClasses.length)){
-					nodes.push(node);
-				}else if(classMatchType == dojo.html.classMatchType.ContainsAll){
-					nodes.push(node);
-				}
-			}
-		}
-		return nodes;
-	}
-}
-
-dojo.html.getElementsByClassName = dojo.html.getElementsByClass;
-
-/**
- * Returns the mouse position relative to the document (not the viewport).
- * For example, if you have a document that is 10000px tall,
- * but your browser window is only 100px tall,
- * if you scroll to the bottom of the document and call this function it
- * will return {x: 0, y: 10000}
- */
-dojo.html.getCursorPosition = function(e){
-	e = e || window.event;
-	var cursor = {x:0, y:0};
-	if(e.pageX || e.pageY){
-		cursor.x = e.pageX;
-		cursor.y = e.pageY;
-	}else{
-		var de = document.documentElement;
-		var db = document.body;
-		cursor.x = e.clientX + ((de||db)["scrollLeft"]) - ((de||db)["clientLeft"]);
-		cursor.y = e.clientY + ((de||db)["scrollTop"]) - ((de||db)["clientTop"]);
-	}
-	return cursor;
-}
-
-dojo.html.overElement = function(element, e){
-	element = dojo.byId(element);
-	var mouse = dojo.html.getCursorPosition(e);
-
-	with(dojo.html){
-		var top = getAbsoluteY(element, true);
-		var bottom = top + getInnerHeight(element);
-		var left = getAbsoluteX(element, true);
-		var right = left + getInnerWidth(element);
-	}
-	
-	return (mouse.x >= left && mouse.x <= right &&
-		mouse.y >= top && mouse.y <= bottom);
-}
-
-dojo.html.setActiveStyleSheet = function(title){
-	var i = 0, a, els = document.getElementsByTagName("link");
-	while (a = els[i++]) {
-		if(a.getAttribute("rel").indexOf("style") != -1 && a.getAttribute("title")){
-			a.disabled = true;
-			if (a.getAttribute("title") == title) { a.disabled = false; }
-		}
-	}
-}
-
-dojo.html.getActiveStyleSheet = function(){
-	var i = 0, a, els = document.getElementsByTagName("link");
-	while (a = els[i++]) {
-		if (a.getAttribute("rel").indexOf("style") != -1 &&
-			a.getAttribute("title") && !a.disabled) { return a.getAttribute("title"); }
-	}
-	return null;
-}
-
-dojo.html.getPreferredStyleSheet = function(){
-	var i = 0, a, els = document.getElementsByTagName("link");
-	while (a = els[i++]) {
-		if(a.getAttribute("rel").indexOf("style") != -1
-			&& a.getAttribute("rel").indexOf("alt") == -1
-			&& a.getAttribute("title")) { return a.getAttribute("title"); }
-	}
-	return null;
-}
-
-dojo.html.body = function(){
-	// Note: document.body is not defined for a strict xhtml document
-	return document.body || document.getElementsByTagName("body")[0];
-}
-
-/**
- * Like dojo.dom.isTag, except case-insensitive
-**/
-dojo.html.isTag = function(node /* ... */) {
-	node = dojo.byId(node);
-	if(node && node.tagName) {
-		var arr = dojo.lang.map(dojo.lang.toArray(arguments, 1),
-			function(a) { return String(a).toLowerCase(); });
-		return arr[ dojo.lang.find(node.tagName.toLowerCase(), arr) ] || "";
-	}
-	return "";
-}
-
-dojo.html.copyStyle = function(target, source){
-	// work around for opera which doesn't have cssText, and for IE which fails on setAttribute 
-	if(dojo.lang.isUndefined(source.style.cssText)){ 
-		target.setAttribute("style", source.getAttribute("style")); 
-	}else{
-		target.style.cssText = source.style.cssText; 
-	}
-	dojo.html.addClass(target, dojo.html.getClass(source));
-}
-
-dojo.html._callExtrasDeprecated = function(inFunc, args) {
-	var module = "dojo.html.extras";
-	dojo.deprecated("dojo.html." + inFunc, "moved to " + module, "0.4");
-	dojo["require"](module); // weird syntax to fool list-profile-deps (build)
-	return dojo.html[inFunc].apply(dojo.html, args);
-}
-
-dojo.html.createNodesFromText = function() {
-	return dojo.html._callExtrasDeprecated('createNodesFromText', arguments);
-}
-
-dojo.html.gravity = function() {
-	return dojo.html._callExtrasDeprecated('gravity', arguments);
-}
-
-dojo.html.placeOnScreen = function() {
-	return dojo.html._callExtrasDeprecated('placeOnScreen', arguments);
-}
-
-dojo.html.placeOnScreenPoint = function() {
-	return dojo.html._callExtrasDeprecated('placeOnScreenPoint', arguments);
-}
-
-dojo.html.renderedTextContent = function() {
-	return dojo.html._callExtrasDeprecated('renderedTextContent', arguments);
-}
-
-dojo.html.BackgroundIframe = function() {
-	return dojo.html._callExtrasDeprecated('BackgroundIframe', arguments);
-}
-
-dojo.provide("dojo.lfx.html");
-dojo.require("dojo.lfx.Animation");
-
-dojo.require("dojo.html");
-
-dojo.lfx.html._byId = function(nodes){
-	if(!nodes){ return []; }
-	if(dojo.lang.isArray(nodes)){
-		if(!nodes.alreadyChecked){
-			var n = [];
-			dojo.lang.forEach(nodes, function(node){
-				n.push(dojo.byId(node));
-			});
-			n.alreadyChecked = true;
-			return n;
-		}else{
-			return nodes;
-		}
-	}else{
-		var n = [];
-		n.push(dojo.byId(nodes));
-		n.alreadyChecked = true;
-		return n;
-	}
-}
-
-dojo.lfx.html.propertyAnimation = function(	/*DOMNode*/ nodes, 
-											/*Array*/ propertyMap, 
-											/*int*/ duration,
-											/*function*/ easing){
-	nodes = dojo.lfx.html._byId(nodes);
-	
-	if(nodes.length==1){
-		// FIXME: we're only supporting start-value filling when one node is
-		// passed
-		
-		dojo.lang.forEach(propertyMap, function(prop){
-			if(typeof prop["start"] == "undefined"){
-				if(prop.property != "opacity"){
-					prop.start = parseInt(dojo.style.getComputedStyle(nodes[0], prop.property));
-				}else{
-					prop.start = dojo.style.getOpacity(nodes[0]);
-				}
-			}
-		});
-	}
-
-	var coordsAsInts = function(coords){
-		var cints = new Array(coords.length);
-		for(var i = 0; i < coords.length; i++){
-			cints[i] = Math.round(coords[i]);
-		}
-		return cints;
-	}
-	var setStyle = function(n, style){
-		n = dojo.byId(n);
-		if(!n || !n.style){ return; }
-		for(var s in style){
-			if(s == "opacity"){
-				dojo.style.setOpacity(n, style[s]);
-			}else{
-				n.style[s] = style[s];
-			}
-		}
-	}
-	var propLine = function(properties){
-		this._properties = properties;
-		this.diffs = new Array(properties.length);
-		dojo.lang.forEach(properties, function(prop, i){
-			// calculate the end - start to optimize a bit
-			if(dojo.lang.isArray(prop.start)){
-				// don't loop through the arrays
-				this.diffs[i] = null;
-			}else if(prop.start instanceof dojo.graphics.color.Color){
-				// save these so we don't have to call toRgb() every getValue() call
-				prop.startRgb = prop.start.toRgb();
-				prop.endRgb = prop.end.toRgb();
-			}else{
-				this.diffs[i] = prop.end - prop.start;
-			}
-		}, this);
-		this.getValue = function(n){
-			var ret = {};
-			dojo.lang.forEach(this._properties, function(prop, i){
-				var value = null;
-				if(dojo.lang.isArray(prop.start)){
-					// FIXME: what to do here?
-				}else if(prop.start instanceof dojo.graphics.color.Color){
-					value = (prop.units||"rgb") + "(";
-					for(var j = 0 ; j < prop.startRgb.length ; j++){
-						value += Math.round(((prop.endRgb[j] - prop.startRgb[j]) * n) + prop.startRgb[j]) + (j < prop.startRgb.length - 1 ? "," : "");
-					}
-					value += ")";
-				}else{
-					value = ((this.diffs[i]) * n) + prop.start + (prop.property != "opacity" ? prop.units||"px" : "");
-				}
-				ret[dojo.style.toCamelCase(prop.property)] = value;
-			}, this);
-			return ret;
-		}
-	}
-	
-	var anim = new dojo.lfx.Animation({
-		onAnimate: function(propValues){
-			dojo.lang.forEach(nodes, function(node){
-				setStyle(node, propValues);
-			});
-		} }, duration, new propLine(propertyMap), easing);
-	
-	return anim;
-}
-
-dojo.lfx.html._makeFadeable = function(nodes){
-	var makeFade = function(node){
-		if(dojo.render.html.ie){
-			// only set the zoom if the "tickle" value would be the same as the
-			// default
-			if( (node.style.zoom.length == 0) &&
-				(dojo.style.getStyle(node, "zoom") == "normal") ){
-				// make sure the node "hasLayout"
-				// NOTE: this has been tested with larger and smaller user-set text
-				// sizes and works fine
-				node.style.zoom = "1";
-				// node.style.zoom = "normal";
-			}
-			// don't set the width to auto if it didn't already cascade that way.
-			// We don't want to f anyones designs
-			if(	(node.style.width.length == 0) &&
-				(dojo.style.getStyle(node, "width") == "auto") ){
-				node.style.width = "auto";
-			}
-		}
-	}
-	if(dojo.lang.isArrayLike(nodes)){
-		dojo.lang.forEach(nodes, makeFade);
-	}else{
-		makeFade(nodes);
-	}
-}
-
-dojo.lfx.html.fadeIn = function(nodes, duration, easing, callback){
-	nodes = dojo.lfx.html._byId(nodes);
-	dojo.lfx.html._makeFadeable(nodes);
-	var anim = dojo.lfx.propertyAnimation(nodes, [
-		{	property: "opacity",
-			start: dojo.style.getOpacity(nodes[0]),
-			end: 1 } ], duration, easing);
-	if(callback){
-		var oldOnEnd = (anim["onEnd"]) ? dojo.lang.hitch(anim, "onEnd") : function(){};
-		anim.onEnd = function(){ oldOnEnd(); callback(nodes, anim); };
-	}
-
-	return anim;
-}
-
-dojo.lfx.html.fadeOut = function(nodes, duration, easing, callback){
-	nodes = dojo.lfx.html._byId(nodes);
-	dojo.lfx.html._makeFadeable(nodes);
-	var anim = dojo.lfx.propertyAnimation(nodes, [
-		{	property: "opacity",
-			start: dojo.style.getOpacity(nodes[0]),
-			end: 0 } ], duration, easing);
-	if(callback){
-		var oldOnEnd = (anim["onEnd"]) ? dojo.lang.hitch(anim, "onEnd") : function(){};
-		anim.onEnd = function(){ oldOnEnd(); callback(nodes, anim); };
-	}
-
-	return anim;
-}
-
-dojo.lfx.html.fadeShow = function(nodes, duration, easing, callback){
-	var anim = dojo.lfx.html.fadeIn(nodes, duration, easing, callback);
-	var oldBb = (anim["beforeBegin"]) ? dojo.lang.hitch(anim, "beforeBegin") : function(){};
-	anim.beforeBegin = function(){ 
-		oldBb();
-		if(dojo.lang.isArrayLike(nodes)){
-			dojo.lang.forEach(nodes, dojo.style.show);
-		}else{
-			dojo.style.show(nodes);
-		}
-	};
-	
-	return anim;
-}
-
-dojo.lfx.html.fadeHide = function(nodes, duration, easing, callback){
-	var anim = dojo.lfx.html.fadeOut(nodes, duration, easing, function(){
-		if(dojo.lang.isArrayLike(nodes)){
-			dojo.lang.forEach(nodes, dojo.style.hide);
-		}else{
-			dojo.style.hide(nodes);
-		}
-		if(callback){ callback(nodes, anim); }
-	});
-	
-	return anim;
-}
-
-dojo.lfx.html.wipeIn = function(nodes, duration, easing, callback){
-	nodes = dojo.lfx.html._byId(nodes);
-	var anims = [];
-
-	dojo.lang.forEach(nodes, function(node){
-		var overflow = dojo.style.getStyle(node, "overflow");
-		if(overflow == "visible") {
-			node.style.overflow = "hidden";
-		}
-		node.style.height = "0px";
-		dojo.style.show(node);
-		
-		var anim = dojo.lfx.propertyAnimation(node,
-			[{	property: "height",
-				start: 0,
-				end: node.scrollHeight }], duration, easing);
-		
-		var oldOnEnd = (anim["onEnd"]) ? dojo.lang.hitch(anim, "onEnd") : function(){};
-		anim.onEnd = function(){ 
-			oldOnEnd(); 
-			node.style.overflow = overflow;
-			node.style.height = "auto";
-			if(callback){ callback(node, anim); }
-		};
-		anims.push(anim);
-	});
-	
-	if(nodes.length > 1){ return dojo.lfx.combine(anims); }
-	else{ return anims[0]; }
-}
-
-dojo.lfx.html.wipeOut = function(nodes, duration, easing, callback){
-	nodes = dojo.lfx.html._byId(nodes);
-	var anims = [];
-	
-	dojo.lang.forEach(nodes, function(node){
-		var overflow = dojo.style.getStyle(node, "overflow");
-		if(overflow == "visible") {
-			node.style.overflow = "hidden";
-		}
-		dojo.style.show(node);
-
-		var anim = dojo.lfx.propertyAnimation(node,
-			[{	property: "height",
-				start: dojo.style.getContentBoxHeight(node),
-				end: 0 } ], duration, easing);
-		
-		var oldOnEnd = (anim["onEnd"]) ? dojo.lang.hitch(anim, "onEnd") : function(){};
-		anim.onEnd = function(){ 
-			oldOnEnd(); 
-			dojo.style.hide(node);
-			node.style.overflow = overflow;
-			if(callback){ callback(node, anim); }
-		};
-		anims.push(anim);
-	});
-
-	if(nodes.length > 1){ return dojo.lfx.combine(anims); }
-	else { return anims[0]; }
-}
-
-dojo.lfx.html.slideTo = function(nodes, coords, duration, easing, callback){
-	nodes = dojo.lfx.html._byId(nodes);
-	var anims = [];
-
-	dojo.lang.forEach(nodes, function(node){
-		var top = null;
-		var left = null;
-		
-		var init = (function(){
-			var innerNode = node;
-			return function(){
-				top = innerNode.offsetTop;
-				left = innerNode.offsetLeft;
-
-				if (!dojo.style.isPositionAbsolute(innerNode)) {
-					var ret = dojo.style.abs(innerNode, true);
-					dojo.style.setStyleAttributes(innerNode, "position:absolute;top:"+ret.y+"px;left:"+ret.x+"px;");
-					top = ret.y;
-					left = ret.x;
-				}
-			}
-		})();
-		init();
-		
-		var anim = dojo.lfx.propertyAnimation(node,
-			[{	property: "top",
-				start: top,
-				end: coords[0] },
-			{	property: "left",
-				start: left,
-				end: coords[1] }], duration, easing);
-		
-		var oldBb = (anim["beforeBegin"]) ? dojo.lang.hitch(anim, "beforeBegin") : function(){};
-		anim.beforeBegin = function(){ oldBb(); init(); };
-
-		if(callback){
-			var oldOnEnd = (anim["onEnd"]) ? dojo.lang.hitch(anim, "onEnd") : function(){};
-			anim.onEnd = function(){ oldOnEnd(); callback(nodes, anim); };
-		}
-
-		anims.push(anim);
-	});
-	
-	if(nodes.length > 1){ return dojo.lfx.combine(anims); }
-	else{ return anims[0]; }
-}
-
-dojo.lfx.html.slideBy = function(nodes, coords, duration, easing, callback){
-	nodes = dojo.lfx.html._byId(nodes);
-	var anims = [];
-
-	dojo.lang.forEach(nodes, function(node){
-		var top = null;
-		var left = null;
-		
-		var init = (function(){
-			var innerNode = node;
-			return function(){
-				top = node.offsetTop;
-				left = node.offsetLeft;
-
-				if (!dojo.style.isPositionAbsolute(innerNode)) {
-					var ret = dojo.style.abs(innerNode);
-					dojo.style.setStyleAttributes(innerNode, "position:absolute;top:"+ret.y+"px;left:"+ret.x+"px;");
-					top = ret.y;
-					left = ret.x;
-				}
-			}
-		})();
-		init();
-		
-		var anim = dojo.lfx.propertyAnimation(node,
-			[{	property: "top",
-				start: top,
-				end: top+coords[0] },
-			{	property: "left",
-				start: left,
-				end: left+coords[1] }], duration, easing);
-
-		var oldBb = (anim["beforeBegin"]) ? dojo.lang.hitch(anim, "beforeBegin") : function(){};
-		anim.beforeBegin = function(){ oldBb(); init(); };
-
-		if(callback){
-			var oldOnEnd = (anim["onEnd"]) ? dojo.lang.hitch(anim, "onEnd") : function(){};
-			anim.onEnd = function(){ oldOnEnd(); callback(nodes, anim); };
-		}
-
-		anims.push(anim);
-	});
-
-	if(nodes.length > 1){ return dojo.lfx.combine(anims); }
-	else{ return anims[0]; }
-}
-
-dojo.lfx.html.explode = function(start, endNode, duration, easing, callback){
-	start = dojo.byId(start);
-	endNode = dojo.byId(endNode);
-	var startCoords = dojo.style.toCoordinateArray(start, true);
-	var outline = document.createElement("div");
-	dojo.html.copyStyle(outline, endNode);
-	with(outline.style){
-		position = "absolute";
-		display = "none";
-	}
-	document.body.appendChild(outline);
-
-	with(endNode.style){
-		visibility = "hidden";
-		display = "block";
-	}
-	var endCoords = dojo.style.toCoordinateArray(endNode, true);
-	with(endNode.style){
-		display = "none";
-		visibility = "visible";
-	}
-
-	var anim = new dojo.lfx.propertyAnimation(outline, [
-		{ property: "height", start: startCoords[3], end: endCoords[3] },
-		{ property: "width", start: startCoords[2], end: endCoords[2] },
-		{ property: "top", start: startCoords[1], end: endCoords[1] },
-		{ property: "left", start: startCoords[0], end: endCoords[0] },
-		{ property: "opacity", start: 0.3, end: 1.0 }
-	], duration, easing);
-	
-	anim.beforeBegin = function(){
-		dojo.style.setDisplay(outline, "block");
-	};
-	anim.onEnd = function(){
-		dojo.style.setDisplay(endNode, "block");
-		outline.parentNode.removeChild(outline);
-	};
-	if(callback){
-		var oldOnEnd = (anim["onEnd"]) ? dojo.lang.hitch(anim, "onEnd") : function(){};
-		anim.onEnd = function(){ oldOnEnd(); callback(endNode, anim); };
-	}
-	return anim;
-}
-
-dojo.lfx.html.implode = function(startNode, end, duration, easing, callback){
-	startNode = dojo.byId(startNode);
-	end = dojo.byId(end);
-	var startCoords = dojo.style.toCoordinateArray(startNode, true);
-	var endCoords = dojo.style.toCoordinateArray(end, true);
-
-	var outline = document.createElement("div");
-	dojo.html.copyStyle(outline, startNode);
-	dojo.style.setOpacity(outline, 0.3);
-	with(outline.style){
-		position = "absolute";
-		display = "none";
-	}
-	document.body.appendChild(outline);
-
-	var anim = new dojo.lfx.propertyAnimation(outline, [
-		{ property: "height", start: startCoords[3], end: endCoords[3] },
-		{ property: "width", start: startCoords[2], end: endCoords[2] },
-		{ property: "top", start: startCoords[1], end: endCoords[1] },
-		{ property: "left", start: startCoords[0], end: endCoords[0] },
-		{ property: "opacity", start: 1.0, end: 0.3 }
-	], duration, easing);
-	
-	anim.beforeBegin = function(){
-		dojo.style.hide(startNode);
-		dojo.style.show(outline);
-	};
-	anim.onEnd = function(){
-		outline.parentNode.removeChild(outline);
-	};
-	if(callback){
-		var oldOnEnd = (anim["onEnd"]) ? dojo.lang.hitch(anim, "onEnd") : function(){};
-		anim.onEnd = function(){ oldOnEnd(); callback(startNode, anim); };
-	}
-	return anim;
-}
-
-dojo.lfx.html.highlight = function(nodes, startColor, duration, easing, callback){
-	nodes = dojo.lfx.html._byId(nodes);
-	var anims = [];
-
-	dojo.lang.forEach(nodes, function(node){
-		var color = dojo.style.getBackgroundColor(node);
-		var bg = dojo.style.getStyle(node, "background-color").toLowerCase();
-		var bgImage = dojo.style.getStyle(node, "background-image");
-		var wasTransparent = (bg == "transparent" || bg == "rgba(0, 0, 0, 0)");
-		while(color.length > 3) { color.pop(); }
-
-		var rgb = new dojo.graphics.color.Color(startColor);
-		var endRgb = new dojo.graphics.color.Color(color);
-
-		var anim = dojo.lfx.propertyAnimation(node, [{
-			property: "background-color",
-			start: rgb,
-			end: endRgb
-		}], duration, easing);
-
-		var oldbb = (anim["beforeBegin"]) ? dojo.lang.hitch(anim, "beforeBegin") : function(){};
-		anim.beforeBegin = function(){ 
-			oldbb();
-			if(bgImage){
-				node.style.backgroundImage = "none";
-			}
-			node.style.backgroundColor = "rgb(" + rgb.toRgb().join(",") + ")";
-		};
-
-		var oldOnEnd = (anim["onEnd"]) ? dojo.lang.hitch(anim, "onEnd") : function(){};
-		anim.onEnd = function(){ 
-			oldOnEnd();
-			if(bgImage){
-				node.style.backgroundImage = bgImage;
-			}
-			if(wasTransparent){
-				node.style.backgroundColor = "transparent";
-			}
-			if(callback){
-				callback(node, anim);
-			}
-		};
-
-		anims.push(anim);
-	});
-
-	if(nodes.length > 1){ return dojo.lfx.combine(anims); }
-	else{ return anims[0]; }
-}
-
-dojo.lfx.html.unhighlight = function(nodes, endColor, duration, easing, callback){
-	nodes = dojo.lfx.html._byId(nodes);
-	var anims = [];
-
-	dojo.lang.forEach(nodes, function(node){
-		var color = new dojo.graphics.color.Color(dojo.style.getBackgroundColor(node));
-		var rgb = new dojo.graphics.color.Color(endColor);
-
-		var bgImage = dojo.style.getStyle(node, "background-image");
-		
-		var anim = dojo.lfx.propertyAnimation(node, [{
-			property: "background-color",
-			start: color,
-			end: rgb
-		}], duration, easing);
-
-		var oldbb = (anim["beforeBegin"]) ? dojo.lang.hitch(anim, "beforeBegin") : function(){};
-		anim.beforeBegin = function(){ 
-			oldbb();
-			if(bgImage){
-				node.style.backgroundImage = "none";
-			}
-			node.style.backgroundColor = "rgb(" + color.toRgb().join(",") + ")";
-		};
-
-		var oldOnEnd = (anim["onEnd"]) ? dojo.lang.hitch(anim, "onEnd") : function(){};
-		anim.onEnd = function(){ 
-			oldOnEnd();
-			if(callback){
-				callback(node, anim);
-			}
-		};
-
-		anims.push(anim);
-	});
-
-	if(nodes.length > 1){ return dojo.lfx.combine(anims); }
-	else{ return anims[0]; }
-}
-
-dojo.lang.mixin(dojo.lfx, dojo.lfx.html);
-
-dojo.kwCompoundRequire({
-	browser: ["dojo.lfx.html"],
-	dashboard: ["dojo.lfx.html"]
+dojo.unloaded();
+};
+dojo.addOnLoad=function(obj,_3d){
+var dh=dojo.hostenv;
+if(arguments.length==1){
+dh.modulesLoadedListeners.push(obj);
+}else{
+if(arguments.length>1){
+dh.modulesLoadedListeners.push(function(){
+obj[_3d]();
 });
+}
+}
+if(dh.post_load_&&dh.inFlightCount==0&&!dh.loadNotifying){
+dh.callLoaded();
+}
+};
+dojo.addOnUnload=function(obj,_40){
+var dh=dojo.hostenv;
+if(arguments.length==1){
+dh.unloadListeners.push(obj);
+}else{
+if(arguments.length>1){
+dh.unloadListeners.push(function(){
+obj[_40]();
+});
+}
+}
+};
+dojo.hostenv.modulesLoaded=function(){
+if(this.post_load_){
+return;
+}
+if(this.loadUriStack.length==0&&this.getTextStack.length==0){
+if(this.inFlightCount>0){
+dojo.debug("files still in flight!");
+return;
+}
+dojo.hostenv.callLoaded();
+}
+};
+dojo.hostenv.callLoaded=function(){
+if(typeof setTimeout=="object"){
+setTimeout("dojo.hostenv.loaded();",0);
+}else{
+dojo.hostenv.loaded();
+}
+};
+dojo.hostenv.getModuleSymbols=function(_42){
+var _43=_42.split(".");
+for(var i=_43.length;i>0;i--){
+var _45=_43.slice(0,i).join(".");
+if((i==1)&&!this.moduleHasPrefix(_45)){
+_43[0]="../"+_43[0];
+}else{
+var _46=this.getModulePrefix(_45);
+if(_46!=_45){
+_43.splice(0,i,_46);
+break;
+}
+}
+}
+return _43;
+};
+dojo.hostenv._global_omit_module_check=false;
+dojo.hostenv.loadModule=function(_47,_48,_49){
+if(!_47){
+return;
+}
+_49=this._global_omit_module_check||_49;
+var _4a=this.findModule(_47,false);
+if(_4a){
+return _4a;
+}
+if(dj_undef(_47,this.loading_modules_)){
+this.addedToLoadingCount.push(_47);
+}
+this.loading_modules_[_47]=1;
+var _4b=_47.replace(/\./g,"/")+".js";
+var _4c=_47.split(".");
+var _4d=this.getModuleSymbols(_47);
+var _4e=((_4d[0].charAt(0)!="/")&&!_4d[0].match(/^\w+:/));
+var _4f=_4d[_4d.length-1];
+var ok;
+if(_4f=="*"){
+_47=_4c.slice(0,-1).join(".");
+while(_4d.length){
+_4d.pop();
+_4d.push(this.pkgFileName);
+_4b=_4d.join("/")+".js";
+if(_4e&&_4b.charAt(0)=="/"){
+_4b=_4b.slice(1);
+}
+ok=this.loadPath(_4b,!_49?_47:null);
+if(ok){
+break;
+}
+_4d.pop();
+}
+}else{
+_4b=_4d.join("/")+".js";
+_47=_4c.join(".");
+var _51=!_49?_47:null;
+ok=this.loadPath(_4b,_51);
+if(!ok&&!_48){
+_4d.pop();
+while(_4d.length){
+_4b=_4d.join("/")+".js";
+ok=this.loadPath(_4b,_51);
+if(ok){
+break;
+}
+_4d.pop();
+_4b=_4d.join("/")+"/"+this.pkgFileName+".js";
+if(_4e&&_4b.charAt(0)=="/"){
+_4b=_4b.slice(1);
+}
+ok=this.loadPath(_4b,_51);
+if(ok){
+break;
+}
+}
+}
+if(!ok&&!_49){
+dojo.raise("Could not load '"+_47+"'; last tried '"+_4b+"'");
+}
+}
+if(!_49&&!this["isXDomain"]){
+_4a=this.findModule(_47,false);
+if(!_4a){
+dojo.raise("symbol '"+_47+"' is not defined after loading '"+_4b+"'");
+}
+}
+return _4a;
+};
+dojo.hostenv.startPackage=function(_52){
+var _53=String(_52);
+var _54=_53;
+var _55=_52.split(/\./);
+if(_55[_55.length-1]=="*"){
+_55.pop();
+_54=_55.join(".");
+}
+var _56=dojo.evalObjPath(_54,true);
+this.loaded_modules_[_53]=_56;
+this.loaded_modules_[_54]=_56;
+return _56;
+};
+dojo.hostenv.findModule=function(_57,_58){
+var lmn=String(_57);
+if(this.loaded_modules_[lmn]){
+return this.loaded_modules_[lmn];
+}
+if(_58){
+dojo.raise("no loaded module named '"+_57+"'");
+}
+return null;
+};
+dojo.kwCompoundRequire=function(_5a){
+var _5b=_5a["common"]||[];
+var _5c=_5a[dojo.hostenv.name_]?_5b.concat(_5a[dojo.hostenv.name_]||[]):_5b.concat(_5a["default"]||[]);
+for(var x=0;x<_5c.length;x++){
+var _5e=_5c[x];
+if(_5e.constructor==Array){
+dojo.hostenv.loadModule.apply(dojo.hostenv,_5e);
+}else{
+dojo.hostenv.loadModule(_5e);
+}
+}
+};
+dojo.require=function(_5f){
+dojo.hostenv.loadModule.apply(dojo.hostenv,arguments);
+};
+dojo.requireIf=function(_60,_61){
+var _62=arguments[0];
+if((_62===true)||(_62=="common")||(_62&&dojo.render[_62].capable)){
+var _63=[];
+for(var i=1;i<arguments.length;i++){
+_63.push(arguments[i]);
+}
+dojo.require.apply(dojo,_63);
+}
+};
+dojo.requireAfterIf=dojo.requireIf;
+dojo.provide=function(_65){
+return dojo.hostenv.startPackage.apply(dojo.hostenv,arguments);
+};
+dojo.registerModulePath=function(_66,_67){
+return dojo.hostenv.setModulePrefix(_66,_67);
+};
+dojo.setModulePrefix=function(_68,_69){
+dojo.deprecated("dojo.setModulePrefix(\""+_68+"\", \""+_69+"\")","replaced by dojo.registerModulePath","0.5");
+return dojo.registerModulePath(_68,_69);
+};
+dojo.exists=function(obj,_6b){
+var p=_6b.split(".");
+for(var i=0;i<p.length;i++){
+if(!obj[p[i]]){
+return false;
+}
+obj=obj[p[i]];
+}
+return true;
+};
+dojo.hostenv.normalizeLocale=function(_6e){
+var _6f=_6e?_6e.toLowerCase():dojo.locale;
+if(_6f=="root"){
+_6f="ROOT";
+}
+return _6f;
+};
+dojo.hostenv.searchLocalePath=function(_70,_71,_72){
+_70=dojo.hostenv.normalizeLocale(_70);
+var _73=_70.split("-");
+var _74=[];
+for(var i=_73.length;i>0;i--){
+_74.push(_73.slice(0,i).join("-"));
+}
+_74.push(false);
+if(_71){
+_74.reverse();
+}
+for(var j=_74.length-1;j>=0;j--){
+var loc=_74[j]||"ROOT";
+var _78=_72(loc);
+if(_78){
+break;
+}
+}
+};
+dojo.hostenv.localesGenerated;
+dojo.hostenv.registerNlsPrefix=function(){
+dojo.registerModulePath("nls","nls");
+};
+dojo.hostenv.preloadLocalizations=function(){
+if(dojo.hostenv.localesGenerated){
+dojo.hostenv.registerNlsPrefix();
+function preload(_79){
+_79=dojo.hostenv.normalizeLocale(_79);
+dojo.hostenv.searchLocalePath(_79,true,function(loc){
+for(var i=0;i<dojo.hostenv.localesGenerated.length;i++){
+if(dojo.hostenv.localesGenerated[i]==loc){
+dojo["require"]("nls.dojo_"+loc);
+return true;
+}
+}
+return false;
+});
+}
+preload();
+var _7c=djConfig.extraLocale||[];
+for(var i=0;i<_7c.length;i++){
+preload(_7c[i]);
+}
+}
+dojo.hostenv.preloadLocalizations=function(){
+};
+};
+dojo.requireLocalization=function(_7e,_7f,_80,_81){
+dojo.hostenv.preloadLocalizations();
+var _82=dojo.hostenv.normalizeLocale(_80);
+var _83=[_7e,"nls",_7f].join(".");
+var _84="";
+if(_81){
+var _85=_81.split(",");
+for(var i=0;i<_85.length;i++){
+if(_82.indexOf(_85[i])==0){
+if(_85[i].length>_84.length){
+_84=_85[i];
+}
+}
+}
+if(!_84){
+_84="ROOT";
+}
+}
+var _87=_81?_84:_82;
+var _88=dojo.hostenv.findModule(_83);
+var _89=null;
+if(_88){
+if(djConfig.localizationComplete&&_88._built){
+return;
+}
+var _8a=_87.replace("-","_");
+var _8b=_83+"."+_8a;
+_89=dojo.hostenv.findModule(_8b);
+}
+if(!_89){
+_88=dojo.hostenv.startPackage(_83);
+var _8c=dojo.hostenv.getModuleSymbols(_7e);
+var _8d=_8c.concat("nls").join("/");
+var _8e;
+dojo.hostenv.searchLocalePath(_87,_81,function(loc){
+var _90=loc.replace("-","_");
+var _91=_83+"."+_90;
+var _92=false;
+if(!dojo.hostenv.findModule(_91)){
+dojo.hostenv.startPackage(_91);
+var _93=[_8d];
+if(loc!="ROOT"){
+_93.push(loc);
+}
+_93.push(_7f);
+var _94=_93.join("/")+".js";
+_92=dojo.hostenv.loadPath(_94,null,function(_95){
+var _96=function(){
+};
+_96.prototype=_8e;
+_88[_90]=new _96();
+for(var j in _95){
+_88[_90][j]=_95[j];
+}
+});
+}else{
+_92=true;
+}
+if(_92&&_88[_90]){
+_8e=_88[_90];
+}else{
+_88[_90]=_8e;
+}
+if(_81){
+return true;
+}
+});
+}
+if(_81&&_82!=_84){
+_88[_82.replace("-","_")]=_88[_84.replace("-","_")];
+}
+};
+(function(){
+var _98=djConfig.extraLocale;
+if(_98){
+if(!_98 instanceof Array){
+_98=[_98];
+}
+var req=dojo.requireLocalization;
+dojo.requireLocalization=function(m,b,_9c,_9d){
+req(m,b,_9c,_9d);
+if(_9c){
+return;
+}
+for(var i=0;i<_98.length;i++){
+req(m,b,_98[i],_9d);
+}
+};
+}
+})();
+}
+if(typeof window!="undefined"){
+(function(){
+if(djConfig.allowQueryConfig){
+var _9f=document.location.toString();
+var _a0=_9f.split("?",2);
+if(_a0.length>1){
+var _a1=_a0[1];
+var _a2=_a1.split("&");
+for(var x in _a2){
+var sp=_a2[x].split("=");
+if((sp[0].length>9)&&(sp[0].substr(0,9)=="djConfig.")){
+var opt=sp[0].substr(9);
+try{
+djConfig[opt]=eval(sp[1]);
+}
+catch(e){
+djConfig[opt]=sp[1];
+}
+}
+}
+}
+}
+if(((djConfig["baseScriptUri"]=="")||(djConfig["baseRelativePath"]==""))&&(document&&document.getElementsByTagName)){
+var _a6=document.getElementsByTagName("script");
+var _a7=/(__package__|dojo|bootstrap1)\.js([\?\.]|$)/i;
+for(var i=0;i<_a6.length;i++){
+var src=_a6[i].getAttribute("src");
+if(!src){
+continue;
+}
+var m=src.match(_a7);
+if(m){
+var _ab=src.substring(0,m.index);
+if(src.indexOf("bootstrap1")>-1){
+_ab+="../";
+}
+if(!this["djConfig"]){
+djConfig={};
+}
+if(djConfig["baseScriptUri"]==""){
+djConfig["baseScriptUri"]=_ab;
+}
+if(djConfig["baseRelativePath"]==""){
+djConfig["baseRelativePath"]=_ab;
+}
+break;
+}
+}
+}
+var dr=dojo.render;
+var drh=dojo.render.html;
+var drs=dojo.render.svg;
+var dua=(drh.UA=navigator.userAgent);
+var dav=(drh.AV=navigator.appVersion);
+var t=true;
+var f=false;
+drh.capable=t;
+drh.support.builtin=t;
+dr.ver=parseFloat(drh.AV);
+dr.os.mac=dav.indexOf("Macintosh")>=0;
+dr.os.win=dav.indexOf("Windows")>=0;
+dr.os.linux=dav.indexOf("X11")>=0;
+drh.opera=dua.indexOf("Opera")>=0;
+drh.khtml=(dav.indexOf("Konqueror")>=0)||(dav.indexOf("Safari")>=0);
+drh.safari=dav.indexOf("Safari")>=0;
+var _b3=dua.indexOf("Gecko");
+drh.mozilla=drh.moz=(_b3>=0)&&(!drh.khtml);
+if(drh.mozilla){
+drh.geckoVersion=dua.substring(_b3+6,_b3+14);
+}
+drh.ie=(document.all)&&(!drh.opera);
+drh.ie50=drh.ie&&dav.indexOf("MSIE 5.0")>=0;
+drh.ie55=drh.ie&&dav.indexOf("MSIE 5.5")>=0;
+drh.ie60=drh.ie&&dav.indexOf("MSIE 6.0")>=0;
+drh.ie70=drh.ie&&dav.indexOf("MSIE 7.0")>=0;
+var cm=document["compatMode"];
+drh.quirks=(cm=="BackCompat")||(cm=="QuirksMode")||drh.ie55||drh.ie50;
+dojo.locale=dojo.locale||(drh.ie?navigator.userLanguage:navigator.language).toLowerCase();
+dr.vml.capable=drh.ie;
+drs.capable=f;
+drs.support.plugin=f;
+drs.support.builtin=f;
+var _b5=window["document"];
+var tdi=_b5["implementation"];
+if((tdi)&&(tdi["hasFeature"])&&(tdi.hasFeature("org.w3c.dom.svg","1.0"))){
+drs.capable=t;
+drs.support.builtin=t;
+drs.support.plugin=f;
+}
+if(drh.safari){
+var tmp=dua.split("AppleWebKit/")[1];
+var ver=parseFloat(tmp.split(" ")[0]);
+if(ver>=420){
+drs.capable=t;
+drs.support.builtin=t;
+drs.support.plugin=f;
+}
+}else{
+}
+})();
+dojo.hostenv.startPackage("dojo.hostenv");
+dojo.render.name=dojo.hostenv.name_="browser";
+dojo.hostenv.searchIds=[];
+dojo.hostenv._XMLHTTP_PROGIDS=["Msxml2.XMLHTTP","Microsoft.XMLHTTP","Msxml2.XMLHTTP.4.0"];
+dojo.hostenv.getXmlhttpObject=function(){
+var _b9=null;
+var _ba=null;
+try{
+_b9=new XMLHttpRequest();
+}
+catch(e){
+}
+if(!_b9){
+for(var i=0;i<3;++i){
+var _bc=dojo.hostenv._XMLHTTP_PROGIDS[i];
+try{
+_b9=new ActiveXObject(_bc);
+}
+catch(e){
+_ba=e;
+}
+if(_b9){
+dojo.hostenv._XMLHTTP_PROGIDS=[_bc];
+break;
+}
+}
+}
+if(!_b9){
+return dojo.raise("XMLHTTP not available",_ba);
+}
+return _b9;
+};
+dojo.hostenv._blockAsync=false;
+dojo.hostenv.getText=function(uri,_be,_bf){
+if(!_be){
+this._blockAsync=true;
+}
+var _c0=this.getXmlhttpObject();
+function isDocumentOk(_c1){
+var _c2=_c1["status"];
+return Boolean((!_c2)||((200<=_c2)&&(300>_c2))||(_c2==304));
+}
+if(_be){
+var _c3=this,_c4=null,gbl=dojo.global();
+var xhr=dojo.evalObjPath("dojo.io.XMLHTTPTransport");
+_c0.onreadystatechange=function(){
+if(_c4){
+gbl.clearTimeout(_c4);
+_c4=null;
+}
+if(_c3._blockAsync||(xhr&&xhr._blockAsync)){
+_c4=gbl.setTimeout(function(){
+_c0.onreadystatechange.apply(this);
+},10);
+}else{
+if(4==_c0.readyState){
+if(isDocumentOk(_c0)){
+_be(_c0.responseText);
+}
+}
+}
+};
+}
+_c0.open("GET",uri,_be?true:false);
+try{
+_c0.send(null);
+if(_be){
+return null;
+}
+if(!isDocumentOk(_c0)){
+var err=Error("Unable to load "+uri+" status:"+_c0.status);
+err.status=_c0.status;
+err.responseText=_c0.responseText;
+throw err;
+}
+}
+catch(e){
+this._blockAsync=false;
+if((_bf)&&(!_be)){
+return null;
+}else{
+throw e;
+}
+}
+this._blockAsync=false;
+return _c0.responseText;
+};
+dojo.hostenv.defaultDebugContainerId="dojoDebug";
+dojo.hostenv._println_buffer=[];
+dojo.hostenv._println_safe=false;
+dojo.hostenv.println=function(_c8){
+if(!dojo.hostenv._println_safe){
+dojo.hostenv._println_buffer.push(_c8);
+}else{
+try{
+var _c9=document.getElementById(djConfig.debugContainerId?djConfig.debugContainerId:dojo.hostenv.defaultDebugContainerId);
+if(!_c9){
+_c9=dojo.body();
+}
+var div=document.createElement("div");
+div.appendChild(document.createTextNode(_c8));
+_c9.appendChild(div);
+}
+catch(e){
+try{
+document.write("<div>"+_c8+"</div>");
+}
+catch(e2){
+window.status=_c8;
+}
+}
+}
+};
+dojo.addOnLoad(function(){
+dojo.hostenv._println_safe=true;
+while(dojo.hostenv._println_buffer.length>0){
+dojo.hostenv.println(dojo.hostenv._println_buffer.shift());
+}
+});
+function dj_addNodeEvtHdlr(_cb,_cc,fp){
+var _ce=_cb["on"+_cc]||function(){
+};
+_cb["on"+_cc]=function(){
+fp.apply(_cb,arguments);
+_ce.apply(_cb,arguments);
+};
+return true;
+}
+function dj_load_init(e){
+var _d0=(e&&e.type)?e.type.toLowerCase():"load";
+if(arguments.callee.initialized||(_d0!="domcontentloaded"&&_d0!="load")){
+return;
+}
+arguments.callee.initialized=true;
+if(typeof (_timer)!="undefined"){
+clearInterval(_timer);
+delete _timer;
+}
+var _d1=function(){
+if(dojo.render.html.ie){
+dojo.hostenv.makeWidgets();
+}
+};
+if(dojo.hostenv.inFlightCount==0){
+_d1();
+dojo.hostenv.modulesLoaded();
+}else{
+dojo.hostenv.modulesLoadedListeners.unshift(_d1);
+}
+}
+if(document.addEventListener){
+if(dojo.render.html.opera||(dojo.render.html.moz&&!djConfig.delayMozLoadingFix)){
+document.addEventListener("DOMContentLoaded",dj_load_init,null);
+}
+window.addEventListener("load",dj_load_init,null);
+}
+if(dojo.render.html.ie&&dojo.render.os.win){
+document.attachEvent("onreadystatechange",function(e){
+if(document.readyState=="complete"){
+dj_load_init();
+}
+});
+}
+if(/(WebKit|khtml)/i.test(navigator.userAgent)){
+var _timer=setInterval(function(){
+if(/loaded|complete/.test(document.readyState)){
+dj_load_init();
+}
+},10);
+}
+if(dojo.render.html.ie){
+dj_addNodeEvtHdlr(window,"beforeunload",function(){
+dojo.hostenv._unloading=true;
+window.setTimeout(function(){
+dojo.hostenv._unloading=false;
+},0);
+});
+}
+dj_addNodeEvtHdlr(window,"unload",function(){
+dojo.hostenv.unloaded();
+if((!dojo.render.html.ie)||(dojo.render.html.ie&&dojo.hostenv._unloading)){
+dojo.hostenv.unloaded();
+}
+});
+dojo.hostenv.makeWidgets=function(){
+var _d3=[];
+if(djConfig.searchIds&&djConfig.searchIds.length>0){
+_d3=_d3.concat(djConfig.searchIds);
+}
+if(dojo.hostenv.searchIds&&dojo.hostenv.searchIds.length>0){
+_d3=_d3.concat(dojo.hostenv.searchIds);
+}
+if((djConfig.parseWidgets)||(_d3.length>0)){
+if(dojo.evalObjPath("dojo.widget.Parse")){
+var _d4=new dojo.xml.Parse();
+if(_d3.length>0){
+for(var x=0;x<_d3.length;x++){
+var _d6=document.getElementById(_d3[x]);
+if(!_d6){
+continue;
+}
+var _d7=_d4.parseElement(_d6,null,true);
+dojo.widget.getParser().createComponents(_d7);
+}
+}else{
+if(djConfig.parseWidgets){
+var _d7=_d4.parseElement(dojo.body(),null,true);
+dojo.widget.getParser().createComponents(_d7);
+}
+}
+}
+}
+};
+dojo.addOnLoad(function(){
+if(!dojo.render.html.ie){
+dojo.hostenv.makeWidgets();
+}
+});
+try{
+if(dojo.render.html.ie){
+document.namespaces.add("v","urn:schemas-microsoft-com:vml");
+document.createStyleSheet().addRule("v\\:*","behavior:url(#default#VML)");
+}
+}
+catch(e){
+}
+dojo.hostenv.writeIncludes=function(){
+};
+if(!dj_undef("document",this)){
+dj_currentDocument=this.document;
+}
+dojo.doc=function(){
+return dj_currentDocument;
+};
+dojo.body=function(){
+return dojo.doc().body||dojo.doc().getElementsByTagName("body")[0];
+};
+dojo.byId=function(id,doc){
+if((id)&&((typeof id=="string")||(id instanceof String))){
+if(!doc){
+doc=dj_currentDocument;
+}
+var ele=doc.getElementById(id);
+if(ele&&(ele.id!=id)&&doc.all){
+ele=null;
+eles=doc.all[id];
+if(eles){
+if(eles.length){
+for(var i=0;i<eles.length;i++){
+if(eles[i].id==id){
+ele=eles[i];
+break;
+}
+}
+}else{
+ele=eles;
+}
+}
+}
+return ele;
+}
+return id;
+};
+dojo.setContext=function(_dc,_dd){
+dj_currentContext=_dc;
+dj_currentDocument=_dd;
+};
+dojo._fireCallback=function(_de,_df,_e0){
+if((_df)&&((typeof _de=="string")||(_de instanceof String))){
+_de=_df[_de];
+}
+return (_df?_de.apply(_df,_e0||[]):_de());
+};
+dojo.withGlobal=function(_e1,_e2,_e3,_e4){
+var _e5;
+var _e6=dj_currentContext;
+var _e7=dj_currentDocument;
+try{
+dojo.setContext(_e1,_e1.document);
+_e5=dojo._fireCallback(_e2,_e3,_e4);
+}
+finally{
+dojo.setContext(_e6,_e7);
+}
+return _e5;
+};
+dojo.withDoc=function(_e8,_e9,_ea,_eb){
+var _ec;
+var _ed=dj_currentDocument;
+try{
+dj_currentDocument=_e8;
+_ec=dojo._fireCallback(_e9,_ea,_eb);
+}
+finally{
+dj_currentDocument=_ed;
+}
+return _ec;
+};
+}
+(function(){
+if(typeof dj_usingBootstrap!="undefined"){
+return;
+}
+var _ee=false;
+var _ef=false;
+var _f0=false;
+if((typeof this["load"]=="function")&&((typeof this["Packages"]=="function")||(typeof this["Packages"]=="object"))){
+_ee=true;
+}else{
+if(typeof this["load"]=="function"){
+_ef=true;
+}else{
+if(window.widget){
+_f0=true;
+}
+}
+}
+var _f1=[];
+if((this["djConfig"])&&((djConfig["isDebug"])||(djConfig["debugAtAllCosts"]))){
+_f1.push("debug.js");
+}
+if((this["djConfig"])&&(djConfig["debugAtAllCosts"])&&(!_ee)&&(!_f0)){
+_f1.push("browser_debug.js");
+}
+var _f2=djConfig["baseScriptUri"];
+if((this["djConfig"])&&(djConfig["baseLoaderUri"])){
+_f2=djConfig["baseLoaderUri"];
+}
+for(var x=0;x<_f1.length;x++){
+var _f4=_f2+"src/"+_f1[x];
+if(_ee||_ef){
+load(_f4);
+}else{
+try{
+document.write("<scr"+"ipt type='text/javascript' src='"+_f4+"'></scr"+"ipt>");
+}
+catch(e){
+var _f5=document.createElement("script");
+_f5.src=_f4;
+document.getElementsByTagName("head")[0].appendChild(_f5);
+}
+}
+}
+})();
+dojo.provide("dojo.string.common");
+dojo.string.trim=function(str,wh){
+if(!str.replace){
+return str;
+}
+if(!str.length){
+return str;
+}
+var re=(wh>0)?(/^\s+/):(wh<0)?(/\s+$/):(/^\s+|\s+$/g);
+return str.replace(re,"");
+};
+dojo.string.trimStart=function(str){
+return dojo.string.trim(str,1);
+};
+dojo.string.trimEnd=function(str){
+return dojo.string.trim(str,-1);
+};
+dojo.string.repeat=function(str,_fc,_fd){
+var out="";
+for(var i=0;i<_fc;i++){
+out+=str;
+if(_fd&&i<_fc-1){
+out+=_fd;
+}
+}
+return out;
+};
+dojo.string.pad=function(str,len,c,dir){
+var out=String(str);
+if(!c){
+c="0";
+}
+if(!dir){
+dir=1;
+}
+while(out.length<len){
+if(dir>0){
+out=c+out;
+}else{
+out+=c;
+}
+}
+return out;
+};
+dojo.string.padLeft=function(str,len,c){
+return dojo.string.pad(str,len,c,1);
+};
+dojo.string.padRight=function(str,len,c){
+return dojo.string.pad(str,len,c,-1);
+};
+dojo.provide("dojo.string");
+dojo.provide("dojo.lang.common");
+dojo.lang.inherits=function(_10b,_10c){
+if(!dojo.lang.isFunction(_10c)){
+dojo.raise("dojo.inherits: superclass argument ["+_10c+"] must be a function (subclass: ["+_10b+"']");
+}
+_10b.prototype=new _10c();
+_10b.prototype.constructor=_10b;
+_10b.superclass=_10c.prototype;
+_10b["super"]=_10c.prototype;
+};
+dojo.lang._mixin=function(obj,_10e){
+var tobj={};
+for(var x in _10e){
+if((typeof tobj[x]=="undefined")||(tobj[x]!=_10e[x])){
+obj[x]=_10e[x];
+}
+}
+if(dojo.render.html.ie&&(typeof (_10e["toString"])=="function")&&(_10e["toString"]!=obj["toString"])&&(_10e["toString"]!=tobj["toString"])){
+obj.toString=_10e.toString;
+}
+return obj;
+};
+dojo.lang.mixin=function(obj,_112){
+for(var i=1,l=arguments.length;i<l;i++){
+dojo.lang._mixin(obj,arguments[i]);
+}
+return obj;
+};
+dojo.lang.extend=function(_115,_116){
+for(var i=1,l=arguments.length;i<l;i++){
+dojo.lang._mixin(_115.prototype,arguments[i]);
+}
+return _115;
+};
+dojo.inherits=dojo.lang.inherits;
+dojo.mixin=dojo.lang.mixin;
+dojo.extend=dojo.lang.extend;
+dojo.lang.find=function(_119,_11a,_11b,_11c){
+if(!dojo.lang.isArrayLike(_119)&&dojo.lang.isArrayLike(_11a)){
+dojo.deprecated("dojo.lang.find(value, array)","use dojo.lang.find(array, value) instead","0.5");
+var temp=_119;
+_119=_11a;
+_11a=temp;
+}
+var _11e=dojo.lang.isString(_119);
+if(_11e){
+_119=_119.split("");
+}
+if(_11c){
+var step=-1;
+var i=_119.length-1;
+var end=-1;
+}else{
+var step=1;
+var i=0;
+var end=_119.length;
+}
+if(_11b){
+while(i!=end){
+if(_119[i]===_11a){
+return i;
+}
+i+=step;
+}
+}else{
+while(i!=end){
+if(_119[i]==_11a){
+return i;
+}
+i+=step;
+}
+}
+return -1;
+};
+dojo.lang.indexOf=dojo.lang.find;
+dojo.lang.findLast=function(_122,_123,_124){
+return dojo.lang.find(_122,_123,_124,true);
+};
+dojo.lang.lastIndexOf=dojo.lang.findLast;
+dojo.lang.inArray=function(_125,_126){
+return dojo.lang.find(_125,_126)>-1;
+};
+dojo.lang.isObject=function(it){
+if(typeof it=="undefined"){
+return false;
+}
+return (typeof it=="object"||it===null||dojo.lang.isArray(it)||dojo.lang.isFunction(it));
+};
+dojo.lang.isArray=function(it){
+return (it&&it instanceof Array||typeof it=="array");
+};
+dojo.lang.isArrayLike=function(it){
+if((!it)||(dojo.lang.isUndefined(it))){
+return false;
+}
+if(dojo.lang.isString(it)){
+return false;
+}
+if(dojo.lang.isFunction(it)){
+return false;
+}
+if(dojo.lang.isArray(it)){
+return true;
+}
+if((it.tagName)&&(it.tagName.toLowerCase()=="form")){
+return false;
+}
+if(dojo.lang.isNumber(it.length)&&isFinite(it.length)){
+return true;
+}
+return false;
+};
+dojo.lang.isFunction=function(it){
+return (it instanceof Function||typeof it=="function");
+};
+(function(){
+if((dojo.render.html.capable)&&(dojo.render.html["safari"])){
+dojo.lang.isFunction=function(it){
+if((typeof (it)=="function")&&(it=="[object NodeList]")){
+return false;
+}
+return (it instanceof Function||typeof it=="function");
+};
+}
+})();
+dojo.lang.isString=function(it){
+return (typeof it=="string"||it instanceof String);
+};
+dojo.lang.isAlien=function(it){
+if(!it){
+return false;
+}
+return !dojo.lang.isFunction(it)&&/\{\s*\[native code\]\s*\}/.test(String(it));
+};
+dojo.lang.isBoolean=function(it){
+return (it instanceof Boolean||typeof it=="boolean");
+};
+dojo.lang.isNumber=function(it){
+return (it instanceof Number||typeof it=="number");
+};
+dojo.lang.isUndefined=function(it){
+return ((typeof (it)=="undefined")&&(it==undefined));
+};
+dojo.provide("dojo.lang.extras");
+dojo.lang.setTimeout=function(func,_132){
+var _133=window,_134=2;
+if(!dojo.lang.isFunction(func)){
+_133=func;
+func=_132;
+_132=arguments[2];
+_134++;
+}
+if(dojo.lang.isString(func)){
+func=_133[func];
+}
+var args=[];
+for(var i=_134;i<arguments.length;i++){
+args.push(arguments[i]);
+}
+return dojo.global().setTimeout(function(){
+func.apply(_133,args);
+},_132);
+};
+dojo.lang.clearTimeout=function(_137){
+dojo.global().clearTimeout(_137);
+};
+dojo.lang.getNameInObj=function(ns,item){
+if(!ns){
+ns=dj_global;
+}
+for(var x in ns){
+if(ns[x]===item){
+return new String(x);
+}
+}
+return null;
+};
+dojo.lang.shallowCopy=function(obj,deep){
+var i,ret;
+if(obj===null){
+return null;
+}
+if(dojo.lang.isObject(obj)){
+ret=new obj.constructor();
+for(i in obj){
+if(dojo.lang.isUndefined(ret[i])){
+ret[i]=deep?dojo.lang.shallowCopy(obj[i],deep):obj[i];
+}
+}
+}else{
+if(dojo.lang.isArray(obj)){
+ret=[];
+for(i=0;i<obj.length;i++){
+ret[i]=deep?dojo.lang.shallowCopy(obj[i],deep):obj[i];
+}
+}else{
+ret=obj;
+}
+}
+return ret;
+};
+dojo.lang.firstValued=function(){
+for(var i=0;i<arguments.length;i++){
+if(typeof arguments[i]!="undefined"){
+return arguments[i];
+}
+}
+return undefined;
+};
+dojo.lang.getObjPathValue=function(_140,_141,_142){
+with(dojo.parseObjPath(_140,_141,_142)){
+return dojo.evalProp(prop,obj,_142);
+}
+};
+dojo.lang.setObjPathValue=function(_143,_144,_145,_146){
+dojo.deprecated("dojo.lang.setObjPathValue","use dojo.parseObjPath and the '=' operator","0.6");
+if(arguments.length<4){
+_146=true;
+}
+with(dojo.parseObjPath(_143,_145,_146)){
+if(obj&&(_146||(prop in obj))){
+obj[prop]=_144;
+}
+}
+};
+dojo.provide("dojo.io.common");
+dojo.io.transports=[];
+dojo.io.hdlrFuncNames=["load","error","timeout"];
+dojo.io.Request=function(url,_148,_149,_14a){
+if((arguments.length==1)&&(arguments[0].constructor==Object)){
+this.fromKwArgs(arguments[0]);
+}else{
+this.url=url;
+if(_148){
+this.mimetype=_148;
+}
+if(_149){
+this.transport=_149;
+}
+if(arguments.length>=4){
+this.changeUrl=_14a;
+}
+}
+};
+dojo.lang.extend(dojo.io.Request,{url:"",mimetype:"text/plain",method:"GET",content:undefined,transport:undefined,changeUrl:undefined,formNode:undefined,sync:false,bindSuccess:false,useCache:false,preventCache:false,load:function(type,data,_14d,_14e){
+},error:function(type,_150,_151,_152){
+},timeout:function(type,_154,_155,_156){
+},handle:function(type,data,_159,_15a){
+},timeoutSeconds:0,abort:function(){
+},fromKwArgs:function(_15b){
+if(_15b["url"]){
+_15b.url=_15b.url.toString();
+}
+if(_15b["formNode"]){
+_15b.formNode=dojo.byId(_15b.formNode);
+}
+if(!_15b["method"]&&_15b["formNode"]&&_15b["formNode"].method){
+_15b.method=_15b["formNode"].method;
+}
+if(!_15b["handle"]&&_15b["handler"]){
+_15b.handle=_15b.handler;
+}
+if(!_15b["load"]&&_15b["loaded"]){
+_15b.load=_15b.loaded;
+}
+if(!_15b["changeUrl"]&&_15b["changeURL"]){
+_15b.changeUrl=_15b.changeURL;
+}
+_15b.encoding=dojo.lang.firstValued(_15b["encoding"],djConfig["bindEncoding"],"");
+_15b.sendTransport=dojo.lang.firstValued(_15b["sendTransport"],djConfig["ioSendTransport"],false);
+var _15c=dojo.lang.isFunction;
+for(var x=0;x<dojo.io.hdlrFuncNames.length;x++){
+var fn=dojo.io.hdlrFuncNames[x];
+if(_15b[fn]&&_15c(_15b[fn])){
+continue;
+}
+if(_15b["handle"]&&_15c(_15b["handle"])){
+_15b[fn]=_15b.handle;
+}
+}
+dojo.lang.mixin(this,_15b);
+}});
+dojo.io.Error=function(msg,type,num){
+this.message=msg;
+this.type=type||"unknown";
+this.number=num||0;
+};
+dojo.io.transports.addTransport=function(name){
+this.push(name);
+this[name]=dojo.io[name];
+};
+dojo.io.bind=function(_163){
+if(!(_163 instanceof dojo.io.Request)){
+try{
+_163=new dojo.io.Request(_163);
+}
+catch(e){
+dojo.debug(e);
+}
+}
+var _164="";
+if(_163["transport"]){
+_164=_163["transport"];
+if(!this[_164]){
+dojo.io.sendBindError(_163,"No dojo.io.bind() transport with name '"+_163["transport"]+"'.");
+return _163;
+}
+if(!this[_164].canHandle(_163)){
+dojo.io.sendBindError(_163,"dojo.io.bind() transport with name '"+_163["transport"]+"' cannot handle this type of request.");
+return _163;
+}
+}else{
+for(var x=0;x<dojo.io.transports.length;x++){
+var tmp=dojo.io.transports[x];
+if((this[tmp])&&(this[tmp].canHandle(_163))){
+_164=tmp;
+break;
+}
+}
+if(_164==""){
+dojo.io.sendBindError(_163,"None of the loaded transports for dojo.io.bind()"+" can handle the request.");
+return _163;
+}
+}
+this[_164].bind(_163);
+_163.bindSuccess=true;
+return _163;
+};
+dojo.io.sendBindError=function(_167,_168){
+if((typeof _167.error=="function"||typeof _167.handle=="function")&&(typeof setTimeout=="function"||typeof setTimeout=="object")){
+var _169=new dojo.io.Error(_168);
+setTimeout(function(){
+_167[(typeof _167.error=="function")?"error":"handle"]("error",_169,null,_167);
+},50);
+}else{
+dojo.raise(_168);
+}
+};
+dojo.io.queueBind=function(_16a){
+if(!(_16a instanceof dojo.io.Request)){
+try{
+_16a=new dojo.io.Request(_16a);
+}
+catch(e){
+dojo.debug(e);
+}
+}
+var _16b=_16a.load;
+_16a.load=function(){
+dojo.io._queueBindInFlight=false;
+var ret=_16b.apply(this,arguments);
+dojo.io._dispatchNextQueueBind();
+return ret;
+};
+var _16d=_16a.error;
+_16a.error=function(){
+dojo.io._queueBindInFlight=false;
+var ret=_16d.apply(this,arguments);
+dojo.io._dispatchNextQueueBind();
+return ret;
+};
+dojo.io._bindQueue.push(_16a);
+dojo.io._dispatchNextQueueBind();
+return _16a;
+};
+dojo.io._dispatchNextQueueBind=function(){
+if(!dojo.io._queueBindInFlight){
+dojo.io._queueBindInFlight=true;
+if(dojo.io._bindQueue.length>0){
+dojo.io.bind(dojo.io._bindQueue.shift());
+}else{
+dojo.io._queueBindInFlight=false;
+}
+}
+};
+dojo.io._bindQueue=[];
+dojo.io._queueBindInFlight=false;
+dojo.io.argsFromMap=function(map,_170,last){
+var enc=/utf/i.test(_170||"")?encodeURIComponent:dojo.string.encodeAscii;
+var _173=[];
+var _174=new Object();
+for(var name in map){
+var _176=function(elt){
+var val=enc(name)+"="+enc(elt);
+_173[(last==name)?"push":"unshift"](val);
+};
+if(!_174[name]){
+var _179=map[name];
+if(dojo.lang.isArray(_179)){
+dojo.lang.forEach(_179,_176);
+}else{
+_176(_179);
+}
+}
+}
+return _173.join("&");
+};
+dojo.io.setIFrameSrc=function(_17a,src,_17c){
+try{
+var r=dojo.render.html;
+if(!_17c){
+if(r.safari){
+_17a.location=src;
+}else{
+frames[_17a.name].location=src;
+}
+}else{
+var idoc;
+if(r.ie){
+idoc=_17a.contentWindow.document;
+}else{
+if(r.safari){
+idoc=_17a.document;
+}else{
+idoc=_17a.contentWindow;
+}
+}
+if(!idoc){
+_17a.location=src;
+return;
+}else{
+idoc.location.replace(src);
+}
+}
+}
+catch(e){
+dojo.debug(e);
+dojo.debug("setIFrameSrc: "+e);
+}
+};
+dojo.provide("dojo.lang.array");
+dojo.lang.mixin(dojo.lang,{has:function(obj,name){
+try{
+return typeof obj[name]!="undefined";
+}
+catch(e){
+return false;
+}
+},isEmpty:function(obj){
+if(dojo.lang.isObject(obj)){
+var tmp={};
+var _183=0;
+for(var x in obj){
+if(obj[x]&&(!tmp[x])){
+_183++;
+break;
+}
+}
+return _183==0;
+}else{
+if(dojo.lang.isArrayLike(obj)||dojo.lang.isString(obj)){
+return obj.length==0;
+}
+}
+},map:function(arr,obj,_187){
+var _188=dojo.lang.isString(arr);
+if(_188){
+arr=arr.split("");
+}
+if(dojo.lang.isFunction(obj)&&(!_187)){
+_187=obj;
+obj=dj_global;
+}else{
+if(dojo.lang.isFunction(obj)&&_187){
+var _189=obj;
+obj=_187;
+_187=_189;
+}
+}
+if(Array.map){
+var _18a=Array.map(arr,_187,obj);
+}else{
+var _18a=[];
+for(var i=0;i<arr.length;++i){
+_18a.push(_187.call(obj,arr[i]));
+}
+}
+if(_188){
+return _18a.join("");
+}else{
+return _18a;
+}
+},reduce:function(arr,_18d,obj,_18f){
+var _190=_18d;
+if(arguments.length==1){
+dojo.debug("dojo.lang.reduce called with too few arguments!");
+return false;
+}else{
+if(arguments.length==2){
+_18f=_18d;
+_190=arr.shift();
+}else{
+if(arguments.lenght==3){
+if(dojo.lang.isFunction(obj)){
+_18f=obj;
+obj=null;
+}
+}else{
+if(dojo.lang.isFunction(obj)){
+var tmp=_18f;
+_18f=obj;
+obj=tmp;
+}
+}
+}
+}
+var ob=obj?obj:dj_global;
+dojo.lang.map(arr,function(val){
+_190=_18f.call(ob,_190,val);
+});
+return _190;
+},forEach:function(_194,_195,_196){
+if(dojo.lang.isString(_194)){
+_194=_194.split("");
+}
+if(Array.forEach){
+Array.forEach(_194,_195,_196);
+}else{
+if(!_196){
+_196=dj_global;
+}
+for(var i=0,l=_194.length;i<l;i++){
+_195.call(_196,_194[i],i,_194);
+}
+}
+},_everyOrSome:function(_199,arr,_19b,_19c){
+if(dojo.lang.isString(arr)){
+arr=arr.split("");
+}
+if(Array.every){
+return Array[_199?"every":"some"](arr,_19b,_19c);
+}else{
+if(!_19c){
+_19c=dj_global;
+}
+for(var i=0,l=arr.length;i<l;i++){
+var _19f=_19b.call(_19c,arr[i],i,arr);
+if(_199&&!_19f){
+return false;
+}else{
+if((!_199)&&(_19f)){
+return true;
+}
+}
+}
+return Boolean(_199);
+}
+},every:function(arr,_1a1,_1a2){
+return this._everyOrSome(true,arr,_1a1,_1a2);
+},some:function(arr,_1a4,_1a5){
+return this._everyOrSome(false,arr,_1a4,_1a5);
+},filter:function(arr,_1a7,_1a8){
+var _1a9=dojo.lang.isString(arr);
+if(_1a9){
+arr=arr.split("");
+}
+var _1aa;
+if(Array.filter){
+_1aa=Array.filter(arr,_1a7,_1a8);
+}else{
+if(!_1a8){
+if(arguments.length>=3){
+dojo.raise("thisObject doesn't exist!");
+}
+_1a8=dj_global;
+}
+_1aa=[];
+for(var i=0;i<arr.length;i++){
+if(_1a7.call(_1a8,arr[i],i,arr)){
+_1aa.push(arr[i]);
+}
+}
+}
+if(_1a9){
+return _1aa.join("");
+}else{
+return _1aa;
+}
+},unnest:function(){
+var out=[];
+for(var i=0;i<arguments.length;i++){
+if(dojo.lang.isArrayLike(arguments[i])){
+var add=dojo.lang.unnest.apply(this,arguments[i]);
+out=out.concat(add);
+}else{
+out.push(arguments[i]);
+}
+}
+return out;
+},toArray:function(_1af,_1b0){
+var _1b1=[];
+for(var i=_1b0||0;i<_1af.length;i++){
+_1b1.push(_1af[i]);
+}
+return _1b1;
+}});
+dojo.provide("dojo.lang.func");
+dojo.lang.hitch=function(_1b3,_1b4){
+var fcn=(dojo.lang.isString(_1b4)?_1b3[_1b4]:_1b4)||function(){
+};
+return function(){
+return fcn.apply(_1b3,arguments);
+};
+};
+dojo.lang.anonCtr=0;
+dojo.lang.anon={};
+dojo.lang.nameAnonFunc=function(_1b6,_1b7,_1b8){
+var nso=(_1b7||dojo.lang.anon);
+if((_1b8)||((dj_global["djConfig"])&&(djConfig["slowAnonFuncLookups"]==true))){
+for(var x in nso){
+try{
+if(nso[x]===_1b6){
+return x;
+}
+}
+catch(e){
+}
+}
+}
+var ret="__"+dojo.lang.anonCtr++;
+while(typeof nso[ret]!="undefined"){
+ret="__"+dojo.lang.anonCtr++;
+}
+nso[ret]=_1b6;
+return ret;
+};
+dojo.lang.forward=function(_1bc){
+return function(){
+return this[_1bc].apply(this,arguments);
+};
+};
+dojo.lang.curry=function(_1bd,func){
+var _1bf=[];
+_1bd=_1bd||dj_global;
+if(dojo.lang.isString(func)){
+func=_1bd[func];
+}
+for(var x=2;x<arguments.length;x++){
+_1bf.push(arguments[x]);
+}
+var _1c1=(func["__preJoinArity"]||func.length)-_1bf.length;
+function gather(_1c2,_1c3,_1c4){
+var _1c5=_1c4;
+var _1c6=_1c3.slice(0);
+for(var x=0;x<_1c2.length;x++){
+_1c6.push(_1c2[x]);
+}
+_1c4=_1c4-_1c2.length;
+if(_1c4<=0){
+var res=func.apply(_1bd,_1c6);
+_1c4=_1c5;
+return res;
+}else{
+return function(){
+return gather(arguments,_1c6,_1c4);
+};
+}
+}
+return gather([],_1bf,_1c1);
+};
+dojo.lang.curryArguments=function(_1c9,func,args,_1cc){
+var _1cd=[];
+var x=_1cc||0;
+for(x=_1cc;x<args.length;x++){
+_1cd.push(args[x]);
+}
+return dojo.lang.curry.apply(dojo.lang,[_1c9,func].concat(_1cd));
+};
+dojo.lang.tryThese=function(){
+for(var x=0;x<arguments.length;x++){
+try{
+if(typeof arguments[x]=="function"){
+var ret=(arguments[x]());
+if(ret){
+return ret;
+}
+}
+}
+catch(e){
+dojo.debug(e);
+}
+}
+};
+dojo.lang.delayThese=function(farr,cb,_1d3,_1d4){
+if(!farr.length){
+if(typeof _1d4=="function"){
+_1d4();
+}
+return;
+}
+if((typeof _1d3=="undefined")&&(typeof cb=="number")){
+_1d3=cb;
+cb=function(){
+};
+}else{
+if(!cb){
+cb=function(){
+};
+if(!_1d3){
+_1d3=0;
+}
+}
+}
+setTimeout(function(){
+(farr.shift())();
+cb();
+dojo.lang.delayThese(farr,cb,_1d3,_1d4);
+},_1d3);
+};
+dojo.provide("dojo.string.extras");
+dojo.string.substituteParams=function(_1d5,hash){
+var map=(typeof hash=="object")?hash:dojo.lang.toArray(arguments,1);
+return _1d5.replace(/\%\{(\w+)\}/g,function(_1d8,key){
+if(typeof (map[key])!="undefined"&&map[key]!=null){
+return map[key];
+}
+dojo.raise("Substitution not found: "+key);
+});
+};
+dojo.string.capitalize=function(str){
+if(!dojo.lang.isString(str)){
+return "";
+}
+if(arguments.length==0){
+str=this;
+}
+var _1db=str.split(" ");
+for(var i=0;i<_1db.length;i++){
+_1db[i]=_1db[i].charAt(0).toUpperCase()+_1db[i].substring(1);
+}
+return _1db.join(" ");
+};
+dojo.string.isBlank=function(str){
+if(!dojo.lang.isString(str)){
+return true;
+}
+return (dojo.string.trim(str).length==0);
+};
+dojo.string.encodeAscii=function(str){
+if(!dojo.lang.isString(str)){
+return str;
+}
+var ret="";
+var _1e0=escape(str);
+var _1e1,re=/%u([0-9A-F]{4})/i;
+while((_1e1=_1e0.match(re))){
+var num=Number("0x"+_1e1[1]);
+var _1e4=escape("&#"+num+";");
+ret+=_1e0.substring(0,_1e1.index)+_1e4;
+_1e0=_1e0.substring(_1e1.index+_1e1[0].length);
+}
+ret+=_1e0.replace(/\+/g,"%2B");
+return ret;
+};
+dojo.string.escape=function(type,str){
+var args=dojo.lang.toArray(arguments,1);
+switch(type.toLowerCase()){
+case "xml":
+case "html":
+case "xhtml":
+return dojo.string.escapeXml.apply(this,args);
+case "sql":
+return dojo.string.escapeSql.apply(this,args);
+case "regexp":
+case "regex":
+return dojo.string.escapeRegExp.apply(this,args);
+case "javascript":
+case "jscript":
+case "js":
+return dojo.string.escapeJavaScript.apply(this,args);
+case "ascii":
+return dojo.string.encodeAscii.apply(this,args);
+default:
+return str;
+}
+};
+dojo.string.escapeXml=function(str,_1e9){
+str=str.replace(/&/gm,"&amp;").replace(/</gm,"&lt;").replace(/>/gm,"&gt;").replace(/"/gm,"&quot;");
+if(!_1e9){
+str=str.replace(/'/gm,"&#39;");
+}
+return str;
+};
+dojo.string.escapeSql=function(str){
+return str.replace(/'/gm,"''");
+};
+dojo.string.escapeRegExp=function(str){
+return str.replace(/\\/gm,"\\\\").replace(/([\f\b\n\t\r[\^$|?*+(){}])/gm,"\\$1");
+};
+dojo.string.escapeJavaScript=function(str){
+return str.replace(/(["'\f\b\n\t\r])/gm,"\\$1");
+};
+dojo.string.escapeString=function(str){
+return ("\""+str.replace(/(["\\])/g,"\\$1")+"\"").replace(/[\f]/g,"\\f").replace(/[\b]/g,"\\b").replace(/[\n]/g,"\\n").replace(/[\t]/g,"\\t").replace(/[\r]/g,"\\r");
+};
+dojo.string.summary=function(str,len){
+if(!len||str.length<=len){
+return str;
+}
+return str.substring(0,len).replace(/\.+$/,"")+"...";
+};
+dojo.string.endsWith=function(str,end,_1f2){
+if(_1f2){
+str=str.toLowerCase();
+end=end.toLowerCase();
+}
+if((str.length-end.length)<0){
+return false;
+}
+return str.lastIndexOf(end)==str.length-end.length;
+};
+dojo.string.endsWithAny=function(str){
+for(var i=1;i<arguments.length;i++){
+if(dojo.string.endsWith(str,arguments[i])){
+return true;
+}
+}
+return false;
+};
+dojo.string.startsWith=function(str,_1f6,_1f7){
+if(_1f7){
+str=str.toLowerCase();
+_1f6=_1f6.toLowerCase();
+}
+return str.indexOf(_1f6)==0;
+};
+dojo.string.startsWithAny=function(str){
+for(var i=1;i<arguments.length;i++){
+if(dojo.string.startsWith(str,arguments[i])){
+return true;
+}
+}
+return false;
+};
+dojo.string.has=function(str){
+for(var i=1;i<arguments.length;i++){
+if(str.indexOf(arguments[i])>-1){
+return true;
+}
+}
+return false;
+};
+dojo.string.normalizeNewlines=function(text,_1fd){
+if(_1fd=="\n"){
+text=text.replace(/\r\n/g,"\n");
+text=text.replace(/\r/g,"\n");
+}else{
+if(_1fd=="\r"){
+text=text.replace(/\r\n/g,"\r");
+text=text.replace(/\n/g,"\r");
+}else{
+text=text.replace(/([^\r])\n/g,"$1\r\n").replace(/\r([^\n])/g,"\r\n$1");
+}
+}
+return text;
+};
+dojo.string.splitEscaped=function(str,_1ff){
+var _200=[];
+for(var i=0,_202=0;i<str.length;i++){
+if(str.charAt(i)=="\\"){
+i++;
+continue;
+}
+if(str.charAt(i)==_1ff){
+_200.push(str.substring(_202,i));
+_202=i+1;
+}
+}
+_200.push(str.substr(_202));
+return _200;
+};
+dojo.provide("dojo.dom");
+dojo.dom.ELEMENT_NODE=1;
+dojo.dom.ATTRIBUTE_NODE=2;
+dojo.dom.TEXT_NODE=3;
+dojo.dom.CDATA_SECTION_NODE=4;
+dojo.dom.ENTITY_REFERENCE_NODE=5;
+dojo.dom.ENTITY_NODE=6;
+dojo.dom.PROCESSING_INSTRUCTION_NODE=7;
+dojo.dom.COMMENT_NODE=8;
+dojo.dom.DOCUMENT_NODE=9;
+dojo.dom.DOCUMENT_TYPE_NODE=10;
+dojo.dom.DOCUMENT_FRAGMENT_NODE=11;
+dojo.dom.NOTATION_NODE=12;
+dojo.dom.dojoml="http://www.dojotoolkit.org/2004/dojoml";
+dojo.dom.xmlns={svg:"http://www.w3.org/2000/svg",smil:"http://www.w3.org/2001/SMIL20/",mml:"http://www.w3.org/1998/Math/MathML",cml:"http://www.xml-cml.org",xlink:"http://www.w3.org/1999/xlink",xhtml:"http://www.w3.org/1999/xhtml",xul:"http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul",xbl:"http://www.mozilla.org/xbl",fo:"http://www.w3.org/1999/XSL/Format",xsl:"http://www.w3.org/1999/XSL/Transform",xslt:"http://www.w3.org/1999/XSL/Transform",xi:"http://www.w3.org/2001/XInclude",xforms:"http://www.w3.org/2002/01/xforms",saxon:"http://icl.com/saxon",xalan:"http://xml.apache.org/xslt",xsd:"http://www.w3.org/2001/XMLSchema",dt:"http://www.w3.org/2001/XMLSchema-datatypes",xsi:"http://www.w3.org/2001/XMLSchema-instance",rdf:"http://www.w3.org/1999/02/22-rdf-syntax-ns#",rdfs:"http://www.w3.org/2000/01/rdf-schema#",dc:"http://purl.org/dc/elements/1.1/",dcq:"http://purl.org/dc/qualifiers/1.0","soap-env":"http://schemas.xmlsoap.org/soap/envelope/",wsdl:"http://schemas.xmlsoap.org/wsdl/",AdobeExtensions:"http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"};
+dojo.dom.isNode=function(wh){
+if(typeof Element=="function"){
+try{
+return wh instanceof Element;
+}
+catch(e){
+}
+}else{
+return wh&&!isNaN(wh.nodeType);
+}
+};
+dojo.dom.getUniqueId=function(){
+var _204=dojo.doc();
+do{
+var id="dj_unique_"+(++arguments.callee._idIncrement);
+}while(_204.getElementById(id));
+return id;
+};
+dojo.dom.getUniqueId._idIncrement=0;
+dojo.dom.firstElement=dojo.dom.getFirstChildElement=function(_206,_207){
+var node=_206.firstChild;
+while(node&&node.nodeType!=dojo.dom.ELEMENT_NODE){
+node=node.nextSibling;
+}
+if(_207&&node&&node.tagName&&node.tagName.toLowerCase()!=_207.toLowerCase()){
+node=dojo.dom.nextElement(node,_207);
+}
+return node;
+};
+dojo.dom.lastElement=dojo.dom.getLastChildElement=function(_209,_20a){
+var node=_209.lastChild;
+while(node&&node.nodeType!=dojo.dom.ELEMENT_NODE){
+node=node.previousSibling;
+}
+if(_20a&&node&&node.tagName&&node.tagName.toLowerCase()!=_20a.toLowerCase()){
+node=dojo.dom.prevElement(node,_20a);
+}
+return node;
+};
+dojo.dom.nextElement=dojo.dom.getNextSiblingElement=function(node,_20d){
+if(!node){
+return null;
+}
+do{
+node=node.nextSibling;
+}while(node&&node.nodeType!=dojo.dom.ELEMENT_NODE);
+if(node&&_20d&&_20d.toLowerCase()!=node.tagName.toLowerCase()){
+return dojo.dom.nextElement(node,_20d);
+}
+return node;
+};
+dojo.dom.prevElement=dojo.dom.getPreviousSiblingElement=function(node,_20f){
+if(!node){
+return null;
+}
+if(_20f){
+_20f=_20f.toLowerCase();
+}
+do{
+node=node.previousSibling;
+}while(node&&node.nodeType!=dojo.dom.ELEMENT_NODE);
+if(node&&_20f&&_20f.toLowerCase()!=node.tagName.toLowerCase()){
+return dojo.dom.prevElement(node,_20f);
+}
+return node;
+};
+dojo.dom.moveChildren=function(_210,_211,trim){
+var _213=0;
+if(trim){
+while(_210.hasChildNodes()&&_210.firstChild.nodeType==dojo.dom.TEXT_NODE){
+_210.removeChild(_210.firstChild);
+}
+while(_210.hasChildNodes()&&_210.lastChild.nodeType==dojo.dom.TEXT_NODE){
+_210.removeChild(_210.lastChild);
+}
+}
+while(_210.hasChildNodes()){
+_211.appendChild(_210.firstChild);
+_213++;
+}
+return _213;
+};
+dojo.dom.copyChildren=function(_214,_215,trim){
+var _217=_214.cloneNode(true);
+return this.moveChildren(_217,_215,trim);
+};
+dojo.dom.replaceChildren=function(node,_219){
+var _21a=[];
+if(dojo.render.html.ie){
+for(var i=0;i<node.childNodes.length;i++){
+_21a.push(node.childNodes[i]);
+}
+}
+dojo.dom.removeChildren(node);
+node.appendChild(_219);
+for(var i=0;i<_21a.length;i++){
+dojo.dom.destroyNode(_21a[i]);
+}
+};
+dojo.dom.removeChildren=function(node){
+var _21d=node.childNodes.length;
+while(node.hasChildNodes()){
+dojo.dom.removeNode(node.firstChild);
+}
+return _21d;
+};
+dojo.dom.replaceNode=function(node,_21f){
+return node.parentNode.replaceChild(_21f,node);
+};
+dojo.dom.destroyNode=function(node){
+if(node.parentNode){
+node=dojo.dom.removeNode(node);
+}
+if(node.nodeType!=3){
+if(dojo.evalObjPath("dojo.event.browser.clean",false)){
+dojo.event.browser.clean(node);
+}
+if(dojo.render.html.ie){
+node.outerHTML="";
+}
+}
+};
+dojo.dom.removeNode=function(node){
+if(node&&node.parentNode){
+return node.parentNode.removeChild(node);
+}
+};
+dojo.dom.getAncestors=function(node,_223,_224){
+var _225=[];
+var _226=(_223&&(_223 instanceof Function||typeof _223=="function"));
+while(node){
+if(!_226||_223(node)){
+_225.push(node);
+}
+if(_224&&_225.length>0){
+return _225[0];
+}
+node=node.parentNode;
+}
+if(_224){
+return null;
+}
+return _225;
+};
+dojo.dom.getAncestorsByTag=function(node,tag,_229){
+tag=tag.toLowerCase();
+return dojo.dom.getAncestors(node,function(el){
+return ((el.tagName)&&(el.tagName.toLowerCase()==tag));
+},_229);
+};
+dojo.dom.getFirstAncestorByTag=function(node,tag){
+return dojo.dom.getAncestorsByTag(node,tag,true);
+};
+dojo.dom.isDescendantOf=function(node,_22e,_22f){
+if(_22f&&node){
+node=node.parentNode;
+}
+while(node){
+if(node==_22e){
+return true;
+}
+node=node.parentNode;
+}
+return false;
+};
+dojo.dom.innerXML=function(node){
+if(node.innerXML){
+return node.innerXML;
+}else{
+if(node.xml){
+return node.xml;
+}else{
+if(typeof XMLSerializer!="undefined"){
+return (new XMLSerializer()).serializeToString(node);
+}
+}
+}
+};
+dojo.dom.createDocument=function(){
+var doc=null;
+var _232=dojo.doc();
+if(!dj_undef("ActiveXObject")){
+var _233=["MSXML2","Microsoft","MSXML","MSXML3"];
+for(var i=0;i<_233.length;i++){
+try{
+doc=new ActiveXObject(_233[i]+".XMLDOM");
+}
+catch(e){
+}
+if(doc){
+break;
+}
+}
+}else{
+if((_232.implementation)&&(_232.implementation.createDocument)){
+doc=_232.implementation.createDocument("","",null);
+}
+}
+return doc;
+};
+dojo.dom.createDocumentFromText=function(str,_236){
+if(!_236){
+_236="text/xml";
+}
+if(!dj_undef("DOMParser")){
+var _237=new DOMParser();
+return _237.parseFromString(str,_236);
+}else{
+if(!dj_undef("ActiveXObject")){
+var _238=dojo.dom.createDocument();
+if(_238){
+_238.async=false;
+_238.loadXML(str);
+return _238;
+}else{
+dojo.debug("toXml didn't work?");
+}
+}else{
+var _239=dojo.doc();
+if(_239.createElement){
+var tmp=_239.createElement("xml");
+tmp.innerHTML=str;
+if(_239.implementation&&_239.implementation.createDocument){
+var _23b=_239.implementation.createDocument("foo","",null);
+for(var i=0;i<tmp.childNodes.length;i++){
+_23b.importNode(tmp.childNodes.item(i),true);
+}
+return _23b;
+}
+return ((tmp.document)&&(tmp.document.firstChild?tmp.document.firstChild:tmp));
+}
+}
+}
+return null;
+};
+dojo.dom.prependChild=function(node,_23e){
+if(_23e.firstChild){
+_23e.insertBefore(node,_23e.firstChild);
+}else{
+_23e.appendChild(node);
+}
+return true;
+};
+dojo.dom.insertBefore=function(node,ref,_241){
+if((_241!=true)&&(node===ref||node.nextSibling===ref)){
+return false;
+}
+var _242=ref.parentNode;
+_242.insertBefore(node,ref);
+return true;
+};
+dojo.dom.insertAfter=function(node,ref,_245){
+var pn=ref.parentNode;
+if(ref==pn.lastChild){
+if((_245!=true)&&(node===ref)){
+return false;
+}
+pn.appendChild(node);
+}else{
+return this.insertBefore(node,ref.nextSibling,_245);
+}
+return true;
+};
+dojo.dom.insertAtPosition=function(node,ref,_249){
+if((!node)||(!ref)||(!_249)){
+return false;
+}
+switch(_249.toLowerCase()){
+case "before":
+return dojo.dom.insertBefore(node,ref);
+case "after":
+return dojo.dom.insertAfter(node,ref);
+case "first":
+if(ref.firstChild){
+return dojo.dom.insertBefore(node,ref.firstChild);
+}else{
+ref.appendChild(node);
+return true;
+}
+break;
+default:
+ref.appendChild(node);
+return true;
+}
+};
+dojo.dom.insertAtIndex=function(node,_24b,_24c){
+var _24d=_24b.childNodes;
+if(!_24d.length||_24d.length==_24c){
+_24b.appendChild(node);
+return true;
+}
+if(_24c==0){
+return dojo.dom.prependChild(node,_24b);
+}
+return dojo.dom.insertAfter(node,_24d[_24c-1]);
+};
+dojo.dom.textContent=function(node,text){
+if(arguments.length>1){
+var _250=dojo.doc();
+dojo.dom.replaceChildren(node,_250.createTextNode(text));
+return text;
+}else{
+if(node.textContent!=undefined){
+return node.textContent;
+}
+var _251="";
+if(node==null){
+return _251;
+}
+for(var i=0;i<node.childNodes.length;i++){
+switch(node.childNodes[i].nodeType){
+case 1:
+case 5:
+_251+=dojo.dom.textContent(node.childNodes[i]);
+break;
+case 3:
+case 2:
+case 4:
+_251+=node.childNodes[i].nodeValue;
+break;
+default:
+break;
+}
+}
+return _251;
+}
+};
+dojo.dom.hasParent=function(node){
+return Boolean(node&&node.parentNode&&dojo.dom.isNode(node.parentNode));
+};
+dojo.dom.isTag=function(node){
+if(node&&node.tagName){
+for(var i=1;i<arguments.length;i++){
+if(node.tagName==String(arguments[i])){
+return String(arguments[i]);
+}
+}
+}
+return "";
+};
+dojo.dom.setAttributeNS=function(elem,_257,_258,_259){
+if(elem==null||((elem==undefined)&&(typeof elem=="undefined"))){
+dojo.raise("No element given to dojo.dom.setAttributeNS");
+}
+if(!((elem.setAttributeNS==undefined)&&(typeof elem.setAttributeNS=="undefined"))){
+elem.setAttributeNS(_257,_258,_259);
+}else{
+var _25a=elem.ownerDocument;
+var _25b=_25a.createNode(2,_258,_257);
+_25b.nodeValue=_259;
+elem.setAttributeNode(_25b);
+}
+};
+dojo.provide("dojo.undo.browser");
+try{
+if((!djConfig["preventBackButtonFix"])&&(!dojo.hostenv.post_load_)){
+document.write("<iframe style='border: 0px; width: 1px; height: 1px; position: absolute; bottom: 0px; right: 0px; visibility: visible;' name='djhistory' id='djhistory' src='"+(dojo.hostenv.getBaseScriptUri()+"iframe_history.html")+"'></iframe>");
+}
+}
+catch(e){
+}
+if(dojo.render.html.opera){
+dojo.debug("Opera is not supported with dojo.undo.browser, so back/forward detection will not work.");
+}
+dojo.undo.browser={initialHref:(!dj_undef("window"))?window.location.href:"",initialHash:(!dj_undef("window"))?window.location.hash:"",moveForward:false,historyStack:[],forwardStack:[],historyIframe:null,bookmarkAnchor:null,locationTimer:null,setInitialState:function(args){
+this.initialState=this._createState(this.initialHref,args,this.initialHash);
+},addToHistory:function(args){
+this.forwardStack=[];
+var hash=null;
+var url=null;
+if(!this.historyIframe){
+this.historyIframe=window.frames["djhistory"];
+}
+if(!this.bookmarkAnchor){
+this.bookmarkAnchor=document.createElement("a");
+dojo.body().appendChild(this.bookmarkAnchor);
+this.bookmarkAnchor.style.display="none";
+}
+if(args["changeUrl"]){
+hash="#"+((args["changeUrl"]!==true)?args["changeUrl"]:(new Date()).getTime());
+if(this.historyStack.length==0&&this.initialState.urlHash==hash){
+this.initialState=this._createState(url,args,hash);
+return;
+}else{
+if(this.historyStack.length>0&&this.historyStack[this.historyStack.length-1].urlHash==hash){
+this.historyStack[this.historyStack.length-1]=this._createState(url,args,hash);
+return;
+}
+}
+this.changingUrl=true;
+setTimeout("window.location.href = '"+hash+"'; dojo.undo.browser.changingUrl = false;",1);
+this.bookmarkAnchor.href=hash;
+if(dojo.render.html.ie){
+url=this._loadIframeHistory();
+var _260=args["back"]||args["backButton"]||args["handle"];
+var tcb=function(_262){
+if(window.location.hash!=""){
+setTimeout("window.location.href = '"+hash+"';",1);
+}
+_260.apply(this,[_262]);
+};
+if(args["back"]){
+args.back=tcb;
+}else{
+if(args["backButton"]){
+args.backButton=tcb;
+}else{
+if(args["handle"]){
+args.handle=tcb;
+}
+}
+}
+var _263=args["forward"]||args["forwardButton"]||args["handle"];
+var tfw=function(_265){
+if(window.location.hash!=""){
+window.location.href=hash;
+}
+if(_263){
+_263.apply(this,[_265]);
+}
+};
+if(args["forward"]){
+args.forward=tfw;
+}else{
+if(args["forwardButton"]){
+args.forwardButton=tfw;
+}else{
+if(args["handle"]){
+args.handle=tfw;
+}
+}
+}
+}else{
+if(dojo.render.html.moz){
+if(!this.locationTimer){
+this.locationTimer=setInterval("dojo.undo.browser.checkLocation();",200);
+}
+}
+}
+}else{
+url=this._loadIframeHistory();
+}
+this.historyStack.push(this._createState(url,args,hash));
+},checkLocation:function(){
+if(!this.changingUrl){
+var hsl=this.historyStack.length;
+if((window.location.hash==this.initialHash||window.location.href==this.initialHref)&&(hsl==1)){
+this.handleBackButton();
+return;
+}
+if(this.forwardStack.length>0){
+if(this.forwardStack[this.forwardStack.length-1].urlHash==window.location.hash){
+this.handleForwardButton();
+return;
+}
+}
+if((hsl>=2)&&(this.historyStack[hsl-2])){
+if(this.historyStack[hsl-2].urlHash==window.location.hash){
+this.handleBackButton();
+return;
+}
+}
+}
+},iframeLoaded:function(evt,_268){
+if(!dojo.render.html.opera){
+var _269=this._getUrlQuery(_268.href);
+if(_269==null){
+if(this.historyStack.length==1){
+this.handleBackButton();
+}
+return;
+}
+if(this.moveForward){
+this.moveForward=false;
+return;
+}
+if(this.historyStack.length>=2&&_269==this._getUrlQuery(this.historyStack[this.historyStack.length-2].url)){
+this.handleBackButton();
+}else{
+if(this.forwardStack.length>0&&_269==this._getUrlQuery(this.forwardStack[this.forwardStack.length-1].url)){
+this.handleForwardButton();
+}
+}
+}
+},handleBackButton:function(){
+var _26a=this.historyStack.pop();
+if(!_26a){
+return;
+}
+var last=this.historyStack[this.historyStack.length-1];
+if(!last&&this.historyStack.length==0){
+last=this.initialState;
+}
+if(last){
+if(last.kwArgs["back"]){
+last.kwArgs["back"]();
+}else{
+if(last.kwArgs["backButton"]){
+last.kwArgs["backButton"]();
+}else{
+if(last.kwArgs["handle"]){
+last.kwArgs.handle("back");
+}
+}
+}
+}
+this.forwardStack.push(_26a);
+},handleForwardButton:function(){
+var last=this.forwardStack.pop();
+if(!last){
+return;
+}
+if(last.kwArgs["forward"]){
+last.kwArgs.forward();
+}else{
+if(last.kwArgs["forwardButton"]){
+last.kwArgs.forwardButton();
+}else{
+if(last.kwArgs["handle"]){
+last.kwArgs.handle("forward");
+}
+}
+}
+this.historyStack.push(last);
+},_createState:function(url,args,hash){
+return {"url":url,"kwArgs":args,"urlHash":hash};
+},_getUrlQuery:function(url){
+var _271=url.split("?");
+if(_271.length<2){
+return null;
+}else{
+return _271[1];
+}
+},_loadIframeHistory:function(){
+var url=dojo.hostenv.getBaseScriptUri()+"iframe_history.html?"+(new Date()).getTime();
+this.moveForward=true;
+dojo.io.setIFrameSrc(this.historyIframe,url,false);
+return url;
+}};
+dojo.provide("dojo.io.BrowserIO");
+if(!dj_undef("window")){
+dojo.io.checkChildrenForFile=function(node){
+var _274=false;
+var _275=node.getElementsByTagName("input");
+dojo.lang.forEach(_275,function(_276){
+if(_274){
+return;
+}
+if(_276.getAttribute("type")=="file"){
+_274=true;
+}
+});
+return _274;
+};
+dojo.io.formHasFile=function(_277){
+return dojo.io.checkChildrenForFile(_277);
+};
+dojo.io.updateNode=function(node,_279){
+node=dojo.byId(node);
+var args=_279;
+if(dojo.lang.isString(_279)){
+args={url:_279};
+}
+args.mimetype="text/html";
+args.load=function(t,d,e){
+while(node.firstChild){
+dojo.dom.destroyNode(node.firstChild);
+}
+node.innerHTML=d;
+};
+dojo.io.bind(args);
+};
+dojo.io.formFilter=function(node){
+var type=(node.type||"").toLowerCase();
+return !node.disabled&&node.name&&!dojo.lang.inArray(["file","submit","image","reset","button"],type);
+};
+dojo.io.encodeForm=function(_280,_281,_282){
+if((!_280)||(!_280.tagName)||(!_280.tagName.toLowerCase()=="form")){
+dojo.raise("Attempted to encode a non-form element.");
+}
+if(!_282){
+_282=dojo.io.formFilter;
+}
+var enc=/utf/i.test(_281||"")?encodeURIComponent:dojo.string.encodeAscii;
+var _284=[];
+for(var i=0;i<_280.elements.length;i++){
+var elm=_280.elements[i];
+if(!elm||elm.tagName.toLowerCase()=="fieldset"||!_282(elm)){
+continue;
+}
+var name=enc(elm.name);
+var type=elm.type.toLowerCase();
+if(type=="select-multiple"){
+for(var j=0;j<elm.options.length;j++){
+if(elm.options[j].selected){
+_284.push(name+"="+enc(elm.options[j].value));
+}
+}
+}else{
+if(dojo.lang.inArray(["radio","checkbox"],type)){
+if(elm.checked){
+_284.push(name+"="+enc(elm.value));
+}
+}else{
+_284.push(name+"="+enc(elm.value));
+}
+}
+}
+var _28a=_280.getElementsByTagName("input");
+for(var i=0;i<_28a.length;i++){
+var _28b=_28a[i];
+if(_28b.type.toLowerCase()=="image"&&_28b.form==_280&&_282(_28b)){
+var name=enc(_28b.name);
+_284.push(name+"="+enc(_28b.value));
+_284.push(name+".x=0");
+_284.push(name+".y=0");
+}
+}
+return _284.join("&")+"&";
+};
+dojo.io.FormBind=function(args){
+this.bindArgs={};
+if(args&&args.formNode){
+this.init(args);
+}else{
+if(args){
+this.init({formNode:args});
+}
+}
+};
+dojo.lang.extend(dojo.io.FormBind,{form:null,bindArgs:null,clickedButton:null,init:function(args){
+var form=dojo.byId(args.formNode);
+if(!form||!form.tagName||form.tagName.toLowerCase()!="form"){
+throw new Error("FormBind: Couldn't apply, invalid form");
+}else{
+if(this.form==form){
+return;
+}else{
+if(this.form){
+throw new Error("FormBind: Already applied to a form");
+}
+}
+}
+dojo.lang.mixin(this.bindArgs,args);
+this.form=form;
+this.connect(form,"onsubmit","submit");
+for(var i=0;i<form.elements.length;i++){
+var node=form.elements[i];
+if(node&&node.type&&dojo.lang.inArray(["submit","button"],node.type.toLowerCase())){
+this.connect(node,"onclick","click");
+}
+}
+var _291=form.getElementsByTagName("input");
+for(var i=0;i<_291.length;i++){
+var _292=_291[i];
+if(_292.type.toLowerCase()=="image"&&_292.form==form){
+this.connect(_292,"onclick","click");
+}
+}
+},onSubmit:function(form){
+return true;
+},submit:function(e){
+e.preventDefault();
+if(this.onSubmit(this.form)){
+dojo.io.bind(dojo.lang.mixin(this.bindArgs,{formFilter:dojo.lang.hitch(this,"formFilter")}));
+}
+},click:function(e){
+var node=e.currentTarget;
+if(node.disabled){
+return;
+}
+this.clickedButton=node;
+},formFilter:function(node){
+var type=(node.type||"").toLowerCase();
+var _299=false;
+if(node.disabled||!node.name){
+_299=false;
+}else{
+if(dojo.lang.inArray(["submit","button","image"],type)){
+if(!this.clickedButton){
+this.clickedButton=node;
+}
+_299=node==this.clickedButton;
+}else{
+_299=!dojo.lang.inArray(["file","submit","reset","button"],type);
+}
+}
+return _299;
+},connect:function(_29a,_29b,_29c){
+if(dojo.evalObjPath("dojo.event.connect")){
+dojo.event.connect(_29a,_29b,this,_29c);
+}else{
+var fcn=dojo.lang.hitch(this,_29c);
+_29a[_29b]=function(e){
+if(!e){
+e=window.event;
+}
+if(!e.currentTarget){
+e.currentTarget=e.srcElement;
+}
+if(!e.preventDefault){
+e.preventDefault=function(){
+window.event.returnValue=false;
+};
+}
+fcn(e);
+};
+}
+}});
+dojo.io.XMLHTTPTransport=new function(){
+var _29f=this;
+var _2a0={};
+this.useCache=false;
+this.preventCache=false;
+function getCacheKey(url,_2a2,_2a3){
+return url+"|"+_2a2+"|"+_2a3.toLowerCase();
+}
+function addToCache(url,_2a5,_2a6,http){
+_2a0[getCacheKey(url,_2a5,_2a6)]=http;
+}
+function getFromCache(url,_2a9,_2aa){
+return _2a0[getCacheKey(url,_2a9,_2aa)];
+}
+this.clearCache=function(){
+_2a0={};
+};
+function doLoad(_2ab,http,url,_2ae,_2af){
+if(((http.status>=200)&&(http.status<300))||(http.status==304)||(location.protocol=="file:"&&(http.status==0||http.status==undefined))||(location.protocol=="chrome:"&&(http.status==0||http.status==undefined))){
+var ret;
+if(_2ab.method.toLowerCase()=="head"){
+var _2b1=http.getAllResponseHeaders();
+ret={};
+ret.toString=function(){
+return _2b1;
+};
+var _2b2=_2b1.split(/[\r\n]+/g);
+for(var i=0;i<_2b2.length;i++){
+var pair=_2b2[i].match(/^([^:]+)\s*:\s*(.+)$/i);
+if(pair){
+ret[pair[1]]=pair[2];
+}
+}
+}else{
+if(_2ab.mimetype=="text/javascript"){
+try{
+ret=dj_eval(http.responseText);
+}
+catch(e){
+dojo.debug(e);
+dojo.debug(http.responseText);
+ret=null;
+}
+}else{
+if(_2ab.mimetype=="text/json"||_2ab.mimetype=="application/json"){
+try{
+ret=dj_eval("("+http.responseText+")");
+}
+catch(e){
+dojo.debug(e);
+dojo.debug(http.responseText);
+ret=false;
+}
+}else{
+if((_2ab.mimetype=="application/xml")||(_2ab.mimetype=="text/xml")){
+ret=http.responseXML;
+if(!ret||typeof ret=="string"||!http.getResponseHeader("Content-Type")){
+ret=dojo.dom.createDocumentFromText(http.responseText);
+}
+}else{
+ret=http.responseText;
+}
+}
+}
+}
+if(_2af){
+addToCache(url,_2ae,_2ab.method,http);
+}
+_2ab[(typeof _2ab.load=="function")?"load":"handle"]("load",ret,http,_2ab);
+}else{
+var _2b5=new dojo.io.Error("XMLHttpTransport Error: "+http.status+" "+http.statusText);
+_2ab[(typeof _2ab.error=="function")?"error":"handle"]("error",_2b5,http,_2ab);
+}
+}
+function setHeaders(http,_2b7){
+if(_2b7["headers"]){
+for(var _2b8 in _2b7["headers"]){
+if(_2b8.toLowerCase()=="content-type"&&!_2b7["contentType"]){
+_2b7["contentType"]=_2b7["headers"][_2b8];
+}else{
+http.setRequestHeader(_2b8,_2b7["headers"][_2b8]);
+}
+}
+}
+}
+this.inFlight=[];
+this.inFlightTimer=null;
+this.startWatchingInFlight=function(){
+if(!this.inFlightTimer){
+this.inFlightTimer=setTimeout("dojo.io.XMLHTTPTransport.watchInFlight();",10);
+}
+};
+this.watchInFlight=function(){
+var now=null;
+if(!dojo.hostenv._blockAsync&&!_29f._blockAsync){
+for(var x=this.inFlight.length-1;x>=0;x--){
+try{
+var tif=this.inFlight[x];
+if(!tif||tif.http._aborted||!tif.http.readyState){
+this.inFlight.splice(x,1);
+continue;
+}
+if(4==tif.http.readyState){
+this.inFlight.splice(x,1);
+doLoad(tif.req,tif.http,tif.url,tif.query,tif.useCache);
+}else{
+if(tif.startTime){
+if(!now){
+now=(new Date()).getTime();
+}
+if(tif.startTime+(tif.req.timeoutSeconds*1000)<now){
+if(typeof tif.http.abort=="function"){
+tif.http.abort();
+}
+this.inFlight.splice(x,1);
+tif.req[(typeof tif.req.timeout=="function")?"timeout":"handle"]("timeout",null,tif.http,tif.req);
+}
+}
+}
+}
+catch(e){
+try{
+var _2bc=new dojo.io.Error("XMLHttpTransport.watchInFlight Error: "+e);
+tif.req[(typeof tif.req.error=="function")?"error":"handle"]("error",_2bc,tif.http,tif.req);
+}
+catch(e2){
+dojo.debug("XMLHttpTransport error callback failed: "+e2);
+}
+}
+}
+}
+clearTimeout(this.inFlightTimer);
+if(this.inFlight.length==0){
+this.inFlightTimer=null;
+return;
+}
+this.inFlightTimer=setTimeout("dojo.io.XMLHTTPTransport.watchInFlight();",10);
+};
+var _2bd=dojo.hostenv.getXmlhttpObject()?true:false;
+this.canHandle=function(_2be){
+return _2bd&&dojo.lang.inArray(["text/plain","text/html","application/xml","text/xml","text/javascript","text/json","application/json"],(_2be["mimetype"].toLowerCase()||""))&&!(_2be["formNode"]&&dojo.io.formHasFile(_2be["formNode"]));
+};
+this.multipartBoundary="45309FFF-BD65-4d50-99C9-36986896A96F";
+this.bind=function(_2bf){
+if(!_2bf["url"]){
+if(!_2bf["formNode"]&&(_2bf["backButton"]||_2bf["back"]||_2bf["changeUrl"]||_2bf["watchForURL"])&&(!djConfig.preventBackButtonFix)){
+dojo.deprecated("Using dojo.io.XMLHTTPTransport.bind() to add to browser history without doing an IO request","Use dojo.undo.browser.addToHistory() instead.","0.4");
+dojo.undo.browser.addToHistory(_2bf);
+return true;
+}
+}
+var url=_2bf.url;
+var _2c1="";
+if(_2bf["formNode"]){
+var ta=_2bf.formNode.getAttribute("action");
+if((ta)&&(!_2bf["url"])){
+url=ta;
+}
+var tp=_2bf.formNode.getAttribute("method");
+if((tp)&&(!_2bf["method"])){
+_2bf.method=tp;
+}
+_2c1+=dojo.io.encodeForm(_2bf.formNode,_2bf.encoding,_2bf["formFilter"]);
+}
+if(url.indexOf("#")>-1){
+dojo.debug("Warning: dojo.io.bind: stripping hash values from url:",url);
+url=url.split("#")[0];
+}
+if(_2bf["file"]){
+_2bf.method="post";
+}
+if(!_2bf["method"]){
+_2bf.method="get";
+}
+if(_2bf.method.toLowerCase()=="get"){
+_2bf.multipart=false;
+}else{
+if(_2bf["file"]){
+_2bf.multipart=true;
+}else{
+if(!_2bf["multipart"]){
+_2bf.multipart=false;
+}
+}
+}
+if(_2bf["backButton"]||_2bf["back"]||_2bf["changeUrl"]){
+dojo.undo.browser.addToHistory(_2bf);
+}
+var _2c4=_2bf["content"]||{};
+if(_2bf.sendTransport){
+_2c4["dojo.transport"]="xmlhttp";
+}
+do{
+if(_2bf.postContent){
+_2c1=_2bf.postContent;
+break;
+}
+if(_2c4){
+_2c1+=dojo.io.argsFromMap(_2c4,_2bf.encoding);
+}
+if(_2bf.method.toLowerCase()=="get"||!_2bf.multipart){
+break;
+}
+var t=[];
+if(_2c1.length){
+var q=_2c1.split("&");
+for(var i=0;i<q.length;++i){
+if(q[i].length){
+var p=q[i].split("=");
+t.push("--"+this.multipartBoundary,"Content-Disposition: form-data; name=\""+p[0]+"\"","",p[1]);
+}
+}
+}
+if(_2bf.file){
+if(dojo.lang.isArray(_2bf.file)){
+for(var i=0;i<_2bf.file.length;++i){
+var o=_2bf.file[i];
+t.push("--"+this.multipartBoundary,"Content-Disposition: form-data; name=\""+o.name+"\"; filename=\""+("fileName" in o?o.fileName:o.name)+"\"","Content-Type: "+("contentType" in o?o.contentType:"application/octet-stream"),"",o.content);
+}
+}else{
+var o=_2bf.file;
+t.push("--"+this.multipartBoundary,"Content-Disposition: form-data; name=\""+o.name+"\"; filename=\""+("fileName" in o?o.fileName:o.name)+"\"","Content-Type: "+("contentType" in o?o.contentType:"application/octet-stream"),"",o.content);
+}
+}
+if(t.length){
+t.push("--"+this.multipartBoundary+"--","");
+_2c1=t.join("\r\n");
+}
+}while(false);
+var _2ca=_2bf["sync"]?false:true;
+var _2cb=_2bf["preventCache"]||(this.preventCache==true&&_2bf["preventCache"]!=false);
+var _2cc=_2bf["useCache"]==true||(this.useCache==true&&_2bf["useCache"]!=false);
+if(!_2cb&&_2cc){
+var _2cd=getFromCache(url,_2c1,_2bf.method);
+if(_2cd){
+doLoad(_2bf,_2cd,url,_2c1,false);
+return;
+}
+}
+var http=dojo.hostenv.getXmlhttpObject(_2bf);
+var _2cf=false;
+if(_2ca){
+var _2d0=this.inFlight.push({"req":_2bf,"http":http,"url":url,"query":_2c1,"useCache":_2cc,"startTime":_2bf.timeoutSeconds?(new Date()).getTime():0});
+this.startWatchingInFlight();
+}else{
+_29f._blockAsync=true;
+}
+if(_2bf.method.toLowerCase()=="post"){
+if(!_2bf.user){
+http.open("POST",url,_2ca);
+}else{
+http.open("POST",url,_2ca,_2bf.user,_2bf.password);
+}
+setHeaders(http,_2bf);
+http.setRequestHeader("Content-Type",_2bf.multipart?("multipart/form-data; boundary="+this.multipartBoundary):(_2bf.contentType||"application/x-www-form-urlencoded"));
+try{
+http.send(_2c1);
+}
+catch(e){
+if(typeof http.abort=="function"){
+http.abort();
+}
+doLoad(_2bf,{status:404},url,_2c1,_2cc);
+}
+}else{
+var _2d1=url;
+if(_2c1!=""){
+_2d1+=(_2d1.indexOf("?")>-1?"&":"?")+_2c1;
+}
+if(_2cb){
+_2d1+=(dojo.string.endsWithAny(_2d1,"?","&")?"":(_2d1.indexOf("?")>-1?"&":"?"))+"dojo.preventCache="+new Date().valueOf();
+}
+if(!_2bf.user){
+http.open(_2bf.method.toUpperCase(),_2d1,_2ca);
+}else{
+http.open(_2bf.method.toUpperCase(),_2d1,_2ca,_2bf.user,_2bf.password);
+}
+setHeaders(http,_2bf);
+try{
+http.send(null);
+}
+catch(e){
+if(typeof http.abort=="function"){
+http.abort();
+}
+doLoad(_2bf,{status:404},url,_2c1,_2cc);
+}
+}
+if(!_2ca){
+doLoad(_2bf,http,url,_2c1,_2cc);
+_29f._blockAsync=false;
+}
+_2bf.abort=function(){
+try{
+http._aborted=true;
+}
+catch(e){
+}
+return http.abort();
+};
+return;
+};
+dojo.io.transports.addTransport("XMLHTTPTransport");
+};
+}
+dojo.provide("dojo.io.cookie");
+dojo.io.cookie.setCookie=function(name,_2d3,days,path,_2d6,_2d7){
+var _2d8=-1;
+if((typeof days=="number")&&(days>=0)){
+var d=new Date();
+d.setTime(d.getTime()+(days*24*60*60*1000));
+_2d8=d.toGMTString();
+}
+_2d3=escape(_2d3);
+document.cookie=name+"="+_2d3+";"+(_2d8!=-1?" expires="+_2d8+";":"")+(path?"path="+path:"")+(_2d6?"; domain="+_2d6:"")+(_2d7?"; secure":"");
+};
+dojo.io.cookie.set=dojo.io.cookie.setCookie;
+dojo.io.cookie.getCookie=function(name){
+var idx=document.cookie.lastIndexOf(name+"=");
+if(idx==-1){
+return null;
+}
+var _2dc=document.cookie.substring(idx+name.length+1);
+var end=_2dc.indexOf(";");
+if(end==-1){
+end=_2dc.length;
+}
+_2dc=_2dc.substring(0,end);
+_2dc=unescape(_2dc);
+return _2dc;
+};
+dojo.io.cookie.get=dojo.io.cookie.getCookie;
+dojo.io.cookie.deleteCookie=function(name){
+dojo.io.cookie.setCookie(name,"-",0);
+};
+dojo.io.cookie.setObjectCookie=function(name,obj,days,path,_2e3,_2e4,_2e5){
+if(arguments.length==5){
+_2e5=_2e3;
+_2e3=null;
+_2e4=null;
+}
+var _2e6=[],_2e7,_2e8="";
+if(!_2e5){
+_2e7=dojo.io.cookie.getObjectCookie(name);
+}
+if(days>=0){
+if(!_2e7){
+_2e7={};
+}
+for(var prop in obj){
+if(obj[prop]==null){
+delete _2e7[prop];
+}else{
+if((typeof obj[prop]=="string")||(typeof obj[prop]=="number")){
+_2e7[prop]=obj[prop];
+}
+}
+}
+prop=null;
+for(var prop in _2e7){
+_2e6.push(escape(prop)+"="+escape(_2e7[prop]));
+}
+_2e8=_2e6.join("&");
+}
+dojo.io.cookie.setCookie(name,_2e8,days,path,_2e3,_2e4);
+};
+dojo.io.cookie.getObjectCookie=function(name){
+var _2eb=null,_2ec=dojo.io.cookie.getCookie(name);
+if(_2ec){
+_2eb={};
+var _2ed=_2ec.split("&");
+for(var i=0;i<_2ed.length;i++){
+var pair=_2ed[i].split("=");
+var _2f0=pair[1];
+if(isNaN(_2f0)){
+_2f0=unescape(pair[1]);
+}
+_2eb[unescape(pair[0])]=_2f0;
+}
+}
+return _2eb;
+};
+dojo.io.cookie.isSupported=function(){
+if(typeof navigator.cookieEnabled!="boolean"){
+dojo.io.cookie.setCookie("__TestingYourBrowserForCookieSupport__","CookiesAllowed",90,null);
+var _2f1=dojo.io.cookie.getCookie("__TestingYourBrowserForCookieSupport__");
+navigator.cookieEnabled=(_2f1=="CookiesAllowed");
+if(navigator.cookieEnabled){
+this.deleteCookie("__TestingYourBrowserForCookieSupport__");
+}
+}
+return navigator.cookieEnabled;
+};
+if(!dojo.io.cookies){
+dojo.io.cookies=dojo.io.cookie;
+}
+dojo.provide("dojo.io.*");
+dojo.provide("dojo.event.common");
+dojo.event=new function(){
+this._canTimeout=dojo.lang.isFunction(dj_global["setTimeout"])||dojo.lang.isAlien(dj_global["setTimeout"]);
+function interpolateArgs(args,_2f3){
+var dl=dojo.lang;
+var ao={srcObj:dj_global,srcFunc:null,adviceObj:dj_global,adviceFunc:null,aroundObj:null,aroundFunc:null,adviceType:(args.length>2)?args[0]:"after",precedence:"last",once:false,delay:null,rate:0,adviceMsg:false};
+switch(args.length){
+case 0:
+return;
+case 1:
+return;
+case 2:
+ao.srcFunc=args[0];
+ao.adviceFunc=args[1];
+break;
+case 3:
+if((dl.isObject(args[0]))&&(dl.isString(args[1]))&&(dl.isString(args[2]))){
+ao.adviceType="after";
+ao.srcObj=args[0];
+ao.srcFunc=args[1];
+ao.adviceFunc=args[2];
+}else{
+if((dl.isString(args[1]))&&(dl.isString(args[2]))){
+ao.srcFunc=args[1];
+ao.adviceFunc=args[2];
+}else{
+if((dl.isObject(args[0]))&&(dl.isString(args[1]))&&(dl.isFunction(args[2]))){
+ao.adviceType="after";
+ao.srcObj=args[0];
+ao.srcFunc=args[1];
+var _2f6=dl.nameAnonFunc(args[2],ao.adviceObj,_2f3);
+ao.adviceFunc=_2f6;
+}else{
+if((dl.isFunction(args[0]))&&(dl.isObject(args[1]))&&(dl.isString(args[2]))){
+ao.adviceType="after";
+ao.srcObj=dj_global;
+var _2f6=dl.nameAnonFunc(args[0],ao.srcObj,_2f3);
+ao.srcFunc=_2f6;
+ao.adviceObj=args[1];
+ao.adviceFunc=args[2];
+}
+}
+}
+}
+break;
+case 4:
+if((dl.isObject(args[0]))&&(dl.isObject(args[2]))){
+ao.adviceType="after";
+ao.srcObj=args[0];
+ao.srcFunc=args[1];
+ao.adviceObj=args[2];
+ao.adviceFunc=args[3];
+}else{
+if((dl.isString(args[0]))&&(dl.isString(args[1]))&&(dl.isObject(args[2]))){
+ao.adviceType=args[0];
+ao.srcObj=dj_global;
+ao.srcFunc=args[1];
+ao.adviceObj=args[2];
+ao.adviceFunc=args[3];
+}else{
+if((dl.isString(args[0]))&&(dl.isFunction(args[1]))&&(dl.isObject(args[2]))){
+ao.adviceType=args[0];
+ao.srcObj=dj_global;
+var _2f6=dl.nameAnonFunc(args[1],dj_global,_2f3);
+ao.srcFunc=_2f6;
+ao.adviceObj=args[2];
+ao.adviceFunc=args[3];
+}else{
+if((dl.isString(args[0]))&&(dl.isObject(args[1]))&&(dl.isString(args[2]))&&(dl.isFunction(args[3]))){
+ao.srcObj=args[1];
+ao.srcFunc=args[2];
+var _2f6=dl.nameAnonFunc(args[3],dj_global,_2f3);
+ao.adviceObj=dj_global;
+ao.adviceFunc=_2f6;
+}else{
+if(dl.isObject(args[1])){
+ao.srcObj=args[1];
+ao.srcFunc=args[2];
+ao.adviceObj=dj_global;
+ao.adviceFunc=args[3];
+}else{
+if(dl.isObject(args[2])){
+ao.srcObj=dj_global;
+ao.srcFunc=args[1];
+ao.adviceObj=args[2];
+ao.adviceFunc=args[3];
+}else{
+ao.srcObj=ao.adviceObj=ao.aroundObj=dj_global;
+ao.srcFunc=args[1];
+ao.adviceFunc=args[2];
+ao.aroundFunc=args[3];
+}
+}
+}
+}
+}
+}
+break;
+case 6:
+ao.srcObj=args[1];
+ao.srcFunc=args[2];
+ao.adviceObj=args[3];
+ao.adviceFunc=args[4];
+ao.aroundFunc=args[5];
+ao.aroundObj=dj_global;
+break;
+default:
+ao.srcObj=args[1];
+ao.srcFunc=args[2];
+ao.adviceObj=args[3];
+ao.adviceFunc=args[4];
+ao.aroundObj=args[5];
+ao.aroundFunc=args[6];
+ao.once=args[7];
+ao.delay=args[8];
+ao.rate=args[9];
+ao.adviceMsg=args[10];
+break;
+}
+if(dl.isFunction(ao.aroundFunc)){
+var _2f6=dl.nameAnonFunc(ao.aroundFunc,ao.aroundObj,_2f3);
+ao.aroundFunc=_2f6;
+}
+if(dl.isFunction(ao.srcFunc)){
+ao.srcFunc=dl.getNameInObj(ao.srcObj,ao.srcFunc);
+}
+if(dl.isFunction(ao.adviceFunc)){
+ao.adviceFunc=dl.getNameInObj(ao.adviceObj,ao.adviceFunc);
+}
+if((ao.aroundObj)&&(dl.isFunction(ao.aroundFunc))){
+ao.aroundFunc=dl.getNameInObj(ao.aroundObj,ao.aroundFunc);
+}
+if(!ao.srcObj){
+dojo.raise("bad srcObj for srcFunc: "+ao.srcFunc);
+}
+if(!ao.adviceObj){
+dojo.raise("bad adviceObj for adviceFunc: "+ao.adviceFunc);
+}
+if(!ao.adviceFunc){
+dojo.debug("bad adviceFunc for srcFunc: "+ao.srcFunc);
+dojo.debugShallow(ao);
+}
+return ao;
+}
+this.connect=function(){
+if(arguments.length==1){
+var ao=arguments[0];
+}else{
+var ao=interpolateArgs(arguments,true);
+}
+if(dojo.lang.isString(ao.srcFunc)&&(ao.srcFunc.toLowerCase()=="onkey")){
+if(dojo.render.html.ie){
+ao.srcFunc="onkeydown";
+this.connect(ao);
+}
+ao.srcFunc="onkeypress";
+}
+if(dojo.lang.isArray(ao.srcObj)&&ao.srcObj!=""){
+var _2f8={};
+for(var x in ao){
+_2f8[x]=ao[x];
+}
+var mjps=[];
+dojo.lang.forEach(ao.srcObj,function(src){
+if((dojo.render.html.capable)&&(dojo.lang.isString(src))){
+src=dojo.byId(src);
+}
+_2f8.srcObj=src;
+mjps.push(dojo.event.connect.call(dojo.event,_2f8));
+});
+return mjps;
+}
+var mjp=dojo.event.MethodJoinPoint.getForMethod(ao.srcObj,ao.srcFunc);
+if(ao.adviceFunc){
+var mjp2=dojo.event.MethodJoinPoint.getForMethod(ao.adviceObj,ao.adviceFunc);
+}
+mjp.kwAddAdvice(ao);
+return mjp;
+};
+this.log=function(a1,a2){
+var _300;
+if((arguments.length==1)&&(typeof a1=="object")){
+_300=a1;
+}else{
+_300={srcObj:a1,srcFunc:a2};
+}
+_300.adviceFunc=function(){
+var _301=[];
+for(var x=0;x<arguments.length;x++){
+_301.push(arguments[x]);
+}
+dojo.debug("("+_300.srcObj+")."+_300.srcFunc,":",_301.join(", "));
+};
+this.kwConnect(_300);
+};
+this.connectBefore=function(){
+var args=["before"];
+for(var i=0;i<arguments.length;i++){
+args.push(arguments[i]);
+}
+return this.connect.apply(this,args);
+};
+this.connectAround=function(){
+var args=["around"];
+for(var i=0;i<arguments.length;i++){
+args.push(arguments[i]);
+}
+return this.connect.apply(this,args);
+};
+this.connectOnce=function(){
+var ao=interpolateArgs(arguments,true);
+ao.once=true;
+return this.connect(ao);
+};
+this._kwConnectImpl=function(_308,_309){
+var fn=(_309)?"disconnect":"connect";
+if(typeof _308["srcFunc"]=="function"){
+_308.srcObj=_308["srcObj"]||dj_global;
+var _30b=dojo.lang.nameAnonFunc(_308.srcFunc,_308.srcObj,true);
+_308.srcFunc=_30b;
+}
+if(typeof _308["adviceFunc"]=="function"){
+_308.adviceObj=_308["adviceObj"]||dj_global;
+var _30b=dojo.lang.nameAnonFunc(_308.adviceFunc,_308.adviceObj,true);
+_308.adviceFunc=_30b;
+}
+_308.srcObj=_308["srcObj"]||dj_global;
+_308.adviceObj=_308["adviceObj"]||_308["targetObj"]||dj_global;
+_308.adviceFunc=_308["adviceFunc"]||_308["targetFunc"];
+return dojo.event[fn](_308);
+};
+this.kwConnect=function(_30c){
+return this._kwConnectImpl(_30c,false);
+};
+this.disconnect=function(){
+if(arguments.length==1){
+var ao=arguments[0];
+}else{
+var ao=interpolateArgs(arguments,true);
+}
+if(!ao.adviceFunc){
+return;
+}
+if(dojo.lang.isString(ao.srcFunc)&&(ao.srcFunc.toLowerCase()=="onkey")){
+if(dojo.render.html.ie){
+ao.srcFunc="onkeydown";
+this.disconnect(ao);
+}
+ao.srcFunc="onkeypress";
+}
+if(!ao.srcObj[ao.srcFunc]){
+return null;
+}
+var mjp=dojo.event.MethodJoinPoint.getForMethod(ao.srcObj,ao.srcFunc,true);
+mjp.removeAdvice(ao.adviceObj,ao.adviceFunc,ao.adviceType,ao.once);
+return mjp;
+};
+this.kwDisconnect=function(_30f){
+return this._kwConnectImpl(_30f,true);
+};
+};
+dojo.event.MethodInvocation=function(_310,obj,args){
+this.jp_=_310;
+this.object=obj;
+this.args=[];
+for(var x=0;x<args.length;x++){
+this.args[x]=args[x];
+}
+this.around_index=-1;
+};
+dojo.event.MethodInvocation.prototype.proceed=function(){
+this.around_index++;
+if(this.around_index>=this.jp_.around.length){
+return this.jp_.object[this.jp_.methodname].apply(this.jp_.object,this.args);
+}else{
+var ti=this.jp_.around[this.around_index];
+var mobj=ti[0]||dj_global;
+var meth=ti[1];
+return mobj[meth].call(mobj,this);
+}
+};
+dojo.event.MethodJoinPoint=function(obj,_318){
+this.object=obj||dj_global;
+this.methodname=_318;
+this.methodfunc=this.object[_318];
+this.squelch=false;
+};
+dojo.event.MethodJoinPoint.getForMethod=function(obj,_31a){
+if(!obj){
+obj=dj_global;
+}
+if(!obj[_31a]){
+obj[_31a]=function(){
+};
+if(!obj[_31a]){
+dojo.raise("Cannot set do-nothing method on that object "+_31a);
+}
+}else{
+if((!dojo.lang.isFunction(obj[_31a]))&&(!dojo.lang.isAlien(obj[_31a]))){
+return null;
+}
+}
+var _31b=_31a+"$joinpoint";
+var _31c=_31a+"$joinpoint$method";
+var _31d=obj[_31b];
+if(!_31d){
+var _31e=false;
+if(dojo.event["browser"]){
+if((obj["attachEvent"])||(obj["nodeType"])||(obj["addEventListener"])){
+_31e=true;
+dojo.event.browser.addClobberNodeAttrs(obj,[_31b,_31c,_31a]);
+}
+}
+var _31f=obj[_31a].length;
+obj[_31c]=obj[_31a];
+_31d=obj[_31b]=new dojo.event.MethodJoinPoint(obj,_31c);
+obj[_31a]=function(){
+var args=[];
+if((_31e)&&(!arguments.length)){
+var evt=null;
+try{
+if(obj.ownerDocument){
+evt=obj.ownerDocument.parentWindow.event;
+}else{
+if(obj.documentElement){
+evt=obj.documentElement.ownerDocument.parentWindow.event;
+}else{
+if(obj.event){
+evt=obj.event;
+}else{
+evt=window.event;
+}
+}
+}
+}
+catch(e){
+evt=window.event;
+}
+if(evt){
+args.push(dojo.event.browser.fixEvent(evt,this));
+}
+}else{
+for(var x=0;x<arguments.length;x++){
+if((x==0)&&(_31e)&&(dojo.event.browser.isEvent(arguments[x]))){
+args.push(dojo.event.browser.fixEvent(arguments[x],this));
+}else{
+args.push(arguments[x]);
+}
+}
+}
+return _31d.run.apply(_31d,args);
+};
+obj[_31a].__preJoinArity=_31f;
+}
+return _31d;
+};
+dojo.lang.extend(dojo.event.MethodJoinPoint,{unintercept:function(){
+this.object[this.methodname]=this.methodfunc;
+this.before=[];
+this.after=[];
+this.around=[];
+},disconnect:dojo.lang.forward("unintercept"),run:function(){
+var obj=this.object||dj_global;
+var args=arguments;
+var _325=[];
+for(var x=0;x<args.length;x++){
+_325[x]=args[x];
+}
+var _327=function(marr){
+if(!marr){
+dojo.debug("Null argument to unrollAdvice()");
+return;
+}
+var _329=marr[0]||dj_global;
+var _32a=marr[1];
+if(!_329[_32a]){
+dojo.raise("function \""+_32a+"\" does not exist on \""+_329+"\"");
+}
+var _32b=marr[2]||dj_global;
+var _32c=marr[3];
+var msg=marr[6];
+var _32e;
+var to={args:[],jp_:this,object:obj,proceed:function(){
+return _329[_32a].apply(_329,to.args);
+}};
+to.args=_325;
+var _330=parseInt(marr[4]);
+var _331=((!isNaN(_330))&&(marr[4]!==null)&&(typeof marr[4]!="undefined"));
+if(marr[5]){
+var rate=parseInt(marr[5]);
+var cur=new Date();
+var _334=false;
+if((marr["last"])&&((cur-marr.last)<=rate)){
+if(dojo.event._canTimeout){
+if(marr["delayTimer"]){
+clearTimeout(marr.delayTimer);
+}
+var tod=parseInt(rate*2);
+var mcpy=dojo.lang.shallowCopy(marr);
+marr.delayTimer=setTimeout(function(){
+mcpy[5]=0;
+_327(mcpy);
+},tod);
+}
+return;
+}else{
+marr.last=cur;
+}
+}
+if(_32c){
+_32b[_32c].call(_32b,to);
+}else{
+if((_331)&&((dojo.render.html)||(dojo.render.svg))){
+dj_global["setTimeout"](function(){
+if(msg){
+_329[_32a].call(_329,to);
+}else{
+_329[_32a].apply(_329,args);
+}
+},_330);
+}else{
+if(msg){
+_329[_32a].call(_329,to);
+}else{
+_329[_32a].apply(_329,args);
+}
+}
+}
+};
+var _337=function(){
+if(this.squelch){
+try{
+return _327.apply(this,arguments);
+}
+catch(e){
+dojo.debug(e);
+}
+}else{
+return _327.apply(this,arguments);
+}
+};
+if((this["before"])&&(this.before.length>0)){
+dojo.lang.forEach(this.before.concat(new Array()),_337);
+}
+var _338;
+try{
+if((this["around"])&&(this.around.length>0)){
+var mi=new dojo.event.MethodInvocation(this,obj,args);
+_338=mi.proceed();
+}else{
+if(this.methodfunc){
+_338=this.object[this.methodname].apply(this.object,args);
+}
+}
+}
+catch(e){
+if(!this.squelch){
+dojo.debug(e,"when calling",this.methodname,"on",this.object,"with arguments",args);
+dojo.raise(e);
+}
+}
+if((this["after"])&&(this.after.length>0)){
+dojo.lang.forEach(this.after.concat(new Array()),_337);
+}
+return (this.methodfunc)?_338:null;
+},getArr:function(kind){
+var type="after";
+if((typeof kind=="string")&&(kind.indexOf("before")!=-1)){
+type="before";
+}else{
+if(kind=="around"){
+type="around";
+}
+}
+if(!this[type]){
+this[type]=[];
+}
+return this[type];
+},kwAddAdvice:function(args){
+this.addAdvice(args["adviceObj"],args["adviceFunc"],args["aroundObj"],args["aroundFunc"],args["adviceType"],args["precedence"],args["once"],args["delay"],args["rate"],args["adviceMsg"]);
+},addAdvice:function(_33d,_33e,_33f,_340,_341,_342,once,_344,rate,_346){
+var arr=this.getArr(_341);
+if(!arr){
+dojo.raise("bad this: "+this);
+}
+var ao=[_33d,_33e,_33f,_340,_344,rate,_346];
+if(once){
+if(this.hasAdvice(_33d,_33e,_341,arr)>=0){
+return;
+}
+}
+if(_342=="first"){
+arr.unshift(ao);
+}else{
+arr.push(ao);
+}
+},hasAdvice:function(_349,_34a,_34b,arr){
+if(!arr){
+arr=this.getArr(_34b);
+}
+var ind=-1;
+for(var x=0;x<arr.length;x++){
+var aao=(typeof _34a=="object")?(new String(_34a)).toString():_34a;
+var a1o=(typeof arr[x][1]=="object")?(new String(arr[x][1])).toString():arr[x][1];
+if((arr[x][0]==_349)&&(a1o==aao)){
+ind=x;
+}
+}
+return ind;
+},removeAdvice:function(_351,_352,_353,once){
+var arr=this.getArr(_353);
+var ind=this.hasAdvice(_351,_352,_353,arr);
+if(ind==-1){
+return false;
+}
+while(ind!=-1){
+arr.splice(ind,1);
+if(once){
+break;
+}
+ind=this.hasAdvice(_351,_352,_353,arr);
+}
+return true;
+}});
+dojo.provide("dojo.event.topic");
+dojo.event.topic=new function(){
+this.topics={};
+this.getTopic=function(_357){
+if(!this.topics[_357]){
+this.topics[_357]=new this.TopicImpl(_357);
+}
+return this.topics[_357];
+};
+this.registerPublisher=function(_358,obj,_35a){
+var _358=this.getTopic(_358);
+_358.registerPublisher(obj,_35a);
+};
+this.subscribe=function(_35b,obj,_35d){
+var _35b=this.getTopic(_35b);
+_35b.subscribe(obj,_35d);
+};
+this.unsubscribe=function(_35e,obj,_360){
+var _35e=this.getTopic(_35e);
+_35e.unsubscribe(obj,_360);
+};
+this.destroy=function(_361){
+this.getTopic(_361).destroy();
+delete this.topics[_361];
+};
+this.publishApply=function(_362,args){
+var _362=this.getTopic(_362);
+_362.sendMessage.apply(_362,args);
+};
+this.publish=function(_364,_365){
+var _364=this.getTopic(_364);
+var args=[];
+for(var x=1;x<arguments.length;x++){
+args.push(arguments[x]);
+}
+_364.sendMessage.apply(_364,args);
+};
+};
+dojo.event.topic.TopicImpl=function(_368){
+this.topicName=_368;
+this.subscribe=function(_369,_36a){
+var tf=_36a||_369;
+var to=(!_36a)?dj_global:_369;
+return dojo.event.kwConnect({srcObj:this,srcFunc:"sendMessage",adviceObj:to,adviceFunc:tf});
+};
+this.unsubscribe=function(_36d,_36e){
+var tf=(!_36e)?_36d:_36e;
+var to=(!_36e)?null:_36d;
+return dojo.event.kwDisconnect({srcObj:this,srcFunc:"sendMessage",adviceObj:to,adviceFunc:tf});
+};
+this._getJoinPoint=function(){
+return dojo.event.MethodJoinPoint.getForMethod(this,"sendMessage");
+};
+this.setSquelch=function(_371){
+this._getJoinPoint().squelch=_371;
+};
+this.destroy=function(){
+this._getJoinPoint().disconnect();
+};
+this.registerPublisher=function(_372,_373){
+dojo.event.connect(_372,_373,this,"sendMessage");
+};
+this.sendMessage=function(_374){
+};
+};
+dojo.provide("dojo.event.browser");
+dojo._ie_clobber=new function(){
+this.clobberNodes=[];
+function nukeProp(node,prop){
+try{
+node[prop]=null;
+}
+catch(e){
+}
+try{
+delete node[prop];
+}
+catch(e){
+}
+try{
+node.removeAttribute(prop);
+}
+catch(e){
+}
+}
+this.clobber=function(_377){
+var na;
+var tna;
+if(_377){
+tna=_377.all||_377.getElementsByTagName("*");
+na=[_377];
+for(var x=0;x<tna.length;x++){
+if(tna[x]["__doClobber__"]){
+na.push(tna[x]);
+}
+}
+}else{
+try{
+window.onload=null;
+}
+catch(e){
+}
+na=(this.clobberNodes.length)?this.clobberNodes:document.all;
+}
+tna=null;
+var _37b={};
+for(var i=na.length-1;i>=0;i=i-1){
+var el=na[i];
+try{
+if(el&&el["__clobberAttrs__"]){
+for(var j=0;j<el.__clobberAttrs__.length;j++){
+nukeProp(el,el.__clobberAttrs__[j]);
+}
+nukeProp(el,"__clobberAttrs__");
+nukeProp(el,"__doClobber__");
+}
+}
+catch(e){
+}
+}
+na=null;
+};
+};
+if(dojo.render.html.ie){
+dojo.addOnUnload(function(){
+dojo._ie_clobber.clobber();
+try{
+if((dojo["widget"])&&(dojo.widget["manager"])){
+dojo.widget.manager.destroyAll();
+}
+}
+catch(e){
+}
+if(dojo.widget){
+for(var name in dojo.widget._templateCache){
+if(dojo.widget._templateCache[name].node){
+dojo.dom.destroyNode(dojo.widget._templateCache[name].node);
+dojo.widget._templateCache[name].node=null;
+delete dojo.widget._templateCache[name].node;
+}
+}
+}
+try{
+window.onload=null;
+}
+catch(e){
+}
+try{
+window.onunload=null;
+}
+catch(e){
+}
+dojo._ie_clobber.clobberNodes=[];
+});
+}
+dojo.event.browser=new function(){
+var _380=0;
+this.normalizedEventName=function(_381){
+switch(_381){
+case "CheckboxStateChange":
+case "DOMAttrModified":
+case "DOMMenuItemActive":
+case "DOMMenuItemInactive":
+case "DOMMouseScroll":
+case "DOMNodeInserted":
+case "DOMNodeRemoved":
+case "RadioStateChange":
+return _381;
+break;
+default:
+return _381.toLowerCase();
+break;
+}
+};
+this.clean=function(node){
+if(dojo.render.html.ie){
+dojo._ie_clobber.clobber(node);
+}
+};
+this.addClobberNode=function(node){
+if(!dojo.render.html.ie){
+return;
+}
+if(!node["__doClobber__"]){
+node.__doClobber__=true;
+dojo._ie_clobber.clobberNodes.push(node);
+node.__clobberAttrs__=[];
+}
+};
+this.addClobberNodeAttrs=function(node,_385){
+if(!dojo.render.html.ie){
+return;
+}
+this.addClobberNode(node);
+for(var x=0;x<_385.length;x++){
+node.__clobberAttrs__.push(_385[x]);
+}
+};
+this.removeListener=function(node,_388,fp,_38a){
+if(!_38a){
+var _38a=false;
+}
+_388=dojo.event.browser.normalizedEventName(_388);
+if((_388=="onkey")||(_388=="key")){
+if(dojo.render.html.ie){
+this.removeListener(node,"onkeydown",fp,_38a);
+}
+_388="onkeypress";
+}
+if(_388.substr(0,2)=="on"){
+_388=_388.substr(2);
+}
+if(node.removeEventListener){
+node.removeEventListener(_388,fp,_38a);
+}
+};
+this.addListener=function(node,_38c,fp,_38e,_38f){
+if(!node){
+return;
+}
+if(!_38e){
+var _38e=false;
+}
+_38c=dojo.event.browser.normalizedEventName(_38c);
+if((_38c=="onkey")||(_38c=="key")){
+if(dojo.render.html.ie){
+this.addListener(node,"onkeydown",fp,_38e,_38f);
+}
+_38c="onkeypress";
+}
+if(_38c.substr(0,2)!="on"){
+_38c="on"+_38c;
+}
+if(!_38f){
+var _390=function(evt){
+if(!evt){
+evt=window.event;
+}
+var ret=fp(dojo.event.browser.fixEvent(evt,this));
+if(_38e){
+dojo.event.browser.stopEvent(evt);
+}
+return ret;
+};
+}else{
+_390=fp;
+}
+if(node.addEventListener){
+node.addEventListener(_38c.substr(2),_390,_38e);
+return _390;
+}else{
+if(typeof node[_38c]=="function"){
+var _393=node[_38c];
+node[_38c]=function(e){
+_393(e);
+return _390(e);
+};
+}else{
+node[_38c]=_390;
+}
+if(dojo.render.html.ie){
+this.addClobberNodeAttrs(node,[_38c]);
+}
+return _390;
+}
+};
+this.isEvent=function(obj){
+return (typeof obj!="undefined")&&(obj)&&(typeof Event!="undefined")&&(obj.eventPhase);
+};
+this.currentEvent=null;
+this.callListener=function(_396,_397){
+if(typeof _396!="function"){
+dojo.raise("listener not a function: "+_396);
+}
+dojo.event.browser.currentEvent.currentTarget=_397;
+return _396.call(_397,dojo.event.browser.currentEvent);
+};
+this._stopPropagation=function(){
+dojo.event.browser.currentEvent.cancelBubble=true;
+};
+this._preventDefault=function(){
+dojo.event.browser.currentEvent.returnValue=false;
+};
+this.keys={KEY_BACKSPACE:8,KEY_TAB:9,KEY_CLEAR:12,KEY_ENTER:13,KEY_SHIFT:16,KEY_CTRL:17,KEY_ALT:18,KEY_PAUSE:19,KEY_CAPS_LOCK:20,KEY_ESCAPE:27,KEY_SPACE:32,KEY_PAGE_UP:33,KEY_PAGE_DOWN:34,KEY_END:35,KEY_HOME:36,KEY_LEFT_ARROW:37,KEY_UP_ARROW:38,KEY_RIGHT_ARROW:39,KEY_DOWN_ARROW:40,KEY_INSERT:45,KEY_DELETE:46,KEY_HELP:47,KEY_LEFT_WINDOW:91,KEY_RIGHT_WINDOW:92,KEY_SELECT:93,KEY_NUMPAD_0:96,KEY_NUMPAD_1:97,KEY_NUMPAD_2:98,KEY_NUMPAD_3:99,KEY_NUMPAD_4:100,KEY_NUMPAD_5:101,KEY_NUMPAD_6:102,KEY_NUMPAD_7:103,KEY_NUMPAD_8:104,KEY_NUMPAD_9:105,KEY_NUMPAD_MULTIPLY:106,KEY_NUMPAD_PLUS:107,KEY_NUMPAD_ENTER:108,KEY_NUMPAD_MINUS:109,KEY_NUMPAD_PERIOD:110,KEY_NUMPAD_DIVIDE:111,KEY_F1:112,KEY_F2:113,KEY_F3:114,KEY_F4:115,KEY_F5:116,KEY_F6:117,KEY_F7:118,KEY_F8:119,KEY_F9:120,KEY_F10:121,KEY_F11:122,KEY_F12:123,KEY_F13:124,KEY_F14:125,KEY_F15:126,KEY_NUM_LOCK:144,KEY_SCROLL_LOCK:145};
+this.revKeys=[];
+for(var key in this.keys){
+this.revKeys[this.keys[key]]=key;
+}
+this.fixEvent=function(evt,_39a){
+if(!evt){
+if(window["event"]){
+evt=window.event;
+}
+}
+if((evt["type"])&&(evt["type"].indexOf("key")==0)){
+evt.keys=this.revKeys;
+for(var key in this.keys){
+evt[key]=this.keys[key];
+}
+if(evt["type"]=="keydown"&&dojo.render.html.ie){
+switch(evt.keyCode){
+case evt.KEY_SHIFT:
+case evt.KEY_CTRL:
+case evt.KEY_ALT:
+case evt.KEY_CAPS_LOCK:
+case evt.KEY_LEFT_WINDOW:
+case evt.KEY_RIGHT_WINDOW:
+case evt.KEY_SELECT:
+case evt.KEY_NUM_LOCK:
+case evt.KEY_SCROLL_LOCK:
+case evt.KEY_NUMPAD_0:
+case evt.KEY_NUMPAD_1:
+case evt.KEY_NUMPAD_2:
+case evt.KEY_NUMPAD_3:
+case evt.KEY_NUMPAD_4:
+case evt.KEY_NUMPAD_5:
+case evt.KEY_NUMPAD_6:
+case evt.KEY_NUMPAD_7:
+case evt.KEY_NUMPAD_8:
+case evt.KEY_NUMPAD_9:
+case evt.KEY_NUMPAD_PERIOD:
+break;
+case evt.KEY_NUMPAD_MULTIPLY:
+case evt.KEY_NUMPAD_PLUS:
+case evt.KEY_NUMPAD_ENTER:
+case evt.KEY_NUMPAD_MINUS:
+case evt.KEY_NUMPAD_DIVIDE:
+break;
+case evt.KEY_PAUSE:
+case evt.KEY_TAB:
+case evt.KEY_BACKSPACE:
+case evt.KEY_ENTER:
+case evt.KEY_ESCAPE:
+case evt.KEY_PAGE_UP:
+case evt.KEY_PAGE_DOWN:
+case evt.KEY_END:
+case evt.KEY_HOME:
+case evt.KEY_LEFT_ARROW:
+case evt.KEY_UP_ARROW:
+case evt.KEY_RIGHT_ARROW:
+case evt.KEY_DOWN_ARROW:
+case evt.KEY_INSERT:
+case evt.KEY_DELETE:
+case evt.KEY_F1:
+case evt.KEY_F2:
+case evt.KEY_F3:
+case evt.KEY_F4:
+case evt.KEY_F5:
+case evt.KEY_F6:
+case evt.KEY_F7:
+case evt.KEY_F8:
+case evt.KEY_F9:
+case evt.KEY_F10:
+case evt.KEY_F11:
+case evt.KEY_F12:
+case evt.KEY_F12:
+case evt.KEY_F13:
+case evt.KEY_F14:
+case evt.KEY_F15:
+case evt.KEY_CLEAR:
+case evt.KEY_HELP:
+evt.key=evt.keyCode;
+break;
+default:
+if(evt.ctrlKey||evt.altKey){
+var _39c=evt.keyCode;
+if(_39c>=65&&_39c<=90&&evt.shiftKey==false){
+_39c+=32;
+}
+if(_39c>=1&&_39c<=26&&evt.ctrlKey){
+_39c+=96;
+}
+evt.key=String.fromCharCode(_39c);
+}
+}
+}else{
+if(evt["type"]=="keypress"){
+if(dojo.render.html.opera){
+if(evt.which==0){
+evt.key=evt.keyCode;
+}else{
+if(evt.which>0){
+switch(evt.which){
+case evt.KEY_SHIFT:
+case evt.KEY_CTRL:
+case evt.KEY_ALT:
+case evt.KEY_CAPS_LOCK:
+case evt.KEY_NUM_LOCK:
+case evt.KEY_SCROLL_LOCK:
+break;
+case evt.KEY_PAUSE:
+case evt.KEY_TAB:
+case evt.KEY_BACKSPACE:
+case evt.KEY_ENTER:
+case evt.KEY_ESCAPE:
+evt.key=evt.which;
+break;
+default:
+var _39c=evt.which;
+if((evt.ctrlKey||evt.altKey||evt.metaKey)&&(evt.which>=65&&evt.which<=90&&evt.shiftKey==false)){
+_39c+=32;
+}
+evt.key=String.fromCharCode(_39c);
+}
+}
+}
+}else{
+if(dojo.render.html.ie){
+if(!evt.ctrlKey&&!evt.altKey&&evt.keyCode>=evt.KEY_SPACE){
+evt.key=String.fromCharCode(evt.keyCode);
+}
+}else{
+if(dojo.render.html.safari){
+switch(evt.keyCode){
+case 25:
+evt.key=evt.KEY_TAB;
+evt.shift=true;
+break;
+case 63232:
+evt.key=evt.KEY_UP_ARROW;
+break;
+case 63233:
+evt.key=evt.KEY_DOWN_ARROW;
+break;
+case 63234:
+evt.key=evt.KEY_LEFT_ARROW;
+break;
+case 63235:
+evt.key=evt.KEY_RIGHT_ARROW;
+break;
+case 63236:
+evt.key=evt.KEY_F1;
+break;
+case 63237:
+evt.key=evt.KEY_F2;
+break;
+case 63238:
+evt.key=evt.KEY_F3;
+break;
+case 63239:
+evt.key=evt.KEY_F4;
+break;
+case 63240:
+evt.key=evt.KEY_F5;
+break;
+case 63241:
+evt.key=evt.KEY_F6;
+break;
+case 63242:
+evt.key=evt.KEY_F7;
+break;
+case 63243:
+evt.key=evt.KEY_F8;
+break;
+case 63244:
+evt.key=evt.KEY_F9;
+break;
+case 63245:
+evt.key=evt.KEY_F10;
+break;
+case 63246:
+evt.key=evt.KEY_F11;
+break;
+case 63247:
+evt.key=evt.KEY_F12;
+break;
+case 63250:
+evt.key=evt.KEY_PAUSE;
+break;
+case 63272:
+evt.key=evt.KEY_DELETE;
+break;
+case 63273:
+evt.key=evt.KEY_HOME;
+break;
+case 63275:
+evt.key=evt.KEY_END;
+break;
+case 63276:
+evt.key=evt.KEY_PAGE_UP;
+break;
+case 63277:
+evt.key=evt.KEY_PAGE_DOWN;
+break;
+case 63302:
+evt.key=evt.KEY_INSERT;
+break;
+case 63248:
+case 63249:
+case 63289:
+break;
+default:
+evt.key=evt.charCode>=evt.KEY_SPACE?String.fromCharCode(evt.charCode):evt.keyCode;
+}
+}else{
+evt.key=evt.charCode>0?String.fromCharCode(evt.charCode):evt.keyCode;
+}
+}
+}
+}
+}
+}
+if(dojo.render.html.ie){
+if(!evt.target){
+evt.target=evt.srcElement;
+}
+if(!evt.currentTarget){
+evt.currentTarget=(_39a?_39a:evt.srcElement);
+}
+if(!evt.layerX){
+evt.layerX=evt.offsetX;
+}
+if(!evt.layerY){
+evt.layerY=evt.offsetY;
+}
+var doc=(evt.srcElement&&evt.srcElement.ownerDocument)?evt.srcElement.ownerDocument:document;
+var _39e=((dojo.render.html.ie55)||(doc["compatMode"]=="BackCompat"))?doc.body:doc.documentElement;
+if(!evt.pageX){
+evt.pageX=evt.clientX+(_39e.scrollLeft||0);
+}
+if(!evt.pageY){
+evt.pageY=evt.clientY+(_39e.scrollTop||0);
+}
+if(evt.type=="mouseover"){
+evt.relatedTarget=evt.fromElement;
+}
+if(evt.type=="mouseout"){
+evt.relatedTarget=evt.toElement;
+}
+this.currentEvent=evt;
+evt.callListener=this.callListener;
+evt.stopPropagation=this._stopPropagation;
+evt.preventDefault=this._preventDefault;
+}
+return evt;
+};
+this.stopEvent=function(evt){
+if(window.event){
+evt.cancelBubble=true;
+evt.returnValue=false;
+}else{
+evt.preventDefault();
+evt.stopPropagation();
+}
+};
+};
+dojo.provide("dojo.event.*");
+dojo.provide("dojo.gfx.color");
+dojo.gfx.color.Color=function(r,g,b,a){
+if(dojo.lang.isArray(r)){
+this.r=r[0];
+this.g=r[1];
+this.b=r[2];
+this.a=r[3]||1;
+}else{
+if(dojo.lang.isString(r)){
+var rgb=dojo.gfx.color.extractRGB(r);
+this.r=rgb[0];
+this.g=rgb[1];
+this.b=rgb[2];
+this.a=g||1;
+}else{
+if(r instanceof dojo.gfx.color.Color){
+this.r=r.r;
+this.b=r.b;
+this.g=r.g;
+this.a=r.a;
+}else{
+this.r=r;
+this.g=g;
+this.b=b;
+this.a=a;
+}
+}
+}
+};
+dojo.gfx.color.Color.fromArray=function(arr){
+return new dojo.gfx.color.Color(arr[0],arr[1],arr[2],arr[3]);
+};
+dojo.extend(dojo.gfx.color.Color,{toRgb:function(_3a6){
+if(_3a6){
+return this.toRgba();
+}else{
+return [this.r,this.g,this.b];
+}
+},toRgba:function(){
+return [this.r,this.g,this.b,this.a];
+},toHex:function(){
+return dojo.gfx.color.rgb2hex(this.toRgb());
+},toCss:function(){
+return "rgb("+this.toRgb().join()+")";
+},toString:function(){
+return this.toHex();
+},blend:function(_3a7,_3a8){
+var rgb=null;
+if(dojo.lang.isArray(_3a7)){
+rgb=_3a7;
+}else{
+if(_3a7 instanceof dojo.gfx.color.Color){
+rgb=_3a7.toRgb();
+}else{
+rgb=new dojo.gfx.color.Color(_3a7).toRgb();
+}
+}
+return dojo.gfx.color.blend(this.toRgb(),rgb,_3a8);
+}});
+dojo.gfx.color.named={white:[255,255,255],black:[0,0,0],red:[255,0,0],green:[0,255,0],lime:[0,255,0],blue:[0,0,255],navy:[0,0,128],gray:[128,128,128],silver:[192,192,192]};
+dojo.gfx.color.blend=function(a,b,_3ac){
+if(typeof a=="string"){
+return dojo.gfx.color.blendHex(a,b,_3ac);
+}
+if(!_3ac){
+_3ac=0;
+}
+_3ac=Math.min(Math.max(-1,_3ac),1);
+_3ac=((_3ac+1)/2);
+var c=[];
+for(var x=0;x<3;x++){
+c[x]=parseInt(b[x]+((a[x]-b[x])*_3ac));
+}
+return c;
+};
+dojo.gfx.color.blendHex=function(a,b,_3b1){
+return dojo.gfx.color.rgb2hex(dojo.gfx.color.blend(dojo.gfx.color.hex2rgb(a),dojo.gfx.color.hex2rgb(b),_3b1));
+};
+dojo.gfx.color.extractRGB=function(_3b2){
+var hex="0123456789abcdef";
+_3b2=_3b2.toLowerCase();
+if(_3b2.indexOf("rgb")==0){
+var _3b4=_3b2.match(/rgba*\((\d+), *(\d+), *(\d+)/i);
+var ret=_3b4.splice(1,3);
+return ret;
+}else{
+var _3b6=dojo.gfx.color.hex2rgb(_3b2);
+if(_3b6){
+return _3b6;
+}else{
+return dojo.gfx.color.named[_3b2]||[255,255,255];
+}
+}
+};
+dojo.gfx.color.hex2rgb=function(hex){
+var _3b8="0123456789ABCDEF";
+var rgb=new Array(3);
+if(hex.indexOf("#")==0){
+hex=hex.substring(1);
+}
+hex=hex.toUpperCase();
+if(hex.replace(new RegExp("["+_3b8+"]","g"),"")!=""){
+return null;
+}
+if(hex.length==3){
+rgb[0]=hex.charAt(0)+hex.charAt(0);
+rgb[1]=hex.charAt(1)+hex.charAt(1);
+rgb[2]=hex.charAt(2)+hex.charAt(2);
+}else{
+rgb[0]=hex.substring(0,2);
+rgb[1]=hex.substring(2,4);
+rgb[2]=hex.substring(4);
+}
+for(var i=0;i<rgb.length;i++){
+rgb[i]=_3b8.indexOf(rgb[i].charAt(0))*16+_3b8.indexOf(rgb[i].charAt(1));
+}
+return rgb;
+};
+dojo.gfx.color.rgb2hex=function(r,g,b){
+if(dojo.lang.isArray(r)){
+g=r[1]||0;
+b=r[2]||0;
+r=r[0]||0;
+}
+var ret=dojo.lang.map([r,g,b],function(x){
+x=new Number(x);
+var s=x.toString(16);
+while(s.length<2){
+s="0"+s;
+}
+return s;
+});
+ret.unshift("#");
+return ret.join("");
+};
+dojo.provide("dojo.lfx.Animation");
+dojo.lfx.Line=function(_3c1,end){
+this.start=_3c1;
+this.end=end;
+if(dojo.lang.isArray(_3c1)){
+var diff=[];
+dojo.lang.forEach(this.start,function(s,i){
+diff[i]=this.end[i]-s;
+},this);
+this.getValue=function(n){
+var res=[];
+dojo.lang.forEach(this.start,function(s,i){
+res[i]=(diff[i]*n)+s;
+},this);
+return res;
+};
+}else{
+var diff=end-_3c1;
+this.getValue=function(n){
+return (diff*n)+this.start;
+};
+}
+};
+dojo.lfx.easeDefault=function(n){
+if(dojo.render.html.khtml){
+return (parseFloat("0.5")+((Math.sin((n+parseFloat("1.5"))*Math.PI))/2));
+}else{
+return (0.5+((Math.sin((n+1.5)*Math.PI))/2));
+}
+};
+dojo.lfx.easeIn=function(n){
+return Math.pow(n,3);
+};
+dojo.lfx.easeOut=function(n){
+return (1-Math.pow(1-n,3));
+};
+dojo.lfx.easeInOut=function(n){
+return ((3*Math.pow(n,2))-(2*Math.pow(n,3)));
+};
+dojo.lfx.IAnimation=function(){
+};
+dojo.lang.extend(dojo.lfx.IAnimation,{curve:null,duration:1000,easing:null,repeatCount:0,rate:25,handler:null,beforeBegin:null,onBegin:null,onAnimate:null,onEnd:null,onPlay:null,onPause:null,onStop:null,play:null,pause:null,stop:null,connect:function(evt,_3d0,_3d1){
+if(!_3d1){
+_3d1=_3d0;
+_3d0=this;
+}
+_3d1=dojo.lang.hitch(_3d0,_3d1);
+var _3d2=this[evt]||function(){
+};
+this[evt]=function(){
+var ret=_3d2.apply(this,arguments);
+_3d1.apply(this,arguments);
+return ret;
+};
+return this;
+},fire:function(evt,args){
+if(this[evt]){
+this[evt].apply(this,(args||[]));
+}
+return this;
+},repeat:function(_3d6){
+this.repeatCount=_3d6;
+return this;
+},_active:false,_paused:false});
+dojo.lfx.Animation=function(_3d7,_3d8,_3d9,_3da,_3db,rate){
+dojo.lfx.IAnimation.call(this);
+if(dojo.lang.isNumber(_3d7)||(!_3d7&&_3d8.getValue)){
+rate=_3db;
+_3db=_3da;
+_3da=_3d9;
+_3d9=_3d8;
+_3d8=_3d7;
+_3d7=null;
+}else{
+if(_3d7.getValue||dojo.lang.isArray(_3d7)){
+rate=_3da;
+_3db=_3d9;
+_3da=_3d8;
+_3d9=_3d7;
+_3d8=null;
+_3d7=null;
+}
+}
+if(dojo.lang.isArray(_3d9)){
+this.curve=new dojo.lfx.Line(_3d9[0],_3d9[1]);
+}else{
+this.curve=_3d9;
+}
+if(_3d8!=null&&_3d8>0){
+this.duration=_3d8;
+}
+if(_3db){
+this.repeatCount=_3db;
+}
+if(rate){
+this.rate=rate;
+}
+if(_3d7){
+dojo.lang.forEach(["handler","beforeBegin","onBegin","onEnd","onPlay","onStop","onAnimate"],function(item){
+if(_3d7[item]){
+this.connect(item,_3d7[item]);
+}
+},this);
+}
+if(_3da&&dojo.lang.isFunction(_3da)){
+this.easing=_3da;
+}
+};
+dojo.inherits(dojo.lfx.Animation,dojo.lfx.IAnimation);
+dojo.lang.extend(dojo.lfx.Animation,{_startTime:null,_endTime:null,_timer:null,_percent:0,_startRepeatCount:0,play:function(_3de,_3df){
+if(_3df){
+clearTimeout(this._timer);
+this._active=false;
+this._paused=false;
+this._percent=0;
+}else{
+if(this._active&&!this._paused){
+return this;
+}
+}
+this.fire("handler",["beforeBegin"]);
+this.fire("beforeBegin");
+if(_3de>0){
+setTimeout(dojo.lang.hitch(this,function(){
+this.play(null,_3df);
+}),_3de);
+return this;
+}
+this._startTime=new Date().valueOf();
+if(this._paused){
+this._startTime-=(this.duration*this._percent/100);
+}
+this._endTime=this._startTime+this.duration;
+this._active=true;
+this._paused=false;
+var step=this._percent/100;
+var _3e1=this.curve.getValue(step);
+if(this._percent==0){
+if(!this._startRepeatCount){
+this._startRepeatCount=this.repeatCount;
+}
+this.fire("handler",["begin",_3e1]);
+this.fire("onBegin",[_3e1]);
+}
+this.fire("handler",["play",_3e1]);
+this.fire("onPlay",[_3e1]);
+this._cycle();
+return this;
+},pause:function(){
+clearTimeout(this._timer);
+if(!this._active){
+return this;
+}
+this._paused=true;
+var _3e2=this.curve.getValue(this._percent/100);
+this.fire("handler",["pause",_3e2]);
+this.fire("onPause",[_3e2]);
+return this;
+},gotoPercent:function(pct,_3e4){
+clearTimeout(this._timer);
+this._active=true;
+this._paused=true;
+this._percent=pct;
+if(_3e4){
+this.play();
+}
+return this;
+},stop:function(_3e5){
+clearTimeout(this._timer);
+var step=this._percent/100;
+if(_3e5){
+step=1;
+}
+var _3e7=this.curve.getValue(step);
+this.fire("handler",["stop",_3e7]);
+this.fire("onStop",[_3e7]);
+this._active=false;
+this._paused=false;
+return this;
+},status:function(){
+if(this._active){
+return this._paused?"paused":"playing";
+}else{
+return "stopped";
+}
+return this;
+},_cycle:function(){
+clearTimeout(this._timer);
+if(this._active){
+var curr=new Date().valueOf();
+var step=(curr-this._startTime)/(this._endTime-this._startTime);
+if(step>=1){
+step=1;
+this._percent=100;
+}else{
+this._percent=step*100;
+}
+if((this.easing)&&(dojo.lang.isFunction(this.easing))){
+step=this.easing(step);
+}
+var _3ea=this.curve.getValue(step);
+this.fire("handler",["animate",_3ea]);
+this.fire("onAnimate",[_3ea]);
+if(step<1){
+this._timer=setTimeout(dojo.lang.hitch(this,"_cycle"),this.rate);
+}else{
+this._active=false;
+this.fire("handler",["end"]);
+this.fire("onEnd");
+if(this.repeatCount>0){
+this.repeatCount--;
+this.play(null,true);
+}else{
+if(this.repeatCount==-1){
+this.play(null,true);
+}else{
+if(this._startRepeatCount){
+this.repeatCount=this._startRepeatCount;
+this._startRepeatCount=0;
+}
+}
+}
+}
+}
+return this;
+}});
+dojo.lfx.Combine=function(_3eb){
+dojo.lfx.IAnimation.call(this);
+this._anims=[];
+this._animsEnded=0;
+var _3ec=arguments;
+if(_3ec.length==1&&(dojo.lang.isArray(_3ec[0])||dojo.lang.isArrayLike(_3ec[0]))){
+_3ec=_3ec[0];
+}
+dojo.lang.forEach(_3ec,function(anim){
+this._anims.push(anim);
+anim.connect("onEnd",dojo.lang.hitch(this,"_onAnimsEnded"));
+},this);
+};
+dojo.inherits(dojo.lfx.Combine,dojo.lfx.IAnimation);
+dojo.lang.extend(dojo.lfx.Combine,{_animsEnded:0,play:function(_3ee,_3ef){
+if(!this._anims.length){
+return this;
+}
+this.fire("beforeBegin");
+if(_3ee>0){
+setTimeout(dojo.lang.hitch(this,function(){
+this.play(null,_3ef);
+}),_3ee);
+return this;
+}
+if(_3ef||this._anims[0].percent==0){
+this.fire("onBegin");
+}
+this.fire("onPlay");
+this._animsCall("play",null,_3ef);
+return this;
+},pause:function(){
+this.fire("onPause");
+this._animsCall("pause");
+return this;
+},stop:function(_3f0){
+this.fire("onStop");
+this._animsCall("stop",_3f0);
+return this;
+},_onAnimsEnded:function(){
+this._animsEnded++;
+if(this._animsEnded>=this._anims.length){
+this.fire("onEnd");
+}
+return this;
+},_animsCall:function(_3f1){
+var args=[];
+if(arguments.length>1){
+for(var i=1;i<arguments.length;i++){
+args.push(arguments[i]);
+}
+}
+var _3f4=this;
+dojo.lang.forEach(this._anims,function(anim){
+anim[_3f1](args);
+},_3f4);
+return this;
+}});
+dojo.lfx.Chain=function(_3f6){
+dojo.lfx.IAnimation.call(this);
+this._anims=[];
+this._currAnim=-1;
+var _3f7=arguments;
+if(_3f7.length==1&&(dojo.lang.isArray(_3f7[0])||dojo.lang.isArrayLike(_3f7[0]))){
+_3f7=_3f7[0];
+}
+var _3f8=this;
+dojo.lang.forEach(_3f7,function(anim,i,_3fb){
+this._anims.push(anim);
+if(i<_3fb.length-1){
+anim.connect("onEnd",dojo.lang.hitch(this,"_playNext"));
+}else{
+anim.connect("onEnd",dojo.lang.hitch(this,function(){
+this.fire("onEnd");
+}));
+}
+},this);
+};
+dojo.inherits(dojo.lfx.Chain,dojo.lfx.IAnimation);
+dojo.lang.extend(dojo.lfx.Chain,{_currAnim:-1,play:function(_3fc,_3fd){
+if(!this._anims.length){
+return this;
+}
+if(_3fd||!this._anims[this._currAnim]){
+this._currAnim=0;
+}
+var _3fe=this._anims[this._currAnim];
+this.fire("beforeBegin");
+if(_3fc>0){
+setTimeout(dojo.lang.hitch(this,function(){
+this.play(null,_3fd);
+}),_3fc);
+return this;
+}
+if(_3fe){
+if(this._currAnim==0){
+this.fire("handler",["begin",this._currAnim]);
+this.fire("onBegin",[this._currAnim]);
+}
+this.fire("onPlay",[this._currAnim]);
+_3fe.play(null,_3fd);
+}
+return this;
+},pause:function(){
+if(this._anims[this._currAnim]){
+this._anims[this._currAnim].pause();
+this.fire("onPause",[this._currAnim]);
+}
+return this;
+},playPause:function(){
+if(this._anims.length==0){
+return this;
+}
+if(this._currAnim==-1){
+this._currAnim=0;
+}
+var _3ff=this._anims[this._currAnim];
+if(_3ff){
+if(!_3ff._active||_3ff._paused){
+this.play();
+}else{
+this.pause();
+}
+}
+return this;
+},stop:function(){
+var _400=this._anims[this._currAnim];
+if(_400){
+_400.stop();
+this.fire("onStop",[this._currAnim]);
+}
+return _400;
+},_playNext:function(){
+if(this._currAnim==-1||this._anims.length==0){
+return this;
+}
+this._currAnim++;
+if(this._anims[this._currAnim]){
+this._anims[this._currAnim].play(null,true);
+}
+return this;
+}});
+dojo.lfx.combine=function(_401){
+var _402=arguments;
+if(dojo.lang.isArray(arguments[0])){
+_402=arguments[0];
+}
+if(_402.length==1){
+return _402[0];
+}
+return new dojo.lfx.Combine(_402);
+};
+dojo.lfx.chain=function(_403){
+var _404=arguments;
+if(dojo.lang.isArray(arguments[0])){
+_404=arguments[0];
+}
+if(_404.length==1){
+return _404[0];
+}
+return new dojo.lfx.Chain(_404);
+};
+dojo.provide("dojo.html.common");
+dojo.lang.mixin(dojo.html,dojo.dom);
+dojo.html.body=function(){
+dojo.deprecated("dojo.html.body() moved to dojo.body()","0.5");
+return dojo.body();
+};
+dojo.html.getEventTarget=function(evt){
+if(!evt){
+evt=dojo.global().event||{};
+}
+var t=(evt.srcElement?evt.srcElement:(evt.target?evt.target:null));
+while((t)&&(t.nodeType!=1)){
+t=t.parentNode;
+}
+return t;
+};
+dojo.html.getViewport=function(){
+var _407=dojo.global();
+var _408=dojo.doc();
+var w=0;
+var h=0;
+if(dojo.render.html.mozilla){
+w=_408.documentElement.clientWidth;
+h=_407.innerHeight;
+}else{
+if(!dojo.render.html.opera&&_407.innerWidth){
+w=_407.innerWidth;
+h=_407.innerHeight;
+}else{
+if(!dojo.render.html.opera&&dojo.exists(_408,"documentElement.clientWidth")){
+var w2=_408.documentElement.clientWidth;
+if(!w||w2&&w2<w){
+w=w2;
+}
+h=_408.documentElement.clientHeight;
+}else{
+if(dojo.body().clientWidth){
+w=dojo.body().clientWidth;
+h=dojo.body().clientHeight;
+}
+}
+}
+}
+return {width:w,height:h};
+};
+dojo.html.getScroll=function(){
+var _40c=dojo.global();
+var _40d=dojo.doc();
+var top=_40c.pageYOffset||_40d.documentElement.scrollTop||dojo.body().scrollTop||0;
+var left=_40c.pageXOffset||_40d.documentElement.scrollLeft||dojo.body().scrollLeft||0;
+return {top:top,left:left,offset:{x:left,y:top}};
+};
+dojo.html.getParentByType=function(node,type){
+var _412=dojo.doc();
+var _413=dojo.byId(node);
+type=type.toLowerCase();
+while((_413)&&(_413.nodeName.toLowerCase()!=type)){
+if(_413==(_412["body"]||_412["documentElement"])){
+return null;
+}
+_413=_413.parentNode;
+}
+return _413;
+};
+dojo.html.getAttribute=function(node,attr){
+node=dojo.byId(node);
+if((!node)||(!node.getAttribute)){
+return null;
+}
+var ta=typeof attr=="string"?attr:new String(attr);
+var v=node.getAttribute(ta.toUpperCase());
+if((v)&&(typeof v=="string")&&(v!="")){
+return v;
+}
+if(v&&v.value){
+return v.value;
+}
+if((node.getAttributeNode)&&(node.getAttributeNode(ta))){
+return (node.getAttributeNode(ta)).value;
+}else{
+if(node.getAttribute(ta)){
+return node.getAttribute(ta);
+}else{
+if(node.getAttribute(ta.toLowerCase())){
+return node.getAttribute(ta.toLowerCase());
+}
+}
+}
+return null;
+};
+dojo.html.hasAttribute=function(node,attr){
+return dojo.html.getAttribute(dojo.byId(node),attr)?true:false;
+};
+dojo.html.getCursorPosition=function(e){
+e=e||dojo.global().event;
+var _41b={x:0,y:0};
+if(e.pageX||e.pageY){
+_41b.x=e.pageX;
+_41b.y=e.pageY;
+}else{
+var de=dojo.doc().documentElement;
+var db=dojo.body();
+_41b.x=e.clientX+((de||db)["scrollLeft"])-((de||db)["clientLeft"]);
+_41b.y=e.clientY+((de||db)["scrollTop"])-((de||db)["clientTop"]);
+}
+return _41b;
+};
+dojo.html.isTag=function(node){
+node=dojo.byId(node);
+if(node&&node.tagName){
+for(var i=1;i<arguments.length;i++){
+if(node.tagName.toLowerCase()==String(arguments[i]).toLowerCase()){
+return String(arguments[i]).toLowerCase();
+}
+}
+}
+return "";
+};
+if(dojo.render.html.ie&&!dojo.render.html.ie70){
+if(window.location.href.substr(0,6).toLowerCase()!="https:"){
+(function(){
+var _420=dojo.doc().createElement("script");
+_420.src="javascript:'dojo.html.createExternalElement=function(doc, tag){ return doc.createElement(tag); }'";
+dojo.doc().getElementsByTagName("head")[0].appendChild(_420);
+})();
+}
+}else{
+dojo.html.createExternalElement=function(doc,tag){
+return doc.createElement(tag);
+};
+}
+dojo.html._callDeprecated=function(_423,_424,args,_426,_427){
+dojo.deprecated("dojo.html."+_423,"replaced by dojo.html."+_424+"("+(_426?"node, {"+_426+": "+_426+"}":"")+")"+(_427?"."+_427:""),"0.5");
+var _428=[];
+if(_426){
+var _429={};
+_429[_426]=args[1];
+_428.push(args[0]);
+_428.push(_429);
+}else{
+_428=args;
+}
+var ret=dojo.html[_424].apply(dojo.html,args);
+if(_427){
+return ret[_427];
+}else{
+return ret;
+}
+};
+dojo.html.getViewportWidth=function(){
+return dojo.html._callDeprecated("getViewportWidth","getViewport",arguments,null,"width");
+};
+dojo.html.getViewportHeight=function(){
+return dojo.html._callDeprecated("getViewportHeight","getViewport",arguments,null,"height");
+};
+dojo.html.getViewportSize=function(){
+return dojo.html._callDeprecated("getViewportSize","getViewport",arguments);
+};
+dojo.html.getScrollTop=function(){
+return dojo.html._callDeprecated("getScrollTop","getScroll",arguments,null,"top");
+};
+dojo.html.getScrollLeft=function(){
+return dojo.html._callDeprecated("getScrollLeft","getScroll",arguments,null,"left");
+};
+dojo.html.getScrollOffset=function(){
+return dojo.html._callDeprecated("getScrollOffset","getScroll",arguments,null,"offset");
+};
+dojo.provide("dojo.uri.Uri");
+dojo.uri=new function(){
+this.dojoUri=function(uri){
+return new dojo.uri.Uri(dojo.hostenv.getBaseScriptUri(),uri);
+};
+this.moduleUri=function(_42c,uri){
+var loc=dojo.hostenv.getModuleSymbols(_42c).join("/");
+if(!loc){
+return null;
+}
+if(loc.lastIndexOf("/")!=loc.length-1){
+loc+="/";
+}
+return new dojo.uri.Uri(dojo.hostenv.getBaseScriptUri()+loc,uri);
+};
+this.Uri=function(){
+var uri=arguments[0];
+for(var i=1;i<arguments.length;i++){
+if(!arguments[i]){
+continue;
+}
+var _431=new dojo.uri.Uri(arguments[i].toString());
+var _432=new dojo.uri.Uri(uri.toString());
+if((_431.path=="")&&(_431.scheme==null)&&(_431.authority==null)&&(_431.query==null)){
+if(_431.fragment!=null){
+_432.fragment=_431.fragment;
+}
+_431=_432;
+}else{
+if(_431.scheme==null){
+_431.scheme=_432.scheme;
+if(_431.authority==null){
+_431.authority=_432.authority;
+if(_431.path.charAt(0)!="/"){
+var path=_432.path.substring(0,_432.path.lastIndexOf("/")+1)+_431.path;
+var segs=path.split("/");
+for(var j=0;j<segs.length;j++){
+if(segs[j]=="."){
+if(j==segs.length-1){
+segs[j]="";
+}else{
+segs.splice(j,1);
+j--;
+}
+}else{
+if(j>0&&!(j==1&&segs[0]=="")&&segs[j]==".."&&segs[j-1]!=".."){
+if(j==segs.length-1){
+segs.splice(j,1);
+segs[j-1]="";
+}else{
+segs.splice(j-1,2);
+j-=2;
+}
+}
+}
+}
+_431.path=segs.join("/");
+}
+}
+}
+}
+uri="";
+if(_431.scheme!=null){
+uri+=_431.scheme+":";
+}
+if(_431.authority!=null){
+uri+="//"+_431.authority;
+}
+uri+=_431.path;
+if(_431.query!=null){
+uri+="?"+_431.query;
+}
+if(_431.fragment!=null){
+uri+="#"+_431.fragment;
+}
+}
+this.uri=uri.toString();
+var _436="^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?$";
+var r=this.uri.match(new RegExp(_436));
+this.scheme=r[2]||(r[1]?"":null);
+this.authority=r[4]||(r[3]?"":null);
+this.path=r[5];
+this.query=r[7]||(r[6]?"":null);
+this.fragment=r[9]||(r[8]?"":null);
+if(this.authority!=null){
+_436="^((([^:]+:)?([^@]+))@)?([^:]*)(:([0-9]+))?$";
+r=this.authority.match(new RegExp(_436));
+this.user=r[3]||null;
+this.password=r[4]||null;
+this.host=r[5];
+this.port=r[7]||null;
+}
+this.toString=function(){
+return this.uri;
+};
+};
+};
+dojo.provide("dojo.html.style");
+dojo.html.getClass=function(node){
+node=dojo.byId(node);
+if(!node){
+return "";
+}
+var cs="";
+if(node.className){
+cs=node.className;
+}else{
+if(dojo.html.hasAttribute(node,"class")){
+cs=dojo.html.getAttribute(node,"class");
+}
+}
+return cs.replace(/^\s+|\s+$/g,"");
+};
+dojo.html.getClasses=function(node){
+var c=dojo.html.getClass(node);
+return (c=="")?[]:c.split(/\s+/g);
+};
+dojo.html.hasClass=function(node,_43d){
+return (new RegExp("(^|\\s+)"+_43d+"(\\s+|$)")).test(dojo.html.getClass(node));
+};
+dojo.html.prependClass=function(node,_43f){
+_43f+=" "+dojo.html.getClass(node);
+return dojo.html.setClass(node,_43f);
+};
+dojo.html.addClass=function(node,_441){
+if(dojo.html.hasClass(node,_441)){
+return false;
+}
+_441=(dojo.html.getClass(node)+" "+_441).replace(/^\s+|\s+$/g,"");
+return dojo.html.setClass(node,_441);
+};
+dojo.html.setClass=function(node,_443){
+node=dojo.byId(node);
+var cs=new String(_443);
+try{
+if(typeof node.className=="string"){
+node.className=cs;
+}else{
+if(node.setAttribute){
+node.setAttribute("class",_443);
+node.className=cs;
+}else{
+return false;
+}
+}
+}
+catch(e){
+dojo.debug("dojo.html.setClass() failed",e);
+}
+return true;
+};
+dojo.html.removeClass=function(node,_446,_447){
+try{
+if(!_447){
+var _448=dojo.html.getClass(node).replace(new RegExp("(^|\\s+)"+_446+"(\\s+|$)"),"$1$2");
+}else{
+var _448=dojo.html.getClass(node).replace(_446,"");
+}
+dojo.html.setClass(node,_448);
+}
+catch(e){
+dojo.debug("dojo.html.removeClass() failed",e);
+}
+return true;
+};
+dojo.html.replaceClass=function(node,_44a,_44b){
+dojo.html.removeClass(node,_44b);
+dojo.html.addClass(node,_44a);
+};
+dojo.html.classMatchType={ContainsAll:0,ContainsAny:1,IsOnly:2};
+dojo.html.getElementsByClass=function(_44c,_44d,_44e,_44f,_450){
+_450=false;
+var _451=dojo.doc();
+_44d=dojo.byId(_44d)||_451;
+var _452=_44c.split(/\s+/g);
+var _453=[];
+if(_44f!=1&&_44f!=2){
+_44f=0;
+}
+var _454=new RegExp("(\\s|^)(("+_452.join(")|(")+"))(\\s|$)");
+var _455=_452.join(" ").length;
+var _456=[];
+if(!_450&&_451.evaluate){
+var _457=".//"+(_44e||"*")+"[contains(";
+if(_44f!=dojo.html.classMatchType.ContainsAny){
+_457+="concat(' ',@class,' '), ' "+_452.join(" ') and contains(concat(' ',@class,' '), ' ")+" ')";
+if(_44f==2){
+_457+=" and string-length(@class)="+_455+"]";
+}else{
+_457+="]";
+}
+}else{
+_457+="concat(' ',@class,' '), ' "+_452.join(" ') or contains(concat(' ',@class,' '), ' ")+" ')]";
+}
+var _458=_451.evaluate(_457,_44d,null,XPathResult.ANY_TYPE,null);
+var _459=_458.iterateNext();
+while(_459){
+try{
+_456.push(_459);
+_459=_458.iterateNext();
+}
+catch(e){
+break;
+}
+}
+return _456;
+}else{
+if(!_44e){
+_44e="*";
+}
+_456=_44d.getElementsByTagName(_44e);
+var node,i=0;
+outer:
+while(node=_456[i++]){
+var _45c=dojo.html.getClasses(node);
+if(_45c.length==0){
+continue outer;
+}
+var _45d=0;
+for(var j=0;j<_45c.length;j++){
+if(_454.test(_45c[j])){
+if(_44f==dojo.html.classMatchType.ContainsAny){
+_453.push(node);
+continue outer;
+}else{
+_45d++;
+}
+}else{
+if(_44f==dojo.html.classMatchType.IsOnly){
+continue outer;
+}
+}
+}
+if(_45d==_452.length){
+if((_44f==dojo.html.classMatchType.IsOnly)&&(_45d==_45c.length)){
+_453.push(node);
+}else{
+if(_44f==dojo.html.classMatchType.ContainsAll){
+_453.push(node);
+}
+}
+}
+}
+return _453;
+}
+};
+dojo.html.getElementsByClassName=dojo.html.getElementsByClass;
+dojo.html.toCamelCase=function(_45f){
+var arr=_45f.split("-"),cc=arr[0];
+for(var i=1;i<arr.length;i++){
+cc+=arr[i].charAt(0).toUpperCase()+arr[i].substring(1);
+}
+return cc;
+};
+dojo.html.toSelectorCase=function(_463){
+return _463.replace(/([A-Z])/g,"-$1").toLowerCase();
+};
+dojo.html.getComputedStyle=function(node,_465,_466){
+node=dojo.byId(node);
+var _465=dojo.html.toSelectorCase(_465);
+var _467=dojo.html.toCamelCase(_465);
+if(!node||!node.style){
+return _466;
+}else{
+if(document.defaultView&&dojo.html.isDescendantOf(node,node.ownerDocument)){
+try{
+var cs=document.defaultView.getComputedStyle(node,"");
+if(cs){
+return cs.getPropertyValue(_465);
+}
+}
+catch(e){
+if(node.style.getPropertyValue){
+return node.style.getPropertyValue(_465);
+}else{
+return _466;
+}
+}
+}else{
+if(node.currentStyle){
+return node.currentStyle[_467];
+}
+}
+}
+if(node.style.getPropertyValue){
+return node.style.getPropertyValue(_465);
+}else{
+return _466;
+}
+};
+dojo.html.getStyleProperty=function(node,_46a){
+node=dojo.byId(node);
+return (node&&node.style?node.style[dojo.html.toCamelCase(_46a)]:undefined);
+};
+dojo.html.getStyle=function(node,_46c){
+var _46d=dojo.html.getStyleProperty(node,_46c);
+return (_46d?_46d:dojo.html.getComputedStyle(node,_46c));
+};
+dojo.html.setStyle=function(node,_46f,_470){
+node=dojo.byId(node);
+if(node&&node.style){
+var _471=dojo.html.toCamelCase(_46f);
+node.style[_471]=_470;
+}
+};
+dojo.html.setStyleText=function(_472,text){
+try{
+_472.style.cssText=text;
+}
+catch(e){
+_472.setAttribute("style",text);
+}
+};
+dojo.html.copyStyle=function(_474,_475){
+if(!_475.style.cssText){
+_474.setAttribute("style",_475.getAttribute("style"));
+}else{
+_474.style.cssText=_475.style.cssText;
+}
+dojo.html.addClass(_474,dojo.html.getClass(_475));
+};
+dojo.html.getUnitValue=function(node,_477,_478){
+var s=dojo.html.getComputedStyle(node,_477);
+if((!s)||((s=="auto")&&(_478))){
+return {value:0,units:"px"};
+}
+var _47a=s.match(/(\-?[\d.]+)([a-z%]*)/i);
+if(!_47a){
+return dojo.html.getUnitValue.bad;
+}
+return {value:Number(_47a[1]),units:_47a[2].toLowerCase()};
+};
+dojo.html.getUnitValue.bad={value:NaN,units:""};
+dojo.html.getPixelValue=function(node,_47c,_47d){
+var _47e=dojo.html.getUnitValue(node,_47c,_47d);
+if(isNaN(_47e.value)){
+return 0;
+}
+if((_47e.value)&&(_47e.units!="px")){
+return NaN;
+}
+return _47e.value;
+};
+dojo.html.setPositivePixelValue=function(node,_480,_481){
+if(isNaN(_481)){
+return false;
+}
+node.style[_480]=Math.max(0,_481)+"px";
+return true;
+};
+dojo.html.styleSheet=null;
+dojo.html.insertCssRule=function(_482,_483,_484){
+if(!dojo.html.styleSheet){
+if(document.createStyleSheet){
+dojo.html.styleSheet=document.createStyleSheet();
+}else{
+if(document.styleSheets[0]){
+dojo.html.styleSheet=document.styleSheets[0];
+}else{
+return null;
+}
+}
+}
+if(arguments.length<3){
+if(dojo.html.styleSheet.cssRules){
+_484=dojo.html.styleSheet.cssRules.length;
+}else{
+if(dojo.html.styleSheet.rules){
+_484=dojo.html.styleSheet.rules.length;
+}else{
+return null;
+}
+}
+}
+if(dojo.html.styleSheet.insertRule){
+var rule=_482+" { "+_483+" }";
+return dojo.html.styleSheet.insertRule(rule,_484);
+}else{
+if(dojo.html.styleSheet.addRule){
+return dojo.html.styleSheet.addRule(_482,_483,_484);
+}else{
+return null;
+}
+}
+};
+dojo.html.removeCssRule=function(_486){
+if(!dojo.html.styleSheet){
+dojo.debug("no stylesheet defined for removing rules");
+return false;
+}
+if(dojo.render.html.ie){
+if(!_486){
+_486=dojo.html.styleSheet.rules.length;
+dojo.html.styleSheet.removeRule(_486);
+}
+}else{
+if(document.styleSheets[0]){
+if(!_486){
+_486=dojo.html.styleSheet.cssRules.length;
+}
+dojo.html.styleSheet.deleteRule(_486);
+}
+}
+return true;
+};
+dojo.html._insertedCssFiles=[];
+dojo.html.insertCssFile=function(URI,doc,_489,_48a){
+if(!URI){
+return;
+}
+if(!doc){
+doc=document;
+}
+var _48b=dojo.hostenv.getText(URI,false,_48a);
+if(_48b===null){
+return;
+}
+_48b=dojo.html.fixPathsInCssText(_48b,URI);
+if(_489){
+var idx=-1,node,ent=dojo.html._insertedCssFiles;
+for(var i=0;i<ent.length;i++){
+if((ent[i].doc==doc)&&(ent[i].cssText==_48b)){
+idx=i;
+node=ent[i].nodeRef;
+break;
+}
+}
+if(node){
+var _490=doc.getElementsByTagName("style");
+for(var i=0;i<_490.length;i++){
+if(_490[i]==node){
+return;
+}
+}
+dojo.html._insertedCssFiles.shift(idx,1);
+}
+}
+var _491=dojo.html.insertCssText(_48b,doc);
+dojo.html._insertedCssFiles.push({"doc":doc,"cssText":_48b,"nodeRef":_491});
+if(_491&&djConfig.isDebug){
+_491.setAttribute("dbgHref",URI);
+}
+return _491;
+};
+dojo.html.insertCssText=function(_492,doc,URI){
+if(!_492){
+return;
+}
+if(!doc){
+doc=document;
+}
+if(URI){
+_492=dojo.html.fixPathsInCssText(_492,URI);
+}
+var _495=doc.createElement("style");
+_495.setAttribute("type","text/css");
+var head=doc.getElementsByTagName("head")[0];
+if(!head){
+dojo.debug("No head tag in document, aborting styles");
+return;
+}else{
+head.appendChild(_495);
+}
+if(_495.styleSheet){
+var _497=function(){
+try{
+_495.styleSheet.cssText=_492;
+}
+catch(e){
+dojo.debug(e);
+}
+};
+if(_495.styleSheet.disabled){
+setTimeout(_497,10);
+}else{
+_497();
+}
+}else{
+var _498=doc.createTextNode(_492);
+_495.appendChild(_498);
+}
+return _495;
+};
+dojo.html.fixPathsInCssText=function(_499,URI){
+if(!_499||!URI){
+return;
+}
+var _49b,str="",url="",_49e="[\\t\\s\\w\\(\\)\\/\\.\\\\'\"-:#=&?~]+";
+var _49f=new RegExp("url\\(\\s*("+_49e+")\\s*\\)");
+var _4a0=/(file|https?|ftps?):\/\//;
+regexTrim=new RegExp("^[\\s]*(['\"]?)("+_49e+")\\1[\\s]*?$");
+if(dojo.render.html.ie55||dojo.render.html.ie60){
+var _4a1=new RegExp("AlphaImageLoader\\((.*)src=['\"]("+_49e+")['\"]");
+while(_49b=_4a1.exec(_499)){
+url=_49b[2].replace(regexTrim,"$2");
+if(!_4a0.exec(url)){
+url=(new dojo.uri.Uri(URI,url).toString());
+}
+str+=_499.substring(0,_49b.index)+"AlphaImageLoader("+_49b[1]+"src='"+url+"'";
+_499=_499.substr(_49b.index+_49b[0].length);
+}
+_499=str+_499;
+str="";
+}
+while(_49b=_49f.exec(_499)){
+url=_49b[1].replace(regexTrim,"$2");
+if(!_4a0.exec(url)){
+url=(new dojo.uri.Uri(URI,url).toString());
+}
+str+=_499.substring(0,_49b.index)+"url("+url+")";
+_499=_499.substr(_49b.index+_49b[0].length);
+}
+return str+_499;
+};
+dojo.html.setActiveStyleSheet=function(_4a2){
+var i=0,a,els=dojo.doc().getElementsByTagName("link");
+while(a=els[i++]){
+if(a.getAttribute("rel").indexOf("style")!=-1&&a.getAttribute("title")){
+a.disabled=true;
+if(a.getAttribute("title")==_4a2){
+a.disabled=false;
+}
+}
+}
+};
+dojo.html.getActiveStyleSheet=function(){
+var i=0,a,els=dojo.doc().getElementsByTagName("link");
+while(a=els[i++]){
+if(a.getAttribute("rel").indexOf("style")!=-1&&a.getAttribute("title")&&!a.disabled){
+return a.getAttribute("title");
+}
+}
+return null;
+};
+dojo.html.getPreferredStyleSheet=function(){
+var i=0,a,els=dojo.doc().getElementsByTagName("link");
+while(a=els[i++]){
+if(a.getAttribute("rel").indexOf("style")!=-1&&a.getAttribute("rel").indexOf("alt")==-1&&a.getAttribute("title")){
+return a.getAttribute("title");
+}
+}
+return null;
+};
+dojo.html.applyBrowserClass=function(node){
+var drh=dojo.render.html;
+var _4ae={dj_ie:drh.ie,dj_ie55:drh.ie55,dj_ie6:drh.ie60,dj_ie7:drh.ie70,dj_iequirks:drh.ie&&drh.quirks,dj_opera:drh.opera,dj_opera8:drh.opera&&(Math.floor(dojo.render.version)==8),dj_opera9:drh.opera&&(Math.floor(dojo.render.version)==9),dj_khtml:drh.khtml,dj_safari:drh.safari,dj_gecko:drh.mozilla};
+for(var p in _4ae){
+if(_4ae[p]){
+dojo.html.addClass(node,p);
+}
+}
+};
+dojo.provide("dojo.html.display");
+dojo.html._toggle=function(node,_4b1,_4b2){
+node=dojo.byId(node);
+_4b2(node,!_4b1(node));
+return _4b1(node);
+};
+dojo.html.show=function(node){
+node=dojo.byId(node);
+if(dojo.html.getStyleProperty(node,"display")=="none"){
+dojo.html.setStyle(node,"display",(node.dojoDisplayCache||""));
+node.dojoDisplayCache=undefined;
+}
+};
+dojo.html.hide=function(node){
+node=dojo.byId(node);
+if(typeof node["dojoDisplayCache"]=="undefined"){
+var d=dojo.html.getStyleProperty(node,"display");
+if(d!="none"){
+node.dojoDisplayCache=d;
+}
+}
+dojo.html.setStyle(node,"display","none");
+};
+dojo.html.setShowing=function(node,_4b7){
+dojo.html[(_4b7?"show":"hide")](node);
+};
+dojo.html.isShowing=function(node){
+return (dojo.html.getStyleProperty(node,"display")!="none");
+};
+dojo.html.toggleShowing=function(node){
+return dojo.html._toggle(node,dojo.html.isShowing,dojo.html.setShowing);
+};
+dojo.html.displayMap={tr:"",td:"",th:"",img:"inline",span:"inline",input:"inline",button:"inline"};
+dojo.html.suggestDisplayByTagName=function(node){
+node=dojo.byId(node);
+if(node&&node.tagName){
+var tag=node.tagName.toLowerCase();
+return (tag in dojo.html.displayMap?dojo.html.displayMap[tag]:"block");
+}
+};
+dojo.html.setDisplay=function(node,_4bd){
+dojo.html.setStyle(node,"display",((_4bd instanceof String||typeof _4bd=="string")?_4bd:(_4bd?dojo.html.suggestDisplayByTagName(node):"none")));
+};
+dojo.html.isDisplayed=function(node){
+return (dojo.html.getComputedStyle(node,"display")!="none");
+};
+dojo.html.toggleDisplay=function(node){
+return dojo.html._toggle(node,dojo.html.isDisplayed,dojo.html.setDisplay);
+};
+dojo.html.setVisibility=function(node,_4c1){
+dojo.html.setStyle(node,"visibility",((_4c1 instanceof String||typeof _4c1=="string")?_4c1:(_4c1?"visible":"hidden")));
+};
+dojo.html.isVisible=function(node){
+return (dojo.html.getComputedStyle(node,"visibility")!="hidden");
+};
+dojo.html.toggleVisibility=function(node){
+return dojo.html._toggle(node,dojo.html.isVisible,dojo.html.setVisibility);
+};
+dojo.html.setOpacity=function(node,_4c5,_4c6){
+node=dojo.byId(node);
+var h=dojo.render.html;
+if(!_4c6){
+if(_4c5>=1){
+if(h.ie){
+dojo.html.clearOpacity(node);
+return;
+}else{
+_4c5=0.999999;
+}
+}else{
+if(_4c5<0){
+_4c5=0;
+}
+}
+}
+if(h.ie){
+if(node.nodeName.toLowerCase()=="tr"){
+var tds=node.getElementsByTagName("td");
+for(var x=0;x<tds.length;x++){
+tds[x].style.filter="Alpha(Opacity="+_4c5*100+")";
+}
+}
+node.style.filter="Alpha(Opacity="+_4c5*100+")";
+}else{
+if(h.moz){
+node.style.opacity=_4c5;
+node.style.MozOpacity=_4c5;
+}else{
+if(h.safari){
+node.style.opacity=_4c5;
+node.style.KhtmlOpacity=_4c5;
+}else{
+node.style.opacity=_4c5;
+}
+}
+}
+};
+dojo.html.clearOpacity=function(node){
+node=dojo.byId(node);
+var ns=node.style;
+var h=dojo.render.html;
+if(h.ie){
+try{
+if(node.filters&&node.filters.alpha){
+ns.filter="";
+}
+}
+catch(e){
+}
+}else{
+if(h.moz){
+ns.opacity=1;
+ns.MozOpacity=1;
+}else{
+if(h.safari){
+ns.opacity=1;
+ns.KhtmlOpacity=1;
+}else{
+ns.opacity=1;
+}
+}
+}
+};
+dojo.html.getOpacity=function(node){
+node=dojo.byId(node);
+var h=dojo.render.html;
+if(h.ie){
+var opac=(node.filters&&node.filters.alpha&&typeof node.filters.alpha.opacity=="number"?node.filters.alpha.opacity:100)/100;
+}else{
+var opac=node.style.opacity||node.style.MozOpacity||node.style.KhtmlOpacity||1;
+}
+return opac>=0.999999?1:Number(opac);
+};
+dojo.provide("dojo.html.color");
+dojo.html.getBackgroundColor=function(node){
+node=dojo.byId(node);
+var _4d1;
+do{
+_4d1=dojo.html.getStyle(node,"background-color");
+if(_4d1.toLowerCase()=="rgba(0, 0, 0, 0)"){
+_4d1="transparent";
+}
+if(node==document.getElementsByTagName("body")[0]){
+node=null;
+break;
+}
+node=node.parentNode;
+}while(node&&dojo.lang.inArray(["transparent",""],_4d1));
+if(_4d1=="transparent"){
+_4d1=[255,255,255,0];
+}else{
+_4d1=dojo.gfx.color.extractRGB(_4d1);
+}
+return _4d1;
+};
+dojo.provide("dojo.html.layout");
+dojo.html.sumAncestorProperties=function(node,prop){
+node=dojo.byId(node);
+if(!node){
+return 0;
+}
+var _4d4=0;
+while(node){
+if(dojo.html.getComputedStyle(node,"position")=="fixed"){
+return 0;
+}
+var val=node[prop];
+if(val){
+_4d4+=val-0;
+if(node==dojo.body()){
+break;
+}
+}
+node=node.parentNode;
+}
+return _4d4;
+};
+dojo.html.setStyleAttributes=function(node,_4d7){
+node=dojo.byId(node);
+var _4d8=_4d7.replace(/(;)?\s*$/,"").split(";");
+for(var i=0;i<_4d8.length;i++){
+var _4da=_4d8[i].split(":");
+var name=_4da[0].replace(/\s*$/,"").replace(/^\s*/,"").toLowerCase();
+var _4dc=_4da[1].replace(/\s*$/,"").replace(/^\s*/,"");
+switch(name){
+case "opacity":
+dojo.html.setOpacity(node,_4dc);
+break;
+case "content-height":
+dojo.html.setContentBox(node,{height:_4dc});
+break;
+case "content-width":
+dojo.html.setContentBox(node,{width:_4dc});
+break;
+case "outer-height":
+dojo.html.setMarginBox(node,{height:_4dc});
+break;
+case "outer-width":
+dojo.html.setMarginBox(node,{width:_4dc});
+break;
+default:
+node.style[dojo.html.toCamelCase(name)]=_4dc;
+}
+}
+};
+dojo.html.boxSizing={MARGIN_BOX:"margin-box",BORDER_BOX:"border-box",PADDING_BOX:"padding-box",CONTENT_BOX:"content-box"};
+dojo.html.getAbsolutePosition=dojo.html.abs=function(node,_4de,_4df){
+node=dojo.byId(node,node.ownerDocument);
+var ret={x:0,y:0};
+var bs=dojo.html.boxSizing;
+if(!_4df){
+_4df=bs.CONTENT_BOX;
+}
+var _4e2=2;
+var _4e3;
+switch(_4df){
+case bs.MARGIN_BOX:
+_4e3=3;
+break;
+case bs.BORDER_BOX:
+_4e3=2;
+break;
+case bs.PADDING_BOX:
+default:
+_4e3=1;
+break;
+case bs.CONTENT_BOX:
+_4e3=0;
+break;
+}
+var h=dojo.render.html;
+var db=document["body"]||document["documentElement"];
+if(h.ie){
+with(node.getBoundingClientRect()){
+ret.x=left-2;
+ret.y=top-2;
+}
+}else{
+if(document.getBoxObjectFor){
+_4e2=1;
+try{
+var bo=document.getBoxObjectFor(node);
+ret.x=bo.x-dojo.html.sumAncestorProperties(node,"scrollLeft");
+ret.y=bo.y-dojo.html.sumAncestorProperties(node,"scrollTop");
+}
+catch(e){
+}
+}else{
+if(node["offsetParent"]){
+var _4e7;
+if((h.safari)&&(node.style.getPropertyValue("position")=="absolute")&&(node.parentNode==db)){
+_4e7=db;
+}else{
+_4e7=db.parentNode;
+}
+if(node.parentNode!=db){
+var nd=node;
+if(dojo.render.html.opera){
+nd=db;
+}
+ret.x-=dojo.html.sumAncestorProperties(nd,"scrollLeft");
+ret.y-=dojo.html.sumAncestorProperties(nd,"scrollTop");
+}
+var _4e9=node;
+do{
+var n=_4e9["offsetLeft"];
+if(!h.opera||n>0){
+ret.x+=isNaN(n)?0:n;
+}
+var m=_4e9["offsetTop"];
+ret.y+=isNaN(m)?0:m;
+_4e9=_4e9.offsetParent;
+}while((_4e9!=_4e7)&&(_4e9!=null));
+}else{
+if(node["x"]&&node["y"]){
+ret.x+=isNaN(node.x)?0:node.x;
+ret.y+=isNaN(node.y)?0:node.y;
+}
+}
+}
+}
+if(_4de){
+var _4ec=dojo.html.getScroll();
+ret.y+=_4ec.top;
+ret.x+=_4ec.left;
+}
+var _4ed=[dojo.html.getPaddingExtent,dojo.html.getBorderExtent,dojo.html.getMarginExtent];
+if(_4e2>_4e3){
+for(var i=_4e3;i<_4e2;++i){
+ret.y+=_4ed[i](node,"top");
+ret.x+=_4ed[i](node,"left");
+}
+}else{
+if(_4e2<_4e3){
+for(var i=_4e3;i>_4e2;--i){
+ret.y-=_4ed[i-1](node,"top");
+ret.x-=_4ed[i-1](node,"left");
+}
+}
+}
+ret.top=ret.y;
+ret.left=ret.x;
+return ret;
+};
+dojo.html.isPositionAbsolute=function(node){
+return (dojo.html.getComputedStyle(node,"position")=="absolute");
+};
+dojo.html._sumPixelValues=function(node,_4f1,_4f2){
+var _4f3=0;
+for(var x=0;x<_4f1.length;x++){
+_4f3+=dojo.html.getPixelValue(node,_4f1[x],_4f2);
+}
+return _4f3;
+};
+dojo.html.getMargin=function(node){
+return {width:dojo.html._sumPixelValues(node,["margin-left","margin-right"],(dojo.html.getComputedStyle(node,"position")=="absolute")),height:dojo.html._sumPixelValues(node,["margin-top","margin-bottom"],(dojo.html.getComputedStyle(node,"position")=="absolute"))};
+};
+dojo.html.getBorder=function(node){
+return {width:dojo.html.getBorderExtent(node,"left")+dojo.html.getBorderExtent(node,"right"),height:dojo.html.getBorderExtent(node,"top")+dojo.html.getBorderExtent(node,"bottom")};
+};
+dojo.html.getBorderExtent=function(node,side){
+return (dojo.html.getStyle(node,"border-"+side+"-style")=="none"?0:dojo.html.getPixelValue(node,"border-"+side+"-width"));
+};
+dojo.html.getMarginExtent=function(node,side){
+return dojo.html._sumPixelValues(node,["margin-"+side],dojo.html.isPositionAbsolute(node));
+};
+dojo.html.getPaddingExtent=function(node,side){
+return dojo.html._sumPixelValues(node,["padding-"+side],true);
+};
+dojo.html.getPadding=function(node){
+return {width:dojo.html._sumPixelValues(node,["padding-left","padding-right"],true),height:dojo.html._sumPixelValues(node,["padding-top","padding-bottom"],true)};
+};
+dojo.html.getPadBorder=function(node){
+var pad=dojo.html.getPadding(node);
+var _500=dojo.html.getBorder(node);
+return {width:pad.width+_500.width,height:pad.height+_500.height};
+};
+dojo.html.getBoxSizing=function(node){
+var h=dojo.render.html;
+var bs=dojo.html.boxSizing;
+if(((h.ie)||(h.opera))&&node.nodeName!="IMG"){
+var cm=document["compatMode"];
+if((cm=="BackCompat")||(cm=="QuirksMode")){
+return bs.BORDER_BOX;
+}else{
+return bs.CONTENT_BOX;
+}
+}else{
+if(arguments.length==0){
+node=document.documentElement;
+}
+var _505=dojo.html.getStyle(node,"-moz-box-sizing");
+if(!_505){
+_505=dojo.html.getStyle(node,"box-sizing");
+}
+return (_505?_505:bs.CONTENT_BOX);
+}
+};
+dojo.html.isBorderBox=function(node){
+return (dojo.html.getBoxSizing(node)==dojo.html.boxSizing.BORDER_BOX);
+};
+dojo.html.getBorderBox=function(node){
+node=dojo.byId(node);
+return {width:node.offsetWidth,height:node.offsetHeight};
+};
+dojo.html.getPaddingBox=function(node){
+var box=dojo.html.getBorderBox(node);
+var _50a=dojo.html.getBorder(node);
+return {width:box.width-_50a.width,height:box.height-_50a.height};
+};
+dojo.html.getContentBox=function(node){
+node=dojo.byId(node);
+var _50c=dojo.html.getPadBorder(node);
+return {width:node.offsetWidth-_50c.width,height:node.offsetHeight-_50c.height};
+};
+dojo.html.setContentBox=function(node,args){
+node=dojo.byId(node);
+var _50f=0;
+var _510=0;
+var isbb=dojo.html.isBorderBox(node);
+var _512=(isbb?dojo.html.getPadBorder(node):{width:0,height:0});
+var ret={};
+if(typeof args.width!="undefined"){
+_50f=args.width+_512.width;
+ret.width=dojo.html.setPositivePixelValue(node,"width",_50f);
+}
+if(typeof args.height!="undefined"){
+_510=args.height+_512.height;
+ret.height=dojo.html.setPositivePixelValue(node,"height",_510);
+}
+return ret;
+};
+dojo.html.getMarginBox=function(node){
+var _515=dojo.html.getBorderBox(node);
+var _516=dojo.html.getMargin(node);
+return {width:_515.width+_516.width,height:_515.height+_516.height};
+};
+dojo.html.setMarginBox=function(node,args){
+node=dojo.byId(node);
+var _519=0;
+var _51a=0;
+var isbb=dojo.html.isBorderBox(node);
+var _51c=(!isbb?dojo.html.getPadBorder(node):{width:0,height:0});
+var _51d=dojo.html.getMargin(node);
+var ret={};
+if(typeof args.width!="undefined"){
+_519=args.width-_51c.width;
+_519-=_51d.width;
+ret.width=dojo.html.setPositivePixelValue(node,"width",_519);
+}
+if(typeof args.height!="undefined"){
+_51a=args.height-_51c.height;
+_51a-=_51d.height;
+ret.height=dojo.html.setPositivePixelValue(node,"height",_51a);
+}
+return ret;
+};
+dojo.html.getElementBox=function(node,type){
+var bs=dojo.html.boxSizing;
+switch(type){
+case bs.MARGIN_BOX:
+return dojo.html.getMarginBox(node);
+case bs.BORDER_BOX:
+return dojo.html.getBorderBox(node);
+case bs.PADDING_BOX:
+return dojo.html.getPaddingBox(node);
+case bs.CONTENT_BOX:
+default:
+return dojo.html.getContentBox(node);
+}
+};
+dojo.html.toCoordinateObject=dojo.html.toCoordinateArray=function(_522,_523,_524){
+if(_522 instanceof Array||typeof _522=="array"){
+dojo.deprecated("dojo.html.toCoordinateArray","use dojo.html.toCoordinateObject({left: , top: , width: , height: }) instead","0.5");
+while(_522.length<4){
+_522.push(0);
+}
+while(_522.length>4){
+_522.pop();
+}
+var ret={left:_522[0],top:_522[1],width:_522[2],height:_522[3]};
+}else{
+if(!_522.nodeType&&!(_522 instanceof String||typeof _522=="string")&&("width" in _522||"height" in _522||"left" in _522||"x" in _522||"top" in _522||"y" in _522)){
+var ret={left:_522.left||_522.x||0,top:_522.top||_522.y||0,width:_522.width||0,height:_522.height||0};
+}else{
+var node=dojo.byId(_522);
+var pos=dojo.html.abs(node,_523,_524);
+var _528=dojo.html.getMarginBox(node);
+var ret={left:pos.left,top:pos.top,width:_528.width,height:_528.height};
+}
+}
+ret.x=ret.left;
+ret.y=ret.top;
+return ret;
+};
+dojo.html.setMarginBoxWidth=dojo.html.setOuterWidth=function(node,_52a){
+return dojo.html._callDeprecated("setMarginBoxWidth","setMarginBox",arguments,"width");
+};
+dojo.html.setMarginBoxHeight=dojo.html.setOuterHeight=function(){
+return dojo.html._callDeprecated("setMarginBoxHeight","setMarginBox",arguments,"height");
+};
+dojo.html.getMarginBoxWidth=dojo.html.getOuterWidth=function(){
+return dojo.html._callDeprecated("getMarginBoxWidth","getMarginBox",arguments,null,"width");
+};
+dojo.html.getMarginBoxHeight=dojo.html.getOuterHeight=function(){
+return dojo.html._callDeprecated("getMarginBoxHeight","getMarginBox",arguments,null,"height");
+};
+dojo.html.getTotalOffset=function(node,type,_52d){
+return dojo.html._callDeprecated("getTotalOffset","getAbsolutePosition",arguments,null,type);
+};
+dojo.html.getAbsoluteX=function(node,_52f){
+return dojo.html._callDeprecated("getAbsoluteX","getAbsolutePosition",arguments,null,"x");
+};
+dojo.html.getAbsoluteY=function(node,_531){
+return dojo.html._callDeprecated("getAbsoluteY","getAbsolutePosition",arguments,null,"y");
+};
+dojo.html.totalOffsetLeft=function(node,_533){
+return dojo.html._callDeprecated("totalOffsetLeft","getAbsolutePosition",arguments,null,"left");
+};
+dojo.html.totalOffsetTop=function(node,_535){
+return dojo.html._callDeprecated("totalOffsetTop","getAbsolutePosition",arguments,null,"top");
+};
+dojo.html.getMarginWidth=function(node){
+return dojo.html._callDeprecated("getMarginWidth","getMargin",arguments,null,"width");
+};
+dojo.html.getMarginHeight=function(node){
+return dojo.html._callDeprecated("getMarginHeight","getMargin",arguments,null,"height");
+};
+dojo.html.getBorderWidth=function(node){
+return dojo.html._callDeprecated("getBorderWidth","getBorder",arguments,null,"width");
+};
+dojo.html.getBorderHeight=function(node){
+return dojo.html._callDeprecated("getBorderHeight","getBorder",arguments,null,"height");
+};
+dojo.html.getPaddingWidth=function(node){
+return dojo.html._callDeprecated("getPaddingWidth","getPadding",arguments,null,"width");
+};
+dojo.html.getPaddingHeight=function(node){
+return dojo.html._callDeprecated("getPaddingHeight","getPadding",arguments,null,"height");
+};
+dojo.html.getPadBorderWidth=function(node){
+return dojo.html._callDeprecated("getPadBorderWidth","getPadBorder",arguments,null,"width");
+};
+dojo.html.getPadBorderHeight=function(node){
+return dojo.html._callDeprecated("getPadBorderHeight","getPadBorder",arguments,null,"height");
+};
+dojo.html.getBorderBoxWidth=dojo.html.getInnerWidth=function(){
+return dojo.html._callDeprecated("getBorderBoxWidth","getBorderBox",arguments,null,"width");
+};
+dojo.html.getBorderBoxHeight=dojo.html.getInnerHeight=function(){
+return dojo.html._callDeprecated("getBorderBoxHeight","getBorderBox",arguments,null,"height");
+};
+dojo.html.getContentBoxWidth=dojo.html.getContentWidth=function(){
+return dojo.html._callDeprecated("getContentBoxWidth","getContentBox",arguments,null,"width");
+};
+dojo.html.getContentBoxHeight=dojo.html.getContentHeight=function(){
+return dojo.html._callDeprecated("getContentBoxHeight","getContentBox",arguments,null,"height");
+};
+dojo.html.setContentBoxWidth=dojo.html.setContentWidth=function(node,_53f){
+return dojo.html._callDeprecated("setContentBoxWidth","setContentBox",arguments,"width");
+};
+dojo.html.setContentBoxHeight=dojo.html.setContentHeight=function(node,_541){
+return dojo.html._callDeprecated("setContentBoxHeight","setContentBox",arguments,"height");
+};
+dojo.provide("dojo.lfx.html");
+dojo.lfx.html._byId=function(_542){
+if(!_542){
+return [];
+}
+if(dojo.lang.isArrayLike(_542)){
+if(!_542.alreadyChecked){
+var n=[];
+dojo.lang.forEach(_542,function(node){
+n.push(dojo.byId(node));
+});
+n.alreadyChecked=true;
+return n;
+}else{
+return _542;
+}
+}else{
+var n=[];
+n.push(dojo.byId(_542));
+n.alreadyChecked=true;
+return n;
+}
+};
+dojo.lfx.html.propertyAnimation=function(_545,_546,_547,_548,_549){
+_545=dojo.lfx.html._byId(_545);
+var _54a={"propertyMap":_546,"nodes":_545,"duration":_547,"easing":_548||dojo.lfx.easeDefault};
+var _54b=function(args){
+if(args.nodes.length==1){
+var pm=args.propertyMap;
+if(!dojo.lang.isArray(args.propertyMap)){
+var parr=[];
+for(var _54f in pm){
+pm[_54f].property=_54f;
+parr.push(pm[_54f]);
+}
+pm=args.propertyMap=parr;
+}
+dojo.lang.forEach(pm,function(prop){
+if(dj_undef("start",prop)){
+if(prop.property!="opacity"){
+prop.start=parseInt(dojo.html.getComputedStyle(args.nodes[0],prop.property));
+}else{
+prop.start=dojo.html.getOpacity(args.nodes[0]);
+}
+}
+});
+}
+};
+var _551=function(_552){
+var _553=[];
+dojo.lang.forEach(_552,function(c){
+_553.push(Math.round(c));
+});
+return _553;
+};
+var _555=function(n,_557){
+n=dojo.byId(n);
+if(!n||!n.style){
+return;
+}
+for(var s in _557){
+try{
+if(s=="opacity"){
+dojo.html.setOpacity(n,_557[s]);
+}else{
+n.style[s]=_557[s];
+}
+}
+catch(e){
+dojo.debug(e);
+}
+}
+};
+var _559=function(_55a){
+this._properties=_55a;
+this.diffs=new Array(_55a.length);
+dojo.lang.forEach(_55a,function(prop,i){
+if(dojo.lang.isFunction(prop.start)){
+prop.start=prop.start(prop,i);
+}
+if(dojo.lang.isFunction(prop.end)){
+prop.end=prop.end(prop,i);
+}
+if(dojo.lang.isArray(prop.start)){
+this.diffs[i]=null;
+}else{
+if(prop.start instanceof dojo.gfx.color.Color){
+prop.startRgb=prop.start.toRgb();
+prop.endRgb=prop.end.toRgb();
+}else{
+this.diffs[i]=prop.end-prop.start;
+}
+}
+},this);
+this.getValue=function(n){
+var ret={};
+dojo.lang.forEach(this._properties,function(prop,i){
+var _561=null;
+if(dojo.lang.isArray(prop.start)){
+}else{
+if(prop.start instanceof dojo.gfx.color.Color){
+_561=(prop.units||"rgb")+"(";
+for(var j=0;j<prop.startRgb.length;j++){
+_561+=Math.round(((prop.endRgb[j]-prop.startRgb[j])*n)+prop.startRgb[j])+(j<prop.startRgb.length-1?",":"");
+}
+_561+=")";
+}else{
+_561=((this.diffs[i])*n)+prop.start+(prop.property!="opacity"?prop.units||"px":"");
+}
+}
+ret[dojo.html.toCamelCase(prop.property)]=_561;
+},this);
+return ret;
+};
+};
+var anim=new dojo.lfx.Animation({beforeBegin:function(){
+_54b(_54a);
+anim.curve=new _559(_54a.propertyMap);
+},onAnimate:function(_564){
+dojo.lang.forEach(_54a.nodes,function(node){
+_555(node,_564);
+});
+}},_54a.duration,null,_54a.easing);
+if(_549){
+for(var x in _549){
+if(dojo.lang.isFunction(_549[x])){
+anim.connect(x,anim,_549[x]);
+}
+}
+}
+return anim;
+};
+dojo.lfx.html._makeFadeable=function(_567){
+var _568=function(node){
+if(dojo.render.html.ie){
+if((node.style.zoom.length==0)&&(dojo.html.getStyle(node,"zoom")=="normal")){
+node.style.zoom="1";
+}
+if((node.style.width.length==0)&&(dojo.html.getStyle(node,"width")=="auto")){
+node.style.width="auto";
+}
+}
+};
+if(dojo.lang.isArrayLike(_567)){
+dojo.lang.forEach(_567,_568);
+}else{
+_568(_567);
+}
+};
+dojo.lfx.html.fade=function(_56a,_56b,_56c,_56d,_56e){
+_56a=dojo.lfx.html._byId(_56a);
+var _56f={property:"opacity"};
+if(!dj_undef("start",_56b)){
+_56f.start=_56b.start;
+}else{
+_56f.start=function(){
+return dojo.html.getOpacity(_56a[0]);
+};
+}
+if(!dj_undef("end",_56b)){
+_56f.end=_56b.end;
+}else{
+dojo.raise("dojo.lfx.html.fade needs an end value");
+}
+var anim=dojo.lfx.propertyAnimation(_56a,[_56f],_56c,_56d);
+anim.connect("beforeBegin",function(){
+dojo.lfx.html._makeFadeable(_56a);
+});
+if(_56e){
+anim.connect("onEnd",function(){
+_56e(_56a,anim);
+});
+}
+return anim;
+};
+dojo.lfx.html.fadeIn=function(_571,_572,_573,_574){
+return dojo.lfx.html.fade(_571,{end:1},_572,_573,_574);
+};
+dojo.lfx.html.fadeOut=function(_575,_576,_577,_578){
+return dojo.lfx.html.fade(_575,{end:0},_576,_577,_578);
+};
+dojo.lfx.html.fadeShow=function(_579,_57a,_57b,_57c){
+_579=dojo.lfx.html._byId(_579);
+dojo.lang.forEach(_579,function(node){
+dojo.html.setOpacity(node,0);
+});
+var anim=dojo.lfx.html.fadeIn(_579,_57a,_57b,_57c);
+anim.connect("beforeBegin",function(){
+if(dojo.lang.isArrayLike(_579)){
+dojo.lang.forEach(_579,dojo.html.show);
+}else{
+dojo.html.show(_579);
+}
+});
+return anim;
+};
+dojo.lfx.html.fadeHide=function(_57f,_580,_581,_582){
+var anim=dojo.lfx.html.fadeOut(_57f,_580,_581,function(){
+if(dojo.lang.isArrayLike(_57f)){
+dojo.lang.forEach(_57f,dojo.html.hide);
+}else{
+dojo.html.hide(_57f);
+}
+if(_582){
+_582(_57f,anim);
+}
+});
+return anim;
+};
+dojo.lfx.html.wipeIn=function(_584,_585,_586,_587){
+_584=dojo.lfx.html._byId(_584);
+var _588=[];
+dojo.lang.forEach(_584,function(node){
+var _58a={};
+var _58b,_58c,_58d;
+with(node.style){
+_58b=top;
+_58c=left;
+_58d=position;
+top="-9999px";
+left="-9999px";
+position="absolute";
+display="";
+}
+var _58e=dojo.html.getBorderBox(node).height;
+with(node.style){
+top=_58b;
+left=_58c;
+position=_58d;
+display="none";
+}
+var anim=dojo.lfx.propertyAnimation(node,{"height":{start:1,end:function(){
+return _58e;
+}}},_585,_586);
+anim.connect("beforeBegin",function(){
+_58a.overflow=node.style.overflow;
+_58a.height=node.style.height;
+with(node.style){
+overflow="hidden";
+_58e="1px";
+}
+dojo.html.show(node);
+});
+anim.connect("onEnd",function(){
+with(node.style){
+overflow=_58a.overflow;
+_58e=_58a.height;
+}
+if(_587){
+_587(node,anim);
+}
+});
+_588.push(anim);
+});
+return dojo.lfx.combine(_588);
+};
+dojo.lfx.html.wipeOut=function(_590,_591,_592,_593){
+_590=dojo.lfx.html._byId(_590);
+var _594=[];
+dojo.lang.forEach(_590,function(node){
+var _596={};
+var anim=dojo.lfx.propertyAnimation(node,{"height":{start:function(){
+return dojo.html.getContentBox(node).height;
+},end:1}},_591,_592,{"beforeBegin":function(){
+_596.overflow=node.style.overflow;
+_596.height=node.style.height;
+with(node.style){
+overflow="hidden";
+}
+dojo.html.show(node);
+},"onEnd":function(){
+dojo.html.hide(node);
+with(node.style){
+overflow=_596.overflow;
+height=_596.height;
+}
+if(_593){
+_593(node,anim);
+}
+}});
+_594.push(anim);
+});
+return dojo.lfx.combine(_594);
+};
+dojo.lfx.html.slideTo=function(_598,_599,_59a,_59b,_59c){
+_598=dojo.lfx.html._byId(_598);
+var _59d=[];
+var _59e=dojo.html.getComputedStyle;
+if(dojo.lang.isArray(_599)){
+dojo.deprecated("dojo.lfx.html.slideTo(node, array)","use dojo.lfx.html.slideTo(node, {top: value, left: value});","0.5");
+_599={top:_599[0],left:_599[1]};
+}
+dojo.lang.forEach(_598,function(node){
+var top=null;
+var left=null;
+var init=(function(){
+var _5a3=node;
+return function(){
+var pos=_59e(_5a3,"position");
+top=(pos=="absolute"?node.offsetTop:parseInt(_59e(node,"top"))||0);
+left=(pos=="absolute"?node.offsetLeft:parseInt(_59e(node,"left"))||0);
+if(!dojo.lang.inArray(["absolute","relative"],pos)){
+var ret=dojo.html.abs(_5a3,true);
+dojo.html.setStyleAttributes(_5a3,"position:absolute;top:"+ret.y+"px;left:"+ret.x+"px;");
+top=ret.y;
+left=ret.x;
+}
+};
+})();
+init();
+var anim=dojo.lfx.propertyAnimation(node,{"top":{start:top,end:(_599.top||0)},"left":{start:left,end:(_599.left||0)}},_59a,_59b,{"beforeBegin":init});
+if(_59c){
+anim.connect("onEnd",function(){
+_59c(_598,anim);
+});
+}
+_59d.push(anim);
+});
+return dojo.lfx.combine(_59d);
+};
+dojo.lfx.html.slideBy=function(_5a7,_5a8,_5a9,_5aa,_5ab){
+_5a7=dojo.lfx.html._byId(_5a7);
+var _5ac=[];
+var _5ad=dojo.html.getComputedStyle;
+if(dojo.lang.isArray(_5a8)){
+dojo.deprecated("dojo.lfx.html.slideBy(node, array)","use dojo.lfx.html.slideBy(node, {top: value, left: value});","0.5");
+_5a8={top:_5a8[0],left:_5a8[1]};
+}
+dojo.lang.forEach(_5a7,function(node){
+var top=null;
+var left=null;
+var init=(function(){
+var _5b2=node;
+return function(){
+var pos=_5ad(_5b2,"position");
+top=(pos=="absolute"?node.offsetTop:parseInt(_5ad(node,"top"))||0);
+left=(pos=="absolute"?node.offsetLeft:parseInt(_5ad(node,"left"))||0);
+if(!dojo.lang.inArray(["absolute","relative"],pos)){
+var ret=dojo.html.abs(_5b2,true);
+dojo.html.setStyleAttributes(_5b2,"position:absolute;top:"+ret.y+"px;left:"+ret.x+"px;");
+top=ret.y;
+left=ret.x;
+}
+};
+})();
+init();
+var anim=dojo.lfx.propertyAnimation(node,{"top":{start:top,end:top+(_5a8.top||0)},"left":{start:left,end:left+(_5a8.left||0)}},_5a9,_5aa).connect("beforeBegin",init);
+if(_5ab){
+anim.connect("onEnd",function(){
+_5ab(_5a7,anim);
+});
+}
+_5ac.push(anim);
+});
+return dojo.lfx.combine(_5ac);
+};
+dojo.lfx.html.explode=function(_5b6,_5b7,_5b8,_5b9,_5ba){
+var h=dojo.html;
+_5b6=dojo.byId(_5b6);
+_5b7=dojo.byId(_5b7);
+var _5bc=h.toCoordinateObject(_5b6,true);
+var _5bd=document.createElement("div");
+h.copyStyle(_5bd,_5b7);
+if(_5b7.explodeClassName){
+_5bd.className=_5b7.explodeClassName;
+}
+with(_5bd.style){
+position="absolute";
+display="none";
+var _5be=h.getStyle(_5b6,"background-color");
+backgroundColor=_5be?_5be.toLowerCase():"transparent";
+backgroundColor=(backgroundColor=="transparent")?"rgb(221, 221, 221)":backgroundColor;
+}
+dojo.body().appendChild(_5bd);
+with(_5b7.style){
+visibility="hidden";
+display="block";
+}
+var _5bf=h.toCoordinateObject(_5b7,true);
+with(_5b7.style){
+display="none";
+visibility="visible";
+}
+var _5c0={opacity:{start:0.5,end:1}};
+dojo.lang.forEach(["height","width","top","left"],function(type){
+_5c0[type]={start:_5bc[type],end:_5bf[type]};
+});
+var anim=new dojo.lfx.propertyAnimation(_5bd,_5c0,_5b8,_5b9,{"beforeBegin":function(){
+h.setDisplay(_5bd,"block");
+},"onEnd":function(){
+h.setDisplay(_5b7,"block");
+_5bd.parentNode.removeChild(_5bd);
+}});
+if(_5ba){
+anim.connect("onEnd",function(){
+_5ba(_5b7,anim);
+});
+}
+return anim;
+};
+dojo.lfx.html.implode=function(_5c3,end,_5c5,_5c6,_5c7){
+var h=dojo.html;
+_5c3=dojo.byId(_5c3);
+end=dojo.byId(end);
+var _5c9=dojo.html.toCoordinateObject(_5c3,true);
+var _5ca=dojo.html.toCoordinateObject(end,true);
+var _5cb=document.createElement("div");
+dojo.html.copyStyle(_5cb,_5c3);
+if(_5c3.explodeClassName){
+_5cb.className=_5c3.explodeClassName;
+}
+dojo.html.setOpacity(_5cb,0.3);
+with(_5cb.style){
+position="absolute";
+display="none";
+backgroundColor=h.getStyle(_5c3,"background-color").toLowerCase();
+}
+dojo.body().appendChild(_5cb);
+var _5cc={opacity:{start:1,end:0.5}};
+dojo.lang.forEach(["height","width","top","left"],function(type){
+_5cc[type]={start:_5c9[type],end:_5ca[type]};
+});
+var anim=new dojo.lfx.propertyAnimation(_5cb,_5cc,_5c5,_5c6,{"beforeBegin":function(){
+dojo.html.hide(_5c3);
+dojo.html.show(_5cb);
+},"onEnd":function(){
+_5cb.parentNode.removeChild(_5cb);
+}});
+if(_5c7){
+anim.connect("onEnd",function(){
+_5c7(_5c3,anim);
+});
+}
+return anim;
+};
+dojo.lfx.html.highlight=function(_5cf,_5d0,_5d1,_5d2,_5d3){
+_5cf=dojo.lfx.html._byId(_5cf);
+var _5d4=[];
+dojo.lang.forEach(_5cf,function(node){
+var _5d6=dojo.html.getBackgroundColor(node);
+var bg=dojo.html.getStyle(node,"background-color").toLowerCase();
+var _5d8=dojo.html.getStyle(node,"background-image");
+var _5d9=(bg=="transparent"||bg=="rgba(0, 0, 0, 0)");
+while(_5d6.length>3){
+_5d6.pop();
+}
+var rgb=new dojo.gfx.color.Color(_5d0);
+var _5db=new dojo.gfx.color.Color(_5d6);
+var anim=dojo.lfx.propertyAnimation(node,{"background-color":{start:rgb,end:_5db}},_5d1,_5d2,{"beforeBegin":function(){
+if(_5d8){
+node.style.backgroundImage="none";
+}
+node.style.backgroundColor="rgb("+rgb.toRgb().join(",")+")";
+},"onEnd":function(){
+if(_5d8){
+node.style.backgroundImage=_5d8;
+}
+if(_5d9){
+node.style.backgroundColor="transparent";
+}
+if(_5d3){
+_5d3(node,anim);
+}
+}});
+_5d4.push(anim);
+});
+return dojo.lfx.combine(_5d4);
+};
+dojo.lfx.html.unhighlight=function(_5dd,_5de,_5df,_5e0,_5e1){
+_5dd=dojo.lfx.html._byId(_5dd);
+var _5e2=[];
+dojo.lang.forEach(_5dd,function(node){
+var _5e4=new dojo.gfx.color.Color(dojo.html.getBackgroundColor(node));
+var rgb=new dojo.gfx.color.Color(_5de);
+var _5e6=dojo.html.getStyle(node,"background-image");
+var anim=dojo.lfx.propertyAnimation(node,{"background-color":{start:_5e4,end:rgb}},_5df,_5e0,{"beforeBegin":function(){
+if(_5e6){
+node.style.backgroundImage="none";
+}
+node.style.backgroundColor="rgb("+_5e4.toRgb().join(",")+")";
+},"onEnd":function(){
+if(_5e1){
+_5e1(node,anim);
+}
+}});
+_5e2.push(anim);
+});
+return dojo.lfx.combine(_5e2);
+};
+dojo.lang.mixin(dojo.lfx,dojo.lfx.html);
 dojo.provide("dojo.lfx.*");
+

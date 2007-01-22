@@ -383,6 +383,15 @@
 	</servlet>
 
 
+	<!-- Servlet for sending email -->
+	<servlet>
+		<servlet-name>sendEmail</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.email.SendEmailServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
 	<!-- Servlet for administration tasks -->
 	<servlet>
 		<servlet-name>reloadProperties</servlet-name>
@@ -644,6 +653,12 @@
 	<servlet-mapping>
 		<servlet-name>cityFind</servlet-name>
 		<url-pattern>/servlet/cityFind</url-pattern>
+	</servlet-mapping>
+
+	<!-- Servlet for sending email -->
+	<servlet-mapping>
+		<servlet-name>sendEmail</servlet-name>
+		<url-pattern>/servlet/sendEmail</url-pattern>
 	</servlet-mapping>
 
 	<!-- The Usual Welcome File List -->

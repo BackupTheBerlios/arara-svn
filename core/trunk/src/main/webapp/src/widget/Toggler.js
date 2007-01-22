@@ -12,18 +12,15 @@ dojo.provide("dojo.widget.Toggler");
 dojo.require("dojo.widget.*");
 dojo.require("dojo.event.*");
 
-// clicking on this node shows/hides another widget
+dojo.widget.defineWidget(
+	"dojo.widget.Toggler",
+	dojo.widget.HtmlWidget,
+{
+	// summary:
+	//		clicking on this widget shows/hides another widget
 
-dojo.widget.Toggler = function(){
-	dojo.widget.DomWidget.call(this);
-}
-
-dojo.inherits(dojo.widget.Toggler, dojo.widget.DomWidget);
-
-dojo.lang.extend(dojo.widget.Toggler, {
-	widgetType: "Toggler",
-	
-	// Associated widget 
+	// targetId: String
+	//		Id of widget to show/hide when this widget is clicked
 	targetId: '',
 	
 	fillInTemplate: function() {
@@ -37,4 +34,3 @@ dojo.lang.extend(dojo.widget.Toggler, {
 		pane.toggleShowing();
 	}
 });
-dojo.widget.tags.addParseTreeHandler("dojo:toggler");

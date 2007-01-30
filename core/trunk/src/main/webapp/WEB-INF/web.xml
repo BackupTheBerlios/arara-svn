@@ -389,7 +389,7 @@
 		<servlet-class>
 			net.indrix.arara.servlets.email.SendEmailServlet
 		</servlet-class>
-		<load-on-startup>2</load-on-startup>
+		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<!-- Servlet for administration tasks -->

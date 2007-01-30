@@ -109,12 +109,13 @@ table.comBordaSimples tr {
 						<font size="1" face="Verdana"><br><fmt:message key="user.title" />: 
 							<a href="<c:url value="/servlet/searchPhotosByUser?id=${photo.user.id}&action=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${photo.user.login}</a>
 
-							<c:if test="${(photo.user.id == user.id) or (user.admin == true)}">
+							<c:if test="${user != null}">
 								<a  href="<c:url value="/frame.jsp?pageToShow=/jsp/email/doWriteEmail.jsp&loginTo=${photo.user.login}"/>"> 
 									<fmt:message key="button.sound.tooltip" var="soundToolTip"/>
 									<img align="middle" title="${soundToolTip}" src="<c:url value="/jsp/images/mail_write.png"/>" width="20" height="20" border="0"> 
 								</a>							
 							</c:if> 
+
 						</font> 
 						<c:if test="${photo.specie.id == -1}">
 							<font size="1" face="Verdana"><br>

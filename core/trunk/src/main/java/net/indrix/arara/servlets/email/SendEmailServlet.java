@@ -19,6 +19,10 @@ import net.indrix.arara.vo.User;
 
 public class SendEmailServlet extends AbstractServlet {
 
+    public void init(){
+        logger.info("Initializing SendEmailServlet servlet...");
+    }
+    
     public void doPost(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
         String login = req.getParameter("loginTo");
@@ -47,7 +51,7 @@ public class SendEmailServlet extends AbstractServlet {
             try {
                 sender.sendEmailNow();
                 logger.debug("SendEmailServlet.doPost: email sent...");
-                loggerActions.debug("User " + login + " has sent a message to user " + user.getLogin());
+                loggerActions.info("User " + login + " has sent a message to user " + user.getLogin());
                 messageKey = "send.email.success";
             } catch (SendEmailException e) {
                 logger.error("SendEmailServlet.doPost: email NOT sent...");

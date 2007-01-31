@@ -28,46 +28,16 @@
 	<tr>
 		<td>
 			<b>Apoie esse projeto, seja um patrocinador deste site!</b><br><br>
-			<table width="100%" class="formBorder" >
+			<table width="100%" border="0">
 				<tr>
-					<td align="center">
-						<a href="mailto:webmaster@aves.brasil.nom.br?subject=Patrocinio"> 
-							<img src="<c:url value="/jsp/images/Propaganda.jpg"/>"	align="bottom"> 
-						</a> 
-					</td>
-					<td align="center">
-						<a href="mailto:webmaster@aves.brasil.nom.br?subject=Patrocinio"> 
-							<img src="<c:url value="/jsp/images/Propaganda.jpg"/>"	align="bottom"> 
-						</a> 
-					</td>
-					<td align="center">
-						<a href="mailto:webmaster@aves.brasil.nom.br?subject=Patrocinio"> 
-							<img src="<c:url value="/jsp/images/Propaganda.jpg"/>"	align="bottom"> 
-						</a> 
-					</td>
-					<td align="center">
-						<a href="mailto:webmaster@aves.brasil.nom.br?subject=Patrocinio"> 
-							<img src="<c:url value="/jsp/images/Propaganda.jpg"/>"	align="bottom"> 
+					<td align="left" colspan="4">
+						<a href="http://www.avistarbrasil.com.br" target="_blanck"> 
+							<img src="<c:url value="/jsp/images/bannerAB.png"/>" align="bottom"> 
 						</a> 
 					</td>
 				</tr>
 				<tr>
-					<td align="center">
-						<a href="mailto:webmaster@aves.brasil.nom.br?subject=Patrocinio"> 
-							<img src="<c:url value="/jsp/images/Propaganda.jpg"/>"	align="bottom"> 
-						</a> 
-					</td>
-					<td align="center">
-						<a href="mailto:webmaster@aves.brasil.nom.br?subject=Patrocinio"> 
-							<img src="<c:url value="/jsp/images/Propaganda.jpg"/>"	align="bottom"> 
-						</a> 
-					</td>
-					<td align="center">
-						<a href="mailto:webmaster@aves.brasil.nom.br?subject=Patrocinio"> 
-							<img src="<c:url value="/jsp/images/Propaganda.jpg"/>"	align="bottom"> 
-						</a> 
-					</td>
-					<td align="center">
+					<td align="right" colspan="4">
 						<a href="mailto:webmaster@aves.brasil.nom.br?subject=Patrocinio"> 
 							<img src="<c:url value="/jsp/images/Propaganda.jpg"/>"	align="bottom"> 
 						</a> 

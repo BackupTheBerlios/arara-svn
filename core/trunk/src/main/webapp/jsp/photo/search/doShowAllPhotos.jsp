@@ -111,8 +111,8 @@ table.comBordaSimples tr {
 
 							<c:if test="${user != null}">
 								<a  href="<c:url value="/frame.jsp?pageToShow=/jsp/email/doWriteEmail.jsp&loginTo=${photo.user.login}"/>"> 
-									<fmt:message key="button.sound.tooltip" var="soundToolTip"/>
-									<img align="middle" title="${soundToolTip}" src="<c:url value="/jsp/images/mail_write.png"/>" width="20" height="20" border="0"> 
+									<fmt:message key="button.email.tooltip" var="emailToolTip"/>
+									<img align="middle" title="${emailToolTip}" src="<c:url value="/jsp/images/mail_write.png"/>" width="20" height="20" border="0"> 
 								</a>							
 							</c:if> 
 

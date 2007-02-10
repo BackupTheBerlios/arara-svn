@@ -14,6 +14,7 @@ import java.util.Collections;
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.model.PhotoModel;
 import net.indrix.arara.model.StatisticsModel;
+import net.indrix.arara.vo.Photo;
 
 import org.apache.log4j.Logger;
 
@@ -110,11 +111,12 @@ public class Statistics {
                 maxSize = listOfPhotos.size();
             }
             Iterator i = (listOfPhotos.subList(0, maxSize)).iterator();
-            String id = ((Integer) (i.next())).toString();            
-            imgUrls = contextPath + "/servlet/getThumbnail?photoId=" + id;
+
+            Photo photo = model.retrieve((Integer)i.next());
+            imgUrls = contextPath + "/" + photo.getThumbnailRelativePathAsLink();
             while (i.hasNext()) {
-                id = ((Integer) (i.next())).toString();
-                imgUrls = imgUrls + ";" + contextPath + "/servlet/getThumbnail?photoId=" + id;
+                photo = model.retrieve((Integer)i.next());
+                imgUrls = imgUrls + ";" + contextPath + "/" + photo.getThumbnailRelativePathAsLink();
             }            
         } catch (DatabaseDownException e) {
             logger.error(

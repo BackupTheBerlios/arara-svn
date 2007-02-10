@@ -29,7 +29,7 @@
 			<table width="100%" border="0">
 				<tr>
 					<td align="left" colspan="4">
-						<a href="http://www.avistarbrasil.com.br/concurso" target="_blanck"> 
+						<a href="http://www.avistarbrasil.com.br/concurso/index.html" target="_blanck"> 
 							<img src="<c:url value="/jsp/images/bannerAB.png"/>" align="bottom"/> 
 						</a> 
 					</td>

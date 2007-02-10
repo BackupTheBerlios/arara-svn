@@ -15,16 +15,18 @@
 	<c:set var="fontSize" value="${1}" />
 </c:if>
 
-
 <table width="${tableW}%">
 <tr>
 	<td align="${imageAlign}">
+	
+		<!-- Show photo when in View Mode -->
 		<c:if test="${viewMode == 'viewMode'}">
-			<a href="<c:url value="/servlet/getPhoto?photoId=${currentPhoto.id}&identification=${identification}"/>" target="_blank"> 
+			<a href="<c:url value="${linkKey}${currentPhoto.relativePathAsLink}"/>" target="_blank"> 
 				<img:showImage identification="${identification}" />
 			</a>
 		</c:if> 
 		
+		<!-- Show photo when in Identification Mode -->
 		<c:if test="${viewMode == 'identificationMode'}">
 			<br>
 			<table class="formBorder"width="95%">
@@ -34,7 +36,7 @@
 					<td align="center">
 						<a href="<c:url value="/servlet/getPhoto?photoId=${currentPhoto.id}&identification=${identification}"/>" target="_blank"> 
 						<img
-							src="<c:url value="/servlet/getThumbnail?photoId=${currentPhoto.id}"/>"
+							src="<c:url value="${photo.relativePathAsLink}"/>"
 							width="${f:thumbnailWidth(w, currentPhoto.smallImage.width, currentPhoto.smallImage.height)}"
 							height="${f:thumbnailHeight(w, currentPhoto.smallImage.width, currentPhoto.smallImage.height)}"
 							align="bottom" /> 

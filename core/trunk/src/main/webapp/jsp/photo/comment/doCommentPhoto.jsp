@@ -29,7 +29,7 @@ table.comBordaSimples tr {
 		<td colspacing="2" align="left">
 			<c:set var="w" value="${240}" />
 			<img
-			src="<c:url value="/servlet/getThumbnail?photoId=${currentPhoto.id}"/>"
+			src="<c:url value="${linkKey}${currentPhoto.thumbnailRelativePathAsLink}"/>"
 			width="${f:thumbnailWidth(w, currentPhoto.smallImage.width, currentPhoto.smallImage.height)}"
 			height="${f:thumbnailHeight(w, currentPhoto.smallImage.width, currentPhoto.smallImage.height)}"
 			align="bottom" />

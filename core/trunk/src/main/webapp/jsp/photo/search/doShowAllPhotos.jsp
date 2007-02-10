@@ -14,25 +14,25 @@ table.comBordaSimples tr {
 
 <table width="100%" border="0" cellspacing="2" height="100%">
 <tr><td>
-		<c:if test="${empty listOfPhotos}">
-			<br><br>
-			<table align="center" class="formBorder" width="50%" border="0" cellspacing="2" bgcolor="${mainBgColor}">
-				<tr height="10" bgcolor="#000000">
-					<td colspan="3"></td>
-				</tr>
-				<tr height="5">
-					<td colspan="3"></td>
-				</tr>
-				<tr>
-					<td align="center" width="15%">
-						<h3><fmt:message key="show.all.photos.not.found" /></h3>
-					</td>
-				</tr>
-				<tr height="5">
-					<td colspan="3"></td>
-				</tr>
-			</table>
-		</c:if>
+	<c:if test="${empty listOfPhotos}">
+		<br><br>
+		<table align="center" class="formBorder" width="50%" border="0" cellspacing="2" bgcolor="${mainBgColor}">
+			<tr height="10" bgcolor="#000000">
+				<td colspan="3"></td>
+			</tr>
+			<tr height="5">
+				<td colspan="3"></td>
+			</tr>
+			<tr>
+				<td align="center" width="15%">
+					<h3><fmt:message key="show.all.photos.not.found" /></h3>
+				</td>
+			</tr>
+			<tr height="5">
+				<td colspan="3"></td>
+			</tr>
+		</table>
+	</c:if>
 	<table class="comBordaSimples"  width="100%" border="0" cellspacing="2" height="100%">
 		<c:set var="index" value="${0}" />
 		<c:set var="newLine" value="${true}" />
@@ -52,7 +52,7 @@ table.comBordaSimples tr {
 				<tr>
 					<td width="20" align="right">
 					<c:if test="${photo.soundAvailable == true}">
-						<a  href="<c:url value="${linkKey}${photo.sound.relativePathAsLink}"/>" target="_blank"> 
+						<a  href="<c:url value="${photo.sound.relativePathAsLink}"/>" target="_blank"> 
 							<font size="1" face="Verdana"> 
 								<fmt:message key="button.sound.tooltip" var="soundToolTip"/>
 								<img title="${soundToolTip}" src="<c:url value="/jsp/images/sound.gif"/>" width="20" height="20" border="0"> 
@@ -67,12 +67,13 @@ table.comBordaSimples tr {
 					</c:if> 
 					</td>
 	        		<td width="${w+10}" colspan="1" rowspan="4" align="left">
-					<a href="<c:url value="/servlet/showOnePhoto?nextPage=/frame.jsp&pageToShow=/jsp/photo/search/doShowOnePhoto.jsp&photoId=${photo.id}&identification=${identification}"/>">
-					<img src="<c:url value="/servlet/getThumbnail?photoId=${photo.id}&identification=${identification}"/>"
-						width="${f:thumbnailWidth(w, photo.smallImage.width, photo.smallImage.height)}"
-						height="${f:thumbnailHeight(w, photo.smallImage.width, photo.smallImage.height)}"
-						align="bottom" border="0"/>
-					</a> 
+						<a href="<c:url value="/servlet/showOnePhoto?nextPage=/frame.jsp&pageToShow=/jsp/photo/search/doShowOnePhoto.jsp&photoId=${photo.id}&identification=${identification}"/>">				
+						    <!-- The linkKey below is set in the InitServlet class -->
+							<img src="<c:url value="${linkKey}${photo.thumbnailRelativePathAsLink}"/>"
+								width="${f:thumbnailWidth(w, photo.smallImage.width, photo.smallImage.height)}"
+								height="${f:thumbnailHeight(w, photo.smallImage.width, photo.smallImage.height)}"
+								align="bottom" border="0"/>
+						</a> 
 					</td>
 					
 					<!-- INSERTING SPECIE DATA -->
@@ -177,8 +178,7 @@ table.comBordaSimples tr {
 					</tr>
 				</c:if> 
 				</table>
-				
-		</td>
+		    </td>
 		<c:if test="${index > 1}">
 			<c:set var="index" value="${0}" />
 			<c:set var="newLine" value="${true}" />

@@ -49,13 +49,10 @@ public class PhotoPaginationController extends PaginationController {
 		for (i = currentIndex; (i < end) && (i < size); i++) {
 			int id = ((Integer) listOfData.get(i)).intValue();
 			Photo photo = null;
-			logger
-					.debug("PaginationController.doAction: retrieving photo (thumbnail) "
-							+ id);
+			logger.debug("PaginationController.doAction: retrieving photo (thumbnail) " + id);
 			photo = model.retrieveThumbnail(id);
 			if (photo != null) {
-				logger
-						.debug("PaginationController.doAction: photo retrieved. Adding to list");
+				logger.debug("PaginationController.doAction: photo retrieved. Adding to list..." + photo);
 				viewOfList.add(photo);
 			} else {
 				logger.debug("PaginationController.doAction: photo not found");

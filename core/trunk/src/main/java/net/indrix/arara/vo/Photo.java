@@ -12,26 +12,12 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * @author Jefferson_Angelica
+ * @author Jefferson
  * 
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class Photo implements Serializable {
-	private int id;
-
-	private User user;
-
-	private Specie specie;
-
+public class Photo extends Media implements Serializable {
 	private Date date;
     
-    private Date postDate;
-
-	private String location;
-
-	private City city;
-
 	private String camera;
 
 	private String lens;
@@ -42,43 +28,17 @@ public class Photo implements Serializable {
 
 	private ImageFile smallImage;
 
-	private String comment;
-
 	private List comments;
 
 	private List identifications;
 
-	private Age age;
-
-	private Sex sex;
-
 	private Sound sound;
+    
+    private String thumbnailRelativePath;
 
 	public Photo() {
 		realImage = new ImageFile();
 		smallImage = new ImageFile();
-		id = -1;
-		age = new Age();
-		sex = new Sex();
-		city = new City();
-	}
-
-	/**
-	 * Getter method for the id attribute
-	 * 
-	 * @return The id attribute
-	 */
-	public int getId() {
-		return id;
-	}
-
-	/**
-	 * Getter method for the specie attribute
-	 * 
-	 * @return The value of the attribute
-	 */
-	public Specie getSpecie() {
-		return specie;
 	}
 
 	/**
@@ -118,24 +78,6 @@ public class Photo implements Serializable {
 	}
 
 	/**
-	 * Getter method for the location attribute
-	 * 
-	 * @return The value of the attribute
-	 */
-	public String getLocation() {
-		return location;
-	}
-
-	/**
-	 * Getter method for the user attribute, as a <code>User</code> object
-	 * 
-	 * @return the user attribute, as a <code>User</code> object
-	 */
-	public User getUser() {
-		return user;
-	}
-
-	/**
 	 * Getter method for the smallImage attribute, as a <code>ImageFile</code>
 	 * object
 	 * 
@@ -156,15 +98,6 @@ public class Photo implements Serializable {
 	}
 
 	/**
-	 * Getter method for the comment attribute
-	 * 
-	 * @return The comment attribute
-	 */
-	public String getComment() {
-		return comment;
-	}
-
-	/**
 	 * Getter method for the comments attribute
 	 * 
 	 * @return The list of comments
@@ -173,48 +106,30 @@ public class Photo implements Serializable {
 		return comments;
 	}
 
-	/**
-	 * Getter method for the age attribute, as a <code>Age</code> object
-	 * 
-	 * @return the age attribute, as a <code>Age</code> object
-	 */
-	public Age getAge() {
-		return age;
-	}
-
-	/**
-	 * Getter method for the sex attribute, as a <code>Sex</code> object
-	 * 
-	 * @return the sex attribute, as a <code>Sex</code> object
-	 */
-	public Sex getSex() {
-		return sex;
-	}
-
-	/**
-	 * @return
-	 */
-	public City getCity() {
-		return city;
-	}
-
-	/**
-	 * @return
-	 */
+    /**
+     * Getter method for the identifications attribute, as a <code>List</code>
+     * object
+     * 
+     * @return the identifications attribute, as a <code>List</code> object
+     */
 	public List getIdentifications() {
 		return identifications;
 	}
 
-	/**
-	 * Setter method for the id attribute
-	 * 
-	 * @param i
-	 *            The new value to the attribute
-	 */
-	public void setId(int i) {
-		id = i;
-	}
-
+    /**
+     * Getter method for the thumbnailRelativePath attribute, as a <code>thumbnailRelativePath</code>
+     * object
+     * 
+     * @return the thumbnailRelativePath attribute, as a <code>thumbnailRelativePath</code> object
+     */
+    public String getThumbnailRelativePathAsLink() {
+        String link = "ERROR";
+        if (thumbnailRelativePath != null){
+            link = thumbnailRelativePath.replace('\\', '/'); 
+        }
+        return link;
+    }
+   
 	/**
 	 * Setter method for the camera attribute
 	 * 
@@ -255,35 +170,6 @@ public class Photo implements Serializable {
 		lens = string;
 	}
 
-	/**
-	 * Setter method for the location attribute
-	 * 
-	 * @param string
-	 *            The new value to the attribute
-	 */
-	public void setLocation(String string) {
-		location = string;
-	}
-
-	/**
-	 * Setter method for the user attribute
-	 * 
-	 * @param user
-	 *            The new value to the attribute
-	 */
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	/**
-	 * Setter method for the specie attribute
-	 * 
-	 * @param specie
-	 *            The new value to the attribute
-	 */
-	public void setSpecie(Specie specie) {
-		this.specie = specie;
-	}
 
 	/**
 	 * Setter method for the smallImage attribute
@@ -316,52 +202,11 @@ public class Photo implements Serializable {
 	}
 
 	/**
-	 * Setter method for the comment attribute
-	 * 
-	 * @param string
-	 *            The new value to the attribute
-	 */
-	public void setComment(String string) {
-		comment = string;
-	}
-
-	/**
-	 * Setter method for the age attribute
-	 * 
-	 * @param age
-	 *            The new value to the attribute
-	 */
-	public void setAge(Age age) {
-		this.age = age;
-	}
-
-	/**
-	 * Setter method for the sex attribute
-	 * 
-	 * @param sex
-	 *            The new value to the attribute
-	 */
-	public void setSex(Sex sex) {
-		this.sex = sex;
-	}
-
-	/**
-	 * @param city
-	 */
-	public void setCity(City city) {
-		if (city == null) {
-			city = new City();
-		}
-		this.city = city;
-	}
-
-	/**
 	 * @param list
 	 */
 	public void setIdentifications(List list) {
 		identifications = list;
 	}
-
 
     /**
      * @return
@@ -371,18 +216,23 @@ public class Photo implements Serializable {
     }
 
     /**
-     * @param sound
+     * Setter method for the sound attribute
+     * 
+     * @param Sound
+     *            The new value to the attribute
      */
     public void setSound(Sound sound) {
         this.sound = sound;
     }
 
-    public Date getPostDate() {
-        return postDate;
-    }
-
-    public void setPostDate(Date postDate) {
-        this.postDate = postDate;
+    /**
+     * Setter method for the thumbnailRelativePath attribute
+     * 
+     * @param String
+     *            The new value to the attribute
+     */
+    public void setThumbnailRelativePath(String thumbnailRelativePath) {
+        this.thumbnailRelativePath = thumbnailRelativePath;
     }
     
 	/**
@@ -393,11 +243,11 @@ public class Photo implements Serializable {
 	 */
 	public boolean isSoundAvailable() {
 		boolean is = false;
-		if (specie.isSoundAvailable()) {
-			int ageId = age.getId();
-			int sexId = sex.getId();
+		if (getSpecie().isSoundAvailable()) {
+			int ageId = getAge().getId();
+			int sexId = getSex().getId();
 
-			List sounds = specie.getSounds();
+			List sounds = getSpecie().getSounds();
 			Iterator it = sounds.iterator();
 			while (it.hasNext() && (!is)) {
 				Sound sound = (Sound) it.next();
@@ -417,13 +267,14 @@ public class Photo implements Serializable {
 	 */
 	public String toString() {
 		StringBuffer buffer = new StringBuffer("[");
-		buffer.append(id);
+		buffer.append(getId());
 		buffer.append(",");
 		buffer.append(date);
         buffer.append(",");
-        buffer.append(postDate);
+        buffer.append(getPostDate());
 		buffer.append(",");
 
+        User user = getUser();
 		if (user != null) {
 			buffer.append(user.getLogin());
 			buffer.append(" (");
@@ -431,6 +282,7 @@ public class Photo implements Serializable {
 			buffer.append("),");
 		}
 
+        Specie specie = getSpecie();
 		if (specie != null) {
 			buffer.append(specie.getId());
 			buffer.append(",");
@@ -454,9 +306,9 @@ public class Photo implements Serializable {
 		buffer.append(",");
 		buffer.append(film);
 		buffer.append(",");
-		buffer.append(location);
+		buffer.append(getLocation());
 		buffer.append(",");
-		buffer.append(city);
+		buffer.append(getCity());
 		buffer.append("]");
 
 		return buffer.toString();

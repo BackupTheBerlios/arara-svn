@@ -18,7 +18,7 @@ import net.indrix.arara.vo.Sound;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class SoundFileManager extends AbstractFileManager {
-	private static final String FOLDER = "files" + File.separator + "sounds";
+    public static final String SOUND_FOLDER = ROOT_FOLDER + File.separator + "sounds";
 
 	private static final String EXTENSION = ".mp3";
 
@@ -41,7 +41,7 @@ public class SoundFileManager extends AbstractFileManager {
 	public String getFolder() {
 		int familyId = sound.getSpecie().getFamily().getId();
 		int specieId = sound.getSpecie().getId();
-		String path = FOLDER + File.separator + familyId + File.separator
+		String path = SOUND_FOLDER + File.separator + familyId + File.separator
 				+ specieId;
 		return path;
 	}

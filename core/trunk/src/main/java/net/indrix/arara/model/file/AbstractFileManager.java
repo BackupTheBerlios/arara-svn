@@ -23,7 +23,9 @@ import org.apache.log4j.Logger;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public abstract class AbstractFileManager {
-	/**
+    public static final String ROOT_FOLDER = File.separator + "files";
+    
+    /**
 	 * Logger object to be used by this class
 	 */
 	protected static Logger logger = Logger.getLogger("net.indrix.aves");
@@ -45,34 +47,44 @@ public abstract class AbstractFileManager {
 	 *            The InputStream with the file contents
 	 */
 	public void writeFile() throws FileNotFoundException {
-		logger.debug("AbstractFileManager.writeSoundToFilesystem: entering method...");
-		String path = getRootPath() + File.separator + getFolder();
+        InputStream input = getInputStream();
+        String filename = getFullFilename();
 
-		File dir = new File(path);
-		logger.debug("AbstractFileManager.writeSoundToFilesystem: creating dir " + dir);
-		dir.mkdirs();
-
-		String filename = getFullFilename();
-		logger.debug("AbstractFileManager.writeSoundToFilesystem: creating file "
-				+ filename);
-		FileOutputStream output = new FileOutputStream(new File(filename));
-		InputStream input = getInputStream();
-		byte buffer[] = new byte[512];
-		try {
-			logger.debug("AbstractFileManager.writeSoundToFilesystem: writing file...");
-			while (input.read(buffer) != -1) {
-				output.write(buffer);
-			}
-			output.close();
-			input.close();
-		} catch (IOException e) {
-			logger.debug("AbstractFileManager.writeSoundToFilesystem: IOException: ", e);
-			throw new FileNotFoundException();
-		}
-		logger.debug("UploadSound.writeSoundToFilesystem: finishing method...");
-
+        writeFile(input, filename);
 	}
 
+    /**
+     * This method writes the file, given by input, to the filesystem
+     * 
+     * @param input
+     *            The InputStream with the file contents
+     */
+    protected void writeFile(InputStream input, String filename) throws FileNotFoundException {
+        logger.debug("AbstractFileManager.writeFile: entering method...");
+        String path = getRootPath() + File.separator + getFolder();
+
+        File dir = new File(path);
+        logger.debug("AbstractFileManager.writeFile: creating dir " + dir);
+        dir.mkdirs();
+
+        logger.debug("AbstractFileManager.writeFile: creating file " + filename);
+        FileOutputStream output = new FileOutputStream(new File(filename));
+        byte buffer[] = new byte[512];
+        try {
+            logger.debug("AbstractFileManager.writeFile: writing file...");
+            while (input.read(buffer) != -1) {
+                output.write(buffer);
+            }
+            output.close();
+            input.close();
+        } catch (IOException e) {
+            logger.debug("AbstractFileManager.writeFile: IOException: ", e);
+            throw new FileNotFoundException();
+        }
+        logger.debug("AbstractFileManager.writeFile: finishing method...");
+
+    }
+    
 	/**
 	 * This method retrieves the root path to all types of files
 	 * 

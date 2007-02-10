@@ -18,7 +18,7 @@
 	<c:set var="h" value="${currentPhoto.realImage.height}"/>	
 </c:if>
 
-<img src="<c:url value="/servlet/getPhoto?photoId=${currentPhoto.id}&identification=${identification}"/>" 
+<img src="<c:url value="${linkKey}${currentPhoto.relativePathAsLink}"/>" 
      width="${w}" 
      height="${h}" 
      align="bottom"/>

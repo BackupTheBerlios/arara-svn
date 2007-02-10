@@ -75,7 +75,7 @@ public class ShowOnePhotoServlet extends HttpServlet {
                     found = true;
                     PhotoModel model = new PhotoModel();
                     try {
-                        model.retrievePhotoImage(photo);
+                        //model.retrievePhotoImage(photo);
                         retrieveCommentsForPhoto(model, photo);
                     } catch (DatabaseDownException e) {
                         logger.debug("DatabaseDownException.....", e);

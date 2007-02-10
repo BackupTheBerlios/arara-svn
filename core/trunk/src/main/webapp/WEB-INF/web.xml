@@ -401,6 +401,14 @@
 		<load-on-startup>2</load-on-startup>
 	</servlet>
 
+<!--
+	<servlet>
+		<servlet-name>writePhotos</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.admin.WritePhotosOnFileSystemServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
 	<servlet>
 		<servlet-name>addCities</servlet-name>
 		<servlet-class>
@@ -408,6 +416,8 @@
 		</servlet-class>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
+-->
+
 	<servlet>
 		<description>city Find</description>
 		<display-name>cityFind</display-name>
@@ -646,10 +656,18 @@
 		<url-pattern>/servlet/reloadPropertiesFile</url-pattern>
 	</servlet-mapping>
 
+<!--
+	<servlet-mapping>
+		<servlet-name>writePhotos</servlet-name>
+		<url-pattern>/servlet/writePhotos</url-pattern>
+	</servlet-mapping>
+
 	<servlet-mapping>
 		<servlet-name>addCities</servlet-name>
 		<url-pattern>/servlet/addCities</url-pattern>
 	</servlet-mapping>
+-->
+	
 	<servlet-mapping>
 		<servlet-name>cityFind</servlet-name>
 		<url-pattern>/servlet/cityFind</url-pattern>

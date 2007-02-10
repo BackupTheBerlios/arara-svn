@@ -13,8 +13,7 @@ import net.indrix.arara.model.AgeModel;
 import net.indrix.arara.model.PhotoUtil;
 import net.indrix.arara.model.SexModel;
 import net.indrix.arara.model.StatesModel;
-import net.indrix.arara.model.file.SoundFileManager;
-import net.indrix.arara.servlets.sound.SoundConstants;
+import net.indrix.arara.model.file.AbstractFileManager;
 
 import org.apache.log4j.Logger;
 
@@ -53,11 +52,10 @@ public class InitServlet extends HttpServlet {
 			context.setAttribute(ServletConstants.SEX_KEY, SexModel.getSex());
 
 			StatesModel.initialize();
-			context.setAttribute(ServletConstants.STATES_KEY, StatesModel
-					.getStates());
+			context.setAttribute(ServletConstants.STATES_KEY, StatesModel.getStates());
 
-			String link = SoundFileManager.getRootLink();
-			context.setAttribute(SoundConstants.LINK_KEY, link);
+			String link = AbstractFileManager.getRootLink();
+			context.setAttribute("linkKey", link);
 		} catch (Exception e) {
 			log("Setting width with default value " + WIDTH_PARAM);
 			PhotoUtil.setSmallWidth(DEFAULT_WIDTH_PARAM);

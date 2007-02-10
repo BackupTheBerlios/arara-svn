@@ -11,7 +11,7 @@
 			</tr>
 			<tr>
 				<td align="left"><img
-					src="<c:url value="/servlet/getThumbnail?photoId=${photo.id}"/>"
+					src="<c:url value="${linkKey}${photo.thumbnailRelativePathAsLink}"/>"
 					width="${f:thumbnailWidth(w, photo.smallImage.width, photo.smallImage.height)}"
 					height="${f:thumbnailHeight(w, photo.smallImage.width, photo.smallImage.height)}"
 					align="bottom" /></td>

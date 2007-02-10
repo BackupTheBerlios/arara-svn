@@ -36,8 +36,8 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
      */
     private static final String INSERT = "INSERT INTO photo "
             + "(user_id, date, place, city_id, camera, lens, film, "
-            + "image, w, h, smallImage, sW, sH, specie_id, specie_family_id, post_date, comment, imageSize, smallImageSize, age_id, sex_id) "
-            + "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "w, h, sW, sH, specie_id, specie_family_id, post_date, comment, imageSize, smallImageSize, age_id, sex_id) "
+            + "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     /**
      * SQL for updating a photo
@@ -54,7 +54,7 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
      * SQL to select a photo by a given ID
      */
     private static final String SELECT_BY_ID = "SELECT p.id, p.date, p.place, p.city_id, p.camera, p.lens, p.film, "
-            + "p.image, p.w, p.h, p.imageSize, p.smallImage, p.sW, p.sH, p.smallImageSize, p.comment, p.post_date,"
+            + "p.w, p.h, p.imageSize, p.sW, p.sH, p.smallImageSize, p.comment, p.post_date,"
             + "s.id s_id, s.name s_name, "
             + "f.id f_id, f.name f_name, f.subFamilyName f_sub_name, "
             + "p.user_id, p.age_id, p.sex_id, "
@@ -67,19 +67,13 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
      * retrieved
      */
     private static final String SELECT_THUMBNAIL_BY_ID = "SELECT p.id, p.date, p.place, p.city_id, p.camera, p.lens, p.film, "
-            + "p.imageSize, p.smallImage, p.sW, p.sH, p.smallImageSize, p.comment, p.post_date,"
+            + "p.w, p.h, p.imageSize, p.sW, p.sH, p.smallImageSize, p.comment, p.post_date,"
             + "s.id s_id, s.name s_name, "
             + "f.id f_id, f.name f_name, f.subFamilyName f_sub_name, "
             + "p.user_id, p.age_id, p.sex_id, "
             + "c.id city_id, c.name city_name, c.state_id state_id "
             + "from photo p, specie s, family f, user u, city c "
             + "where p.id=? and p.specie_id = s.id and p.specie_family_id = f.id and p.user_id=u.id and p.city_id = c.id ";
-
-    /**
-     * SQL to select a photo image by a given photo ID
-     */
-    private static final String SELECT_IMAGE_BY_ID = "SELECT p.image, p.w, p.h, p.imageSize "
-            + "from photo p " + "where p.id=?";
 
     /**
      * SQL to select id of all photos
@@ -357,48 +351,6 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
     }    
     
     /**
-     * This method retrieves the photo image from database, given the photo id
-     * 
-     * @param i
-     *            THe photo id
-     * 
-     * @return the photo image from database, given the photo id
-     */
-    public ImageFile retrievePhotoImage(int id) throws DatabaseDownException,
-            SQLException {
-        Connection conn = DatabaseManager.getConnection();
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        ImageFile image = null;
-
-        try {
-            stmt = conn.prepareStatement(SELECT_IMAGE_BY_ID);
-            stmt.setInt(1, id);
-            rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                image = new ImageFile();
-                Blob blob = rs.getBlob(IMAGE_COLUMN);
-                image.setImage(blob.getBinaryStream());
-                image.setWidth(rs.getInt(IMAGE_W));
-                image.setHeight(rs.getInt(IMAGE_H));
-                image.setImageSize(rs.getInt(IMAGE_SIZE));
-            }
-        } catch (SQLException e) {
-            logger
-                    .error("PhotoDAO.retrievePhotoImage : could not retrieve data ");
-            logger.error("Error in SQL : " + SELECT_IMAGE_BY_ID, e);
-            throw e;
-        } finally {
-            closeResultSet(rs);
-            closeStatement(stmt);
-            conn.close();
-        }
-        return image;
-
-    }
-
-    /**
      * This method verifies wheter an Id exists
      * 
      * @param sql
@@ -449,6 +401,7 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
      */
     protected Object createObject(ResultSet rs) throws SQLException {
         Photo photo = new Photo();
+        ImageFile image = photo.getRealImage();
         ImageFile smallImage = photo.getSmallImage();
 
         photo.setId(rs.getInt(ID_COLUMN));
@@ -458,8 +411,8 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
         photo.setCamera(rs.getString(CAMERA_COLUMN));
         photo.setLens(rs.getString(LENS_COLUMN));
         photo.setFilm(rs.getString(FILM_COLUMN));
-        Blob blob1 = rs.getBlob(SMALL_IMAGE_COLUMN);
-        smallImage.setImage(blob1.getBinaryStream());
+        image.setWidth(rs.getInt(IMAGE_W));
+        image.setHeight(rs.getInt(IMAGE_H));
         smallImage.setWidth(rs.getInt(SMALL_IMAGE_W));
         smallImage.setHeight(rs.getInt(SMALL_IMAGE_H));
         smallImage.setImageSize(rs.getInt(SMALL_IMAGE_SIZE));
@@ -509,13 +462,9 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
         photo.setCamera(rs.getString(CAMERA_COLUMN));
         photo.setLens(rs.getString(LENS_COLUMN));
         photo.setFilm(rs.getString(FILM_COLUMN));
-        Blob blob = rs.getBlob(IMAGE_COLUMN);
-        image.setImage(blob.getBinaryStream());
         image.setWidth(rs.getInt(IMAGE_W));
         image.setHeight(rs.getInt(IMAGE_H));
         image.setImageSize(rs.getInt(IMAGE_SIZE));
-        Blob blob1 = rs.getBlob(SMALL_IMAGE_COLUMN);
-        smallImage.setImage(blob1.getBinaryStream());
         smallImage.setWidth(rs.getInt(SMALL_IMAGE_W));
         smallImage.setHeight(rs.getInt(SMALL_IMAGE_H));
         smallImage.setImageSize(rs.getInt(SMALL_IMAGE_SIZE));
@@ -584,30 +533,27 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
         logger.debug("Lens: " + photo.getLens());
         stmt.setString(7, photo.getFilm());
         logger.debug("Film: " + photo.getFilm());
-        stmt.setBinaryStream(8, image.getImage(), image.getImageSize());
-        stmt.setInt(9, image.getWidth());
-        stmt.setInt(10, image.getHeight());
+        stmt.setInt(8, image.getWidth());
+        stmt.setInt(9, image.getHeight());
         logger.debug("Size: " + image.getWidth() + "," + image.getHeight());
-        stmt.setBinaryStream(11, smallImage.getImage(), smallImage
-                .getImageSize());
-        stmt.setInt(12, smallImage.getWidth());
-        stmt.setInt(13, smallImage.getHeight());
+        stmt.setInt(10, smallImage.getWidth());
+        stmt.setInt(11, smallImage.getHeight());
         logger.debug("Small size: " + smallImage.getWidth() + ","
                 + smallImage.getHeight());
-        stmt.setInt(14, photo.getSpecie().getId());
+        stmt.setInt(12, photo.getSpecie().getId());
         logger.debug("Specie: " + photo.getSpecie().getId() + " | "
                 + photo.getSpecie().getName());
-        stmt.setInt(15, photo.getSpecie().getFamily().getId());
+        stmt.setInt(13, photo.getSpecie().getFamily().getId());
         logger.debug("Family: " + photo.getSpecie().getFamily().getId() + " | "
                 + photo.getSpecie().getFamily().getName());
-        stmt.setTimestamp(16, getTimestamp(getSQLDate()));
+        stmt.setTimestamp(14, getTimestamp(getSQLDate()));
         logger.debug("Post date: " + photo.getDate());
-        stmt.setString(17, photo.getComment());
+        stmt.setString(15, photo.getComment());
         logger.debug("Comment from photo: " + photo.getComment());
-        stmt.setInt(18, photo.getRealImage().getImageSize());
-        stmt.setInt(19, photo.getSmallImage().getImageSize());
-        stmt.setInt(20, photo.getAge().getId());
-        stmt.setInt(21, photo.getSex().getId());
+        stmt.setInt(16, photo.getRealImage().getImageSize());
+        stmt.setInt(17, photo.getSmallImage().getImageSize());
+        stmt.setInt(18, photo.getAge().getId());
+        stmt.setInt(19, photo.getSex().getId());
     }
 
     /**

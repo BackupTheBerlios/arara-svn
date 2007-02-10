@@ -123,7 +123,7 @@ public class CommentPhotoServlet extends HttpServlet {
 
 		req.setAttribute(ServletConstants.IDENTIFICATION_KEY, identificationStr);
 		req.setAttribute(ServletConstants.VIEW_MODE_KEY, "viewMode");
-
+		req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);
 		dispatcher = context.getRequestDispatcher(nextPage);
 		logger.debug("Dispatching to " + nextPage);
 		dispatcher.forward(req, res);

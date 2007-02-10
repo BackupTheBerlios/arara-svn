@@ -11,28 +11,44 @@
 </c:if>
 	<c:choose>
 		<c:when test="${marketingCounter == 1}">
-			<img width="200" height="100" hspace ="5" src="<c:url value="/jsp/images/bannerAB_1.png"/>"	align="center">		
+			<a href="http://www.avistarbrasil.com.br/concurso/index.html" target="_blanck"> 
+				<img width="200" height="100" hspace ="5" src="<c:url value="/jsp/images/bannerAB_1.png"/>"	align="center">
+			</a> 
 		</c:when>
 		<c:when test="${marketingCounter == 2}">
-			<img width="200" height="100" hspace ="5"  src="<c:url value="/jsp/images/bannerAB_1.png"/>" align="center">		
+			<a href="http://www.avistarbrasil.com.br/concurso/index.html" target="_blanck"> 
+				<img width="200" height="100" hspace ="5" src="<c:url value="/jsp/images/bannerAB_1.png"/>"	align="center">
+			</a> 
 		</c:when>
 		<c:when test="${marketingCounter == 3}">
-			<img width="200" height="100" hspace ="5"  src="<c:url value="/jsp/images/bannerAB_1.png"/>" align="center">		
+			<a href="http://www.avistarbrasil.com.br/concurso/index.html" target="_blanck"> 
+				<img width="200" height="100" hspace ="5" src="<c:url value="/jsp/images/bannerAB_1.png"/>"	align="center">
+			</a> 
 		</c:when>
 		<c:when test="${marketingCounter == 4}">
-			<img width="200" height="100" hspace ="5"  src="<c:url value="/jsp/images/bannerAB_1.png"/>" align="center">		
+			<a href="http://www.avistarbrasil.com.br/concurso/index.html" target="_blanck"> 
+				<img width="200" height="100" hspace ="5" src="<c:url value="/jsp/images/bannerAB_1.png"/>"	align="center">
+			</a> 
 		</c:when>
 		<c:when test="${marketingCounter == 5}">
-			<img width="200" height="100" hspace ="5"  src="<c:url value="/jsp/images/bannerAB_1.png"/>" align="center">		
+			<a href="http://www.avistarbrasil.com.br/concurso/index.html" target="_blanck"> 
+				<img width="200" height="100" hspace ="5" src="<c:url value="/jsp/images/bannerAB_1.png"/>"	align="center">
+			</a> 
 		</c:when>
 		<c:when test="${marketingCounter == 6}">
-			<img width="200" height="100" hspace ="5"  src="<c:url value="/jsp/images/bannerAB_1.png"/>" align="center">		
+			<a href="http://www.avistarbrasil.com.br/concurso/index.html" target="_blanck"> 
+				<img width="200" height="100" hspace ="5" src="<c:url value="/jsp/images/bannerAB_1.png"/>"	align="center">
+			</a> 
 		</c:when>
 		<c:when test="${marketingCounter == 7}">
-			<img width="200" height="100" hspace ="5"  src="<c:url value="/jsp/images/bannerAB_1.png"/>" align="center">		
+			<a href="http://www.avistarbrasil.com.br/concurso/index.html" target="_blanck"> 
+				<img width="200" height="100" hspace ="5" src="<c:url value="/jsp/images/bannerAB_1.png"/>"	align="center">
+			</a> 
 		</c:when>
 		<c:when test="${marketingCounter == 8}">
-			<img width="200" height="100" hspace ="5"  src="<c:url value="/jsp/images/bannerAB_1.png"/>" align="center">		
+			<a href="http://www.avistarbrasil.com.br/concurso/index.html" target="_blanck"> 
+				<img width="200" height="100" hspace ="5" src="<c:url value="/jsp/images/bannerAB_1.png"/>"	align="center">
+			</a> 
 		</c:when>
 	</c:choose>
 		

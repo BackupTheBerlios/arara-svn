@@ -36,12 +36,12 @@
 <fmt:message key="menu.photos.search.identification" /></a>
 
 <c:if test="${user != null}">
-<br/>
-&nbsp;<b><fmt:message key="menu.photos.send" /></b>
-
-<c:if test="${user.addPhoto == true}">
+  <c:if test="${user.addPhoto == true}">
+    <br/>
+    &nbsp;<b><fmt:message key="menu.photos.send" /></b>
 	<br/>
 	&nbsp;&nbsp;&nbsp;
+
 	<a href="<c:url value="/servlet/initUploadPhotos"/>">
 	<fmt:message key="menu.photos.send" /> </a>
 
@@ -49,9 +49,8 @@
 	&nbsp;&nbsp;&nbsp;
 	<a href="<c:url value="/servlet/initUploadPhotosForIdentification"/>">
 	<fmt:message key="menu.photos.send.identification" /> </a>
+  </c:if>
 </c:if>
-</c:if>
-
 <c:if test="${user != null}">
 <c:if test="${param.submenu == 'changePhoto'}">
 	<c:if test="${(param.userId == user.id) or (user.admin == true)}">

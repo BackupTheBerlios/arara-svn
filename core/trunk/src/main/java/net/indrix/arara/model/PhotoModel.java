@@ -25,6 +25,8 @@ import net.indrix.arara.dao.PhotoDAO;
 import net.indrix.arara.dao.PhotoIdentificationDAO;
 import net.indrix.arara.dao.SpecieDAO;
 import net.indrix.arara.model.exceptions.PhotoAlreadyIdentifiedException;
+import net.indrix.arara.model.file.PhotoFileManager;
+import net.indrix.arara.model.file.SoundFileManager;
 import net.indrix.arara.tools.email.MailClass;
 import net.indrix.arara.tools.email.MessageComposer;
 import net.indrix.arara.tools.email.MessageFormatException;
@@ -35,6 +37,7 @@ import net.indrix.arara.vo.Comment;
 import net.indrix.arara.vo.ImageFile;
 import net.indrix.arara.vo.Photo;
 import net.indrix.arara.vo.PhotoIdentification;
+import net.indrix.arara.vo.Sound;
 import net.indrix.arara.vo.Specie;
 import net.indrix.arara.vo.User;
 
@@ -112,6 +115,8 @@ public class PhotoModel extends MediaModel {
             SQLException {
         logger.debug("PhotoId " + photoId);
         Photo photo = ((PhotoDAO) dao).retrieve(photoId);
+
+        updatePhotoLink(photo);
         return photo;
     }
 
@@ -132,9 +137,12 @@ public class PhotoModel extends MediaModel {
         logger.debug("PhotoId " + photoId);
         Photo photo = ((PhotoDAO) dao).retrieveThumbnail(photoId);
 
+        updatePhotoLink(photo);
+        
         if (photo.isSoundAvailable()) {
             model.updateSoundLink(photo.getSound());
         }
+
         return photo;
     }
 
@@ -189,24 +197,6 @@ public class PhotoModel extends MediaModel {
         List list = ((PhotoDAO) dao).retrieveIDsForRecentPhotos();
         logger.debug("Photo ids retrieved.");
         return list;
-    }
-
-    /**
-     * This method retrieves the photo image from database
-     * 
-     * @param photo
-     *            The photo to have its image retrieved from database
-     * 
-     * @throws DatabaseDownException
-     *             If the database is down
-     * @throws SQLException
-     *             If some SQL Exception occurs
-     */
-    public void retrievePhotoImage(Photo photo) throws DatabaseDownException,
-            SQLException {
-        logger.debug("PhotoId " + photo.getId());
-        ImageFile image = ((PhotoDAO) dao).retrievePhotoImage(photo.getId());
-        photo.setRealImage(image);
     }
 
     /**
@@ -360,6 +350,19 @@ public class PhotoModel extends MediaModel {
         return list;
     }
 
+    /**
+     * This method updates the photo link, to the given photo
+     * 
+     * @param photo The Photo object to be updated
+     */
+    public void updatePhotoLink(Photo photo) {
+        // set the filename, with the full path, to the sound file
+        PhotoFileManager manager = new PhotoFileManager(photo);
+        photo.setRelativePath(manager.getRelativePath());
+        photo.setThumbnailRelativePath(manager.getThumbnailRelativePath());
+        
+    }
+    
     /**
      * This method notifies the photo author about a new comment added to
      * his/her photo

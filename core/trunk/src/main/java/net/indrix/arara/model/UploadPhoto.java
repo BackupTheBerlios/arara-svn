@@ -14,15 +14,13 @@ import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 
 import javax.imageio.ImageIO;
-import javax.mail.internet.AddressException;
 import javax.swing.ImageIcon;
-
-import org.apache.log4j.Logger;
 
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.dao.PhotoDAO;
@@ -32,14 +30,10 @@ import net.indrix.arara.model.email.IdentificationPhotoEmailSender;
 import net.indrix.arara.model.email.NewSpecieEmailSender;
 import net.indrix.arara.model.email.PhotoEmailSender;
 import net.indrix.arara.model.exceptions.ImageProcessingException;
-import net.indrix.arara.tools.email.MailClass;
-import net.indrix.arara.tools.email.MailSender;
-import net.indrix.arara.tools.email.NoRecipientException;
-import net.indrix.arara.utils.PropertiesManager;
+import net.indrix.arara.model.file.PhotoFileManager;
 import net.indrix.arara.vo.ImageFile;
 import net.indrix.arara.vo.Photo;
 import net.indrix.arara.vo.Specie;
-import net.indrix.arara.vo.Statistics;
 
 /**
  * @author wjs085
@@ -67,7 +61,6 @@ public class UploadPhoto extends AbstractUpload {
 
         if (isPhotoValid(photo)) {
             PhotoDAO dao = new PhotoDAO();
-            logger.debug("Calling insert in DAO object");
 
             boolean newSpecie;
             if (dao.hasSpecieAPhoto(photo.getSpecie().getId())) {
@@ -77,8 +70,24 @@ public class UploadPhoto extends AbstractUpload {
             }
             logger.debug("New Specie = " + newSpecie);
 
+            logger.debug("Calling insert in DAO object...");
             dao.insert(photo);
 
+            // now write photos to file system
+            logger.debug("Writing photo and thumbnail in file system...");
+            PhotoFileManager manager = new PhotoFileManager(photo);
+            try {
+                manager.writeFile();
+                logger.debug("Photo has been written in file system...");
+                photo.setRelativePath(manager.getRelativePath());
+                photo.setThumbnailRelativePath(manager.getThumbnailRelativePath());
+            } catch (FileNotFoundException e) {
+                // remove photo from database
+                dao.delete(photo.getId());
+                throw new ImageProcessingException();
+                
+            }
+            
             // retrieve data from database, so all data will be loaded
             SpecieDAO sDao = new SpecieDAO();
             Specie s = sDao.retrieve(photo.getSpecie().getId());

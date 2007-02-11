@@ -33,19 +33,21 @@ public class SpecieDAO extends AbstractDAO {
 	private static final String FAMILY_ID_COLUMN = "family_id";
 
 	private static final String FAMILY_NAME_COLUMN = "f_name";
+    
+    private static final String SUB_FAMILY_NAME_COLUMN = "f_subFamilyName";
 
 	private static final String INSERT = "INSERT INTO specie (name, family_id) values (?, ?)";
 
 	private static final String INSERT_COMMON_NAME = "INSERT INTO specie_has_common_name (specie_id, specie_family_id, common_name_id) "
 			+ "values (?, ?, ?)";
 
-	private static final String SELECT_BY_NAME = "SELECT s.id, s.name, s.family_id, f.name f_name from specie s, family f where s.family_id=f.id and s.name like ? ORDER BY name";
+	private static final String SELECT_BY_NAME = "SELECT s.id, s.name, s.family_id, f.name f_name, f.subFamilyName f_subFamilyName from specie s, family f where s.family_id=f.id and s.name like ? ORDER BY name";
 
-	private static final String SELECT_BY_ID = "SELECT s.id, s.name, s.family_id, f.name f_name from specie s, family f where s.id=? AND s.family_id=f.id ORDER BY name";
+	private static final String SELECT_BY_ID = "SELECT s.id, s.name, s.family_id, f.name f_name, f.subFamilyName f_subFamilyName from specie s, family f where s.id=? AND s.family_id=f.id ORDER BY name";
 
 	private static final String SELECT_FOR_FAMILY = "SELECT * FROM specie where family_id = ? ORDER BY name";
 
-	private static final String SELECT_ALL = "SELECT s.id, s.name, s.family_id, f.name f_name from specie s, family f where s.family_id=f.id and s.id != -1 ORDER BY name";
+	private static final String SELECT_ALL = "SELECT s.id, s.name, s.family_id, f.name f_name, f.subFamilyName f_subFamilyName from specie s, family f where s.family_id=f.id and s.id != -1 ORDER BY name";
 
 	/**
 	 * The list of species to be kept in memory
@@ -235,6 +237,7 @@ public class SpecieDAO extends AbstractDAO {
 		Family f = new Family();
 		f.setId(rs.getInt(FAMILY_ID_COLUMN));
 		f.setName(rs.getString(FAMILY_NAME_COLUMN));
+        f.setSubFamilyName(rs.getString(SUB_FAMILY_NAME_COLUMN));
 		specie.setFamily(f);
 		return specie;
 	}

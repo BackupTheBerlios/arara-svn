@@ -138,8 +138,6 @@ public class InitIdentificationPhotoServlet extends
 						logger.debug("Photo found !!!! ");
 						found = true;
 						try {
-							photoModel.retrievePhotoImage(photo);
-
 							// retrieve all identifications already done for the
 							// given photo
 							retrieveIdentificationsForPhoto(model, photo);

@@ -34,9 +34,9 @@
 				<td align="left">
 					<c:import url="/jsp/photo/search/doShowPhotoData.jsp" />
 					<td align="center">
-						<a href="<c:url value="/servlet/getPhoto?photoId=${currentPhoto.id}&identification=${identification}"/>" target="_blank"> 
+						<a href="<c:url value="${linkKey}${currentPhoto.relativePathAsLink}"/>" target="_blank"> 
 						<img
-							src="<c:url value="${photo.relativePathAsLink}"/>"
+							src="<c:url value="${linkKey}${currentPhoto.relativePathAsLink}"/>"
 							width="${f:thumbnailWidth(w, currentPhoto.smallImage.width, currentPhoto.smallImage.height)}"
 							height="${f:thumbnailHeight(w, currentPhoto.smallImage.width, currentPhoto.smallImage.height)}"
 							align="bottom" /> 

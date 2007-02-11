@@ -40,7 +40,13 @@
 				<tr>
 					<td width="9%"><font size="1" face="Verdana">${identification.user.login}</font></td>
 					<td width="16%"><font size="1" face="Verdana">${f:dateTimeAsString(identification.date)}</font></td>
-					<td width="19%"><font size="1" face="Verdana">${identification.specie.family.name}</font></td>
+
+					<c:if test="${identification.specie.family.subFamilyName == null}">
+						<td width="19%"><font size="1" face="Verdana">${identification.specie.family.name}</font></td>
+					</c:if> 
+					<c:if test="${identification.specie.family.subFamilyName != null}">
+						<td width="19%"><font size="1" face="Verdana">${identification.specie.family.name}-${identification.specie.family.subFamilyName}</font></td>
+					</c:if> 
 					<td width="22%"><font size="1" face="Verdana">${identification.specie.name}</font></td>
 					<td width="22%"><font size="1" face="Verdana">${identification.specie.commonNameString}</font></td>
 					<td width="6%"><font size="1" face="Verdana">${identification.sex.sex}</font></td>

@@ -74,14 +74,28 @@ public class PhotoModel extends MediaModel {
      *             If some SQL Exception occurs
      */
     public void update(Photo photo) throws DatabaseDownException, SQLException {
+        int oldId = photo.getId();
+        // retrieve old photo, so that the current path can be retrieved and photo can be copied
+        // in the file system
+        Photo oldPhoto = retrieve(oldId);
+
         logger.debug("Photo " + photo);
         dao.update(photo);
         SpecieDAO specieDao = new SpecieDAO();
-        logger.debug("Retrieving new specie object for id "
-                + photo.getSpecie().getId());
+        logger.debug("Retrieving new specie object for id " + photo.getSpecie().getId());
         Specie specie = specieDao.retrieve(photo.getSpecie().getId());
         logger.debug("Specie retrieved " + specie);
         photo.setSpecie(specie);
+        
+
+        // retrieve current path for the photo
+        String currentPath = oldPhoto.getRelativePath();
+        String currentPathForThumbnail = oldPhoto.getThumbnailRelativePath();
+        
+        // copy the photo from old path to the new one
+        PhotoFileManager manager = new PhotoFileManager(photo);
+        manager.updatePhotoAndMoveInFileSystem(currentPath, currentPathForThumbnail);
+        updatePhotoLink(photo);
     }
 
     /**
@@ -294,6 +308,13 @@ public class PhotoModel extends MediaModel {
             User photoIdentifier = identification.getUser();
             if ((photoAuthor.getId() == photoIdentifier.getId())
                     || finishIdentification) {
+
+                PhotoFileManager manager = new PhotoFileManager(photo);
+                
+                // retrieve current path for the photo
+                String currentPath = photo.getRelativePath();
+                String currentPathForThumbnail = photo.getThumbnailRelativePath();
+                
                 // photo author has identified photo or admin has finish
                 // identification Set the specie to it
                 logger.debug("Setting specie, age and sex to photo.");
@@ -304,7 +325,11 @@ public class PhotoModel extends MediaModel {
                         + photo);
                 logger.debug("Updating photo into database...");
                 dao.update(photo);
-
+                
+                // move the photo from old path to the new one
+                manager.updatePhotoAndMoveInFileSystem(currentPath, currentPathForThumbnail);
+                updatePhotoLink(photo);
+                
                 // send an email to everyone that identified the photo that the
                 // identification has
                 // finished

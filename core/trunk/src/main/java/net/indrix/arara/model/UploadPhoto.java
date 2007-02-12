@@ -264,6 +264,21 @@ public class UploadPhoto extends AbstractUpload {
             // Specie s = sDao.retrieve(photo.getSpecie().getId());
             photo.setSpecie(new Specie());
 
+            // now write photos to file system
+            logger.debug("Writing photo and thumbnail in file system...");
+            PhotoFileManager manager = new PhotoFileManager(photo);
+            try {
+                manager.writeFile();
+                logger.debug("Photo has been written in file system...");
+                photo.setRelativePath(manager.getRelativePath());
+                photo.setThumbnailRelativePath(manager.getThumbnailRelativePath());
+            } catch (FileNotFoundException e) {
+                // remove photo from database
+                dao.delete(photo.getId());
+                throw new ImageProcessingException();
+                
+            }
+           
             // send email to users
             logger.debug("Sending emails for identification...");
             IdentificationPhotoEmailSender emailSender = new IdentificationPhotoEmailSender(

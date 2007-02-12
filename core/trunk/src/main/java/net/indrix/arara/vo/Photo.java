@@ -116,11 +116,22 @@ public class Photo extends Media implements Serializable {
 		return identifications;
 	}
 
+
     /**
      * Getter method for the thumbnailRelativePath attribute, as a <code>thumbnailRelativePath</code>
      * object
      * 
      * @return the thumbnailRelativePath attribute, as a <code>thumbnailRelativePath</code> object
+     */
+    public String getThumbnailRelativePath() {
+        return thumbnailRelativePath;
+    }
+    
+    /**
+     * This method returns the thumbnailRelativePath attribute value, as a link
+     * 
+     * @return the thumbnailRelativePath attribute value, as a link, as a 
+     * <code>thumbnailRelativePath</code> object
      */
     public String getThumbnailRelativePathAsLink() {
         String link = "ERROR";

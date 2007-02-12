@@ -52,6 +52,17 @@ public class PhotoFileManager extends AbstractFileManager {
     }    
 
     /**
+     * This method retrieves the thumbnail filename, with the relative path, to the file
+     * in the filesystem
+     * 
+     * @return the thumbnail filename, with the relative path, to the file in the
+     *         filesystem
+     */
+    public String getFullThumbnailFilename() {
+        return getRootPath() + File.separator + getFolder() + File.separator + getThumbnailFilename();
+    }
+    
+    /**
      * This method retrieves the filename, with the relative path, to the file
      * in the filesystem
      * 
@@ -103,5 +114,27 @@ public class PhotoFileManager extends AbstractFileManager {
 
     public void setPhoto(Photo photo) {
         this.photo = photo;
+    }
+
+    public void updatePhotoAndMoveInFileSystem(String oldPath, String oldThumbnailPath) {
+        logger.debug("PhotoFileManager.updatePhotoAndMoveInFileSystem: entering method...");
+
+        String path = getRootPath() + File.separator ;
+        File oldFile = new File(path + oldPath);
+        File oldThumbnailFile = new File(path + oldThumbnailPath);
+        
+        File currentFile = new File(getFullFilename());
+        File currentThumbnailFile = new File(getFullThumbnailFilename());
+                
+        try {
+            logger.debug("Copying from " + oldFile + " to " + currentFile);
+            Util.copyFile(oldFile, currentFile);
+
+            logger.debug("Copying from " + oldThumbnailFile + " to " + currentThumbnailFile);
+            Util.copyFile(oldThumbnailFile, currentThumbnailFile);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }

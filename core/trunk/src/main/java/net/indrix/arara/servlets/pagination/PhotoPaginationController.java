@@ -51,9 +51,12 @@ public class PhotoPaginationController extends PaginationController {
 			Photo photo = null;
 			logger.debug("PaginationController.doAction: retrieving photo (thumbnail) " + id);
 			photo = model.retrieveThumbnail(id);
-			if (photo != null) {
-				logger.debug("PaginationController.doAction: photo retrieved. Adding to list..." + photo);
-				viewOfList.add(photo);
+
+            // if photo is for identification, verify if it's still not identified. One user could
+            // have identified it while another user is browsing photos.
+            if ((photo != null) && (!isIdentification() || (isIdentification() && photo.getSpecie().getId() == -1))){
+                logger.debug("PaginationController.doAction: photo retrieved. Adding to list..." + photo);
+                viewOfList.add(photo);
 			} else {
 				logger.debug("PaginationController.doAction: photo not found");
 				end++;

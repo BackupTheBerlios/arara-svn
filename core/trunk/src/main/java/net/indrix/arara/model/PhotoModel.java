@@ -111,8 +111,14 @@ public class PhotoModel extends MediaModel {
      */
     public void delete(int photoId) throws DatabaseDownException, SQLException {
         logger.debug("PhotoId " + photoId);
+        Photo photo = ((PhotoDAO)dao).retrieve(photoId);
+        
+        // copy the photo from old path to the new one
+        PhotoFileManager manager = new PhotoFileManager(photo);
+        manager.delete();       
+
         dao.delete(photoId);
-    }
+}
 
     /**
      * This method retrieves a photo given by the photoId

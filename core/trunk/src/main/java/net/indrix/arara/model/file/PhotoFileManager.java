@@ -128,13 +128,26 @@ public class PhotoFileManager extends AbstractFileManager {
                 
         try {
             logger.debug("Copying from " + oldFile + " to " + currentFile);
-            Util.copyFile(oldFile, currentFile);
+            Util.moveFile(oldFile, currentFile);
 
             logger.debug("Copying from " + oldThumbnailFile + " to " + currentThumbnailFile);
-            Util.copyFile(oldThumbnailFile, currentThumbnailFile);
+            Util.moveFile(oldThumbnailFile, currentThumbnailFile);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    public void delete() {
+        logger.debug("PhotoFileManager.delete: entering method...");
+
+        File currentFile = new File(getFullFilename());
+        File currentThumbnailFile = new File(getFullThumbnailFilename());
+                
+        logger.debug("Deleting " + currentFile);
+        currentFile.delete();
+
+        logger.debug("Deleting " + currentThumbnailFile);
+        currentThumbnailFile.delete();
     }
 }

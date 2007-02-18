@@ -113,10 +113,10 @@ public class Statistics {
             Iterator i = (listOfPhotos.subList(0, maxSize)).iterator();
 
             Photo photo = model.retrieve((Integer)i.next());
-            imgUrls = contextPath + "/" + photo.getThumbnailRelativePathAsLink();
+            imgUrls = contextPath + photo.getThumbnailRelativePathAsLink();
             while (i.hasNext()) {
                 photo = model.retrieve((Integer)i.next());
-                imgUrls = imgUrls + ";" + contextPath + "/" + photo.getThumbnailRelativePathAsLink();
+                imgUrls = imgUrls + ";" + contextPath + photo.getThumbnailRelativePathAsLink();
             }            
         } catch (DatabaseDownException e) {
             logger.error(

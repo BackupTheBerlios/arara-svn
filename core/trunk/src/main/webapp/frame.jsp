@@ -27,6 +27,34 @@
 <script type="text/javascript" src="<c:url value="/rico.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/rssajax.js"/>"></script>
 
+<style type="text/css">
+.dojoTabPaneWrapper {
+padding : 5px;
+overflow: hidden;
+}
+
+#tabBlock {
+top: 150px;
+left: 120px;
+width: 100%;
+height: 640px;
+}
+
+#placeTabBlock {
+top: 150px;
+left: 120px;
+width: 100%;
+height: 300px;
+}
+#mainTabContainer {
+width: 100%;
+height: 100%
+}
+
+</style>
+
+
+
 <script language="javascript">
 var form_submitted = false;
 
@@ -63,18 +91,12 @@ table.lineBorder {
 </style>
 
 
-
-<!-- dojo ajax
-	var djConfig = {isDebug: true, debugAtAllCosts: true};
-    dojo.setModulePrefix("dojo", "");
-	baseScriptUri:'',     
-	baseRelativePath: "",
-    dojo.setModulePrefix("dojo", "");	
--->
 <script language="JavaScript" type="text/javascript">
 	dojo.require("dojo.widget.*");
 	dojo.require("dojo.widget.SlideShow");	
 	dojo.require("dojo.widget.FisheyeList");
+	dojo.require("dojo.widget.TabContainer");
+	dojo.require("dojo.widget.ContentPane");	
 	dojo.hostenv.writeIncludes();    	
 </script>
 
@@ -82,15 +104,6 @@ table.lineBorder {
 	function load_app(id){
 		document.location.assign('<c:url value="/"/>'+id);		
 	}
-</script>
-
-<script type="text/javascript">
-  new Ajax.PeriodicalUpdater("statistics", "<c:url value="/statistics.jsp"/>", 
-	{ // initial number of seconds interval between calls 
-	 frequency : 30, 
-	 decay : 2 
-	});
-
 </script>
 
 <style>

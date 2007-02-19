@@ -8,7 +8,7 @@
 	  	<fmt:message key="menu.photos.photos" />
 	  </div>
 	  <div id="panel1Content" >
-		<c:import url="/menuPhotos.jsp" />		 
+		<c:import url="/jsp/menu/menuPhotos.jsp" />		 
 	  </div>
 	</div>
 	<div id="panel2">
@@ -17,7 +17,7 @@
 	  	<fmt:message key="menu.sounds.sounds" />
 	  </div>
 		<div id="panel2Content">
-	      <c:import url="/menuSounds.jsp" />				      
+	      <c:import url="/jsp/menu/menuSounds.jsp" />				      
 		</div>
 	  </div>
 	<div id="panel3">
@@ -26,16 +26,25 @@
 	  	<fmt:message key="menu.videos.videos" />
 	  </div>
 		<div id="panel3Content">
-	      <c:import url="/menuVideos.jsp" />				      
+	      <c:import url="/jsp/menu/menuVideos.jsp" />				      
 		</div>
 	  </div>
+	<div id="panel4">
+		<div id="panel4Header">
+	    	<img src="<c:url value="/images/find.png"/>" alt="" width="20" height="20">
+			<fmt:message key="menu.birdwatching" />
+		</div>
+		<div id="panel4Content">
+			<c:import url="/jsp/menu/menuBirdwatching.jsp" />				      
+		</div>
+	</div>
 	<div id="panel4">
 		<div id="panel4Header">
 	    	<!-- <img src="<c:url value="/images/videocamera.png"/>" alt="" width="20" height="20"> -->
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="menu.blogs" />
 		</div>
 		<div id="panel4Content">
-			<c:import url="/menuBlogs.jsp" />				      
+			<c:import url="/jsp/menu/menuBlogs.jsp" />				      
 		</div>
 	</div>
 <!-- 
@@ -45,7 +54,7 @@
 	  	<fmt:message key="menu.eclub.eclub" />
 	  </div>
 		<div id="panel4Content">
-	      <c:import url="/menueClub.jsp" />				      
+	      <c:import url="/jsp/menu/menueClub.jsp" />				      
 		</div>
 	</div>
  -->	  

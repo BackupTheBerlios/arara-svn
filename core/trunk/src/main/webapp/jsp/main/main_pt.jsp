@@ -19,9 +19,9 @@
 		para <a href="mailto:webmaster@aves.brasil.nom.br">webmaster</a> pedindo permissão para o
 		envio de fotos e sons.</p>
 		<br>
-		<br>
 		<b>O site segue a nomenclatura e a lista do CBRO </b> <br>
 		<br>
+		<b>Este site é contra a criação de aves em cativeiro!</b> <br>
 		<hr>
 		</td>
 	</tr>

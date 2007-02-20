@@ -190,7 +190,6 @@ table.comBordaSimples tr {
 		    </c:forEach>
 	  	  </table>
 	</td></tr>
-	<c:import url="/jsp/photo/search/pagination.jsp" />
 	</table>
   </td>
   <td width="15%" valign="top" align="center">
@@ -217,6 +216,11 @@ table.comBordaSimples tr {
 	<script type="text/javascript"
 	  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 	</script>
+  </td>
+</tr>
+<tr>
+  <td valign="center">
+  	<c:import url="/jsp/photo/search/pagination.jsp" />
   </td>
 </tr>
 </table>

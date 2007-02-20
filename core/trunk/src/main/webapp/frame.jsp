@@ -211,10 +211,10 @@ param.pageToShow:${param.pageToShow}
     </td>
   </tr>
   <tr>
-    <td width="20%" align="left" valign="top">
-    	<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="${mainBgColor}">
+    <td width="20%" height="100%" align="left" valign="top">
+    	<table valign="top" width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="${mainBgColor}">
       		<tr>
-        		<td align="left">
+        		<td height="100%" align="left" valign="top">
 					<c:set var="path" value="<%=request.getContextPath()%>"/>
 					<img dojoType="SlideShow" 
 					imgUrls="${f:getSlideShow(path)}"
@@ -247,7 +247,7 @@ param.pageToShow:${param.pageToShow}
     <td width="80%" colspan="2" valign="top" align="left" height="100%">
     	<table align="left" width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="${mainBgColor}">
       		<tr>
-        		<td align="left" valign="top">
+        		<td height="100%" align="left" valign="top">
         			<!--  ${nextPage} | ${pageToShow} | ${page} | ${param.pageToShow} -->
         			<c:import url="/jsp/showErrors.jsp" /> 
 				    <c:import url="/jsp/showMessages.jsp" /> 

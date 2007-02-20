@@ -40,8 +40,8 @@
 	</div>
 	<div id="panel4">
 		<div id="panel4Header">
-	    	<!-- <img src="<c:url value="/images/videocamera.png"/>" alt="" width="20" height="20"> -->
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="menu.blogs" />
+	    	<img src="<c:url value="/images/blog.png"/>" alt="" width="20" height="20">
+			<fmt:message key="menu.blogs" />
 		</div>
 		<div id="panel4Content">
 			<c:import url="/jsp/menu/menuBlogs.jsp" />				      

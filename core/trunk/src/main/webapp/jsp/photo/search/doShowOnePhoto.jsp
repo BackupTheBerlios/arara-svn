@@ -17,7 +17,7 @@
 
 <table width="100%" border="0">
 <tr>
-  <td width="85%">
+  <td width="85%" valign="top">
 
 	<table width="${tableW}%">
 	<tr>

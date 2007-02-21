@@ -35,7 +35,7 @@
 			<p>E já está programado para este ano a segunda edição do evento. Confira detalhes no <a href="http://www.avistarbrasil.com.br/" target="_blank">site</a> do evento.
 			
 					
-			<p>Referências
+			<br><p><b>Referências</b>
 			<p>[1] Turismo e Observação de Aves<br>
 				Tietta Pivatto e Alyson Melo<br>
 				<a href="http://www.avistarbrasil.com.br/resumos/tietta_alyson_web/pages/Slide01.htm" target="_blank">http://www.avistarbrasil.com.br/resumos/tietta_alyson_web/pages/Slide01.htm</a><br>

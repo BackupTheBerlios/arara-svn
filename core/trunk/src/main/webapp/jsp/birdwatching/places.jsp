@@ -64,6 +64,10 @@
 						  observadores. Com trilhas e muita área verde, o parque é um excelente lugar para observação de aves no estado de São Paulo.
 
 						  <li><a href="http://www.ambiente.sp.gov.br/ppma/unipici.htm" target="_blank">Parque Estadual da Serra do Mar - Núcleo Picinguaba</a></li>
+
+						  <li><a href="http://www.avesdeubatuba.com.br/" target="_blank">Ubatuba</a></li>
+						  Ubatuba é uma cidade ainda com muito verde, muita área de Mata Atlântica. Veja no link informações mais detalhadas
+						  sobre observação de aves em Ubatuba.
 						</ul>
 					</div>		
 				</div>

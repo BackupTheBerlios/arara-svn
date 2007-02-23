@@ -13,8 +13,8 @@
         if ((p != null) && (p.hasPrevious())){
      	%>        
 			<a href="<c:url value="${servletToCall}?action=FIRST"/>">
-		       	<fmt:message key="pagination.first" var="paginagion.first"/>
-		        <b><img border="0" align="middle" title="${paginagion.first}" src="<c:url value="/images/navigate_left2.png"/>" width="24" height="24"></b>
+		       	<fmt:message key="pagination.first" var="paginationFirst"/>
+		        <b><img border="0" align="middle" title="${paginationFirst}" src="<c:url value="/images/navigate_left2.png"/>" width="24" height="24"></b>
 			</a>
 	        &nbsp;&nbsp;&nbsp;&nbsp; 
 	    <%
@@ -25,8 +25,8 @@
              previous = true;
        	%> 
 	       	<a href="<c:url value="${servletToCall}?action=PREVIOUS"/>">
-	       		<fmt:message key="pagination.previous" var="paginagion.previous"/>
-	       		<b><img border="0" align="middle" title="${paginagion.previous}" src="<c:url value="/images/navigate_left.png"/>" width="24" height="24"></b>
+	       		<fmt:message key="pagination.previous" var="paginationPrevious"/>
+	       		<b><img border="0" align="middle" title="${paginationPrevious}" src="<c:url value="/images/navigate_left.png"/>" width="24" height="24"></b>
 	       	</a> 
 		<%
 		}
@@ -40,8 +40,8 @@
              }
        	%> 
 	       	<a href="<c:url value="${servletToCall}?action=NEXT"/>">
-	       		<fmt:message key="pagination.next" var="paginagion.next"/>
-	        	<b><img border="0" align="middle" title="${paginagion.next}" src="<c:url value="/images/navigate_right.png"/>" width="24" height="24"></b>
+	       		<fmt:message key="pagination.next" var="paginationNext"/>
+	        	<b><img border="0" align="middle" title="${paginationNext}" src="<c:url value="/images/navigate_right.png"/>" width="24" height="24"></b>
 	       		
 	       	</a>
 			&nbsp;&nbsp;&nbsp;&nbsp; 
@@ -52,8 +52,8 @@
 		if ((p != null) && (p.hasNext())){
 		%> 
 	       	<a href="<c:url value="${servletToCall}?action=LAST"/>">
-	       		<fmt:message key="pagination.last" var="paginagion.last"/>
-				<b><img border="0" align="middle" title="${paginagion.last}" src="<c:url value="/images/navigate_right2.png"/>" width="24" height="24"></b>	       		
+	       		<fmt:message key="pagination.last" var="paginationLast"/>
+				<b><img border="0" align="middle" title="${paginationLast}" src="<c:url value="/images/navigate_right2.png"/>" width="24" height="24"></b>	       		
 	       	</a> 
 		<%
 	   	}

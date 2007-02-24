@@ -36,8 +36,8 @@
         %>
         <a href="<c:url value="${servletToCall}?identification=${identification}&action=NEXT&id=${id}&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">
         	<fmt:message	key="pagination.next" var="paginagion.next"/>
-        	<b><img border="0" align="middle" title="${paginagion.next}" src="<c:url value="/images/navigate_right.png"/>" width="24" height="24"></b>
-        </a>&nbsp;&nbsp;&nbsp;&nbsp; 
+        	<b><img border="0" align="middle" title="${paginagion.next}" src="<c:url value="/images/navigate_right.png"/>" width="24" height="24"></b></a>
+        	&nbsp;&nbsp;&nbsp;&nbsp; 
         <%
 	   	   }
         %>

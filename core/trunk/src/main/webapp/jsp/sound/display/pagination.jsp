@@ -41,9 +41,7 @@
        	%> 
 	       	<a href="<c:url value="${servletToCall}?action=NEXT"/>">
 	       		<fmt:message key="pagination.next" var="paginationNext"/>
-	        	<b><img border="0" align="middle" title="${paginationNext}" src="<c:url value="/images/navigate_right.png"/>" width="24" height="24"></b>
-	       		
-	       	</a>
+	        	<b><img border="0" align="middle" title="${paginationNext}" src="<c:url value="/images/navigate_right.png"/>" width="24" height="24"></b></a>
 			&nbsp;&nbsp;&nbsp;&nbsp; 
 		<%
 	   	}

@@ -222,7 +222,7 @@ public abstract class AbstractDAO {
         } finally {
             closeStatement(stmt);
             closeResultSet(rs);
-            conn.close();
+            closeConnection(conn);
         }
     }
 
@@ -256,7 +256,7 @@ public abstract class AbstractDAO {
         } finally {
             closeStatement(stmt);
             closeResultSet(rs);
-            conn.close();
+            closeConnection(conn);
         }
     }
 
@@ -291,7 +291,7 @@ public abstract class AbstractDAO {
         } finally {
             closeStatement(stmt);
             closeResultSet(rs);
-            conn.close();
+            closeConnection(conn);
         }
     }
 
@@ -350,7 +350,7 @@ public abstract class AbstractDAO {
         } finally {
             closeResultSet(rs);
             closeStatement(stmt);
-            conn.close();
+            closeConnection(conn);
         }
         return list;
     }
@@ -387,7 +387,7 @@ public abstract class AbstractDAO {
         } finally {
             closeResultSet(rs);
             closeStatement(stmt);
-            conn.close();
+            closeConnection(conn);
         }
         return list;
     }
@@ -425,7 +425,7 @@ public abstract class AbstractDAO {
         } finally {
             closeResultSet(rs);
             closeStatement(stmt);
-            conn.close();
+            closeConnection(conn);
         }
         return list;
     }
@@ -465,7 +465,7 @@ public abstract class AbstractDAO {
         } finally {
             closeResultSet(rs);
             closeStatement(stmt);
-            conn.close();
+            closeConnection(conn);
         }
         return list;
     }
@@ -507,11 +507,53 @@ public abstract class AbstractDAO {
         } finally {
             closeResultSet(rs);
             closeStatement(stmt);
-            conn.close();
+            closeConnection(conn);
         }
         return object;
     }
 
+    /**
+     * This method retrieves a VO for an object based on its id
+     * 
+     * @param id
+     *            The id of the object to be retrieved
+     * @param sql
+     *            The SQL to be executed
+     * 
+     * @return a VO object
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    protected Object retrieveFullObject(int id, String sql)
+            throws DatabaseDownException, SQLException {
+        Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Object object = null;
+
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                object = createFullObject(rs);
+            }
+        } catch (SQLException e) {
+            logger.error("AbstractDAO.retrieve : could not retrieve data ");
+            logger.error("Error in SQL : " + sql, e);
+            throw e;
+        } finally {
+            closeResultSet(rs);
+            closeStatement(stmt);
+            closeConnection(conn);
+        }
+        return object;
+    }
+    
     /**
      * This method retrieves a list of VO for an object based on some column id
      * 
@@ -549,7 +591,7 @@ public abstract class AbstractDAO {
         } finally {
             closeResultSet(rs);
             closeStatement(stmt);
-            conn.close();
+            closeConnection(conn);
         }
         return list;
     }
@@ -591,7 +633,7 @@ public abstract class AbstractDAO {
         } finally {
             closeResultSet(rs);
             closeStatement(stmt);
-            conn.close();
+            closeConnection(conn);
         }
         return list;
     }
@@ -631,7 +673,7 @@ public abstract class AbstractDAO {
         } finally {
             closeResultSet(rs);
             closeStatement(stmt);
-            conn.close();
+            closeConnection(conn);
         }
         return object;
     }
@@ -671,7 +713,7 @@ public abstract class AbstractDAO {
         } finally {
             closeResultSet(rs);
             closeStatement(stmt);
-            conn.close();
+            closeConnection(conn);
         }
         return idFound;
     }
@@ -682,6 +724,20 @@ public abstract class AbstractDAO {
      */
     abstract protected Object createObject(ResultSet rs) throws SQLException;
 
+    /**
+     * This method creates an object with the data from database, fully loaded
+     * 
+     * @param rs
+     *            The <code>ResultSet<code> object to retrieve the data
+     * 
+     * @return A new object 
+     * 
+     * @throws SQLException If an error occur while retrieving data from result set
+     */
+    protected Object createFullObject(ResultSet rs) throws SQLException{
+        return null;
+    }
+    
     /**
      * This is not abstract because it was implemented a long time after the createObject
      * 
@@ -724,6 +780,13 @@ public abstract class AbstractDAO {
         }
     }
 
+    protected void closeConnection(Connection conn) throws SQLException {
+        if (conn != null){
+            conn.close();
+        }
+    }
+
+    
     /**
      * This method sets the id into the object
      * 

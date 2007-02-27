@@ -71,12 +71,22 @@ public abstract class AbstractFileManager {
         FileOutputStream output = new FileOutputStream(new File(filename));
         byte buffer[] = new byte[512];
         try {
+            // there was at least two times that the photo was sent, this code below (the loop)run, 
+            // but the file was not stored on file system, for any reason. The wrote flag below 
+            // is for keeping track of bytes being written or not. If not, an exception is raised
+            boolean wrote = false;
             logger.debug("AbstractFileManager.writeFile: writing file...");
             while (input.read(buffer) != -1) {
                 output.write(buffer);
+                wrote = true;
             }
             output.close();
             input.close();
+            
+            if (!wrote){
+                logger.fatal("AbstractFileManager.writeFile: Code could not write any byte of the file");
+                throw new FileNotFoundException("Could not write any byte of the file...");
+            }
         } catch (IOException e) {
             logger.debug("AbstractFileManager.writeFile: IOException: ", e);
             throw new FileNotFoundException();

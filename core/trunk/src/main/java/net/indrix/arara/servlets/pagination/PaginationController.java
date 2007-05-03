@@ -86,7 +86,7 @@ public abstract class PaginationController {
 		logger.debug("PaginationController.doAction called with action " + action);
 
 		viewOfList = new ArrayList<Object>();
-		if (action == null) {
+		if (action == null || action.trim().length() == 0) {
 			action = "BEGIN";
 		}
 

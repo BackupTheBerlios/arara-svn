@@ -39,30 +39,32 @@ public class PhotoPaginationController extends PaginationController {
 	 */
 	protected void retrieveDataForPage() throws DatabaseDownException,
 			SQLException {
-		int end = currentIndex + dataPerPage;
-		int size = listOfData.size();
-		logger.debug("CurrentIndex = " + currentIndex);
-		logger.debug("End = " + end);
-		logger.debug("List size = " + size);
-		logger.debug("Adding photos...");
-		int i = 0;
-		for (i = currentIndex; (i < end) && (i < size); i++) {
-			int id = ((Integer) listOfData.get(i)).intValue();
-			Photo photo = null;
-			logger.debug("PaginationController.doAction: retrieving photo (thumbnail) " + id);
-			photo = model.retrieveThumbnail(id);
+        if (listOfData != null){
+            int end = currentIndex + dataPerPage;
+            int size = listOfData.size();
+            logger.debug("CurrentIndex = " + currentIndex);
+            logger.debug("End = " + end);
+            logger.debug("List size = " + size);
+            logger.debug("Adding photos...");
+            int i = 0;
+            for (i = currentIndex; (i < end) && (i < size); i++) {
+                int id = ((Integer) listOfData.get(i)).intValue();
+                Photo photo = null;
+                logger.debug("PaginationController.doAction: retrieving photo (thumbnail) " + id);
+                photo = model.retrieveThumbnail(id);
 
-            // if photo is for identification, verify if it's still not identified. One user could
-            // have identified it while another user is browsing photos.
-            if ((photo != null) && (!isIdentification() || (isIdentification() && photo.getSpecie().getId() == -1))){
-                logger.debug("PaginationController.doAction: photo retrieved. Adding to list..." + photo);
-                viewOfList.add(photo);
-			} else {
-				logger.debug("PaginationController.doAction: photo not found");
-				end++;
-			}
-		}
-		logger.debug("Photos added: " + i);
+                // if photo is for identification, verify if it's still not identified. One user could
+                // have identified it while another user is browsing photos.
+                if ((photo != null) && (!isIdentification() || (isIdentification() && photo.getSpecie().getId() == -1))){
+                    logger.debug("PaginationController.doAction: photo retrieved. Adding to list..." + photo);
+                    viewOfList.add(photo);
+                } else {
+                    logger.debug("PaginationController.doAction: photo not found");
+                    end++;
+                }
+            }
+            logger.debug("Photos added: " + i);
+        }
 
 	}
 

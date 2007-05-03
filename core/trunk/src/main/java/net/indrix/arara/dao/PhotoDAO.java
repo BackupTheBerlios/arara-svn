@@ -6,8 +6,6 @@
  */
 package net.indrix.arara.dao;
 
-import java.sql.Blob;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -170,10 +168,10 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
      * @throws SQLException
      *             If some SQL Exception occurs
      */
-    protected List retrieveObject(String sql) throws DatabaseDownException,
+    protected List retrieveObjects(String sql) throws DatabaseDownException,
             SQLException {
         logger.debug("AbstractDAO.retrieveObjects: running SQL " + sql);
-        List list = super.retrieveObject(sql);
+        List list = super.retrieveObjects(sql);
         logger.debug("AbstractDAO.retrieveObjects: retrieved " + list.size());
         return list;
     }
@@ -192,7 +190,7 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
      *             If some SQL Exception occurs
      */
     public Photo retrieve(int id) throws DatabaseDownException, SQLException {
-        Photo photo = (Photo) retrieveObject(id, SELECT_BY_ID);
+        Photo photo = (Photo) retrieveFullObject(id, SELECT_BY_ID);
         return photo;
     }
 
@@ -213,48 +211,6 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
             SQLException {
         Photo photo = (Photo) super.retrieveObject(id, SELECT_THUMBNAIL_BY_ID);
         return photo;
-    }
-
-    /**
-     * This method retrieves a VO for an object based on its id
-     * 
-     * @param id
-     *            The id of the object to be retrieved
-     * @param sql
-     *            The SQL to be executed
-     * 
-     * @return a VO object
-     * 
-     * @throws DatabaseDownException
-     *             If the database is down
-     * @throws SQLException
-     *             If some SQL Exception occurs
-     */
-    protected Object retrieveObject(int id, String sql)
-            throws DatabaseDownException, SQLException {
-        Connection conn = DatabaseManager.getConnection();
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        Object object = null;
-
-        try {
-            stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, id);
-            rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                object = createFullObject(rs);
-            }
-        } catch (SQLException e) {
-            logger.error("AbstractDAO.retrieve : could not retrieve data ");
-            logger.error("Error in SQL : " + sql, e);
-            throw e;
-        } finally {
-            closeResultSet(rs);
-            closeStatement(stmt);
-            conn.close();
-        }
-        return object;
     }
 
     /**
@@ -429,7 +385,7 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
         id = rs.getInt(SEX_ID_COLUMN);
         photo.setSex(SexModel.getSex(id));
 
-        User user = getUserObject(rs.getInt(USER_ID_COLUMN), photo);
+        User user = getUserObject(rs.getInt(USER_ID_COLUMN));
         photo.setUser(user);
 
         Specie specie = getSpecieObject(rs, photo);
@@ -481,7 +437,7 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
         id = rs.getInt(SEX_ID_COLUMN);
         photo.setSex(SexModel.getSex(id));
 
-        User user = getUserObject(rs.getInt(USER_ID_COLUMN), photo);
+        User user = getUserObject(rs.getInt(USER_ID_COLUMN));
         photo.setUser(user);
 
         Specie specie = getSpecieObject(rs, photo);
@@ -681,7 +637,7 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
                             + photo, e);
             throw e;
         }
-        ;
+        
 
         // retrieve sound information for specie
         SoundDAO soundDAO = new SoundDAO();
@@ -725,20 +681,15 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
      * @param i
      * @return
      */
-    private User getUserObject(int userId, Photo photo) throws SQLException {
+    private User getUserObject(int userId) throws SQLException {
         User user = null;
         try {
             user = userDao.retrieve(userId);
-            photo.setUser(user);
         } catch (DatabaseDownException e) {
-            logger.error(
-                    "PhotoDAO.createObject : Could not retrieve user for photo "
-                            + photo, e);
-            throw new SQLException("Error retrieving user for photo " + photo);
+            logger.error("PhotoDAO.createObject : Could not retrieve user for photo ", e);
+            throw new SQLException("Error retrieving user for photo ");
         } catch (SQLException e) {
-            logger.error(
-                    "PhotoDAO.createObject : Could not retrieve user for photo "
-                            + photo, e);
+            logger.error("PhotoDAO.createObject : Could not retrieve user for photo ", e);
             throw e;
         }
         return user;

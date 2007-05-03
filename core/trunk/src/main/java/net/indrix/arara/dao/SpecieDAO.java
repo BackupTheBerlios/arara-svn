@@ -125,7 +125,7 @@ public class SpecieDAO extends AbstractDAO {
 	public List retrieve() throws DatabaseDownException, SQLException {
 		if (listInMemory == null) {
 			logger.debug("Retrieving species for the first time...");
-			listInMemory = super.retrieveObject(SELECT_ALL);
+			listInMemory = super.retrieveObjects(SELECT_ALL);
 		} else {
 			logger.debug("Retrieving list of species from memory...");
 		}

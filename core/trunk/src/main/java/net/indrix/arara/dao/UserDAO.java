@@ -71,7 +71,7 @@ public class UserDAO extends AbstractDAO {
 	 *             If some SQL Exception occurs
 	 */
 	public List retrieve() throws DatabaseDownException, SQLException {
-		List list = super.retrieveObject(SELECT_ALL_FOR_PHOTOS);
+		List list = super.retrieveObjects(SELECT_ALL_FOR_PHOTOS);
 		return list;
 	}
 
@@ -86,7 +86,7 @@ public class UserDAO extends AbstractDAO {
      *             If some SQL Exception occurs
      */
     public List retrieveUsersForSound() throws DatabaseDownException, SQLException {
-        List list = super.retrieveObject(SELECT_ALL_FOR_SOUNDS);
+        List list = super.retrieveObjects(SELECT_ALL_FOR_SOUNDS);
         return list;
     }    
 	/**
@@ -101,7 +101,7 @@ public class UserDAO extends AbstractDAO {
 	 */
 	public List retrieveForEmailOnNewPhoto() throws DatabaseDownException, SQLException {
 		logger.debug("UserDAO.retrieveForEmailOnNewPhoto: entering method...");
-		List list = super.retrieveObject(SELECT_FOR_EMAIL_ON_NEW_PHOTO, true);
+		List list = super.retrieveObjects(SELECT_FOR_EMAIL_ON_NEW_PHOTO, true);
 		return list;
 	}
 
@@ -117,7 +117,7 @@ public class UserDAO extends AbstractDAO {
      */
     public List retrieveForEmailOnNewSound() throws DatabaseDownException, SQLException {
         logger.debug("UserDAO.retrieveForEmailOnNewSound: entering method...");
-        List list = super.retrieveObject(SELECT_FOR_EMAIL_ON_NEW_SOUND, true);
+        List list = super.retrieveObjects(SELECT_FOR_EMAIL_ON_NEW_SOUND, true);
         return list;
     }
 
@@ -134,7 +134,7 @@ public class UserDAO extends AbstractDAO {
 	public List retrieveForPhotoIdentificationEmail()
 			throws DatabaseDownException, SQLException {
 		logger.debug("UserDAO.retrieveForPhotoIdentificationEmail: entering method...");
-		List list = super.retrieveObject(SELECT_FOR_EMAIL_ON_NEW_ID_PHOTO, true);
+		List list = super.retrieveObjects(SELECT_FOR_EMAIL_ON_NEW_ID_PHOTO, true);
 		return list;
 	}
 

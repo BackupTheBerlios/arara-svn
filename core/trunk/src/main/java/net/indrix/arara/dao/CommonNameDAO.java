@@ -72,7 +72,7 @@ public class CommonNameDAO extends AbstractDAO {
 	public List retrieve() throws DatabaseDownException, SQLException {
 		if (listInMemory == null) {
 			logger.debug("Retrieving common names for the first time...");
-			listInMemory = super.retrieveObject(SELECT_ALL);
+			listInMemory = super.retrieveObjects(SELECT_ALL);
 		} else {
 			logger
 					.debug("Retrieving common names list of families from memory...");

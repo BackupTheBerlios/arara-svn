@@ -27,7 +27,7 @@ public class StatesDAO {
 	/**
 	 * SQL statement to retrieve all states
 	 */
-	private static final String SELECT_ALL = "Select * from states order by acronym";
+	private static final String SELECT_ALL = "Select * from states where id != -1 order by acronym ";
 
 	/**
 	 * Logger object to be used by this class

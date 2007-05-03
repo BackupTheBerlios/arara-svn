@@ -119,7 +119,7 @@ public class SoundDAO extends MediaDAO implements SoundConstants {
      *             If some SQL Exception occurs
      */
     public List retrieve() throws DatabaseDownException, SQLException {
-        List list = super.retrieveObject(SELECT_ALL);
+        List list = super.retrieveObjects(SELECT_ALL);
         return list;
     }
 

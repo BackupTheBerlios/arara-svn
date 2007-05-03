@@ -58,7 +58,7 @@ public class FamilyDAO extends AbstractDAO {
 	public List retrieve() throws DatabaseDownException, SQLException {
 		if (listInMemory == null) {
 			logger.debug("Retrieving families for the first time...");
-			listInMemory = super.retrieveObject(SELECT_ALL);
+			listInMemory = super.retrieveObjects(SELECT_ALL);
 		} else {
 			logger.debug("Retrieving list of families from memory...");
 		}

@@ -61,11 +61,24 @@ public abstract class AbstractFileManager {
      */
     protected void writeFile(InputStream input, String filename) throws FileNotFoundException {
         logger.debug("AbstractFileManager.writeFile: entering method...");
+        
+        try {
+            if (input == null || input.available() == 0){
+                logger.debug("Input is not valid...");
+                throw new FileNotFoundException("Could not read any byte from the input...");
+            }
+        } catch (IOException e1) {
+            logger.debug("Input is not valid...", e1);
+            throw new FileNotFoundException("Could not read any byte from the input...");
+        }
+        
         String path = getRootPath() + File.separator + getFolder();
 
         File dir = new File(path);
-        logger.debug("AbstractFileManager.writeFile: creating dir " + dir);
-        dir.mkdirs();
+        if (!dir.exists()){
+            logger.debug("AbstractFileManager.writeFile: creating dir " + dir);
+            dir.mkdirs();            
+        }
 
         logger.debug("AbstractFileManager.writeFile: creating file " + filename);
         FileOutputStream output = new FileOutputStream(new File(filename));
@@ -88,10 +101,16 @@ public abstract class AbstractFileManager {
                 throw new FileNotFoundException("Could not write any byte of the file...");
             }
         } catch (IOException e) {
-            logger.debug("AbstractFileManager.writeFile: IOException: ", e);
+            logger.error("AbstractFileManager.writeFile: IOException: ", e);
             throw new FileNotFoundException();
         }
         logger.debug("AbstractFileManager.writeFile: finishing method...");
+
+        
+        File file = new File(filename);
+        if (!file.exists()){
+            throw new FileNotFoundException("Could not write file " + filename);
+        }
 
     }
     

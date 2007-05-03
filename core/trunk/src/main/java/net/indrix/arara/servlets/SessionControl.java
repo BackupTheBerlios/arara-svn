@@ -3,6 +3,9 @@ package net.indrix.arara.servlets;
 /**
  * HTTP classes
  */
+import java.util.Enumeration;
+import java.util.Hashtable;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
@@ -16,27 +19,33 @@ public class SessionControl implements HttpSessionListener {
 	 */
 	private static Logger logger = Logger.getLogger("net.indrix.aves");
 
+    private static Hashtable<String, Boolean>sessionIds = new Hashtable<String, Boolean>();
+    
 	/**
 	 * @see javax.servlet.http.HttpSessionListener#sessionCreated(javax.servlet.http.HttpSessionEvent)
 	 */
 	public void sessionCreated(HttpSessionEvent e) {
 		HttpSession session = e.getSession();
-		logger.info("Session " + session.getId() + " has been created");
 
+        String id = session.getId();
+        int num = 0;
 		ServletContext app = session.getServletContext();
-		NumberOfUsers numUsers = null;
 		synchronized (app) {
-			/* inc the number of on-line users */
-			numUsers = (NumberOfUsers) app
-					.getAttribute(ServletConstants.USERS_ON_LINE);
-			if (numUsers == null) {
-				numUsers = new NumberOfUsers();
-				app.setAttribute(ServletConstants.USERS_ON_LINE, numUsers);
-			}
-			numUsers.inc();
+            if (!sessionIds.contains(id)){
+                sessionIds.put(id, new Boolean(true));
+            }
+            
+            num = sessionIds.size();
+			app.setAttribute(ServletConstants.USERS_ON_LINE, new Integer(num));
+            
+            Enumeration<String> l = sessionIds.keys();
+            while (l.hasMoreElements()){
+                String key = (String)l.nextElement();
+                logger.debug(key);
+            }
 		}
 
-		logger.debug("  ---  Usuarios on-line  >>>  " + numUsers.getNumber());
+		logger.debug("  ---  Usuarios on-line  >>>  " + num);
 	}
 
 	/**
@@ -47,39 +56,15 @@ public class SessionControl implements HttpSessionListener {
 		ServletContext app = session.getServletContext();
 
 		logger.info("Session " + session.getId() + " has been destroyed");
+        String id = session.getId();
 
-		NumberOfUsers numUsers = null;
+        sessionIds.remove(id);  
+        int num = 0;
 		synchronized (app) {
-			/* inc the number of on-line users */
-			numUsers = (NumberOfUsers) app
-					.getAttribute(ServletConstants.USERS_ON_LINE);
-			if (numUsers == null) {
-				numUsers = new NumberOfUsers();
-				app.setAttribute(ServletConstants.USERS_ON_LINE, numUsers);
-			}
-			numUsers.dec();
+            num = sessionIds.size();
+            app.setAttribute(ServletConstants.USERS_ON_LINE, new Integer(num));
 		}
 
-		logger.debug("  ---  Usuarios on-line  >>>  " + numUsers.getNumber());
-	}
-
-	class NumberOfUsers {
-		private int number = 0;
-
-		public void inc() {
-			number++;
-		}
-
-		public void dec() {
-			number--;
-		}
-
-		public int getNumber() {
-			return number;
-		}
-
-		public String toString() {
-			return "" + number;
-		}
+		logger.debug("  ---  Usuarios on-line  >>>  " + num);
 	}
 }

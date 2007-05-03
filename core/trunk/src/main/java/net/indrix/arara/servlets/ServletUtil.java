@@ -196,9 +196,13 @@ public class ServletUtil {
 			}
 			statesListInMemory.add(0, new LabelValueBean("", ""));
 		} else {
-			logger
-					.debug("Returning the states data as LabelValueBean without creating objects...");
+			logger.debug("Returning the states data as LabelValueBean without creating objects...");
 		}
+        
+        if (statesListInMemory == null || statesListInMemory.isEmpty()){
+            logger.fatal("LIST OF STATES IS NULL...");
+        }
+        
 		return statesListInMemory;
 	}
 }

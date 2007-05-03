@@ -8,13 +8,15 @@ package net.indrix.arara.bean;
 
 import java.util.List;
 
+import net.indrix.arara.servlets.common.IBean;
+
 /**
  * @author Jeff
  * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class IdentifyPhotoBean {
+public class IdentifyPhotoBean implements IBean{
 	protected List familyList;
 
 	protected String selectedFamilyId;

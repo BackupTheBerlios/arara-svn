@@ -8,6 +8,8 @@ package net.indrix.arara.bean;
 
 import java.util.List;
 
+import net.indrix.arara.servlets.common.IBean;
+
 import org.apache.commons.fileupload.FileItem;
 
 /**
@@ -16,7 +18,7 @@ import org.apache.commons.fileupload.FileItem;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class UploadBean {
+public class UploadBean implements IBean{
 
 	protected List familyList;
 

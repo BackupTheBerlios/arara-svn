@@ -8,7 +8,6 @@ package net.indrix.arara.model.file;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -59,7 +58,7 @@ public class PhotoFileManager extends AbstractFileManager {
      *         filesystem
      */
     public String getFullThumbnailFilename() {
-        return getRootPath() + File.separator + getFolder() + File.separator + getThumbnailFilename();
+        return getRootPath() + getFolder() + File.separator + getThumbnailFilename();
     }
     
     /**
@@ -79,8 +78,7 @@ public class PhotoFileManager extends AbstractFileManager {
 	public String getFolder() {
 		int familyId = photo.getSpecie().getFamily().getId();
 		int specieId = photo.getSpecie().getId();
-		String path = PHOTO_FOLDER + File.separator + familyId + File.separator
-				+ specieId;
+		String path = PHOTO_FOLDER + File.separator + familyId + File.separator + specieId;
 		return path;
 	}
 
@@ -96,7 +94,7 @@ public class PhotoFileManager extends AbstractFileManager {
         super.writeFile();
         
         InputStream input = photo.getSmallImage().getImage();
-        String filename = getRootPath() + File.separator + getFolder() + File.separator + getThumbnailFilename();
+        String filename = getRootPath() + getFolder() + File.separator + getThumbnailFilename();
         
         writeFile(input, filename);
     }
@@ -116,10 +114,38 @@ public class PhotoFileManager extends AbstractFileManager {
         this.photo = photo;
     }
 
-    public void updatePhotoAndMoveInFileSystem(String oldPath, String oldThumbnailPath) {
+    public void undoUpdatePhotoAndMoveInFileSystem(String oldPath, String oldThumbnailPath) throws IOException {
         logger.debug("PhotoFileManager.updatePhotoAndMoveInFileSystem: entering method...");
 
-        String path = getRootPath() + File.separator ;
+        String path = getRootPath();
+        File oldFile = new File(path + oldPath);
+        File oldThumbnailFile = new File(path + oldThumbnailPath);
+        
+        File currentFile = new File(getFullFilename());
+        File currentThumbnailFile = new File(getFullThumbnailFilename());
+                
+        try {
+            logger.debug("Copying from " + currentFile + " to " + oldFile);
+            Util.copyFile(currentFile, oldFile);
+
+            logger.debug("Copying from " + currentThumbnailFile + " to " + oldThumbnailFile);
+            Util.copyFile(currentThumbnailFile, oldThumbnailFile);
+            
+            // now delete the files
+            if (oldFile.exists() && oldThumbnailFile.exists()){
+                Util.deleteFile(currentFile);
+                Util.deleteFile(currentThumbnailFile);
+            }
+        } catch (IOException e) {
+            logger.error("Could not copy file...", e);
+            throw e;
+        }
+    }
+    
+    public void updatePhotoAndMoveInFileSystem(String oldPath, String oldThumbnailPath) throws IOException {
+        logger.debug("PhotoFileManager.updatePhotoAndMoveInFileSystem: entering method...");
+
+        String path = getRootPath();
         File oldFile = new File(path + oldPath);
         File oldThumbnailFile = new File(path + oldThumbnailPath);
         
@@ -128,16 +154,27 @@ public class PhotoFileManager extends AbstractFileManager {
                 
         try {
             logger.debug("Copying from " + oldFile + " to " + currentFile);
-            Util.moveFile(oldFile, currentFile);
+            Util.copyFile(oldFile, currentFile);
 
             logger.debug("Copying from " + oldThumbnailFile + " to " + currentThumbnailFile);
-            Util.moveFile(oldThumbnailFile, currentThumbnailFile);
+            Util.copyFile(oldThumbnailFile, currentThumbnailFile);
+            
+            // now delete the files
+            if (currentFile.exists() && currentThumbnailFile.exists()){
+                logger.info("Deleting old files...");
+                Util.deleteFile(oldFile);
+                Util.deleteFile(oldThumbnailFile);
+            }
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("Could not copy file...", e);
+            throw e;
         }
+        logger.debug("PhotoFileManager.updatePhotoAndMoveInFileSystem: finishing method...");
     }
 
+    /**
+     * This methods deletes a photo from file system.
+     */
     public void delete() {
         logger.debug("PhotoFileManager.delete: entering method...");
 
@@ -149,5 +186,7 @@ public class PhotoFileManager extends AbstractFileManager {
 
         logger.debug("Deleting " + currentThumbnailFile);
         currentThumbnailFile.delete();
+        
+        logger.debug("PhotoFileManager.delete: finishing method...");
     }
 }

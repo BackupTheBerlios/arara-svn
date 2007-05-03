@@ -42,6 +42,7 @@ import org.apache.log4j.Logger;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
+@SuppressWarnings("serial")
 public class EditPhotoServlet extends AbstractUploadPhotoServlet {
 	/**
 	 * Logger object
@@ -102,7 +103,8 @@ public class EditPhotoServlet extends AbstractUploadPhotoServlet {
 			} catch (ServletException e) {
 				logger.debug("ServletException.....");
 			} catch (IOException e) {
-				logger.debug("IOException.....");
+                logger.debug("IOException.....", e);
+                errors.add(ServletConstants.DATABASE_ERROR);
 			} catch (FileUploadException e) {
 				// does nothing, since no file is uploaded for edit use case
 			}
@@ -126,9 +128,10 @@ public class EditPhotoServlet extends AbstractUploadPhotoServlet {
 	 * 
 	 * @param photo
 	 *            The photo to be updated
+	 * @throws IOException 
 	 */
 	private void updatePhotoIntoDatabase(Photo photo)
-			throws DatabaseDownException, SQLException {
+			throws DatabaseDownException, SQLException, IOException {
 		PhotoModel model = new PhotoModel();
 		model.update(photo);
 	}
@@ -188,5 +191,11 @@ public class EditPhotoServlet extends AbstractUploadPhotoServlet {
 	private int getId(String string) {
 		return Integer.parseInt(string);
 	}
+
+    @Override
+    protected String getDataToBeUploaded() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

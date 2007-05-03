@@ -29,6 +29,7 @@ import net.indrix.arara.model.UploadPhoto;
 import net.indrix.arara.model.exceptions.ImageProcessingException;
 import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.servlets.UploadConstants;
+import net.indrix.arara.servlets.common.UploadBeanManagerFactory;
 import net.indrix.arara.servlets.photo.exceptions.InvalidFileException;
 import net.indrix.arara.vo.Photo;
 import net.indrix.arara.vo.User;
@@ -42,6 +43,7 @@ import org.apache.log4j.Logger;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
+@SuppressWarnings("serial")
 public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 	private static final int MAX_PHOTO_SIZE = 400000;
 
@@ -74,7 +76,7 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 				UploadPhotoBean photoBean = (UploadPhotoBean) session.getAttribute(UploadConstants.UPLOAD_PHOTO_BEAN);
 
 				logger.debug("Calling updateBean");
-				if (updateBean(data, photoBean, errors)) {
+				if (updateBean(data, photoBean, errors, session)) {
 					logger.debug("bean updated " + photoBean);
 					try {
 						Photo photo = createPhoto(photoBean, user);
@@ -90,6 +92,7 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 							nextPage = getSuccessPage();
 
 							session.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
+                            session.setAttribute(ServletConstants.PHOTOS_LIST, null);
 
 							loggerActions.info("User " + user.getLogin() + " from IP " + req.getRemoteAddr() + " has uploaded one photo.");
 						}
@@ -134,6 +137,11 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 
 	}
 
+    @Override
+    protected String getDataToBeUploaded() {
+        return UploadBeanManagerFactory.PHOTO;
+    }
+    
 	/**
 	 * Retrieve the next page to go
 	 * 

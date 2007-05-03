@@ -24,8 +24,7 @@ import net.indrix.arara.model.UploadPhoto;
 import net.indrix.arara.model.exceptions.ImageProcessingException;
 import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.servlets.UploadConstants;
-import net.indrix.arara.servlets.common.PhotoBeanManager;
-import net.indrix.arara.servlets.common.PhotoForIdentificationBeanManager;
+import net.indrix.arara.servlets.common.UploadBeanManagerFactory;
 import net.indrix.arara.servlets.photo.exceptions.InvalidFileException;
 import net.indrix.arara.vo.Age;
 import net.indrix.arara.vo.Photo;
@@ -39,6 +38,7 @@ import net.indrix.arara.vo.User;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
+@SuppressWarnings("serial")
 public class UploadPhotoIdentifyServlet extends UploadPhotoServlet {
 	/**
 	 * Init method
@@ -50,8 +50,8 @@ public class UploadPhotoIdentifyServlet extends UploadPhotoServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
 		HttpSession session = req.getSession();
-		UploadPhotoBean uploadBean = (UploadPhotoBean) session
-				.getAttribute(UploadConstants.UPLOAD_PHOTO_BEAN);
+		UploadPhotoBean uploadBean;
+        uploadBean = (UploadPhotoBean) session.getAttribute(UploadConstants.UPLOAD_PHOTO_BEAN);
 		if (uploadBean == null) {
 			uploadBean = new UploadPhotoBean();
 			// add bean to session
@@ -60,6 +60,11 @@ public class UploadPhotoIdentifyServlet extends UploadPhotoServlet {
 		super.doPost(req, res);
 	}
 
+	@Override
+    protected String getDataToBeUploaded() {
+        return UploadBeanManagerFactory.PHOTO_FOR_IDENTIFICATION;
+    }
+
 	/**
 	 * Retrieve the next page to go
 	 * 
@@ -67,15 +72,6 @@ public class UploadPhotoIdentifyServlet extends UploadPhotoServlet {
 	 */
 	protected String getNextPage() {
 		return ServletConstants.UPLOAD_IDENTIFICATION_PAGE;
-	}
-
-	/**
-	 * Return the bean manager to be used
-	 * 
-	 * @return a new BeanManager instance
-	 */
-	protected PhotoBeanManager getBeanManager() {
-		return new PhotoForIdentificationBeanManager();
 	}
 
 	/**

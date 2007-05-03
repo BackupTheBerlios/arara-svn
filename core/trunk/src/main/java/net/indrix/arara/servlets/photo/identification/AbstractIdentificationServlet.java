@@ -64,8 +64,7 @@ public class AbstractIdentificationServlet extends AbstractServlet {
 		bean.setSelectedFamilyId(familyId);
 		bean.setSelectedSpecieId(specieId);
 		bean.setComment(comment);
-		logger
-				.debug("AbstractIdentificationServlet.handleBean: entering method...");
+		logger.debug("AbstractIdentificationServlet.handleBean: entering method...");
 		return bean;
 	}
 

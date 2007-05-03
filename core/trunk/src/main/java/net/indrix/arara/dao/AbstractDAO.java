@@ -83,7 +83,7 @@ public abstract class AbstractDAO {
      *             If some SQL Exception occurs
      */
     public List retrieve() throws DatabaseDownException, SQLException {
-        List list = retrieveObject(getSelectAllSQL());
+        List list = retrieveObjects(getSelectAllSQL());
         return list;
     }
 
@@ -296,35 +296,31 @@ public abstract class AbstractDAO {
     }
 
     /**
-     * This method retrieves all common names from database. It uses the
-     * following SQL: <br>
-     * SELECT * FROM COMMON_NAME
+     * This method retrieves all objects from database, for the give SQL
      * 
-     * @return A list of <code>CommonName</code> objects
+     * @return A list of objects
      * 
      * @throws DatabaseDownException
      *             If the database is down
      * @throws SQLException
      *             If some SQL Exception occurs
      */
-    protected List retrieveObject(String sql) throws DatabaseDownException,
+    protected List retrieveObjects(String sql) throws DatabaseDownException,
             SQLException {
-        return retrieveObject(sql, false);
+        return retrieveObjects(sql, false);
     }
 
     /**
-     * This method retrieves all common names from database. It uses the
-     * following SQL: <br>
-     * SELECT * FROM COMMON_NAME
+     * This method retrieves all objects from database. It uses the given SQL
      * 
-     * @return A list of <code>CommonName</code> objects
+     * @return A list of objects
      * 
      * @throws DatabaseDownException
      *             If the database is down
      * @throws SQLException
      *             If some SQL Exception occurs
      */
-    protected List retrieveObject(String sql, boolean light) throws DatabaseDownException, SQLException {       
+    protected List retrieveObjects(String sql, boolean light) throws DatabaseDownException, SQLException {       
         List<Object> list = new ArrayList<Object>();
         Connection conn = DatabaseManager.getConnection();
         PreparedStatement stmt = null;

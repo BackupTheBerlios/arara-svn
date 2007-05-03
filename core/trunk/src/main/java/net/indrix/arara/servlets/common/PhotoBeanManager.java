@@ -9,7 +9,6 @@ package net.indrix.arara.servlets.common;
 import java.util.List;
 import java.util.Map;
 
-import net.indrix.arara.bean.UploadBean;
 import net.indrix.arara.bean.UploadPhotoBean;
 import net.indrix.arara.servlets.ServletConstants;
 
@@ -20,13 +19,6 @@ import net.indrix.arara.servlets.ServletConstants;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class PhotoBeanManager extends BeanManager {
-	protected void updateMediaData(Map data, UploadBean bean, List errors,
-			boolean validate) {
-		logger
-				.debug("PhotoBeanManager.updateMediaData: updating media data...");
-		updateMediaData(data, (UploadPhotoBean) bean, errors, validate);
-	}
-
 	/**
 	 * This method updates in the bean data related to the photo
 	 * 
@@ -34,10 +26,10 @@ public class PhotoBeanManager extends BeanManager {
 	 * @param bean
 	 * @param errors
 	 */
-	protected void updateMediaData(Map data, UploadPhotoBean bean, List errors,
-			boolean validate) {
-		logger
-				.debug("PhotoBeanManager.updateMediaData: updating media data...");
+	protected void updateMediaData(Map data, List errors, boolean validate) {
+		logger.debug("PhotoBeanManager.updateMediaData: updating media data...");
+        
+        UploadPhotoBean bean = (UploadPhotoBean)getBean();
 		logger.debug(bean);
 		logger.debug(data);
 		bean.setCamera((String) data.get(ServletConstants.CAMERA));

@@ -18,8 +18,7 @@ import net.indrix.arara.bean.UploadBean;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class SoundBeanManager extends BeanManager {
-	protected void updateMediaData(Map data, UploadBean bean, List errors,
-			boolean validate) {
+	protected void updateMediaData(Map data, List errors, boolean validate) {
 		logger.debug("SoundBeanManager.updateMediaData: do nothing...");
 	}
 

@@ -23,22 +23,19 @@ import org.apache.log4j.Logger;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class BeanManager {
-	/**
-	 * Logger object to be used by this servlet to log statements
-	 */
-	protected static Logger logger = Logger.getLogger("net.indrix.aves");
+public class BeanManager extends IBeanManagerImplementation{
+    public static final String CITY_TYPE = "City";
+    public static final String FAMILY_ID_TYPE = "Family ID";
 
 	/**
 	 * @param data
 	 * @param bean
 	 */
-	public boolean updateBean(Map data, UploadBean bean, List <String>errors,
-			boolean validate) {
+	public boolean updateBean(Map data, List <String>errors, boolean validate) {
 		boolean status = false;
 
-		updateBirdData(data, bean, errors, validate);
-		updateMediaData(data, bean, errors, validate);
+		updateBirdData(data, errors, validate);
+		updateMediaData(data, errors, validate);
 
 		if (!errors.isEmpty()) {
 			status = false;
@@ -55,8 +52,7 @@ public class BeanManager {
 	 * @param bean
 	 * @param errors
 	 */
-	protected void updateBirdData(Map data, UploadBean bean, List <String>errors,
-			boolean validate) {
+	protected void updateBirdData(Map data, List <String>errors, boolean validate) {
 		logger.debug("BeanManager.updateBirdData: updating bird data...");
 		String familyId = (String) data.get(ServletConstants.FAMILY_ID);
 		String specieId = (String) data.get(ServletConstants.SPECIE_ID);
@@ -73,6 +69,7 @@ public class BeanManager {
 				errors.add(UploadPhotoConstants.CITY_REQUIRED);
 			}
 		}
+        UploadBean bean = (UploadBean)getBean();
 		bean.setSelectedFamilyId(familyId);
 		bean.setSelectedSpecieId(specieId);
 		bean.setSelectedCityId(cityId);
@@ -98,9 +95,28 @@ public class BeanManager {
 	 * @param bean
 	 * @param errors
 	 */
-	protected void updateMediaData(Map data, UploadBean bean, List errors,
-			boolean validate) {
+	protected void updateMediaData(Map data, List errors, boolean validate) {
 		logger.debug("BeanManager.updateMediaData: updating media data...");
 	}
 
+    /**
+     * This method allows the manager to set an object in the correct bean. The source specifies the 
+     * data type, such as a City.
+     * 
+     * @param object The object to be updated into the bean
+     * @param source The type of the data
+     */
+    public void setData(Object object, String source){
+        UploadBean bean = (UploadBean)getBean();
+        if (source.equals("City List")){
+            logger.debug("BeanManager.setData: setting City list...");
+            bean.setCitiesList((List)object);            
+        } else if (source.equals("Family ID")){
+            logger.debug("BeanManager.setData: setting Family ID...");
+            bean.setSelectedFamilyId((String)object);
+        } else if (source.equals("Specie List")){
+            logger.debug("BeanManager.setData: setting Specie list...");
+            bean.setSpecieList((List)object);
+        }
+    }
 }

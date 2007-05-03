@@ -66,12 +66,13 @@ public class AbstractUploadServlet extends HttpServlet {
 		Iterator it = fields.iterator();
 		while (it.hasNext()) {
 			item = (FileItem) it.next();
-
+            String key = item.getFieldName();
+            logger.debug("Reading key " + key);
+            
 			if (item.isFormField()) {
-				String key = item.getFieldName();
+				key = item.getFieldName();
 				aData.put(key, item.getString().trim());
-				logger.debug("Adding data to map " + key + ","
-						+ item.getString().trim());
+				logger.debug("Adding data to map " + key + "," + item.getString().trim());
 			} else {
 				String file = item.getName();
 				if ((file != null) && ((!file.trim().equals("")))) {
@@ -104,7 +105,8 @@ public class AbstractUploadServlet extends HttpServlet {
 		boolean status = false;
 
 		SoundBeanManager manager = getBeanManager();
-		manager.updateBean(data, bean, errors, true);
+        manager.setBean(bean);
+		manager.updateBean(data, errors, true);
 
 		if (!errors.isEmpty()) {
 			status = false;
@@ -112,30 +114,6 @@ public class AbstractUploadServlet extends HttpServlet {
 			status = true;
 		}
 		return status;
-
-		/*
-		 * boolean status = false; String familyId = (String)
-		 * data.get(UploadSoundConstants.FAMILY_ID); String specieId = (String)
-		 * data.get(UploadSoundConstants.SPECIE_ID); if ((specieId == null) ||
-		 * (specieId.trim().equals(""))) {
-		 * errors.add(UploadSoundConstants.SPECIE_REQUIRED); }
-		 * bean.setSelectedFamilyId(familyId);
-		 * bean.setSelectedSpecieId(specieId); bean.setFilename((String)
-		 * data.get(UploadConstants.FILE_NAME)); bean.setFileSize((String)
-		 * data.get(UploadConstants.FILE_SIZE)); FileItem fileItem = (FileItem)
-		 * data.get(UploadConstants.FILE_ITEM); if (fileItem == null) {
-		 * errors.add(UploadConstants.FILE_REQUIRED); }
-		 * bean.setFileItem(fileItem); bean.setLocation((String)
-		 * data.get(UploadSoundConstants.LOCATION)); bean.setCityId((String)
-		 * data.get(UploadSoundConstants.CITY_ID)); bean.setStateId((String)
-		 * data.get(UploadSoundConstants.STATE_ID)); bean.setComment((String)
-		 * data.get(UploadSoundConstants.COMMENT));
-		 * bean.setSelectedAgeId((String)
-		 * data.get(UploadSoundConstants.AGE_ID));
-		 * bean.setSelectedSexId((String)
-		 * data.get(UploadSoundConstants.SEX_ID)); if (!errors.isEmpty()) {
-		 * status = false; } else { status = true; } return status;
-		 */
 	}
 
 	/**

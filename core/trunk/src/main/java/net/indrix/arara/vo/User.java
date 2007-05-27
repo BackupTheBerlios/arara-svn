@@ -6,6 +6,8 @@
  */
 package net.indrix.arara.vo;
 
+import java.util.Date;
+
 import net.indrix.arara.model.Cryptography;
 
 /**
@@ -16,28 +18,19 @@ import net.indrix.arara.model.Cryptography;
  */
 public class User {
 	private int id;
-
 	private String name;
-
 	private String login;
-
 	private String password;
-
 	private String email;
-
 	private String language;
-
 	private boolean emailOnNewPhoto;
-
 	private boolean emailOnNewIdPhoto;
-
 	private boolean emailOnNewSound;
-
 	private boolean addPhoto;
-
 	private boolean addSound;
-
 	private boolean isAdmin;
+    private boolean active;    
+    private Date registeredOn;
 
 	public User() {
 		id = -1;
@@ -291,5 +284,21 @@ public class User {
 	public void setEmailOnNewIdPhoto(boolean b) {
 		emailOnNewIdPhoto = b;
 	}
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public Date getRegisteredOn() {
+        return registeredOn;
+    }
+
+    public void setRegisteredOn(Date registeredOn) {
+        this.registeredOn = registeredOn;
+    }
 
 }

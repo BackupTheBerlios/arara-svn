@@ -5,6 +5,7 @@
 <c:set var="col2" value="${15}%"/>
 <c:set var="col3" value="${80}%"/>
 
+
 <br>
 <form method="post" action="<c:url value="/servlet/register"/>">
 <table class="formBorder" width="90%" align="center" border="0" cellspacing="2">

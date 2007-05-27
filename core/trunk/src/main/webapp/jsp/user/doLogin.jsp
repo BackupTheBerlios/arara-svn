@@ -22,13 +22,13 @@
 			<fmt:message key="user.login" />
 		</td>
 		<td align="left" width="${col3}">
-			<input type="text" name="login" value="" size="16" maxlength="16">
+			<input type="text" name="login" value="Jefferson" size="16" maxlength="16">
 		</td>
 	</tr>
 	<tr align="center">
 		<td width="${col1}"></td>
 		<td align="left" width="${col2}"><fmt:message key="user.password" /></td>
-		<td align="left" width="${col3}"><input type="password" name="password" value=""
+		<td align="left" width="${col3}"><input type="password" name="password" value="jeff"
 			size="16" maxlength="16"></td>
 	</tr>
 	<tr align="center">

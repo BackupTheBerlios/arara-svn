@@ -18,7 +18,7 @@
     	<td width="${col2}">
 			<c:import url="/jsp/user/registrationData.jsp"/>
 			<br><br>
-			<fmt:message key="user.registered.confirmation.email" />
+			<fmt:message key="user.registered.send.photo.info" />
 		</td>
 	</tr>
 </table>

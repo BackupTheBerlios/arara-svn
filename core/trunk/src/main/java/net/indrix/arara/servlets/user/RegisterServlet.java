@@ -32,17 +32,22 @@ import org.apache.log4j.Logger;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
+@SuppressWarnings("serial")
 public class RegisterServlet extends HttpServlet {
 	/**
 	 * Logger object to be used by this class
 	 */
 	protected static Logger logger = Logger.getLogger("net.indrix.aves");
 
+    public void init() {
+        logger.debug("Initializing RegisterServlet...");
+    }
+
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
 		logger.debug("RegisterServlet.doPost called...");
 
-		List erros = new ArrayList();
+		List<String> errors = new ArrayList<String>();
 
 		// recupera dados do request
 		String name = req.getParameter("name");
@@ -51,17 +56,13 @@ public class RegisterServlet extends HttpServlet {
 		String password = req.getParameter("password");
 		String confirmationPassword = req.getParameter("password2");
 		String language = req.getParameter("language");
-		boolean emailOnPhoto = "on".equals(req.getParameter("emailOnNewPhoto")) ? true
-				: false;
-		boolean emailOnIdPhoto = "on".equals(req
-				.getParameter("emailOnNewIdPhoto")) ? true : false;
-		boolean emailOnSound = "on".equals(req.getParameter("emailOnNewSound")) ? true
-				: false;
+		boolean emailOnPhoto = "on".equals(req.getParameter("emailOnNewPhoto")) ? true : false;
+		boolean emailOnIdPhoto = "on".equals(req.getParameter("emailOnNewIdPhoto")) ? true : false;
+		boolean emailOnSound = "on".equals(req.getParameter("emailOnNewSound")) ? true : false;
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
-		String msg = null;
-
-		// verifica se as senhas digitadas estão iguais
+		
+        // verifica se as senhas digitadas estão iguais
 		logger.debug("Verifying if passwords match");
 		if (password.equals(confirmationPassword)) {
 			// verifica se login já existe
@@ -71,7 +72,7 @@ public class RegisterServlet extends HttpServlet {
 				if (userModel.userExists(login)) {
 					logger.debug("User exists");
 					// login já existe. Usuário tem que escolher outro.
-					erros.add(ServletConstants.LOGIN_ALREADY_EXIST);
+					errors.add(ServletConstants.LOGIN_ALREADY_EXIST);
 				} else {
 					logger.debug("User does not exist. Validating data...");
 					User user = null;
@@ -92,36 +93,34 @@ public class RegisterServlet extends HttpServlet {
 							logger.debug("User saved in database " + user);
 							// cria sessão e coloca usuário
 							HttpSession session = req.getSession(true);
-							session.setAttribute(ServletConstants.USER_KEY,
-									user);
+							session.setAttribute(ServletConstants.USER_KEY,user);
 
 							// direciona usuário para página inicial
-							dispatcher = context
-									.getRequestDispatcher(ServletConstants.REGISTERED_PAGE);
+							dispatcher = context.getRequestDispatcher(ServletConstants.REGISTERED_PAGE);
 						} catch (DatabaseDownException e1) {
-							erros.add(ServletConstants.DATABASE_ERROR);
+							errors.add(ServletConstants.DATABASE_ERROR);
 						} catch (SQLException e1) {
-							erros.add(ServletConstants.DATABASE_ERROR);
+							errors.add(ServletConstants.DATABASE_ERROR);
 						}
 					} else {
-						erros.add(ServletConstants.FIELDS_REQUIRED);
-						erros.add(ServletConstants.PASSWORD_FORMAT);
+						errors.add(ServletConstants.FIELDS_REQUIRED);
+						errors.add(ServletConstants.PASSWORD_FORMAT);
 					}
 				}
 			} catch (DatabaseDownException e) {
-				erros.add(ServletConstants.DATABASE_ERROR);
+				errors.add(ServletConstants.DATABASE_ERROR);
 			} catch (SQLException e) {
-				erros.add(ServletConstants.DATABASE_ERROR);
+				errors.add(ServletConstants.DATABASE_ERROR);
 			}
 		} else {
 			// segunda senha não bate com a primeira
-			erros.add(ServletConstants.PASSWORD_MISMATCH);
+			errors.add(ServletConstants.PASSWORD_MISMATCH);
 		}
 
-		if (!erros.isEmpty()) {
+		if (!errors.isEmpty()) {
 			// coloca erros no request para registrar.jsp processar e apresentar
 			// mensagem de erro
-			req.setAttribute(ServletConstants.ERRORS_KEY, erros);
+			req.setAttribute(ServletConstants.ERRORS_KEY, errors);
 			req.setAttribute(ServletConstants.USER_KEY, null);
 
 			// direciona usuário para página de registro novamente

@@ -130,6 +130,8 @@ public class ServletConstants {
 
 	public static final String REGISTER_PAGE = "/jsp/user/register.jsp";
 
+    public static final String REGISTRATION_CONFIRMATION_PAGE = "/jsp/user/registrationConfirmed.jsp";
+
 	public static final String REGISTERED_PAGE = "/jsp/user/registered.jsp";
 
 	public static final String UPDATE_PAGE = "/jsp/user/updateUser.jsp";

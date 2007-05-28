@@ -6,9 +6,12 @@
  */
 package net.indrix.arara.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import net.indrix.arara.vo.LightUser;
@@ -16,35 +19,32 @@ import net.indrix.arara.vo.User;
 
 public class UserDAO extends AbstractDAO {
 	public static final String ID_COLUMN = "id";
-
 	public static final String NAME_COLUMN = "name";
-
 	public static final String LOGIN_COLUMN = "login";
-
 	public static final String PASSWORD_COLUMN = "password";
-
 	public static final String EMAIL_COLUMN = "email";
-
 	public static final String LANGUAGE_COLUMN = "language";
-
 	public static final String EMAIL_ON_NEW_PHOTO_COLUMN = "emailOnNewPhoto";
-
 	public static final String EMAIL_ON_NEW_ID_PHOTO_COLUMN = "emailOnNewIdPhoto";
-
 	public static final String EMAIL_ON_NEW_SOUND_COLUMN = "emailOnNewSound";
-
 	public static final String ADD_PHOTO_COLUMN = "addPhoto";
-
 	public static final String ADD_SOUND_COLUMN = "addSound";
-
 	public static final String ADMIN_COLUMN = "admin";
-
-	public static final String INSERT = "INSERT INTO user (name, login, password, email, language, emailOnNewPhoto, emailOnNewIdPhoto, emailOnNewSound, addPhoto, addSound) "
-			+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public static final String ACTIVE_COLUMN = "active";
+    public static final String REGISTERED_ON_COLUMN = "registeredOn";
+    
+	public static final String INSERT = "INSERT INTO user (name, login, password, email, language, emailOnNewPhoto, emailOnNewIdPhoto, emailOnNewSound, addPhoto, addSound, registeredOn) "
+			+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 	public static final String UPDATE = "UPDATE user "
 			+ "set name = ?, password = ?, email = ?, language = ?, emailOnNewPhoto = ?, emailOnNewIdPhoto = ?, emailOnNewSound = ? "
 			+ "WHERE id = ?";
+
+    public static final String UPDATE_USER_CANCEL_EMAIL = "UPDATE user "
+        + "set emailOnNewPhoto = ?, emailOnNewIdPhoto = ?, emailOnNewSound = ? "
+        + "WHERE id = ?";
+
+    public static final String UPDATE_USER_ACTIVE = "UPDATE user set active = ?, registeredOn = ? WHERE id = ?";
 
 	private static final String SELECT_ALL_FOR_PHOTOS = "SELECT * FROM user where addPhoto = 1 order by name";
 
@@ -54,12 +54,17 @@ public class UserDAO extends AbstractDAO {
 
 	private static final String SELECT_BY_LOGIN = "SELECT * FROM user where login = ?";
 
-	private static final String SELECT_FOR_EMAIL_ON_NEW_PHOTO = "SELECT * FROM user where emailOnNewPhoto = 1";
+	private static final String SELECT_FOR_EMAIL_ON_NEW_PHOTO = "SELECT * FROM user where emailOnNewPhoto = 1 and active = 1";
 
-	private static final String SELECT_FOR_EMAIL_ON_NEW_ID_PHOTO = "SELECT * FROM user where emailOnNewIdPhoto = 1";
+	private static final String SELECT_FOR_EMAIL_ON_NEW_ID_PHOTO = "SELECT * FROM user where emailOnNewIdPhoto = 1 and active = 1";
 
-    private static final String SELECT_FOR_EMAIL_ON_NEW_SOUND = "SELECT * FROM user where emailOnNewSound = 1";
+    private static final String SELECT_FOR_EMAIL_ON_NEW_SOUND = "SELECT * FROM user where emailOnNewSound = 1 and active = 1";
 
+    /**
+     * Temp code
+     */
+    private static final String SELECT_INACTIVE_USERS = "SELECT * from user WHERE active = false";
+    
 	/**
 	 * This method retrieves all users from database
 	 * 
@@ -138,6 +143,15 @@ public class UserDAO extends AbstractDAO {
 		return list;
 	}
 
+    /**
+     * Temp code!!!
+     */
+    public List<User> retrieveInactiveUsers() throws DatabaseDownException, SQLException {
+        logger.debug("UserDAO.retrieveInactiveUsers: entering method...");
+        List<User> list = super.retrieveObjects(SELECT_INACTIVE_USERS, false);
+        return list;
+    }
+
 	/**
 	 * This method retrieves a <code>User</code> object based on its id
 	 * 
@@ -175,6 +189,76 @@ public class UserDAO extends AbstractDAO {
 		return user;
 	}
 
+    /**
+     * This method updates a user so that he/she will not receive emails any more.
+     * 
+     * @param id The user id
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    public void cancelEmail(int id)
+            throws DatabaseDownException, SQLException {
+
+        Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            stmt = conn.prepareStatement(UPDATE_USER_CANCEL_EMAIL);
+            stmt.setInt(1, 0);
+            stmt.setInt(2, 0);
+            stmt.setInt(3, 0);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("USERDAO.cancelEmail : could not update data");
+            logger.error("Error in SQL : " + UPDATE_USER_CANCEL_EMAIL, e);
+            logger.error(stmt.toString());
+            throw e;
+        } finally {
+            closeStatement(stmt);
+            closeResultSet(rs);
+            closeConnection(conn);
+        }
+    }
+
+    /**
+     * This method updates a user so that he/she will not receive emails any more.
+     * 
+     * @param id The user id
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    public void updateUserAccountStatus(int id, boolean status)
+            throws DatabaseDownException, SQLException {
+
+        Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        
+        try {
+            Timestamp stamp = getTimestamp(getSQLDate());
+
+            stmt = conn.prepareStatement(UPDATE_USER_ACTIVE);
+            stmt.setBoolean(1, status);
+            stmt.setTimestamp(2, stamp);
+            stmt.setInt(3, id);
+            
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("USERDAO.updateUserAccountStatus : could not update data");
+            logger.error("Error in SQL : " + UPDATE_USER_ACTIVE, e);
+            logger.error(stmt.toString());
+            throw e;
+        } finally {
+            closeStatement(stmt);
+            closeResultSet(rs);
+            closeConnection(conn);
+        }
+    }
+    
 	/**
 	 * This method creates a <code>User</code> object with the data from
 	 * database
@@ -201,6 +285,8 @@ public class UserDAO extends AbstractDAO {
 		user.setAddPhoto(rs.getInt(ADD_PHOTO_COLUMN) == 1 ? true : false);
 		user.setAddSound(rs.getInt(ADD_SOUND_COLUMN) == 1 ? true : false);
 		user.setAdmin(rs.getBoolean(ADMIN_COLUMN));
+        user.setActive(rs.getBoolean(ACTIVE_COLUMN));
+        user.setRegisteredOn(getDate(rs, REGISTERED_ON_COLUMN));
 		return user;
 	}
 
@@ -250,6 +336,12 @@ public class UserDAO extends AbstractDAO {
 		stmt.setInt(8, user.isEmailOnNewSound() ? 1 : 0);
 		stmt.setInt(9, 0);
 		stmt.setInt(10, 0);
+        
+        Timestamp stamp = getTimestamp(getSQLDate());
+        stmt.setTimestamp(11, stamp);        
+        
+        Date d = new Date(stamp.getTime());
+        user.setRegisteredOn(d);
 	}
 
 	/**

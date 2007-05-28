@@ -31,7 +31,7 @@ public class StatisticsDAO {
 
 	private static final String SELECT_NUM_SPECIES = "SELECT distinct specie_id FROM photo where specie_id > -1";
 
-	private static final String SELECT_NUM_USERS = "SELECT count(*) FROM user";
+	private static final String SELECT_NUM_USERS = "SELECT count(*) FROM user where active = 1";
 
 	/**
 	 * This method returns the amount of photos in database

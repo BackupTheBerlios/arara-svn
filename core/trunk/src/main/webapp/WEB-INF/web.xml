@@ -11,11 +11,13 @@
 		<param-value>Resources</param-value>
 	</context-param>
 
+<!--
 	<listener>
 		<listener-class>
 			net.indrix.arara.servlets.SessionControl
 		</listener-class>
 	</listener>
+-->	
 	<servlet>
 		<servlet-name>log4j-init</servlet-name>
 		<servlet-class>
@@ -56,6 +58,14 @@
 		<servlet-name>register</servlet-name>
 		<servlet-class>
 			net.indrix.arara.servlets.user.RegisterServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>confirmRegistration</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.user.RegistrationConfirmationServlet
 		</servlet-class>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
@@ -382,12 +392,44 @@
 		<load-on-startup>2</load-on-startup>
 	</servlet>
 
-
-	<!-- Servlet for sending email -->
+	<!-- Servlet for SENDING EMAIL -->
 	<servlet>
 		<servlet-name>sendEmail</servlet-name>
 		<servlet-class>
 			net.indrix.arara.servlets.email.SendEmailServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<!-- Servlet for BIRD LISTS -->
+	<servlet>
+		<servlet-name>initCreateBirdList</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.birdlist.InitBirdListCreationServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>initEditBirdList</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.birdlist.InitEditBirdListServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>createBirdList</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.birdlist.CreateBirdListServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>showUsersBirdLists</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.birdlist.ShowUserBirdListsServlet
 		</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -397,6 +439,14 @@
 		<servlet-name>reloadProperties</servlet-name>
 		<servlet-class>
 			net.indrix.arara.servlets.admin.ReloadPropertiesFile
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>retrieveImage</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.utils.RetrieveImage
 		</servlet-class>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
@@ -448,6 +498,11 @@
 	<servlet-mapping>
 		<servlet-name>register</servlet-name>
 		<url-pattern>/servlet/register</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>confirmRegistration</servlet-name>
+		<url-pattern>/servlet/confirmRegistration</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
@@ -656,6 +711,10 @@
 		<url-pattern>/servlet/reloadPropertiesFile</url-pattern>
 	</servlet-mapping>
 
+	<servlet-mapping>
+		<servlet-name>retrieveImage</servlet-name>
+		<url-pattern>/servlet/retrieveImage</url-pattern>
+	</servlet-mapping>
 <!--
 	<servlet-mapping>
 		<servlet-name>writePhotos</servlet-name>
@@ -673,10 +732,31 @@
 		<url-pattern>/servlet/cityFind</url-pattern>
 	</servlet-mapping>
 
-	<!-- Servlet for sending email -->
+	<!-- Servlet for SENDING EMAIL -->
 	<servlet-mapping>
 		<servlet-name>sendEmail</servlet-name>
 		<url-pattern>/servlet/sendEmail</url-pattern>
+	</servlet-mapping>
+
+	<!-- Servlet for BIRD LIST -->
+	<servlet-mapping>
+		<servlet-name>initCreateBirdList</servlet-name>
+		<url-pattern>/servlet/initCreateBirdList</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>initEditBirdList</servlet-name>
+		<url-pattern>/servlet/initEditBirdList</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>createBirdList</servlet-name>
+		<url-pattern>/servlet/createBirdList</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>showUsersBirdLists</servlet-name>
+		<url-pattern>/servlet/showUsersBirdLists</url-pattern>
 	</servlet-mapping>
 
 	<!-- The Usual Welcome File List -->

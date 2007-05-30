@@ -6,6 +6,7 @@
  */
 package net.indrix.arara.model;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,7 +27,6 @@ import net.indrix.arara.dao.PhotoIdentificationDAO;
 import net.indrix.arara.dao.SpecieDAO;
 import net.indrix.arara.model.exceptions.PhotoAlreadyIdentifiedException;
 import net.indrix.arara.model.file.PhotoFileManager;
-import net.indrix.arara.model.file.SoundFileManager;
 import net.indrix.arara.tools.email.MailClass;
 import net.indrix.arara.tools.email.MessageComposer;
 import net.indrix.arara.tools.email.MessageFormatException;
@@ -34,10 +34,8 @@ import net.indrix.arara.tools.email.NoRecipientException;
 import net.indrix.arara.tools.email.WrongNumberOfValuesException;
 import net.indrix.arara.utils.PropertiesManager;
 import net.indrix.arara.vo.Comment;
-import net.indrix.arara.vo.ImageFile;
 import net.indrix.arara.vo.Photo;
 import net.indrix.arara.vo.PhotoIdentification;
-import net.indrix.arara.vo.Sound;
 import net.indrix.arara.vo.Specie;
 import net.indrix.arara.vo.User;
 
@@ -62,6 +60,7 @@ public class PhotoModel extends MediaModel {
 
     SoundModel model = new SoundModel();
 
+
     /**
      * This method updates a photo into database
      * 
@@ -72,32 +71,51 @@ public class PhotoModel extends MediaModel {
      *             If the database is down
      * @throws SQLException
      *             If some SQL Exception occurs
+     * @throws IOException 
+     * @throws IOException 
      */
-    public void update(Photo photo) throws DatabaseDownException, SQLException {
-        int oldId = photo.getId();
+    public void update(Photo photo) throws DatabaseDownException, SQLException, IOException {
+        logger.debug("Photo " + photo);
+
         // retrieve old photo, so that the current path can be retrieved and photo can be copied
         // in the file system
+        int oldId = photo.getId();
         Photo oldPhoto = retrieve(oldId);
-
-        logger.debug("Photo " + photo);
-        dao.update(photo);
-        SpecieDAO specieDao = new SpecieDAO();
-        logger.debug("Retrieving new specie object for id " + photo.getSpecie().getId());
-        Specie specie = specieDao.retrieve(photo.getSpecie().getId());
-        logger.debug("Specie retrieved " + specie);
-        photo.setSpecie(specie);
-        
-
         // retrieve current path for the photo
         String currentPath = oldPhoto.getRelativePath();
-        String currentPathForThumbnail = oldPhoto.getThumbnailRelativePath();
-        
+        String currentPathForThumbnail = oldPhoto.getThumbnailRelativePath();   
+
         // copy the photo from old path to the new one
         PhotoFileManager manager = new PhotoFileManager(photo);
-        manager.updatePhotoAndMoveInFileSystem(currentPath, currentPathForThumbnail);
+        try {
+            if (oldPhoto.getSpecie().getId() != photo.getSpecie().getId()){
+                // move from old location to new one
+                manager.updatePhotoAndMoveInFileSystem(currentPath, currentPathForThumbnail);                
+            }
+
+            // update photo into database
+            dao.update(photo);
+            SpecieDAO specieDao = new SpecieDAO();
+            
+            int specieId = photo.getSpecie().getId();
+            if (specieId != -1 || (oldPhoto.getSpecie().getId() != specieId)){
+                logger.debug("Retrieving new specie object for id " + specieId);
+                
+                Specie specie = specieDao.retrieve(photo.getSpecie().getId());
+                logger.debug("Specie retrieved " + specie);
+                photo.setSpecie(specie);                              
+            }
+        } catch (IOException e) {
+            logger.error("Could not perform copy operation. Update was not performed...");
+            throw e;
+        } catch (DatabaseDownException e) {
+            undoCopy(manager, currentPath, currentPathForThumbnail);
+        } catch (SQLException e) {
+            undoCopy(manager, currentPath, currentPathForThumbnail);
+        }
         updatePhotoLink(photo);
     }
-
+    
     /**
      * This method deletes a photo given by the photoId
      * 
@@ -118,7 +136,7 @@ public class PhotoModel extends MediaModel {
         manager.delete();       
 
         dao.delete(photoId);
-}
+    }
 
     /**
      * This method retrieves a photo given by the photoId
@@ -295,6 +313,7 @@ public class PhotoModel extends MediaModel {
      *             If some SQL Exception occurs
      * @throws PhotoAlreadyIdentifiedException
      *             If the photo has been identified already
+     * @throws  
      * 
      */
     public boolean identifyPhoto(PhotoIdentification identification,
@@ -327,21 +346,30 @@ public class PhotoModel extends MediaModel {
                 photo.setSpecie(identification.getSpecie());
                 photo.setAge(identification.getAge());
                 photo.setSex(identification.getSex());
-                logger.debug("Photo author has identified his/her photo "
-                        + photo);
-                logger.debug("Updating photo into database...");
-                dao.update(photo);
+                logger.debug("Photo author has identified his/her photo " + photo);
                 
                 // move the photo from old path to the new one
-                manager.updatePhotoAndMoveInFileSystem(currentPath, currentPathForThumbnail);
-                updatePhotoLink(photo);
-                
-                // send an email to everyone that identified the photo that the
-                // identification has
-                // finished
-                sendFinalEmailToIdentifiers(photoAuthor, identification, finishIdentification);
+                try {
+                    logger.info("Moving photo " + photo.getId() + " in file system...");
+                    manager.updatePhotoAndMoveInFileSystem(currentPath, currentPathForThumbnail);
 
-                finishedIdentification = true;
+                    logger.info("updating link of photo " + photo.getId() + " ...");
+                    updatePhotoLink(photo);
+
+                    logger.info("Updating photo " + photo.getId() + " into database...");
+                    dao.update(photo);
+
+                    // send an email to everyone that identified the photo that the
+                    // identification has
+                    // finished
+                    logger.info("Sending emails to identifiers about photo " + photo.getId() + "...");
+                    sendFinalEmailToIdentifiers(photoAuthor, identification, finishIdentification);
+
+                    finishedIdentification = true;
+                } catch (IOException e) {
+                    logger.error("Error in updating photo in file system...", e);
+                }
+                
             } else {
                 // send an email to everyone that identified the photo that the
                 // a new photo
@@ -368,10 +396,8 @@ public class PhotoModel extends MediaModel {
      * 
      * @return An ArrayList object with Comment objects
      * 
-     * @throws DatabaseDownException
-     *             If the database is down
-     * @throws SQLException
-     *             If some SQL Exception occurs
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
      */
     public List retrieveIdentificationsForPhoto(Photo photo)
             throws DatabaseDownException, SQLException {
@@ -414,15 +440,16 @@ public class PhotoModel extends MediaModel {
 
             // retrieve addresses to send photo
             CommentsDAO dao = new CommentsDAO();
-            List<User> l = dao.retrieveUsersWithCommentsForPhoto(photo.getId(),
-                    user.getId());
+            List<User> l = dao.retrieveUsersWithCommentsForPhoto(photo.getId(), user.getId());
             Iterator dIt = l.iterator();
             while (dIt.hasNext()) {
                 User u = (User) dIt.next();
                 logger.debug("User = " + u);
             }
 
-            if (!l.contains(photo.getUser())) {
+            User photoUser = photo.getUser(); 
+            if (photoUser != null && !l.contains(photoUser) && !photoUser.equals(user)) {
+                logger.debug("Adding user to list = " + photo.getUser());
                 l.add(photo.getUser());
             }
 
@@ -431,13 +458,11 @@ public class PhotoModel extends MediaModel {
                 User u = (User) it.next();
 
                 Locale locale = new Locale(u.getLanguage());
-                EmailResourceBundle bundle = (EmailResourceBundle) EmailResourceBundle
-                        .getInstance();
+                EmailResourceBundle bundle = (EmailResourceBundle) EmailResourceBundle.getInstance();
 
                 subject = bundle.getString("email.newComment.subject", locale);
                 body = bundle.getString("email.newComment.body", locale);
-                fromText = bundle
-                        .getString("email.newComment.fromText", locale);
+                fromText = bundle.getString("email.newComment.fromText", locale);
 
                 sender.setMessageTextBody(getMessage(u, body, c, photo));
                 sender.setSubject(subject);
@@ -736,5 +761,21 @@ public class PhotoModel extends MediaModel {
             e.printStackTrace();
         }
     }
+
+    /**
+     * This method undos a copy, meaning that it performs a new copy, from the target to the source
+     * @param manager The object to perform the copy
+     * @param currentPath 
+     * @param currentPathForThumbnail
+     */
+    private void undoCopy(PhotoFileManager manager, String currentPath, String currentPathForThumbnail) {
+        try {
+            manager.undoUpdatePhotoAndMoveInFileSystem(currentPath, currentPathForThumbnail);
+        } catch (IOException e) {
+            // this should never happen
+            logger.fatal("Could not undo the copy of files: " + currentPath);
+        }
+    }
+    
 
 }

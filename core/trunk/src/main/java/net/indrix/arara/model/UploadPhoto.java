@@ -53,6 +53,16 @@ public class UploadPhoto extends AbstractUpload {
      */
     private static final int wForSmallPhoto = setSmallWidth(PhotoUtil.getSmallWidth());
 
+    /**
+     * This method uploads a photo, meaning that it saves it into database, and stores it into 
+     * file system
+     * 
+     * @param photo The photo to be stored
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     * @throws ImageProcessingException If there is an error with the file
+     */
     public void uploadPhoto(Photo photo) throws DatabaseDownException,
             SQLException, ImageProcessingException {
 
@@ -83,9 +93,9 @@ public class UploadPhoto extends AbstractUpload {
                 photo.setThumbnailRelativePath(manager.getThumbnailRelativePath());
             } catch (FileNotFoundException e) {
                 // remove photo from database
+                logger.error("Photo " + photo.getId() + " could not be saved into file system.", e);
                 dao.delete(photo.getId());
                 throw new ImageProcessingException();
-                
             }
             
             // retrieve data from database, so all data will be loaded
@@ -109,6 +119,59 @@ public class UploadPhoto extends AbstractUpload {
         }
     }
 
+    /**
+     * This method uploads a photo for identification, meaning that it saves it into database, 
+     * and stores it into file system
+     * 
+     * @param photo The photo to be stored
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     * @throws ImageProcessingException If there is an error with the file
+     */
+    public void uploadPhotoForIdentification(Photo photo)
+            throws DatabaseDownException, SQLException,
+            ImageProcessingException {
+        logger
+                .debug("UploadPhoto.uploadPhotoForIdentification : entering method");
+        logger.debug("Calling createSmallPhoto with " + photo);
+        createSmallPhoto(photo);
+
+        if (isPhotoValid(photo)) {
+            PhotoDAO dao = new PhotoDAO();
+            logger.debug("Calling insert in PhotoIdentificationDAO object");
+            dao.insert(photo);
+
+            // retrieve data from database, so all data will be loaded
+            // SpecieDAO sDao = new SpecieDAO();
+            // Specie s = sDao.retrieve(photo.getSpecie().getId());
+            photo.setSpecie(new Specie());
+
+            // now write photos to file system
+            logger.debug("Writing photo and thumbnail in file system...");
+            PhotoFileManager manager = new PhotoFileManager(photo);
+            try {
+                manager.writeFile();
+                logger.debug("Photo has been written in file system...");
+                photo.setRelativePath(manager.getRelativePath());
+                photo.setThumbnailRelativePath(manager.getThumbnailRelativePath());
+            } catch (FileNotFoundException e) {
+                // remove photo from database
+                logger.error("Photo " + photo.getId() + " could not be saved into file system.", e);
+                dao.delete(photo.getId());
+                throw new ImageProcessingException();
+                
+            }
+           
+            // send email to users
+            logger.debug("Sending emails for identification...");
+            IdentificationPhotoEmailSender emailSender = new IdentificationPhotoEmailSender(photo);
+            emailSender.sendEmail();
+        } else {
+            throw new ImageProcessingException("Real image or thumbnail is wrong" + photo);
+        }
+    }
+    
     /**
      * This method verifies if the image was successfully uploaded, and that the
      * thumbnail was successfully created
@@ -146,7 +209,7 @@ public class UploadPhoto extends AbstractUpload {
      * 
      * @throws ImageProcessingException
      */
-    public static void createSmallPhoto(Photo photo)
+    protected static void createSmallPhoto(Photo photo)
             throws ImageProcessingException {
         String path = null;
         ImageFile realimage = photo.getRealImage();
@@ -243,50 +306,4 @@ public class UploadPhoto extends AbstractUpload {
         return bufferedImage;
     }
 
-    /**
-     * @param photo
-     */
-    public void uploadPhotoForIdentification(Photo photo)
-            throws DatabaseDownException, SQLException,
-            ImageProcessingException {
-        logger
-                .debug("UploadPhoto.uploadPhotoForIdentification : entering method");
-        logger.debug("Calling createSmallPhoto with " + photo);
-        createSmallPhoto(photo);
-
-        if (isPhotoValid(photo)) {
-            PhotoDAO dao = new PhotoDAO();
-            logger.debug("Calling insert in PhotoIdentificationDAO object");
-            dao.insert(photo);
-
-            // retrieve data from database, so all data will be loaded
-            // SpecieDAO sDao = new SpecieDAO();
-            // Specie s = sDao.retrieve(photo.getSpecie().getId());
-            photo.setSpecie(new Specie());
-
-            // now write photos to file system
-            logger.debug("Writing photo and thumbnail in file system...");
-            PhotoFileManager manager = new PhotoFileManager(photo);
-            try {
-                manager.writeFile();
-                logger.debug("Photo has been written in file system...");
-                photo.setRelativePath(manager.getRelativePath());
-                photo.setThumbnailRelativePath(manager.getThumbnailRelativePath());
-            } catch (FileNotFoundException e) {
-                // remove photo from database
-                dao.delete(photo.getId());
-                throw new ImageProcessingException();
-                
-            }
-           
-            // send email to users
-            logger.debug("Sending emails for identification...");
-            IdentificationPhotoEmailSender emailSender = new IdentificationPhotoEmailSender(
-                    photo);
-            emailSender.sendEmail();
-        } else {
-            throw new ImageProcessingException(
-                    "Real image or thumbnail is wrong" + photo);
-        }
-    }
 }

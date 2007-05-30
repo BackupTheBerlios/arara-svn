@@ -8,6 +8,8 @@ package net.indrix.arara.model;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -34,7 +36,15 @@ import org.apache.log4j.Logger;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class UserModel extends AbstractModel {
-	/**
+    /**
+     * Email da locaweb, que deve receber uma cópia do email de confirmação a ser enviado para o
+     * usuário.
+     * 
+     * Code commented because it was needed only for one message. Keeping code commented for history
+     */
+	//private static final String ABUSE_LOCAWEB_EMAIL = "abuse@locaweb.com.br";
+
+    /**
 	 * Logger object to be used by this class
 	 */
 	protected static Logger logger = Logger.getLogger("net.indrix.aves");
@@ -157,6 +167,18 @@ public class UserModel extends AbstractModel {
 		return exists;
 	}
 
+    /**
+     * This method updates a user so that he/she will not receive emails any more.
+     * 
+     * @param id The user id
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    public void cancelEmail(int id) throws DatabaseDownException, SQLException{
+        userDAO.cancelEmail(id);
+    }
+    
 	/**
 	 * This method retrieves an user from database, given the login
 	 * 
@@ -242,8 +264,7 @@ public class UserModel extends AbstractModel {
 	 */
 	public List retrieveForPhotoIdentificationEmail()
 			throws DatabaseDownException, SQLException, UserNotFoundException {
-		logger
-				.debug("UserModel.retrieveForPhotoIdentificationEmail : retrieving users to send email to");
+		logger.debug("UserModel.retrieveForPhotoIdentificationEmail : retrieving users to send email to");
 		List list = userDAO.retrieveForPhotoIdentificationEmail();
 		if ((list == null) || (list.isEmpty())) {
 			logger.debug("List with users is EMPTY !");
@@ -251,6 +272,17 @@ public class UserModel extends AbstractModel {
 		return list;
 	}
 
+    /**
+     * Temp code!!!
+     */
+    public List<User> retrieveInactiveUsers() throws DatabaseDownException, SQLException {
+        List<User> list = userDAO.retrieveInactiveUsers();
+        if ((list == null) || (list.isEmpty())) {
+            logger.debug("List with users is EMPTY !");
+        }
+        return list;
+    }
+    
 	/**
 	 * This method inserts a new User to the database
 	 * 
@@ -265,11 +297,11 @@ public class UserModel extends AbstractModel {
 	public void insert(User user) throws DatabaseDownException, SQLException {
 		encryptUserPassword(user);
 		userDAO.insert(user);
-
-		sendEmailToWebmaster(user);
+		
+        sendConfirmationEmailToUser(user);
 	}
 
-	/**
+    /**
 	 * This method updates a User to the database
 	 * 
 	 * @param user
@@ -292,12 +324,9 @@ public class UserModel extends AbstractModel {
 	 * 
 	 * @return A user object
 	 * 
-	 * @throws DatabaseDownException
-	 *             If the database is down
-	 * @throws SQLException
-	 *             If some SQL Exception occurs
-	 * @throws UserNotFoundException
-	 *             If the user is not in database
+	 * @throws DatabaseDownException If the database is down
+	 * @throws SQLException If some SQL Exception occurs
+	 * @throws UserNotFoundException If the user is not in database
 	 */
 	public User sendPassword(String login) throws DatabaseDownException,
 			SQLException, UserNotFoundException {
@@ -314,19 +343,51 @@ public class UserModel extends AbstractModel {
 	}
 
 	/**
+     * This method verifies whether a user confirmation is valid or not.
+     *  
+     * @param key The key sent from user, from the link he clicked
+     * 
+     * @return The user object, if the confirmation is valid.
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     * @throws UserNotFoundException If the user is not in database
+	 */
+    public User confirmRegistration(String key) throws DatabaseDownException, SQLException, UserNotFoundException {
+        String login = getLoginFromKey(key);
+        User user = null;
+        user = retrieve(login);
+        if (user != null){
+            String userKey = generateKey(user);
+            
+            if (key.equals(userKey)){
+                logger.debug("UserModel.confirmRegistration: user VALIDATED...");
+                
+                userDAO.updateUserAccountStatus(user.getId(), true);
+                
+                sendEmailToWebmaster(user);
+            } else {
+                logger.debug("UserModel.confirmRegistration: user is not valid...");
+                throw new UserNotFoundException();
+            }
+        }
+        
+       return user;
+    }
+    
+	/**
 	 * This method notifies the webmaster about a new user
 	 * 
 	 * @param user
 	 *            The new user
 	 */
-	private void sendEmailToWebmaster(User user) {
+	private void sendEmailToWebmaster(User user) {      
 		String server = PropertiesManager.getProperty("email.server");
-		String fromAdd = PropertiesManager.getProperty("email.fromAdd");
+		String fromAdd = PropertiesManager.getProperty("email.from");
 		String subject = PropertiesManager.getProperty("email.newUser.subject");
 		String body = PropertiesManager.getProperty("email.newUser.body");
 		String toAdd = PropertiesManager.getProperty("email.newUser.toAdd");
-		String fromText = PropertiesManager
-				.getProperty("email.newUser.fromText");
+		String fromText = PropertiesManager.getProperty("email.newUser.fromText");
 		try {
 
 			// send password to user
@@ -364,6 +425,58 @@ public class UserModel extends AbstractModel {
 		}
 	}
 
+    private void sendConfirmationEmailToUser(User user) {
+        logger.debug("UserModel.sendConfirmationEmailToUser: enviando email para usuário...");
+        
+        String link = "http://www.aves.brasil.nom.br/servlet/confirmRegistration?id=" + generateKey(user);
+        
+        EmailResourceBundle bundle = (EmailResourceBundle) EmailResourceBundle.getInstance();
+        Locale l = new Locale(user.getLanguage());
+        
+        String server = PropertiesManager.getProperty("email.server");
+        String fromAdd = PropertiesManager.getProperty("email.from");
+        String fromText = bundle.getString("email.general.fromText", l);
+
+        String subject = bundle.getString("email.newUserConfirmation.subject", l);
+        String hello = bundle.getString("email.newUserConfirmation.hello", l);
+        String msg = bundle.getString("email.newUserConfirmation.message", l);
+        String linkText = bundle.getString("email.newUserConfirmation.link", l);
+        String thanks = bundle.getString("email.newUserConfirmation.thanks", l);
+        try {
+            String body = hello + msg + linkText + thanks;
+            // send password to user
+            logger.debug("Enviando email de confirmação para usuário, com os dados:");
+            logger.debug(server + " | " + fromAdd + " | " + subject);
+            logger.debug(getConfirmationMessage(body, user, link));
+
+            MailClass sender = new MailClass(server);
+            logger.debug("Setting to...");
+            sender.setToAddress(user.getEmail());
+
+            // Code commented because it was needed only for one message. Keeping code commented for history
+            //sender.setBCCAddress(ABUSE_LOCAWEB_EMAIL);
+            logger.debug("Setting subject...");
+            sender.setSubject(subject);
+            logger.debug("Setting message...");
+            sender.setMessageTextBody(getConfirmationMessage(body, user, link));
+            logger.debug("Setting from...");
+            sender.setFromAddress(fromAdd, fromText);
+            logger.debug("Sending message...");
+            sender.sendMessage(true);
+            // true indicates to emailObject to send the message right now
+        } catch (MessageFormatException e) {
+            logger.error("exception -> MessageFormatException in sendEmail " + e);
+        } catch (AddressException e) {
+            logger.error("exception -> AddressException in sendEmail " + e);
+        } catch (NoRecipientException e) {
+            logger.error("exception -> NoRecipientException in sendEmail " + e);
+        } catch (SendFailedException e) {
+            logger.error("exception -> SendFailedException in sendEmail " + e);
+        } catch (Exception e) {
+            logger.error("exception -> in sendEmail " + e);
+        }
+    }
+    
 	/**
 	 * This method sends the password to the given user
 	 * 
@@ -439,7 +552,74 @@ public class UserModel extends AbstractModel {
 		return bodyFormatted;
 	}
 
-	/**
+    /**
+     * @param body
+     * @return
+     */
+    private String getConfirmationMessage(String body, User user, String link) {
+        /*
+        email.newUserConfirmation.hello=Olá _$$$_!
+        email.newUserConfirmation.message=Foi efetuado o cadastro no site Aves do Brasil com seu email. 
+        email.newUserConfirmation.link=Para confirmar o registro, clique <a href="http://www.aves.brasil.nom.br/servlets/confirmUser?id=_$$$_">aqui</a>.
+        email.newUserConfirmation.thanks=\n\nObrigado pelo seu interesse no site Aves do Brasil.
+        */
+        
+        String bodyFormatted = "";
+        ArrayList <String>list = new ArrayList<String>();
+        String name = user.getName();
+        list.add(name);
+        list.add(link);
+
+        try {
+            bodyFormatted = MessageComposer.formatMessage(body, list);
+        } catch (WrongNumberOfValuesException e) {
+            logger.error("UserModel.getMessage : Exception", e);
+        }
+        return bodyFormatted;
+    }
+
+    /**
+     * This method generates the key to be appended to the email sent to user
+     * Algorithm is:
+     * (33 + user.id + year)!(month+day)$-(77+user.id)$=user.login
+     * @param user The user data
+     * 
+     * @return a key that will be sent do user inside the email body, as link
+     */
+	private String generateKey(User user) {
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(user.getRegisteredOn());
+        
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        
+        String key = (33 + user.getId() + year) + "!" + (month + day) + "$-" + (77+user.getId()) + "$=" + user.getLogin();
+        logger.debug("UserModel.generateKey: key generated: " + key);
+        return key;
+    }
+
+    /**
+     * This method retrieves the user login from the key 
+     * Algorithm for key is:
+     * (33 + user.id + year)!(month+day)$-(77+user.id)$=user.login
+     * @param user The user data
+     * 
+     * @return a key that will be sent do user inside the email body, as link
+     */
+    private String getLoginFromKey(String key) {
+        String login = "";
+        int index = key.indexOf("$=");
+        if (index > 0){
+            index += 2;
+            
+            login = key.substring(index);
+        } 
+        logger.debug("UserModel.getIdFromKey: login retrieved: " + login);
+        return login;
+    }
+       
+    /**
 	 * @param body
 	 * @return
 	 */

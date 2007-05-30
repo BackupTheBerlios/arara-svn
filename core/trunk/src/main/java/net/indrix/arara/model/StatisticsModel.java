@@ -40,7 +40,6 @@ public class StatisticsModel {
 			SQLException {
 		Statistics s = null;
 
-		logger.debug("StatisticsModel.retrieveStatistics: creating DAO");
 		StatisticsDAO dao = new StatisticsDAO();
 
 		// retrieve number of photos

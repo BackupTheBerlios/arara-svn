@@ -198,7 +198,6 @@ public class CommentsDAO extends AbstractDAO {
 		user.setLogin(rs.getString(UserDAO.LOGIN_COLUMN));
 		user.setEmail(rs.getString(UserDAO.EMAIL_COLUMN));
 		user.setLanguage(rs.getString(UserDAO.LANGUAGE_COLUMN));
-		logger.debug("CommentsDAO.createUserObject: user created: " + user);
 		return user;
 	}
 
@@ -230,7 +229,6 @@ public class CommentsDAO extends AbstractDAO {
 		stmt.setInt(1, comment.getUser().getId());
 		stmt.setInt(2, comment.getPhoto().getId());
 		stmt.setString(3, comment.getComment());
-		logger.debug("Comment from comment:" + comment.getComment());
 		stmt.setTimestamp(4, getTimestamp(comment.getDate()));
 
 	}

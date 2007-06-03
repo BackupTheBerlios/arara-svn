@@ -97,7 +97,7 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
                 || !ServletConstants.BEGIN.equals(action)) {
             List list = null;
             PhotoPaginationController controller = (PhotoPaginationController) getPaginationController(
-                    session, false, getPaginationConstant());
+                    session, false, getPaginationConstant(), action);
             controller.setId(id);
             controller.setText(textToSearch);           
             try {
@@ -176,13 +176,15 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
     protected abstract int getPaginationConstant();
 
     protected PaginationController getPaginationController(HttpSession session,
-            boolean ident, int target) {
+            boolean ident, int target, String action) {
 
         // the key is the key string plus the target
-        String key = ServletConstants.PHOTO_PAGINATION_CONTROLLER_KEY + target + ident;
+        String key = ServletConstants.PHOTO_PAGINATION_CONTROLLER_KEY;
         logger.debug("Retrieving controller with key " + key);
-        PaginationController c = (PaginationController) session
-                .getAttribute(key);
+        PaginationController c = null;
+        if (!ServletConstants.BEGIN.equals(action)){
+            c = (PaginationController) session.getAttribute(key);
+        }
         if (c == null) {
             switch (target) {
             case PAGINATION_FOR_ALL_PHOTOS:
@@ -209,8 +211,7 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
             logger.debug("PaginationController retrieved from session");
         }
         session.setAttribute(key, c);
-        session.setAttribute(ServletConstants.PHOTO_PAGINATION_CONTROLLER_KEY,
-                c);
+        session.setAttribute(ServletConstants.PHOTO_PAGINATION_CONTROLLER_KEY, c);
         return c;
     }
 }

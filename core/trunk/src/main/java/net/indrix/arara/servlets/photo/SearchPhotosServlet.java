@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
+@SuppressWarnings("serial")
 public class SearchPhotosServlet extends AbstractSearchPhotosServlet {
 	private static Logger logger = Logger.getLogger("net.indrix.aves");
 
@@ -56,11 +57,15 @@ public class SearchPhotosServlet extends AbstractSearchPhotosServlet {
         if (nextPage == null){
             nextPage = ServletConstants.FRAME_PAGE;
         }
+
+        if (action == null || action.equals("")) {
+            action = ServletConstants.BEGIN;
+        }
         
 		boolean identification = new Boolean(identificationStr).booleanValue();
 
 		logger.debug("Retrieving controller ...");
-		PaginationController controller = getPaginationController(session, identification, getPaginationConstant());
+		PaginationController controller = getPaginationController(session, identification, getPaginationConstant(), action);
 		List list = null;
 		if (identification) {
 			logger.debug("Retrieving photos for identification...");

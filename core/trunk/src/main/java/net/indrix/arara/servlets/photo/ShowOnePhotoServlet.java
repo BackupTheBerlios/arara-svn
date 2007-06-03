@@ -33,6 +33,7 @@ import org.apache.log4j.Logger;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
+@SuppressWarnings("serial")
 public class ShowOnePhotoServlet extends HttpServlet {
     static Logger logger = Logger.getLogger("net.indrix.aves");
 
@@ -47,7 +48,7 @@ public class ShowOnePhotoServlet extends HttpServlet {
         String photoId = req.getParameter("photoId");
         String identificationStr = req.getParameter(ServletConstants.IDENTIFICATION_KEY);
         String nextPage = req.getParameter(ServletConstants.NEXT_PAGE_KEY);
-
+        String action = req.getParameter(ServletConstants.ACTION);       
         if (nextPage == null){
             nextPage = ServletConstants.FRAME_PAGE;
         }
@@ -68,9 +69,21 @@ public class ShowOnePhotoServlet extends HttpServlet {
             int id = Integer.parseInt(photoId);
             boolean found = false;
             Photo photo = null;
+            Photo previousPhoto = null;
+            int count = 0;
             while (it.hasNext() && (!found)) {
                 photo = (Photo) it.next();
+                count++;
                 if (photo.getId() == id) {
+                    if (ServletConstants.NEXT.equals(action) && it.hasNext()){
+                        photo = (Photo) it.next();
+                        count++;
+                    } else {
+                        if (ServletConstants.PREVIOUS.equals(action) && previousPhoto != null){
+                            photo = previousPhoto;
+                            count--;
+                        }
+                    }
                     logger.debug("Photo found !!!! ");
                     found = true;
                     PhotoModel model = new PhotoModel();
@@ -86,6 +99,15 @@ public class ShowOnePhotoServlet extends HttpServlet {
                         errors.add(ServletConstants.DATABASE_ERROR);
                     }
                 }
+                previousPhoto = photo;
+            }
+            if (count > 1){
+                // there are previous photos
+                req.setAttribute("hasPrevious", true);
+            }
+            if (count < list.size()){
+                // there are more photos
+                req.setAttribute("hasNext", true);                
             }
             if (!found) {
                 photo = getPhotoFromDatabase(errors, photoId);
@@ -104,7 +126,7 @@ public class ShowOnePhotoServlet extends HttpServlet {
 
         req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);
         req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
-        
+        req.setAttribute(ServletConstants.SERVLET_TO_CALL_KEY, "/servlet/showOnePhoto");
 
         dispatcher = context.getRequestDispatcher(nextPage);
         logger.debug("Dispatching to " + nextPage);
@@ -112,6 +134,14 @@ public class ShowOnePhotoServlet extends HttpServlet {
 
     }
 
+    /**
+     * This method retrieves the photo given by the photoId parameter, from the database.
+     * 
+     * @param errors List that keeps errors
+     * @param photoId THe id of the photo to be retrieved
+     * 
+     * @return The <code>Photo</code> object
+     */
     private Photo getPhotoFromDatabase(List<String> errors, String photoId) {
         // retrieve from database
         PhotoModel model = new PhotoModel();

@@ -33,6 +33,7 @@ import org.apache.log4j.Logger;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
+@SuppressWarnings("serial")
 public class CommentPhotoServlet extends HttpServlet {
 	/**
 	 * Logger object
@@ -79,6 +80,7 @@ public class CommentPhotoServlet extends HttpServlet {
 			logger.debug("Comment: " + comment);
 			if (validateData(comment)) {
 				// retrieve current photo
+                comment = formatComment(comment);
 				Photo photo = (Photo) session.getAttribute(ServletConstants.CURRENT_PHOTO);
 				if (photo != null) {
 					PhotoModel model = new PhotoModel();
@@ -130,7 +132,38 @@ public class CommentPhotoServlet extends HttpServlet {
 
 	}
 
-	/**
+    /**
+     * This method formats the comment, breaking lines bigger than 80 characters...
+     * 
+     * @param comment THe comment to be formatted.
+     * 
+     * @return THe formatted comment
+     */
+	private String formatComment(String comment) {
+        String newComment = "";
+        if (comment.length() > 81){
+            boolean finished = false;
+            while (!finished){
+                newComment = newComment + comment.substring(0, 80);
+                comment = comment.substring(81);
+                int index = comment.indexOf(" ");
+                if (index > 0){
+                    newComment = newComment + comment.substring(0, index - 1) + "\n" ;
+                    comment = comment.substring(index+1);
+                    if (comment.length() < 81){
+                        finished = true;
+                    }
+                } else {
+                    finished = true;
+                }
+            }
+        } else {
+            newComment = comment;
+        }
+        return newComment;
+    }
+
+    /**
 	 * This method retrieves the comments for a given photo
 	 * 
 	 * @param model

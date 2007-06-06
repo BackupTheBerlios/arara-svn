@@ -259,13 +259,6 @@ public abstract class PaginationController {
 	}
 
 	/**
-	 * @param list
-	 */
-	public void setListOfData(List list) {
-		listOfData = list;
-	}
-
-	/**
 	 * This method returns true if the list is already set, false otherwise
 	 * 
 	 * @return true if the list is already set, false otherwise

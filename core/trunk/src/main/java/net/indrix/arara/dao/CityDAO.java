@@ -155,13 +155,11 @@ public class CityDAO {
 	 *             If some SQL Exception occurs
 	 */
 	public City retrieve(int id) throws DatabaseDownException, SQLException {
-		logger.debug("CityDAO.retrieve : entering method...");
 		Connection conn = DatabaseManager.getConnection();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		City city = null;
 		try {
-			logger.debug("CityDAO.retrieve : running SQL " + SELECT_BY_ID);
 			stmt = conn.prepareStatement(SELECT_BY_ID);
 			stmt.setInt(1, id);
 			rs = stmt.executeQuery();
@@ -186,7 +184,6 @@ public class CityDAO {
 				throw new DatabaseDownException();
 			}
 		}
-		logger.debug("CityDAO.retrieve : finishing method...");
 		return city;
 	}
 

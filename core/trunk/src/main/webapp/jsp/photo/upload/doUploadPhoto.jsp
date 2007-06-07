@@ -8,7 +8,7 @@
     } 
     
     function stateSelected() { 
-       document.uploadForm.action = "<c:url value="/servlet/retrieveCitiesForState?toPage=/jsp/photo/upload/uploadPhoto.jsp&data=PHOTO&action=UPLOAD"/>"; 
+       document.uploadForm.action = "<c:url value="/servlet/retrieveCitiesForState?nextPage=/jsp/photo/upload/uploadPhoto.jsp&data=PHOTO&action=UPLOAD"/>"; 
        document.uploadForm.submit(); 
     }    
 </script> 

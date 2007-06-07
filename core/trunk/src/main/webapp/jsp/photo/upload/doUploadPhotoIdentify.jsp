@@ -3,7 +3,7 @@
 
 <SCRIPT language="JavaScript"> 
 	function stateSelected() { 
-       document.uploadForm.action = "<c:url value="/servlet/retrieveCitiesForState?toPage=/jsp/photo/upload/uploadPhotoIdentify.jsp&data=PHOTO&action=UPLOAD"/>"; 
+       document.uploadForm.action = "<c:url value="/servlet/retrieveCitiesForState?nextPage=/jsp/photo/upload/uploadPhotoIdentify.jsp&data=PHOTO&action=UPLOAD"/>"; 
        document.uploadForm.submit(); 
     } 
 </script>

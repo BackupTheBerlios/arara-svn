@@ -70,7 +70,7 @@ table.comBordaSimples tr {
 						</c:if> 
 						</td>
 		        		<td width="${w+10}" colspan="1" rowspan="4" align="left">
-							<a href="<c:url value="/servlet/showOnePhoto?nextPage=/frame.jsp&pageToShow=/jsp/photo/search/doShowOnePhoto.jsp&photoId=${photo.id}&identification=${identification}"/>">				
+							<a href="<c:url value="/servlet/showOnePhoto?action=SHOW&nextPage=/frame.jsp&pageToShow=/jsp/photo/search/doShowOnePhoto.jsp&photoId=${photo.id}&identification=${identification}"/>">				
 							    <!-- The linkKey below is set in the InitServlet class -->
 								<img src="<c:url value="${linkKey}${photo.thumbnailRelativePathAsLink}"/>"
 									width="${f:thumbnailWidth(w, photo.smallImage.width, photo.smallImage.height)}"
@@ -218,9 +218,11 @@ table.comBordaSimples tr {
 	</script>
   </td>
 </tr>
+<c:if test="${!empty listOfPhotos}">
 <tr>
   <td valign="center">
   	<c:import url="/jsp/photo/search/pagination.jsp" />
   </td>
 </tr>
+</c:if>				
 </table>

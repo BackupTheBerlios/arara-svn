@@ -7,7 +7,7 @@
     } 
 
     function stateSelected() { 
-       document.uploadForm.action = "<c:url value="/servlet/retrieveCitiesForState?toPage=/jsp/sound/upload/uploadSound.jsp&data=SOUND&action=UPLOAD"/>"; 
+       document.uploadForm.action = "<c:url value="/servlet/retrieveCitiesForState?nextPage=/jsp/sound/upload/uploadSound.jsp&data=SOUND&action=UPLOAD"/>"; 
        document.uploadForm.submit(); 
     } 
 </script>

@@ -94,7 +94,7 @@
 									<a href="<c:url value="/jsp/sound/delete/deleteSound.jsp?soundId=${sound.id}"/>"> 
 										<font size="1" face="Verdana"> 
 											<fmt:message key="button.delete.sound.tooltip" var="deleteToolTip"/>
-											<img hspace="3" title="${deleteToolTip}" src="<c:url value="/jsp/images/delete.gif"/>" width="20" height="20"> 
+											<img hspace="3" title="${deleteToolTip}" src="<c:url value="/jsp/images/delete.gif"/>" width="20" height="20" border="0"> 
 										</font>
 									</a>
 								</c:if>
@@ -116,5 +116,7 @@
 
 		</td>
 	</tr>
-	<c:import url="/jsp/sound/display/pagination.jsp" />
+	<c:if test="${!empty listOfSounds}">
+		<c:import url="/jsp/sound/display/pagination.jsp" />
+	</c:if>				
 </table>

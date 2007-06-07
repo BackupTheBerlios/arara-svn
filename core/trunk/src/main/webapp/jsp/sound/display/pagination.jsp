@@ -2,14 +2,18 @@
 <%@ taglib uri="/fmt" prefix="fmt"%>
 <%@ page import="net.indrix.arara.servlets.pagination.*"%>
 
-<font face="Verdana" color="#ffffff" size="-1">
-<tr>
-	<td align="center">
-		[<fmt:message	key="pagination.page"/> ${paginationBean.currentPage} <fmt:message key="pagination.page.of"/> ${paginationBean.numberOfPages}]
 		<% 
 		PaginationController p = (PaginationController)session.getAttribute("soundPaginationController");
         boolean previous = false;
         boolean next = false;
+		%>
+<font face="Verdana" color="#ffffff" size="-1">
+<tr>
+	<td align="center">
+	<table width="100%">
+	<tr>
+	<td width="25%"  align="right">
+        <% 
         if ((p != null) && (p.hasPrevious())){
      	%>        
 			<a href="<c:url value="${servletToCall}?action=FIRST"/>">
@@ -31,6 +35,11 @@
 		<%
 		}
        	%>
+	</td>
+	<td width="50%" align="center">
+		[<fmt:message	key="pagination.page"/> ${paginationBean.currentPage} <fmt:message key="pagination.page.of"/> ${paginationBean.numberOfPages}]&nbsp;&nbsp;&nbsp;&nbsp;
+	</td>
+	<td width="25%"  align="left">
        	<% 
         if ((p != null) && (p.hasNext())){
              if (previous) {
@@ -56,6 +65,9 @@
 		<%
 	   	}
        	%>
+	</td>
+	</tr>
+	</table>
 	</td>
 </tr>
 </font>

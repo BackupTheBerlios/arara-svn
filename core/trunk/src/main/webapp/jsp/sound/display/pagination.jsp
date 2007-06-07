@@ -18,7 +18,7 @@
      	%>        
 			<a href="<c:url value="${servletToCall}?action=FIRST"/>">
 		       	<fmt:message key="pagination.first" var="paginationFirst"/>
-		        <b><img border="0" align="middle" title="${paginationFirst}" src="<c:url value="/images/navigate_left2.png"/>" width="24" height="24"></b>
+		        <b><img border="0" align="middle" title="${paginationFirst}" src="<c:url value="/images/navigate_left2.gif"/>" width="24" height="24"></b>
 			</a>
 	        &nbsp;&nbsp;&nbsp;&nbsp; 
 	    <%
@@ -30,7 +30,7 @@
        	%> 
 	       	<a href="<c:url value="${servletToCall}?action=PREVIOUS"/>">
 	       		<fmt:message key="pagination.previous" var="paginationPrevious"/>
-	       		<b><img border="0" align="middle" title="${paginationPrevious}" src="<c:url value="/images/navigate_left.png"/>" width="24" height="24"></b>
+	       		<b><img border="0" align="middle" title="${paginationPrevious}" src="<c:url value="/images/navigate_left.gif"/>" width="24" height="24"></b>
 	       	</a> 
 		<%
 		}
@@ -50,7 +50,7 @@
        	%> 
 	       	<a href="<c:url value="${servletToCall}?action=NEXT"/>">
 	       		<fmt:message key="pagination.next" var="paginationNext"/>
-	        	<b><img border="0" align="middle" title="${paginationNext}" src="<c:url value="/images/navigate_right.png"/>" width="24" height="24"></b></a>
+	        	<b><img border="0" align="middle" title="${paginationNext}" src="<c:url value="/images/navigate_right.gif"/>" width="24" height="24"></b></a>
 			&nbsp;&nbsp;&nbsp;&nbsp; 
 		<%
 	   	}
@@ -60,7 +60,7 @@
 		%> 
 	       	<a href="<c:url value="${servletToCall}?action=LAST"/>">
 	       		<fmt:message key="pagination.last" var="paginationLast"/>
-				<b><img border="0" align="middle" title="${paginationLast}" src="<c:url value="/images/navigate_right2.png"/>" width="24" height="24"></b>	       		
+				<b><img border="0" align="middle" title="${paginationLast}" src="<c:url value="/images/navigate_right2.gif"/>" width="24" height="24"></b>	       		
 	       	</a> 
 		<%
 	   	}

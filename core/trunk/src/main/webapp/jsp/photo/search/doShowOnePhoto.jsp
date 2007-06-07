@@ -28,7 +28,7 @@
 		        <c:if test="${hasPrevious}">
 			        <a href="<c:url value="${servletToCall}?identification=${identification}&action=PREVIOUS&id=${id}&nextPage=${nextPage}&photoId=${currentPhoto.id}&pageToShow=${pageToShow}"/>">
 			        	<fmt:message key="pagination.previous" var="paginagion.previous"/>
-			        	<b><img border="0" align="middle" title="${paginagion.previous}" src="<c:url value="/images/navigate_left.png"/>" width="24" height="24"></b>
+			        	<b><img border="0" align="middle" title="${paginagion.previous}" src="<c:url value="/images/navigate_left.png"/>" width="48" height="48"></b>
 			        </a> 
 			    </c:if>
 				&nbsp;&nbsp;&nbsp;&nbsp; 					
@@ -39,7 +39,7 @@
 		        <c:if test="${hasNext}">
 					<a href="<c:url value="${servletToCall}?identification=${identification}&action=NEXT&id=${id}&nextPage=${nextPage}&photoId=${currentPhoto.id}&pageToShow=${pageToShow}"/>">
 			        	<fmt:message	key="pagination.next" var="paginagion.next"/>
-			        	<b><img border="0" align="middle" title="${paginagion.next}" src="<c:url value="/images/navigate_right.png"/>" width="24" height="24"></b>
+			        	<b><img border="0" align="middle" title="${paginagion.next}" src="<c:url value="/images/navigate_right.png"/>" width="48" height="48"></b>
 			        </a>
 			    </c:if>
 			</c:if> 

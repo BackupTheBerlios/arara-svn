@@ -28,13 +28,6 @@
 			<b>Sponsors</b><br><br>
 			<table width="100%" border="0">
 				<tr>
-					<td align="left" colspan="4">
-						<a href="http://www.avistarbrasil.com.br/concurso/index.html" target="_blanck"> 
-							<img src="<c:url value="/jsp/images/sbanner_eng.png"/>" align="bottom" width="390" height="96"/> 
-						</a> 
-					</td>
-				</tr>
-				<tr>
 					<td align="right" colspan="4">
 						<a href="mailto:webmaster@aves.brasil.nom.br?subject=Patrocinio"> 
 							<img src="<c:url value="/jsp/images/Propaganda.jpg"/>"	align="bottom"/> 

@@ -16,23 +16,22 @@
 <meta name="launchDate" content="01/09/2005" />
 <meta name="category" content="homepage" />
 <meta name="type" content="network" />
-<title>Aves do Brasil</title>
+<title><fmt:message key="main.title"/></title>
 
-<script type="text/javascript">
-	console.log("%d ways to skin a cat.", 101);
-	var djConfig = {isDebug: true, debugAtAllCosts: true, baseScriptUri: '<c:url value="/"/>'};
+<script type="text/javascript" src="<c:url value="/addclasskillclass.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/attachevent.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/addcss.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/tabtastic.js"/>"></script>
+
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
 </script>
-<script type="text/javascript" src="<c:url value="/dojo.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/prototype.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/rico.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/rssajax.js"/>"></script>
+<script type="text/javascript">
+_uacct = "UA-1395834-1";
+urchinTracker();
+</script>
 
 <style type="text/css">
-.dojoTabPaneWrapper {
-padding : 5px;
-overflow: hidden;
-}
-
 #tabBlock {
 top: 150px;
 left: 120px;
@@ -40,11 +39,32 @@ width: 100%;
 height: 640px;
 }
 
-#placeTabBlock {
+#size1TabBlock {
+top: 150px;
+left: 120px;
+width: 100%;
+height: 200px;
+}
+
+#size2TabBlock {
 top: 150px;
 left: 120px;
 width: 100%;
 height: 300px;
+}
+
+#size3TabBlock {
+top: 150px;
+left: 120px;
+width: 100%;
+height: 400px;
+}
+
+#placeTabBlock {
+top: 150px;
+left: 120px;
+width: 100%;
+height: 400px;
 }
 #mainTabContainer {
 width: 100%;
@@ -91,26 +111,7 @@ table.lineBorder {
 </style>
 
 
-<script language="JavaScript" type="text/javascript">
-	dojo.require("dojo.widget.*");
-	dojo.require("dojo.widget.SlideShow");	
-	dojo.require("dojo.widget.FisheyeList");
-	dojo.require("dojo.widget.TabContainer");
-	dojo.require("dojo.widget.ContentPane");	
-	dojo.hostenv.writeIncludes();    	
-</script>
-
-<script>
-	function load_app(id){
-		document.location.assign('<c:url value="/"/>'+id);		
-	}
-</script>
-
 <style>
-.dojoHtmlFisheyeListBar {
-	margin: 0 auto;
-	text-align: center;
-}
 .outerbar {
 	background-color: #669900;
 	text-align: center;
@@ -149,10 +150,424 @@ div.channeltitle a:hover
 }
 </style>
 
+	<style type="text/css">
+	html{
+		height:100%;
+	}
+	body{
+		font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
+		font-size:0.8em;
+		margin:0px;
+		padding:0px;
+
+		background-color:#E2EBED;
+		height:100%;
+		text-align:center;
+	}
+	.clear{
+		clear:both;
+	}
+	
+	#mainContainer{
+		width:760px;
+		text-align:left;
+		margin:0 auto;
+		background-color: #FFF;
+		border-left:1px solid #000;
+		border-right:1px solid #000;
+		height:100%;
+	}
+	
+	#topBar{
+		width:760px;
+		height:100px;
+	}
+	#leftMenu{
+		width:200px;
+		padding-left:10px;
+		padding-right:10px;
+		float:left;
+	}
+	#mainContent{
+		width: 520px;
+		padding-right:10px;	
+		float:left;
+	}
+	/*
+	General rules
+	*/
+
+	#dhtmlgoodies_slidedown_menu li{
+		list-style-type:none;
+		position:relative;
+	}
+	#dhtmlgoodies_slidedown_menu ul{
+		margin:0px;
+		padding:0px;
+		position:relative;
+
+	}
+
+	#dhtmlgoodies_slidedown_menu div{
+		margin:0px;
+		padding:0px;
+	}
+	/* 	Layout CSS */
+	#dhtmlgoodies_slidedown_menu{		
+		width:205px;	
+	}
+
+	/* All A tags - i.e menu items. */
+	#dhtmlgoodies_slidedown_menu a{
+		color: #000;
+		text-decoration:none;	
+		display:block;
+		clear:both;
+		width:170px;	
+		padding-left:2px;	
+
+	}
+	
+	/*
+	A tags 
+	*/
+	#dhtmlgoodies_slidedown_menu .slMenuItem_depth1{	/* Main menu items */
+		margin-top:1px;
+		border-bottom:1px solid #000;
+		font-weight:bold;
+	}	
+	#dhtmlgoodies_slidedown_menu .slMenuItem_depth2{	/* Sub menu items */
+		margin-top:1px;
+	}	
+	#dhtmlgoodies_slidedown_menu .slMenuItem_depth3{	/* Sub menu items */
+		margin-top:1px;
+		font-style:italic;
+		color:blue;
+	}	
+	#dhtmlgoodies_slidedown_menu .slMenuItem_depth4{	/* Sub menu items */
+		margin-top:1px;
+		color:red;
+	}	
+	#dhtmlgoodies_slidedown_menu .slMenuItem_depth5{	/* Sub menu items */
+		margin-top:1px;
+	}
+
+	/* UL tags, i.e group of menu utems. 
+	It's important to add style to the UL if you're specifying margins. If not, assign the style directly
+	to the parent DIV, i.e. 
+	
+	#dhtmlgoodies_slidedown_menu .slideMenuDiv1
+	
+	instead of 
+	
+	#dhtmlgoodies_slidedown_menu .slideMenuDiv1 ul
+	*/
+	
+	#dhtmlgoodies_slidedown_menu .slideMenuDiv1 ul{
+		padding:1px;
+	}
+	#dhtmlgoodies_slidedown_menu .slideMenuDiv2 ul{
+		margin-left:5px;
+		padding:1px;
+	}
+	#dhtmlgoodies_slidedown_menu .slideMenuDiv3 ul{
+		margin-left:10px;
+		padding:1px;
+	}
+	#dhtmlgoodies_slidedown_menu .slMenuItem_depth4 ul{
+		margin-left:15px;
+		padding:1px;
+	}
+	
+	</style>
+	<script type="text/javascript">
+	/************************************************************************************************************
+	(C) www.dhtmlgoodies.com, October 2005
+	
+	This is a script from www.dhtmlgoodies.com. You will find this and a lot of other scripts at our website.	
+	
+	Terms of use:
+	You are free to use this script as long as the copyright message is kept intact. However, you may not
+	redistribute, sell or repost it without our permission.
+	
+	Update log:
+	
+		March, 15th: Fixed problem with sliding in MSIE
+	
+	Thank you!
+	
+	www.dhtmlgoodies.com
+	Alf Magne Kalleland
+	
+	************************************************************************************************************/	
+var expandFirstItemAutomatically = false;	// Expand first menu item automatically ?
+var initMenuIdToExpand = false;	// Id of menu item that should be initially expanded. the id is defined in the <li> tag.
+var expandMenuItemByUrl = true;	// Menu will automatically expand by url - i.e. if the href of the menu item is in the current location, it will expand
+
+
+var initialMenuItemAlwaysExpanded = true;	// NOT IMPLEMENTED YET
+
+var dhtmlgoodies_slmenuObj;
+var divToScroll = false;
+var ulToScroll = false;	
+var divCounter = 1;
+var otherDivsToScroll = new Array();
+var divToHide = false;
+var parentDivToHide = new Array();
+var ulToHide = false;
+var offsetOpera = 0;
+if(navigator.userAgent.indexOf('Opera')>=0)offsetOpera=1;	
+var slideMenuHeightOfCurrentBox = 0;
+var objectsToExpand = new Array();
+var initExpandIndex = 0;
+var alwaysExpanedItems = new Array();
+	
+function popMenusToShow()
+{
+	var obj = divToScroll;
+	var endArray = new Array();
+	while(obj && obj.tagName!='BODY'){
+		if(obj.tagName=='DIV' && obj.id.indexOf('slideDiv')>=0){
+			var objFound = -1;
+			for(var no=0;no<otherDivsToScroll.length;no++){
+				if(otherDivsToScroll[no]==obj){
+					objFound = no;		
+				}					
+			}	
+			if(objFound>=0){
+				otherDivsToScroll.splice(objFound,1);	
+			}		
+		}	
+		obj = obj.parentNode;
+	}	
+}
+
+function showSubMenu(e,inputObj)
+{
+
+	if(this && this.tagName)inputObj = this.parentNode;
+	if(inputObj && inputObj.tagName=='LI'){
+		divToScroll = inputObj.getElementsByTagName('DIV')[0];
+		for(var no=0;no<otherDivsToScroll.length;no++){
+			if(otherDivsToScroll[no]==divToScroll)return;
+		}			
+	}
+	hidingInProcess = false;
+	if(otherDivsToScroll.length>0){
+		if(divToScroll){				
+			if(otherDivsToScroll.length>0){
+				popMenusToShow();
+			}
+			if(otherDivsToScroll.length>0){	
+				autoHideMenus();
+				hidingInProcess = true;
+			}
+		}	
+	}		
+	if(divToScroll && !hidingInProcess){
+		divToScroll.style.display='';
+		otherDivsToScroll.length = 0;
+		otherDivToScroll = divToScroll.parentNode;
+		otherDivsToScroll.push(divToScroll);	
+		while(otherDivToScroll && otherDivToScroll.tagName!='BODY'){
+			if(otherDivToScroll.tagName=='DIV' && otherDivToScroll.id.indexOf('slideDiv')>=0){
+				otherDivsToScroll.push(otherDivToScroll);
+									
+			}
+			otherDivToScroll = otherDivToScroll.parentNode;
+		}			
+		ulToScroll = divToScroll.getElementsByTagName('UL')[0];
+		if(divToScroll.style.height.replace('px','')/1<=1)scrollDownSub();
+	}	
+	
+
+}
+
+
+
+function autoHideMenus()
+{
+	if(otherDivsToScroll.length>0){
+		divToHide = otherDivsToScroll[otherDivsToScroll.length-1];
+		parentDivToHide.length=0;
+		var obj = divToHide.parentNode.parentNode.parentNode;
+		while(obj && obj.tagName=='DIV'){			
+			if(obj.id.indexOf('slideDiv')>=0)parentDivToHide.push(obj);
+			obj = obj.parentNode.parentNode.parentNode;
+		}
+		var tmpHeight = (divToHide.style.height.replace('px','')/1 - slideMenuHeightOfCurrentBox);
+		if(tmpHeight<0)tmpHeight=0;
+		if(slideMenuHeightOfCurrentBox)divToHide.style.height = tmpHeight  + 'px';
+		ulToHide = divToHide.getElementsByTagName('UL')[0];
+		slideMenuHeightOfCurrentBox = ulToHide.offsetHeight;
+		scrollUpMenu();		
+	}else{
+		slideMenuHeightOfCurrentBox = 0;
+		showSubMenu();			
+	}
+}
+
+
+function scrollUpMenu()
+{
+
+	var height = divToHide.offsetHeight;
+	height-=15;
+	if(height<0)height=0;
+	divToHide.style.height = height + 'px';
+
+	for(var no=0;no<parentDivToHide.length;no++){	
+		parentDivToHide[no].style.height = parentDivToHide[no].getElementsByTagName('UL')[0].offsetHeight + 'px';
+	}
+	if(height>0){
+		setTimeout('scrollUpMenu()',5);
+	}else{
+		divToHide.style.display='none';
+		otherDivsToScroll.length = otherDivsToScroll.length-1;
+		autoHideMenus();			
+	}
+}	
+
+function scrollDownSub()
+{
+	if(divToScroll){			
+		var height = divToScroll.offsetHeight/1;
+		var offsetMove =Math.min(15,(ulToScroll.offsetHeight - height));
+		height = height +offsetMove ;
+		divToScroll.style.height = height + 'px';
+		
+		for(var no=1;no<otherDivsToScroll.length;no++){
+			var tmpHeight = otherDivsToScroll[no].offsetHeight/1 + offsetMove;
+			otherDivsToScroll[no].style.height = tmpHeight + 'px';
+		}			
+		if(height<ulToScroll.offsetHeight)setTimeout('scrollDownSub()',5); else {
+			divToScroll = false;
+			ulToScroll = false;
+			if(objectsToExpand.length>0 && initExpandIndex<(objectsToExpand.length-1)){
+				initExpandIndex++;
+				
+				showSubMenu(false,objectsToExpand[initExpandIndex]);
+			}
+		}
+	}
+}
+	
+function initSubItems(inputObj,currentDepth)
+{		
+	divCounter++;		
+	var div = document.createElement('DIV');	// Creating new div		
+	div.style.overflow = 'hidden';	
+	div.style.position = 'relative';
+	div.style.display='none';
+	div.style.height = '1px';
+	div.id = 'slideDiv' + divCounter;
+	div.className = 'slideMenuDiv' + currentDepth;		
+	inputObj.parentNode.appendChild(div);	// Appending DIV as child element of <LI> that is parent of input <UL>		
+	div.appendChild(inputObj);	// Appending <UL> to the div
+	var menuItem = inputObj.getElementsByTagName('LI')[0];
+	while(menuItem){
+		if(menuItem.tagName=='LI'){
+			var aTag = menuItem.getElementsByTagName('A')[0];
+			aTag.className='slMenuItem_depth'+currentDepth;	
+			var subUl = menuItem.getElementsByTagName('UL');
+			if(subUl.length>0){
+				initSubItems(subUl[0],currentDepth+1);					
+			}
+			aTag.onclick = showSubMenu;				
+		}			
+		menuItem = menuItem.nextSibling;						
+	}		
+}
+
+function initSlideDownMenu()
+{
+	dhtmlgoodies_slmenuObj = document.getElementById('dhtmlgoodies_slidedown_menu');
+	dhtmlgoodies_slmenuObj.style.visibility='visible';
+	var mainUl = dhtmlgoodies_slmenuObj.getElementsByTagName('UL')[0];		
+	var mainMenuItem = mainUl.getElementsByTagName('LI')[0];
+	mainItemCounter = 1;
+	while(mainMenuItem){			
+		if(mainMenuItem.tagName=='LI'){
+			var aTag = mainMenuItem.getElementsByTagName('A')[0];
+			aTag.className='slMenuItem_depth1';	
+			var subUl = mainMenuItem.getElementsByTagName('UL');
+			if(subUl.length>0){
+				mainMenuItem.id = 'mainMenuItem' + mainItemCounter;
+				initSubItems(subUl[0],2);
+				aTag.onclick = showSubMenu;
+				mainItemCounter++;
+			}				
+		}			
+		mainMenuItem = mainMenuItem.nextSibling;	
+	}		
+	
+	if(location.search.indexOf('mainMenuItemToSlide')>=0){
+		var items = location.search.split('&');
+		for(var no=0;no<items.length;no++){
+			if(items[no].indexOf('mainMenuItemToSlide')>=0){
+				values = items[no].split('=');
+				showSubMenu(false,document.getElementById('mainMenuItem' + values[1]));	
+				initMenuIdToExpand = false;				
+			}
+		}			
+	}else if(expandFirstItemAutomatically>0){
+		if(document.getElementById('mainMenuItem' + expandFirstItemAutomatically)){
+			showSubMenu(false,document.getElementById('mainMenuItem' + expandFirstItemAutomatically));
+			initMenuIdToExpand = false;
+		}
+	}
+
+	if(expandMenuItemByUrl)
+	{
+		var aTags = dhtmlgoodies_slmenuObj.getElementsByTagName('A');
+		for(var no=0;no<aTags.length;no++){
+			var hrefToCheckOn = aTags[no].href;				
+			if(location.href.indexOf(hrefToCheckOn)>=0 && hrefToCheckOn.indexOf('#')<hrefToCheckOn.length-1){
+				initMenuIdToExpand = false;
+				var obj = aTags[no].parentNode;
+				while(obj && obj.id!='dhtmlgoodies_slidedown_menu'){
+					if(obj.tagName=='LI'){							
+						var subUl = obj.getElementsByTagName('UL');
+						if(initialMenuItemAlwaysExpanded)alwaysExpanedItems[obj.parentNode] = true;
+						if(subUl.length>0){								
+							objectsToExpand.unshift(obj);
+						}
+					}
+					obj = obj.parentNode;	
+				}
+				showSubMenu(false,objectsToExpand[0]);
+				break;					
+			}			
+		}
+	}
+			
+	if(initMenuIdToExpand)
+	{
+		objectsToExpand = new Array();
+		var obj = document.getElementById(initMenuIdToExpand)
+		while(obj && obj.id!='dhtmlgoodies_slidedown_menu'){
+			if(obj.tagName=='LI'){
+				var subUl = obj.getElementsByTagName('UL');
+				if(initialMenuItemAlwaysExpanded)alwaysExpanedItems[obj.parentNode] = true;
+				if(subUl.length>0){						
+					objectsToExpand.unshift(obj);
+				}
+			}
+			obj = obj.parentNode;	
+		}
+		
+		showSubMenu(false,objectsToExpand[0]);
+
+	}
+	
+
+		
+}
+window.onload = initSlideDownMenu;
+</script>
+
+
 </head>
-<!--  #669900 top  menu#FFFF00  fundo #333300 
-<body bgcolor="#333300" onload="RSSRequest();">
--->
 <body bgcolor="#333300">
 
 <c:set var="col1" value="${10}" scope="application"/>
@@ -211,51 +626,22 @@ param.pageToShow:${param.pageToShow}
     </td>
   </tr>
   <tr>
-    <td width="20%" height="100%" align="left" valign="top">
-    	<table valign="top" width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="${mainBgColor}">
-      		<tr>
-        		<td height="100%" align="left" valign="top">
-					<c:set var="path" value="<%=request.getContextPath()%>"/>
-					<img dojoType="SlideShow" 
-					imgUrls="${f:getSlideShow(path)}"
-					transitionInterval="1000"
-					delay="30000" 					
-					src="<c:url value="/images/arara.jpg"/>"
-					imgWidth="150" imgHeight="115" />	
-					<hr>		
-			        <c:import url="/menu.jsp" />		
-					<hr>	
-			        <c:import url="/jsp/marketing.jsp" />
-					<hr>	
-					&nbsp;<a href="<c:url value="/frame.jsp?pageToShow=/jsp/colaboradores.html"/>">Colaboradores do site</a>
-			        <hr>
-					<img src="<c:url value="/images/chart.png"/>" alt="" width="20" height="20"><b><fmt:message key="menu.statistics.statistics"/></b><br/>
-			        <c:import url="/statistics.jsp" />
-					<!--  
-					<div id="statistics" style="position: relative;">
-					<div id="updatesponsor">
-					<p>
-					<fmt:message key="menu.statistics.load"/>
-					</p>
-					</div>
-					</div>
-					-->              
-        		</td>
-      		</tr>
-    	</table>
+    <td width="20%" height="100%" align="left" valign="top" bgcolor="${mainBgColor}">
+        <c:import url="/menu.jsp" />		
+		<%--
+		<c:import url="/jsp/marketing.jsp"/>
+		--%>
+		<hr>					
+		&nbsp;<a href="<c:url value="/frame.jsp?pageToShow=/jsp/colaboradores.html"/>">Colaboradores do site</a>
+        <hr>
+		<img src="<c:url value="/images/chart.png"/>" alt="" width="20" height="20"><b><fmt:message key="menu.statistics.statistics"/></b><br/>
+        <c:import url="/statistics.jsp" />
     </td>
-    <td width="80%" colspan="2" valign="top" align="left" height="100%">
-    	<table align="left" width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="${mainBgColor}">
-      		<tr>
-        		<td height="100%" align="left" valign="top">
-        			<!--  ${nextPage} | ${pageToShow} | ${page} | ${param.pageToShow} -->
-        			<c:import url="/jsp/showErrors.jsp" /> 
-				    <c:import url="/jsp/showMessages.jsp" /> 
-				    <c:import url="${page}" />        
-		        </td>
-      		</tr>
-    	</table>
-    </td>
+    <td width="80%" colspan="2" valign="top" align="left" height="100%" bgcolor="${mainBgColor}">
+		<c:import url="/jsp/showErrors.jsp" /> 
+	    <c:import url="/jsp/showMessages.jsp" /> 
+	    <c:import url="${page}" />        
+	</td>
   </tr>
   <tr>
     <td colspan="3">

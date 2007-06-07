@@ -30,6 +30,7 @@ import net.indrix.arara.vo.User;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
+@SuppressWarnings("serial")
 public class SearchSoundsServlet extends AbstractSearchSoundsServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
@@ -49,8 +50,7 @@ public class SearchSoundsServlet extends AbstractSearchSoundsServlet {
 
         logger.debug("Retrieved action " + action);
 
-        PaginationController controller = getPaginationController(session,
-                false, getPaginationConstant());
+        PaginationController controller = getPaginationController(session, false, getPaginationConstant(), action);
 
         List list = null;
         try {

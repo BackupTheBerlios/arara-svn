@@ -28,6 +28,7 @@ import net.indrix.arara.servlets.pagination.SoundByFamilyPaginationController;
 import net.indrix.arara.servlets.pagination.SoundBySpeciePaginationController;
 import net.indrix.arara.servlets.pagination.SoundByUserPaginationController;
 import net.indrix.arara.servlets.pagination.SoundPaginationController;
+import net.indrix.arara.servlets.pagination.SoundRecentPaginationController;
 import net.indrix.arara.servlets.pagination.exceptions.InvalidControllerException;
 import net.indrix.arara.utils.PropertiesManager;
 import net.indrix.arara.vo.User;
@@ -51,6 +52,8 @@ public abstract class AbstractSearchSoundsServlet extends HttpServlet {
 
     public static final int PAGINATION_FOR_USER = 4;
 
+    public static final int PAGINATION_FOR_RECENT = 5;
+    
     protected static Logger logger = Logger.getLogger("net.indrix.aves");
 
     protected static Logger loggerActions = Logger
@@ -86,8 +89,7 @@ public abstract class AbstractSearchSoundsServlet extends HttpServlet {
         logger.debug("Retrieved action " + action);
         int id = -1;
 
-        PaginationController controller = getPaginationController(session,
-                false, getPaginationConstant());
+        PaginationController controller = getPaginationController(session, false, getPaginationConstant(), action);
 
         if ((idStr != null) && (idStr.trim().length() > 0)) {
             id = Integer.parseInt(idStr);
@@ -160,14 +162,17 @@ public abstract class AbstractSearchSoundsServlet extends HttpServlet {
     protected abstract int getPaginationConstant();
 
     protected PaginationController getPaginationController(HttpSession session,
-            boolean identification, int target) {
+            boolean identification, int target, String action) {
 
         // the key is the key string plus the target
-        String key = ServletConstants.SOUND_PAGINATION_CONTROLLER_KEY + target
-                + identification;
+        String key = ServletConstants.SOUND_PAGINATION_CONTROLLER_KEY;
         logger.debug("retrieving controller with key " + key);
-        PaginationController c = (PaginationController) session
-                .getAttribute(key);
+        PaginationController c = null;
+        
+        if (!ServletConstants.BEGIN.equals(action)){
+            c = (PaginationController) session.getAttribute(key);
+        }
+        
         if (c == null) {
             switch (target) {
             case PAGINATION_FOR_ALL_SOUNDS:
@@ -189,6 +194,9 @@ public abstract class AbstractSearchSoundsServlet extends HttpServlet {
             case PAGINATION_FOR_USER:
                 c = new SoundByUserPaginationController(SOUNDS_PER_PAGE,
                         identification);
+                break;
+            case PAGINATION_FOR_RECENT:
+                c = new SoundRecentPaginationController(SOUNDS_PER_PAGE);
                 break;
             }
             logger.debug("PaginationController just created");

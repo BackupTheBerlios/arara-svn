@@ -59,6 +59,25 @@ public class SoundModel extends MediaModel{
 		return list;
 	}
 
+    /**
+     * This method retrieves a <code>List</code> object with
+     * <code>Integer</code> objects, of sounds more recently added to database
+     * 
+     * @return a <code>List</code> object with <code>Sound</code> objects
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public List retrieveSoundIDsForRecentSounds() throws DatabaseDownException,
+            SQLException {
+        logger.debug("Retrieving photo ids for more recent sounds...");
+        List list = ((SoundDAO) dao).retrieveIDsForRecentSounds();
+        logger.debug("Sound ids retrieved.");
+        return list;
+    }
+    
 	/**
 	 * This method deletes a sound given by the soundId
 	 * 

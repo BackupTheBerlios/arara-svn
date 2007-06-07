@@ -41,17 +41,23 @@ public class SoundDAO extends MediaDAO implements SoundConstants {
     private static final String SELECT_BY_ID = "SELECT id, specie_id, user_id, age_id, sex_id, fileSize, location, city_id, post_date, comment "
             + "from sound " + "where id = ?";
 
+    /**
+     * SQL to select id of all sounds, order by post date (desc)
+     */
+    private static final String SELECT_IDS_FOR_ALL_BY_DATE = "SELECT s.id from sound s order by post_date desc";
+    
     private static final String SELECT_BY_SPECIE_ID = "SELECT id, user_id, specie_id, age_id, sex_id, fileSize, location, city_id, post_date, comment "
             + "from sound " + "where specie_id = ?";
 
     /**
      * SQL to select id of all sounds
      */
-    private static final String SELECT_IDS_FOR_ALL = "SELECT s.id, f.id f_id, f.name f_name, f.subFamilyName f_sub_name "
-            + "from sound s, specie sp, family f "
+    private static final String SELECT_IDS_FOR_ALL = "SELECT s.id, f.id f_id, f.name f_name, sp.id s_id, sp.name s_name "
+            + "from sound s, family f, specie sp "
             + "where s.specie_id > -1 and s.specie_id = sp.id and sp.family_id = f.id "
-            + "order by f_name";
-
+            + "order by f_name, s_name";
+    
+    
     /**
      * SQL to select id of sounds by a given family ID
      */
@@ -136,6 +142,20 @@ public class SoundDAO extends MediaDAO implements SoundConstants {
         return object;
     }
 
+    /**
+     * This method retrieves a <code>List</code> object with
+     * <code>Integer</code> objects, of photos more recently added to database
+     * 
+     * @return a <code>List</code> object with <code>Photo</code> objects
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    public List retrieveIDsForRecentSounds() throws DatabaseDownException,
+            SQLException {
+        List list = retrieveIDs(SELECT_IDS_FOR_ALL_BY_DATE);
+        return list;
+    }    
     /**
      * This method retrieves a <code>List</code> object with
      * <code>Sound</code> objects, based on the id of the specie
@@ -256,7 +276,7 @@ public class SoundDAO extends MediaDAO implements SoundConstants {
         stmt.setInt(5, sound.getSound().getFileSize());
         stmt.setString(6, sound.getLocation());
         stmt.setInt(7, sound.getCity().getId());
-        stmt.setDate(8, getSQLDate());
+        stmt.setTimestamp(8, getTimestamp(getSQLDate()));
         stmt.setString(9, sound.getComment());
     }
 

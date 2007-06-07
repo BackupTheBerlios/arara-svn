@@ -353,6 +353,14 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>searchRecentSounds</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.sound.display.SearchRecentSoundsServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
 		<servlet-name>searchSoundsByFamily</servlet-name>
 		<servlet-class>
 			net.indrix.arara.servlets.sound.display.SearchSoundsByFamilyServlet
@@ -678,6 +686,11 @@
 	<servlet-mapping>
 		<servlet-name>searchSounds</servlet-name>
 		<url-pattern>/servlet/searchSounds</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>searchRecentSounds</servlet-name>
+		<url-pattern>/servlet/searchRecentSounds</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

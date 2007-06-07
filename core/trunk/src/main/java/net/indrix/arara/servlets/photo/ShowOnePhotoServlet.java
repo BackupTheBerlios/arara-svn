@@ -22,6 +22,7 @@ import javax.servlet.http.HttpSession;
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.model.PhotoModel;
 import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.servlets.pagination.PhotoPaginationController;
 import net.indrix.arara.servlets.pagination.PhotoRecentPaginationController;
 import net.indrix.arara.servlets.pagination.exceptions.InvalidControllerException;
 import net.indrix.arara.vo.Photo;
@@ -203,7 +204,6 @@ public class ShowOnePhotoServlet extends AbstractSearchPhotosServlet {
     private Photo treatPhotoFromEmailLink(List <String>errors, String photoId, HttpServletRequest req, 
             HttpSession session, String begin) throws DatabaseDownException, SQLException {
         Photo photo = null;
-        PhotoModel model = new PhotoModel();
         logger.debug("Looking for photo inside database...");
         photo = getPhotoFromDatabase(errors, photoId);
         
@@ -324,14 +324,14 @@ public class ShowOnePhotoServlet extends AbstractSearchPhotosServlet {
 
     private boolean hasNextPage(HttpSession session, String action) {
         logger.debug("Retrieving controller...");
-        PhotoRecentPaginationController controller = (PhotoRecentPaginationController) getPaginationController(
+        PhotoPaginationController controller = (PhotoPaginationController) getPaginationController(
                 session, false, getPaginationConstant(), action);
         return controller.hasNext();
     }
 
     private boolean hasPreviousPage(HttpSession session, String action) {
         logger.debug("Retrieving controller...");
-        PhotoRecentPaginationController controller = (PhotoRecentPaginationController) getPaginationController(
+        PhotoPaginationController controller = (PhotoPaginationController) getPaginationController(
                 session, false, getPaginationConstant(), action);
         return controller.hasPrevious();
     }
@@ -340,7 +340,7 @@ public class ShowOnePhotoServlet extends AbstractSearchPhotosServlet {
     private List getList(HttpSession session, String action){
         List list = null;
         logger.debug("Retrieving controller...");
-        PhotoRecentPaginationController controller = (PhotoRecentPaginationController) getPaginationController(
+        PhotoPaginationController controller = (PhotoPaginationController) getPaginationController(
                 session, false, getPaginationConstant(), action);
         try {
             logger.debug("Controller retrieved... Calling doAction...");

@@ -14,39 +14,51 @@
 				
 				<p>Abaixo estão listados alguns grupos, organizados por estado.
 				<p>
-			<div id="placeTabBlock">
-			<div id="mainTabContainer" dojoType="TabContainer" selectedChild="ba">
-				<div dojoType="ContentPane" label="BA" id="ba">
+				
+			<ul class="tabset_tabs">
+				<li><a href="#ba" class="active">BA</a></li>
+				<li><a href="#df">DF</a></li>
+				<li><a href="#mg">MG</a></li>
+				<li><a href="#rj">RJ</a></li>
+				<li><a href="#sc">SC</a></li>
+				<li><a href="#sp">SP</a></li>
+			</ul>
+				
+			<div id="ba" class="tabset_content">
+				<h2 class="tabset_label">BA</h2>
 					<ul>
 					  <li><a href="http://www.geocities.com/RainForest/5089/secoes.html" target="_blank">Clube de Observadores de Aves - BAHIA</a></li>
 					</ul>		  	
-				</div>
-				<div dojoType="ContentPane" label="DF" id="df">
+			</div>
+			<div id="df" class="tabset_content">
+				<h2 class="tabset_label">DF</h2>
 					<ul>
 					  <li><a href="http://observavesdf.multiply.com/" target="_blank">Observadores de Aves do Planalto Central</a></li>
 					</ul>		  	
-				</div>
-				<div dojoType="ContentPane" label="MG" id="mg">
+			</div>
+			<div id="mg" class="tabset_content">
+				<h2 class="tabset_label">MG</h2>
 					<ul>
 					  <li><a href="http://www.geocities.com/aves_udia/" target="_blank">Grupo de Observadores de Aves de Uberlândia</a></li>
 					</ul>		  	
-				</div>
-				<div dojoType="ContentPane" label="RJ" id="rj">
+			</div>
+			<div id="rj" class="tabset_content">
+				<h2 class="tabset_label">RJ</h2>
 					<ul>
 					  <li><a href="http://www.coa-rj.com/" target="_blank">Clube de Observadores de Aves - RJ</a></li>
 					</ul>		  	
-				</div>
-				<div dojoType="ContentPane" label="SC" id="sc">
+			</div>
+			<div id="sc" class="tabset_content">
+				<h2 class="tabset_label">SC</h2>
 					<ul>
 					  <li><a href="mailto:eliara@unochapeco.edu">Clube de Observadores de Aves - UNOCHAPECÓ</a></li>
 					</ul>
-				</div>
-				<div dojoType="ContentPane" label="SP" id="sp">
+			</div>
+			<div id="sp" class="tabset_content">
+				<h2 class="tabset_label">SP</h2>
 					<ul>
 					  <li><a href="http://www.ib.usp.br/ceo/">Centro de Estudos Ornitológicos</a></li>
 					</ul>
-				</div>
-			</div>
 			</div>
 			</font>
 		</td>

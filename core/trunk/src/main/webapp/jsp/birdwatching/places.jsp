@@ -20,9 +20,16 @@
 				
 				<p>Abaixo estão listados alguns locais que contam com estruturas para a prática de observação.
 
-			<div id="placeTabBlock">
-			<div id="mainTabContainer" dojoType="TabContainer" selectedChild="amazonia">
-				<div dojoType="ContentPane" class="size1TabBlock" label="Amazônia" id="amazonia">
+			<ul class="tabset_tabs">
+				<li><a href="#amazonia" class="active">Amazônia</a></li>
+				<li><a href="#pantanal">Pantanal</a></li>
+				<li><a href="#mataatlantica">Mata Atlântica</a></li>
+				<li><a href="#nascidades">Nas Cidades</a></li>
+			</ul>
+
+
+			<div id="amazonia" class="tabset_content">
+				<h2 class="tabset_label">Amazônia</h2>
 					Região com cerca de 700 espécies catalogadas (segundo [1]). Possui hotéis de selva, alguns deles com torres de observação que
 				  	facilitam a prática de observação.
 				  	
@@ -31,20 +38,29 @@
 					  A lista de espécies na área de Alta Floresta, onde o hotel Cristalino está localizado, chega a 550 espécies.
 					  
 					</ul>
-				</div>
-				<div dojoType="ContentPane" label="Pantanal" id="pantanal">
+			</div>
+			<div id="pantanal" class="tabset_content">
+				<h2 class="tabset_label">Pantanal</h2>
 					Habitat de pelo menos 473 espécies, no pantanal a época do ano determina a ocorrência de certas espécies, devido ao sistema de cheias e seca.
 					Com grande parte da vegetação aberta, várias espécies são fáceis de serem observadas.
-				</div>
-				<div dojoType="TabContainer" label="Mata Atlântica" id="mata_atlantica">
-					<div dojoType="ContentPane" label="Introdução" id="mata_atlantica_intro">
+			</div>
+			<div id="mataatlantica" class="tabset_content">
+				<h2 class="tabset_label">Mata Atlântica</h2>
+					<ul class="tabset_tabs">
+						<li><a href="#mata_atlantica_intro" class="active">Introdução</a></li>
+						<li><a href="#mata_atlantica_rj">RJ</a></li>
+						<li><a href="#mata_atlantica_sp">SP</a></li>
+					</ul>
+					<div id="mata_atlantica_intro" class="tabset_content">
+						<h2 class="tabset_label">Introdução</h2>
 					  Originalmente, a mata ocupava o litoral do Brasil, do Rio Grande do Sul ao Rio Grande do Norte, chegando a atingir 
 					  estados com Mato Grosso do Sul. Atualmente, somente cerca de 7% da área original da Mata Atlântica continua de pé ([2]). 
 
 					  <p>Com alto grau de endemismo (espécies que só existem naquela região), a Mata Atlântica conta com cerca de 572 espécies 
 					  de aves catalogadas. Alguns parques nacionais são bons lugares para observação.
 					</div>		
-					<div dojoType="ContentPane" label="RJ" id="mata_atlantica_rj">
+					<div id="mata_atlantica_rj" class="tabset_content">
+						<h2 class="tabset_label">RJ</h2>
 						<ul>
 						  <li><a href="http://www.ibama.gov.br/parna_itatiaia/" target="_blank">Parque Nacional de Itatiaia</a></li>O parque está localizado na cidade de Itatiaia - RJ. 
 						  Para chegar no parque, saindo do Rio de Janeiro ou São Paulo, seguir pela Rodovia Presidente Dutra (BR 116) até a cidade de Itatiaia, na altura do km 316.					  
@@ -53,7 +69,8 @@
 						  Petrópolis, Magé e Guapimirim. Segundo o site do IBAMA, são 264 espécies de aves registradas no parque.
 						</ul>
 					</div>		
-					<div dojoType="ContentPane" label="SP" id="mata_atlantica_sp">
+					<div id="mata_atlantica_sp" class="tabset_content">
+						<h2 class="tabset_label">SP</h2>
 						<ul>
 						  <li><a href="http://www.fflorestal.sp.gov.br/pqe_interv/apresentacao.htm" target="_blank">Parque Estadual Intervales</a></li>O parque é acessível pelas cidades de 
 						  Guapiara e Ribeirão Grande.
@@ -70,20 +87,28 @@
 						  sobre observação de aves em Ubatuba.
 						</ul>
 					</div>		
-				</div>
-				
-				<div dojoType="TabContainer" label="Nas Cidades" id="nas_cidades">
-					<div dojoType="ContentPane" label="Campinas" id="campinas">
+			</div>
+			<div id="nascidades" class="tabset_content">
+				<h2 class="tabset_label">Nas Cidades</h2>
+					<ul class="tabset_tabs">
+						<li><a href="#campinas" class="active">Campinas</a></li>
+						<li><a href="#rio_de_janeiro">Rio de Janeiro</a></li>
+						<li><a href="#sao_paulo">São Paulo</a></li>
+					</ul>
+					<div id="campinas" class="tabset_content">
+						<h2 class="tabset_label">Campinas</h2>
 						<ul>
 						  <li><a href="http://www.campinas.sp.gov.br/portal_2003_sites/conheca_campinas/cc_atracoes_naturais_lagoa_do_taquaral.htm" target="_blank">Lagoa do Taquaral</a></li>
 						</ul>
 					</div>		
-					<div dojoType="ContentPane" label="Rio de Janeiro" id="rio_de_janeiro">
+					<div id="rio_de_janeiro" class="tabset_content">
+						<h2 class="tabset_label">Rio de Janeiro</h2>
 						<ul>
 						  <li><a href="http://www.jbrj.gov.br/index.html" target="_blank">Jardim Botânico do Rio de Janeiro</a></li>
 						</ul>
 					</div>		
-					<div dojoType="ContentPane" label="São Paulo" id="sao_paulo">
+					<div id="sao_paulo" class="tabset_content">
+						<h2 class="tabset_label">São Paulo</h2>
 						<ul>
 						  <li><a href="http://www.ibot.sp.gov.br/" target="_blank">Jardim Botânico de São Paulo</a></li>
 						</ul>

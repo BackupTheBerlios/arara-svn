@@ -26,9 +26,15 @@
 			<br>
 			</font> 
 
-			<div id="tabBlock">
-			<div id="mainTabContainer" dojoType="TabContainer" selectedChild="guias">
-				<div dojoType="ContentPane" label="Guias de Campo" id="guias">
+			<ul class="tabset_tabs">
+				<li><a href="#guias_de_campo" class="active">Guias de Campo</a></li>
+				<li><a href="#binoculos">Binóculos</a></li>
+				<li><a href="#lunetas">Lunetas</a></li>
+				<li><a href="#maquinas_fotograficas">Máquinas Fotográficas</a></li>
+			</ul>
+
+			<div id="guias_de_campo" class="tabset_content">
+				<h2 class="tabset_label">Guias de Campo</h2>
 					Os guias de campo são livros com descrição das aves, com foto ou pintura associada. Existem vários guias de 
 					campo disponíveis no mercado. Alguns contém todas as aves brasileiras, outros são guias regionais.
 					
@@ -40,8 +46,10 @@
 					  <li>Todas as Aves do Brasil - (2a. Edição) Guia de Campo para identificação</li>Deodado Souza
 					  <li>Aves do Estado de São Paulo</li>Willis, Edwin O. / Oniki, Yoshika				   
 					</ul>
-				</div>
-				<div dojoType="ContentPane" label="Bin&oacute;culos" id="binoculos">
+			</div>
+
+			<div id="binoculos" class="tabset_content">
+				<h2 class="tabset_label">Binóculos</h2>
 					Os bin&oacute;culos devem ser leves, para n&atilde;o causar cansa&ccedil;o no pesco&ccedil;o e assim trazer desconforto ao observador. Com um bom binóculo,
 					o observador aumenta suas possibilidades de observação, conseguindo notar detalhes que muitas vezes são impossíveis a olho nú.
 					
@@ -54,8 +62,10 @@
 					  
 					</ul>
 					
-				</div>
-				<div dojoType="ContentPane" label="Lunetas" id="lunetas">
+			</div>
+
+			<div id="lunetas" class="tabset_content">
+				<h2 class="tabset_label">Máquinas Fotográficas<</h2>
 					As lunetas são equipamentos com maior poder de aproximação do que os binóculos. Por isso, deve ser utilizadas 
 					sobre um bom tripé, para que o usuário consiga um bom foco, uma vez que quanto maior a aproximação, maior a tendência de tremer a imagem. 
 					Os aumentos variam de 20x até 60x, permitindo assim a observação de aves à uma grande distância. 
@@ -66,8 +76,10 @@
 					<br>
 					<p>Referências<br>
 					[1] <a href="http://www.wikipedia.org/" target="_blank">http://www.wikipedia.org/</a>
-				</div>
-				<div dojoType="ContentPane" label="Máquinas fotográficas" id="cameras">
+			</div>
+			
+			<div id="maquinas_fotograficas" class="tabset_content">
+				<h2 class="tabset_label">Lunetas</h2>
 					Atualmente com a popularização de máquinas fotográficas digitais,  várias pessoas passaram a fotografar pássaros, por diversos motivos.
 					Um deles é a posterior identificação, através da ajuda de guias de campo ou sites na internet, como o Aves do Brasil.
 					
@@ -94,8 +106,6 @@
 							  	<li>Nikon</li>A Nikon possue equipamentos também semi-profissionais como D50 e D70, modelos de 6.1 Mp.
 							</ul>
 					</ul>
-				</div>
-			</div>
 			</div>
 
 		</td>

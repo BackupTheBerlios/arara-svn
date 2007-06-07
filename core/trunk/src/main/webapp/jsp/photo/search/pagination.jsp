@@ -3,12 +3,17 @@
 
 <%@ page import="net.indrix.arara.servlets.pagination.*"%>
 
-<tr>
-	<td align="center" valign="center">
-		[<fmt:message	key="pagination.page"/> ${paginationBean.currentPage} <fmt:message key="pagination.page.of"/> ${paginationBean.numberOfPages}]&nbsp;&nbsp;&nbsp;&nbsp;
 		<% PaginationController p = (PaginationController)session.getAttribute("photoPaginationController");
         boolean previous = false;
         boolean next = false;
+        %> 
+
+<tr>
+	<td align="center" valign="center">
+	<table width="100%">
+	<tr>
+	<td width="25%"  align="right">
+        <% 
         if ((p != null) && (p.hasPrevious())){
        	%> 
        		<a href="<c:url value="${servletToCall}?identification=${identification}&action=FIRST&id=${id}&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">
@@ -17,8 +22,8 @@
        		</a>&nbsp;&nbsp;&nbsp;&nbsp; 
        	<%
 	   	}
-        %> 
-        <% if ((p != null) && (p.hasPrevious())){
+        
+        if ((p != null) && (p.hasPrevious())){
              previous = true;
         %> 
         <a href="<c:url value="${servletToCall}?identification=${identification}&action=PREVIOUS&id=${id}&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">
@@ -28,6 +33,11 @@
         <%
 	   	   }
         %> 
+	</td>
+	<td width="50%" align="center">
+		[<fmt:message	key="pagination.page"/> ${paginationBean.currentPage} <fmt:message key="pagination.page.of"/> ${paginationBean.numberOfPages}]&nbsp;&nbsp;&nbsp;&nbsp;
+	</td>
+	<td width="25%"  align="left">
         <% if ((p != null) && (p.hasNext())){
              if (previous) {
         %> &nbsp;&nbsp;&nbsp;&nbsp; 
@@ -51,5 +61,8 @@
        	<%
 	   	   }
         %>
+	</td>
+	</tr>
+	</table>
 	</td>
 </tr>

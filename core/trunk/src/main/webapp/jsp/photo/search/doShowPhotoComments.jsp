@@ -7,10 +7,8 @@
 <tr><td>
 	<table border="0" width="100%">
 		<tr>
-			<td bgcolor="#005500" colspan="2">
-				<font color="#ffffff" size="${fontSize}" face="Verdana">
-					<fmt:message key="show.one.photo.comments" />
-				</font>
+			<td align="center" colspan="2">
+				<b><fmt:message key="show.one.photo.comments" /></b>
 			</td>
 		</tr>
 	</table>

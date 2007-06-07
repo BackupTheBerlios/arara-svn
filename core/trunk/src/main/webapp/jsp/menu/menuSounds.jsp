@@ -14,6 +14,10 @@
 		<fmt:message key="menu.sounds.search.all" /></a> 
 	</li>
   	<li>
+		<a href="<c:url value="/servlet/searchRecentSounds?action=BEGIN"/>">
+		<fmt:message key="menu.sounds.search.recent" /></a>
+	</li>
+  	<li>
 		<a href="<c:url value="/servlet/initSearchByFamily?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataByFamily.jsp&servletToCall=/servlet/searchSoundsByFamily&action=BEGIN"/>">
 		<fmt:message key="menu.sounds.search.family" /></a>
 	</li>

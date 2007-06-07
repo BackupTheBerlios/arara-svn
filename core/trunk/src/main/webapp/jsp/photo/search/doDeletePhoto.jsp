@@ -17,11 +17,14 @@
 				align="bottom" /></td>
 		</tr>
 		<tr bgcolor="#005500">
-			<td align="center"><a
-				href="<c:url value="/servlet/deletePhoto?photoId=${currentPhoto.id}"/>"><font
-				color="#ffffff"><fmt:message key="delete.confirm" /></font></a> <a
-				href="<c:url value="/index.jsp"/>"><font color="#ffffff"><fmt:message
-				key="delete.cancel" /></font></a></td>
+			<td align="center">
+				<a href="<c:url value="/servlet/deletePhoto?photoId=${currentPhoto.id}"/>">
+					<font color="#ffffff"><fmt:message key="delete.confirm" /></font>
+				</a> 
+				<a href="<c:url value="/index.jsp"/>">
+					<font color="#ffffff"><fmt:message key="delete.cancel" /></font>
+				</a>
+			</td>
 		</tr>
 	</table>
 </c:if>

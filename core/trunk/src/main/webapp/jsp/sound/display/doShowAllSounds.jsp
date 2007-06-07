@@ -52,12 +52,9 @@
 						<td width="22%"><b><font color="#FFFFFF"><fmt:message key="family" /></font></b></td>
 						<td width="22%"><b><font color="#FFFFFF"><fmt:message key="specie" /></font></b></td>
 						<td width="22%"><b><font color="#FFFFFF"><fmt:message key="common.name" /></font></b></td>
-						<td width="8%"><b><font color="#FFFFFF"><fmt:message
-							key="specie.sex" /></font></b></td>
-						<td width="8%"><b><font color="#FFFFFF"><fmt:message
-							key="specie.age" /></font></b></td>
-						<td width="8%"><b><font color="#FFFFFF"><fmt:message
-							key="sound.link.title" /></font></b></td>
+						<td width="8%"><b><font color="#FFFFFF"><fmt:message  key="specie.sex" /></font></b></td>
+						<td width="8%"><b><font color="#FFFFFF"><fmt:message  key="specie.age" /></font></b></td>
+						<td width="8%"><b><font color="#FFFFFF"><fmt:message  key="sound.link.title" /></font></b></td>
 					</tr>
 				</table>
 		</c:if>				

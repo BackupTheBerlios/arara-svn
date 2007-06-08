@@ -25,13 +25,39 @@ public class StatisticsDAO {
 	 */
 	protected static Logger logger = Logger.getLogger("net.indrix.passaros");
 
-	private static final String SELECT_NUM_PHOTOS = "SELECT count(*) FROM photo";
+	private static final String SELECT_NUM_PHOTOS = "SELECT count(*) " +
+            "FROM photo";
 
-	private static final String SELECT_NUM_FAMILIES = "SELECT distinct specie_family_id FROM photo where specie_family_id > -1";
+    private static final String SELECT_NUM_SOUNDS = "SELECT count(*) " +
+            "FROM sound";
 
-	private static final String SELECT_NUM_SPECIES = "SELECT distinct specie_id FROM photo where specie_id > -1";
+	private static final String SELECT_NUM_FAMILIES_WITH_PHOTO = "SELECT distinct specie_family_id " +
+            "FROM photo " +
+            "WHERE specie_family_id > -1";
 
-	private static final String SELECT_NUM_USERS = "SELECT count(*) FROM user where active = 1";
+    private static final String SELECT_NUM_FAMILIES_WITH_SOUND = "SELECT distinct sp.family_id " +
+            "FROM sound s, specie sp, family f " +
+            "WHERE s.specie_id = sp.id and sp.family_id = f.id and sp.family_id > -1";
+
+	private static final String SELECT_NUM_SPECIES_WITH_PHOTO = "SELECT distinct specie_id " +
+            "FROM photo " +
+            "WHERE specie_id > -1";
+
+    private static final String SELECT_NUM_SPECIES_WITH_SOUND = "SELECT distinct specie_id " +
+            "FROM sound " +
+            "WHERE specie_id > -1";
+
+	private static final String SELECT_NUM_USERS = "SELECT count(*) " +
+            "FROM user " +
+            "WHERE active = 1";
+
+    private static final String SELECT_NUM_USERS_WITH_PHOTO = "SELECT count(*) " +
+            "FROM user " +
+            "WHERE active = 1 and addPhoto = 1 and name not like 'Teste%'";
+
+    private static final String SELECT_NUM_USERS_WITH_SOUND = "SELECT count(*) " +
+            "FROM user " +
+            "WHERE active = 1 and addSound = 1 and name not like 'Teste%'";
 
 	/**
 	 * This method returns the amount of photos in database
@@ -44,139 +70,177 @@ public class StatisticsDAO {
 	 *             If some SQL Exception occurs
 	 */
 	public int numberOfPhotos() throws DatabaseDownException, SQLException {
-		int number = 0;
-
-		Connection conn = DatabaseManager.getConnection();
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-
-		try {
-			stmt = conn.prepareStatement(SELECT_NUM_PHOTOS);
-			rs = stmt.executeQuery();
-			if (rs.next()) {
-				number = rs.getInt(1);
-			}
-		} catch (SQLException e) {
-			logger.error("AbstractDAO.retrieve : could not retrieve data ");
-			logger.error("Error in SQL : " + SELECT_NUM_PHOTOS, e);
-			throw e;
-		} finally {
-			closeResultSet(rs);
-			closeStatement(stmt);
-			conn.close();
-		}
-
-		return number;
+        return numberOfRows(SELECT_NUM_PHOTOS);
 	}
 
+    /**
+     * This method returns the amount of sounds in database
+     * 
+     * @return the amount of sounds in database
+     * 
+     * @throws DatabaseDownException  If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    public int numberOfSounds() throws DatabaseDownException, SQLException {
+        return numberOfRows(SELECT_NUM_SOUNDS);
+    }
+    
 	/**
 	 * This method returns the amount of families with photos in database
 	 * 
 	 * @return the amount of families with photos in database
 	 * 
-	 * @throws DatabaseDownException
-	 *             If the database is down
-	 * @throws SQLException
-	 *             If some SQL Exception occurs
+     * @throws DatabaseDownException  If the database is down
+     * @throws SQLException If some SQL Exception occurs
 	 */
-	public int numberOfFamilies() throws DatabaseDownException, SQLException {
-		int number = 0;
-
-		Connection conn = DatabaseManager.getConnection();
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-
-		try {
-			stmt = conn.prepareStatement(SELECT_NUM_FAMILIES);
-			rs = stmt.executeQuery();
-			while (rs.next()) {
-				number++;
-			}
-		} catch (SQLException e) {
-			logger.error("AbstractDAO.retrieve : could not retrieve data ");
-			logger.error("Error in SQL : " + SELECT_NUM_FAMILIES, e);
-			throw e;
-		} finally {
-			closeResultSet(rs);
-			closeStatement(stmt);
-			conn.close();
-		}
-
-		return number;
+	public int numberOfFamiliesWithPhoto() throws DatabaseDownException, SQLException {
+        return numberOfRowsByCounting(SELECT_NUM_FAMILIES_WITH_PHOTO);
 	}
+
+    /**
+     * This method returns the amount of families with sounds in database
+     * 
+     * @return the amount of families with sounds in database
+     * 
+     * @throws DatabaseDownException  If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    public int numberOfFamiliesWithSound() throws DatabaseDownException, SQLException {
+        return numberOfRowsByCounting(SELECT_NUM_FAMILIES_WITH_SOUND);
+    }
 
 	/**
 	 * This method returns the amount of species with photos in database
 	 * 
 	 * @return the amount of species with photos in database
 	 * 
-	 * @throws DatabaseDownException
-	 *             If the database is down
-	 * @throws SQLException
-	 *             If some SQL Exception occurs
+     * @throws DatabaseDownException  If the database is down
+     * @throws SQLException If some SQL Exception occurs
 	 */
-	public int numberOfSpecies() throws DatabaseDownException, SQLException {
-		int number = 0;
-
-		Connection conn = DatabaseManager.getConnection();
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-
-		try {
-			stmt = conn.prepareStatement(SELECT_NUM_SPECIES);
-			rs = stmt.executeQuery();
-			while (rs.next()) {
-				number++;
-			}
-		} catch (SQLException e) {
-			logger.error("AbstractDAO.retrieve : could not retrieve data ");
-			logger.error("Error in SQL : " + SELECT_NUM_SPECIES, e);
-			throw e;
-		} finally {
-			closeResultSet(rs);
-			closeStatement(stmt);
-			conn.close();
-		}
-
-		return number;
+	public int numberOfSpeciesWithPhoto() throws DatabaseDownException, SQLException {
+        return numberOfRowsByCounting(SELECT_NUM_SPECIES_WITH_PHOTO);
 	}
+
+    /**
+     * This method returns the amount of species with sounds in database
+     * 
+     * @return the amount of species with sounds in database
+     * 
+     * @throws DatabaseDownException  If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    public int numberOfSpeciesWithSound() throws DatabaseDownException, SQLException {
+        return numberOfRowsByCounting(SELECT_NUM_SPECIES_WITH_SOUND);
+    }
 
 	/**
 	 * This method returns the amount of users in database
 	 * 
 	 * @return the amount of users in database
 	 * 
-	 * @throws DatabaseDownException
-	 *             If the database is down
-	 * @throws SQLException
-	 *             If some SQL Exception occurs
+     * @throws DatabaseDownException  If the database is down
+     * @throws SQLException If some SQL Exception occurs
 	 */
 	public int numberOfUsers() throws DatabaseDownException, SQLException {
-		int number = 0;
-
-		Connection conn = DatabaseManager.getConnection();
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-
-		try {
-			stmt = conn.prepareStatement(SELECT_NUM_USERS);
-			rs = stmt.executeQuery();
-			if (rs.next()) {
-				number = rs.getInt(1);
-			}
-		} catch (SQLException e) {
-			logger.error("AbstractDAO.retrieve : could not retrieve data ");
-			logger.error("Error in SQL : " + SELECT_NUM_USERS, e);
-			throw e;
-		} finally {
-			closeResultSet(rs);
-			closeStatement(stmt);
-			conn.close();
-		}
-
-		return number;
+        return numberOfRows(SELECT_NUM_USERS);
 	}
 
+    /**
+     * This method returns the amount of users with photo in database
+     * 
+     * @return the amount of users with photo in database
+     * 
+     * @throws DatabaseDownException  If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    public int numberOfUsersWithPhoto() throws DatabaseDownException, SQLException {
+        return numberOfRows(SELECT_NUM_USERS_WITH_PHOTO);
+    }
+
+    /**
+     * This method returns the amount of users with sounds in database
+     * 
+     * @return the amount of users with sounds in database
+     * 
+     * @throws DatabaseDownException  If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    public int numberOfUsersWithSound() throws DatabaseDownException, SQLException {
+        return numberOfRows(SELECT_NUM_USERS_WITH_SOUND);
+    }
+
+    /**
+     * This method returns the amount of rows in database, for the given select statement
+     * 
+     * @param sql The select statement
+     * 
+     * @return the amount of rows in database
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    private int numberOfRows(String sql) throws DatabaseDownException, SQLException {
+        int number = 0;
+
+        Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            stmt = conn.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                number = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            logger.error("StatisticsDAO.numberOfRows : could not retrieve data ");
+            logger.error("Error in SQL : " + sql, e);
+            throw e;
+        } finally {
+            closeResultSet(rs);
+            closeStatement(stmt);
+            conn.close();
+        }
+
+        return number;
+    }
+    
+    /**
+     * This method returns the amount of families with photos in database
+     * 
+     * @return the amount of families with photos in database
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    private int numberOfRowsByCounting(String sql) throws DatabaseDownException, SQLException {
+        int number = 0;
+
+        Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            stmt = conn.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                number++;
+            }
+        } catch (SQLException e) {
+            logger.error("StatisticsDAO.numberOfRowsByCounting : could not retrieve data ");
+            logger.error("Error in SQL : " + sql, e);
+            throw e;
+        } finally {
+            closeResultSet(rs);
+            closeStatement(stmt);
+            conn.close();
+        }
+
+        return number;
+    }
+    
 	/**
 	 * This method closes the given statement
 	 * 

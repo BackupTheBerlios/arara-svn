@@ -38,27 +38,21 @@ public class StatisticsModel {
 	 */
 	public static Statistics retrieveStatistics() throws DatabaseDownException,
 			SQLException {
-		Statistics s = null;
-
+		Statistics s = new Statistics();
 		StatisticsDAO dao = new StatisticsDAO();
 
 		// retrieve number of photos
-		int photos = dao.numberOfPhotos();
+		s.setNumberOfPhotos(dao.numberOfPhotos());
+        s.setNumberOfSounds(dao.numberOfSounds());
+        s.setNumberOfFamiliesWithPhoto(dao.numberOfFamiliesWithPhoto());
+        s.setNumberOfFamiliesWithSound(dao.numberOfFamiliesWithSound());
+        s.setNumberOfSpeciesWithPhoto(dao.numberOfSpeciesWithPhoto());
+        s.setNumberOfSpeciesWithSound(dao.numberOfSpeciesWithSound());
 
-		// retrieve number of families
-		int families = dao.numberOfFamilies();
+        s.setNumberOfUsers(dao.numberOfUsers());
+        s.setNumberOfUsersWithPhoto(dao.numberOfUsersWithPhoto());
+        s.setNumberOfUsersWithSound(dao.numberOfUsersWithSound());
 
-		// retrieve number of species
-		int species = dao.numberOfSpecies();
-
-		// retrieve number of users
-		int users = dao.numberOfUsers();
-
-		s = new Statistics();
-		s.setNumberOfPhotos(photos);
-		s.setNumberOfFamilies(families);
-		s.setNumberOfSpecies(species);
-		s.setNumberOfUsers(users);
 		return s;
 	}
 }

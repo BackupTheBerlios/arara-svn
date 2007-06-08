@@ -6,9 +6,11 @@
 
 <font size="2" face="Verdana">
 
+<!--
 <li>
   <a href="#"><b><fmt:message key="menu.sounds.search" /></b></a>
   <ul>
+-->
   	<li>
 		<a href="<c:url value="/servlet/searchSounds?action=BEGIN"/>">
 		<fmt:message key="menu.sounds.search.all" /></a> 
@@ -33,22 +35,26 @@
 		<a href="<c:url value="/servlet/initSearchByUser?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataByUser.jsp&servletToCall=/servlet/searchSoundsByUser&action=BEGIN"/>">
 		<fmt:message key="menu.sounds.search.user" /></a>
 	</li>
+<!--	
   </ul>
 </li>
-
+-->
 
 <c:if test='<%= user != null %>'>
 	<c:if test="${user.addSound == true}">
-
+<!--
 	<li>
     	<a href="#"><b><fmt:message key="menu.sounds.send" /></b></a>
 		<ul>
+-->
 			<li>
 				<a href="<c:url value="/servlet/initUploadSounds"/>">
 				<fmt:message key="menu.sounds.send" /></a>
 			</li>
+<!--	
 		</ul>
 	</li>
+-->
 	</c:if>
 </c:if>
 

@@ -33,68 +33,123 @@ public class Statistics {
 	public static int getNumberOfPhotos() {
 		int n = 0;
 		try {
-			net.indrix.arara.vo.Statistics s = StatisticsModel
-					.retrieveStatistics();
+			net.indrix.arara.vo.Statistics s = StatisticsModel.retrieveStatistics();
 			n = s.getNumberOfPhotos();
 		} catch (DatabaseDownException e) {
-			logger.error(
-					"Statistics.getNumberOfPhotos: DatabaseDownException ", e);
+			logger.error("Statistics.getNumberOfPhotos: DatabaseDownException ", e);
 		} catch (SQLException e) {
 			logger.error("Statistics.getNumberOfPhotos: SQLException ", e);
 		}
 		return n;
 	}
 
-	public static int getNumberOfFamilies() {
+    public static int getNumberOfSounds() {
+        int n = 0;
+        try {
+            net.indrix.arara.vo.Statistics s = StatisticsModel.retrieveStatistics();
+            n = s.getNumberOfSounds();
+        } catch (DatabaseDownException e) {
+            logger.error("Statistics.getNumberOfSounds: DatabaseDownException ", e);
+        } catch (SQLException e) {
+            logger.error("Statistics.getNumberOfSounds: SQLException ", e);
+        }
+        return n;
+    }
+
+	public static int getNumberOfFamiliesWithPhoto() {
 		int n = 0;
 		try {
-			net.indrix.arara.vo.Statistics s = StatisticsModel
-					.retrieveStatistics();
-			n = s.getNumberOfFamilies();
+			net.indrix.arara.vo.Statistics s = StatisticsModel.retrieveStatistics();
+			n = s.getNumberOfFamiliesWithPhoto();
 		} catch (DatabaseDownException e) {
-			logger
-					.error(
-							"Statistics.getNumberOfFamilies: DatabaseDownException ",
-							e);
+			logger.error("Statistics.getNumberOfFamiliesWithPhoto: DatabaseDownException ", e);
 		} catch (SQLException e) {
-			logger.error("Statistics.getNumberOfFamilies: SQLException ", e);
+			logger.error("Statistics.getNumberOfFamiliesWithPhoto: SQLException ", e);
 		}
 		return n;
 	}
 
-	public static int getNumberOfSpecies() {
+    public static int getNumberOfFamiliesWithSound() {
+        int n = 0;
+        try {
+            net.indrix.arara.vo.Statistics s = StatisticsModel.retrieveStatistics();
+            n = s.getNumberOfFamiliesWithSound();
+        } catch (DatabaseDownException e) {
+            logger.error("Statistics.getNumberOfFamiliesWithSound: DatabaseDownException ", e);
+        } catch (SQLException e) {
+            logger.error("Statistics.getNumberOfFamiliesWithSound: SQLException ", e);
+        }
+        return n;
+    }
+
+	public static int getNumberOfSpeciesWithPhoto() {
 		int n = 0;
 		try {
-			net.indrix.arara.vo.Statistics s = StatisticsModel
-					.retrieveStatistics();
-			n = s.getNumberOfSpecies();
+			net.indrix.arara.vo.Statistics s = StatisticsModel.retrieveStatistics();
+			n = s.getNumberOfSpeciesWithPhoto();
 		} catch (DatabaseDownException e) {
-			logger
-					.error(
-							"Statistics.getNumberOfFamilies: DatabaseDownException ",
-							e);
+			logger.error("Statistics.getNumberOfSpeciesWithPhoto: DatabaseDownException ", e);
 		} catch (SQLException e) {
-			logger.error("Statistics.getNumberOfFamilies: SQLException ", e);
+			logger.error("Statistics.getNumberOfSpeciesWithPhoto: SQLException ", e);
 		}
 		return n;
 	}
 
-	public static int getNumberOfUsers() {
+    public static int getNumberOfSpeciesWithSound() {
+        int n = 0;
+        try {
+            net.indrix.arara.vo.Statistics s = StatisticsModel.retrieveStatistics();
+            n = s.getNumberOfSpeciesWithSound();
+        } catch (DatabaseDownException e) {
+            logger.error("Statistics.getNumberOfSpeciesWithSound: DatabaseDownException ", e);
+        } catch (SQLException e) {
+            logger.error("Statistics.getNumberOfSpeciesWithSound: SQLException ", e);
+        }
+        return n;
+    }
+
+    public static int getNumberOfUsers() {
 		// set n as 30 as a default value
 		int n = 30;
 		try {
-			net.indrix.arara.vo.Statistics s = StatisticsModel
-					.retrieveStatistics();
+			net.indrix.arara.vo.Statistics s = StatisticsModel.retrieveStatistics();
 			n = s.getNumberOfUsers();
 		} catch (DatabaseDownException e) {
-			logger.error(
-					"Statistics.getNumberOfPhotos: DatabaseDownException ", e);
+			logger.error("Statistics.getNumberOfPhotos: DatabaseDownException ", e);
 		} catch (SQLException e) {
 			logger.error("Statistics.getNumberOfPhotos: SQLException ", e);
 		}
 		return n;
 	}
 
+    public static int getNumberOfUsersWithPhoto() {
+        // set n as 30 as a default value
+        int n = 30;
+        try {
+            net.indrix.arara.vo.Statistics s = StatisticsModel.retrieveStatistics();
+            n = s.getNumberOfUsersWithPhoto();
+        } catch (DatabaseDownException e) {
+            logger.error("Statistics.getNumberOfPhotos: DatabaseDownException ", e);
+        } catch (SQLException e) {
+            logger.error("Statistics.getNumberOfPhotos: SQLException ", e);
+        }
+        return n;
+    }
+
+    public static int getNumberOfUsersWithSound() {
+        // set n as 30 as a default value
+        int n = 30;
+        try {
+            net.indrix.arara.vo.Statistics s = StatisticsModel.retrieveStatistics();
+            n = s.getNumberOfUsersWithSound();
+        } catch (DatabaseDownException e) {
+            logger.error("Statistics.getNumberOfPhotos: DatabaseDownException ", e);
+        } catch (SQLException e) {
+            logger.error("Statistics.getNumberOfPhotos: SQLException ", e);
+        }
+        return n;
+    }
+    
     public static String getSlideShow(String contextPath) {
         // ; is the separator
         String imgUrls="";

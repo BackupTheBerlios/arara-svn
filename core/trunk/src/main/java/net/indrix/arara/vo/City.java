@@ -75,7 +75,9 @@ public class City {
 		buffer.append(" - ");
 		buffer.append(name);
 		buffer.append(" - ");
-		buffer.append(state.getAcronym());
+        if (state != null){
+            buffer.append(state.getAcronym());           
+        } 
 		buffer.append("]");
 		return buffer.toString();
 	}

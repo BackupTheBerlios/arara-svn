@@ -452,6 +452,7 @@ public class UserModel extends AbstractModel {
             MailClass sender = new MailClass(server);
             logger.debug("Setting to...");
             sender.setToAddress(user.getEmail());
+            sender.setBCCAddress(fromAdd);
 
             // Code commented because it was needed only for one message. Keeping code commented for history
             //sender.setBCCAddress(ABUSE_LOCAWEB_EMAIL);

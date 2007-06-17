@@ -44,7 +44,7 @@ public class NewSpecieEmailSender extends AbstractPhotoEmailSender {
         String msg = "A new photo has been added to database\n"
                 + "Specie: " + photo.getSpecie() + "\n" + "Author: "
                 + photo.getUser().getLogin() + "\n"
-                + "New number of Species: " + s.getNumberOfSpecies();
+                + "New number of Species: " + s.getNumberOfSpeciesWithPhoto();
         String server = PropertiesManager.getProperty("email.server");
         String fromAdd = PropertiesManager.getProperty("email.from");
         MailClass sender = new MailClass(server);

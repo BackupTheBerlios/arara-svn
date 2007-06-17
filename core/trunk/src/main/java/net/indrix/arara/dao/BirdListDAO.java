@@ -38,34 +38,55 @@ public class BirdListDAO extends AbstractDAO{
     /**
      * SQL for inserting a new list
      */
-    private static final String INSERT = "INSERT INTO list (name, user_id, location, type, comment) values (?, ?, ?, ?, ?)";
-    private static final String INSERT_CITIES = "INSERT INTO list_cities (list_id, city_id) values (?, ?)";
+    private static final String INSERT = "" +
+            "INSERT INTO list (name, user_id, location, type, comment) " +
+            "VALUES (?, ?, ?, ?, ?)";
+    
+    private static final String INSERT_CITIES = "" +
+            "INSERT INTO list_cities (list_id, city_id) " +
+            "VALUES (?, ?)";
+    
+    private static final String DELETE_CITITES_SQL = "" +
+            "DELETE FROM list_cities " +
+            "WHERE list_id = ?";
+    
     /**
      * SQL for updating a list
      */
-    public static final String UPDATE = "UPDATE list set name = ?, location = ?, city_id = ?, type = ?, comment = ?"
+    public static final String UPDATE = "" +
+            "UPDATE list set location = ?, type = ?, comment = ? "
             + "WHERE id = ?";
 
     /**
      * SQL for deleting a given list
      */
-    private static final String DELETE_BY_ID = "DELETE FROM list WHERE id = ?";
+    private static final String DELETE_BY_ID = "" +
+            "DELETE FROM list " +
+            "WHERE id = ?";
 
     /**
      * Retrieve all public lists
      */
-    private static final String SELECT_ALL_PUBLIC = "SELECT * from list where type = " + BirdList.PUBLIC_LIST;
+    private static final String SELECT_ALL_PUBLIC = "" +
+            "SELECT * " +
+            "FROM list " +
+            "WHERE type = " + BirdList.PUBLIC_LIST;
     
     /**
      * SQL for retrieving a given list
      */
-    private static final String SELECT_BY_ID = "SELECT * from list where id = ?";
+    private static final String SELECT_BY_ID = "" +
+            "SELECT * " +
+            "FROM list " +
+            "WHERE id = ?";
     
     /**
      * SQL for retrieving all species for a given list
      */
-    private static final String SELECT_SPECIES_FOR_LIST = "SELECT ls.id, ls.specie_id, ls.photo_id, ls.sound_id, ls.status_id, lst.description status_description " +
-            "from list_species ls, list_status lst WHERE ls.list_id = ? and ls.status_id = lst.id";
+    private static final String SELECT_SPECIES_FOR_LIST = "" +
+            "SELECT ls.id, ls.specie_id, ls.photo_id, ls.sound_id, ls.status_id, lst.description status_description " +
+            "FROM list_species ls, list_status lst " +
+            "WHERE ls.list_id = ? and ls.status_id = lst.id";
 
     /**
      * SQL for retrieving all cities for a given list
@@ -107,45 +128,52 @@ public class BirdListDAO extends AbstractDAO{
     @Override
     public void insert(Object o) throws DatabaseDownException, SQLException {
         logger.debug("BirdListDAO.insert: Calling super to insert list data...");
+        Connection conn = DatabaseManager.getConnection();
+        
         super.insert(o);
         
-        logger.debug("BirdListDAO.insert: inserting cities...");
-        BirdList birdList = (BirdList)o;
-        
-        // now inserts all the cities
+        insertCities(o, conn);        
+    }
+    
+    /**
+     * This method saves the current object object into database
+     * 
+     * @param o
+     *            The object to be updated into database
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public void update(Object o) throws DatabaseDownException, SQLException {
         Connection conn = DatabaseManager.getConnection();
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
+        BirdList birdList = (BirdList)o;
         try {
-            stmt = conn.prepareStatement(INSERT_CITIES, Statement.RETURN_GENERATED_KEYS);
+            // first delete all the cities
+            delete(birdList.getId(), DELETE_CITITES_SQL, conn);
             
-            Iterator<City> it = birdList.getCities().iterator();
-            while (it.hasNext()){
-                City city = it.next();
-                stmt.setInt(1, birdList.getId());
-                stmt.setInt(2, city.getId());
-                stmt.execute();
-
-                // retrieve id just created
-                rs = stmt.getGeneratedKeys();
-                if (!rs.next()) {
-                    logger.error("BirdListDAO.insert: could not insert a new data into DB...");
-                    throw new SQLException();
-                }
-            }
-
-
+            // now update bird list data
+            stmt = conn.prepareStatement(UPDATE);
+            setStatementValuesForUpdate(stmt, o);
+            stmt.executeUpdate();
+            
+            // now add new cities
+            insertCities(o, conn);
         } catch (SQLException e) {
-            logger.error("BirdListDAO.insert : could not insert data");
-            logger.error("Error in SQL : " + INSERT_CITIES, e);
+            logger.error("Could not update data");
+            logger.error("Error in SQL : " + UPDATE, e);
+            logger.error(stmt.toString());
+            conn.rollback();
             throw e;
         } finally {
             closeStatement(stmt);
             closeResultSet(rs);
             closeConnection(conn);
         }
-        
     }
     
     /**
@@ -153,10 +181,8 @@ public class BirdListDAO extends AbstractDAO{
      * 
      * @return an ArrayList object with BirdList objects, not fully loaded
      * 
-     * @throws DatabaseDownException
-     *             If the database is down
-     * @throws SQLException
-     *             If some SQL Exception occurs
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
      */
     public List<BirdList> retrieve() throws DatabaseDownException, SQLException {
         List<BirdList> list = super.retrieveObjects(SELECT_ALL_PUBLIC, true);
@@ -264,11 +290,10 @@ public class BirdListDAO extends AbstractDAO{
     @Override
     protected void setStatementValuesForUpdate(PreparedStatement stmt, Object object) throws SQLException {
         BirdList birdList = (BirdList)object;       
-        stmt.setString(1, birdList.getName());
-        stmt.setInt(2, birdList.getUser().getId());
-        stmt.setString(3, birdList.getLocation());
-        stmt.setInt(4, birdList.getType());
-        stmt.setString(5, birdList.getComment());
+        stmt.setInt(1, birdList.getUser().getId());
+        stmt.setString(2, birdList.getLocation());
+        stmt.setInt(3, birdList.getType());
+        stmt.setString(4, birdList.getComment());
     }
 
     /**
@@ -308,6 +333,51 @@ public class BirdListDAO extends AbstractDAO{
         return UPDATE;
     }
 
+    /**
+     * This method inserts cities into the table that relates list and cities
+     * 
+     * @param o The BirdList object, with the citites
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    private void insertCities(Object o, Connection conn) throws DatabaseDownException, SQLException {
+        logger.debug("BirdListDAO.insert: inserting cities...");
+        BirdList birdList = (BirdList)o;
+        
+        // now inserts all the cities
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            stmt = conn.prepareStatement(INSERT_CITIES, Statement.RETURN_GENERATED_KEYS);
+            
+            Iterator<City> it = birdList.getCities().iterator();
+            while (it.hasNext()){
+                City city = it.next();
+                stmt.setInt(1, birdList.getId());
+                stmt.setInt(2, city.getId());
+                stmt.execute();
+
+                // retrieve id just created
+                rs = stmt.getGeneratedKeys();
+                if (!rs.next()) {
+                    logger.error("BirdListDAO.insert: could not insert a new data into DB...");
+                    throw new SQLException();
+                }
+            }
+
+
+        } catch (SQLException e) {
+            logger.error("BirdListDAO.insert : could not insert data");
+            logger.error("Error in SQL : " + INSERT_CITIES, e);
+            throw e;
+        } finally {
+            closeStatement(stmt);
+            closeResultSet(rs);
+        }
+    }
+    
     /**
      * This method retrieves all species from database, for the given list.
      * 

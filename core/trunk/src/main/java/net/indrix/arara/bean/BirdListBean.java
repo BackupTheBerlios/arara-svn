@@ -71,6 +71,7 @@ public class BirdListBean implements IBean{
         comment = null;
         statesList = null;
         selectedStateId = null;
+        currentStateCities = null;
         
     }
 

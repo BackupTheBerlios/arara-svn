@@ -18,6 +18,8 @@ public interface DAOConstants {
 	public static final String USER_ID_COLUMN = "user_id";
 
 	public static final String SPECIE_NAME_COLUMN = "s_name";
+    
+    public static final String ENGLISH_NAME_COLUMN = "english_name";
 
 	public static final String FAMILY_ID_COLUMN = "f_id";
 

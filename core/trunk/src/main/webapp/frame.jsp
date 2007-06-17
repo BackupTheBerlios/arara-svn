@@ -582,11 +582,6 @@ window.onload = initSlideDownMenu;
 <c:set var="mainBgColor" value="#669900" scope="application" />
 <c:set var="formTitleColor" value="#000000" scope="application" />
 
-<!-- DEBUG
-PageToShow:${pageToShow}<br>
-param.pageToShow:${param.pageToShow}
--->
-
 <c:if test="${pageToShow != null && pageToShow != ''}">
 	<c:set var="page" value="${pageToShow}" />
 </c:if>
@@ -628,14 +623,15 @@ param.pageToShow:${param.pageToShow}
   <tr>
     <td width="20%" height="100%" align="left" valign="top" bgcolor="${mainBgColor}">
         <c:import url="/menu.jsp" />		
-		<%--
-		<c:import url="/jsp/marketing.jsp"/>
-		--%>
 		<hr>					
 		&nbsp;<a href="<c:url value="/frame.jsp?pageToShow=/jsp/colaboradores.html"/>">Colaboradores do site</a>
         <hr>
 		<img src="<c:url value="/images/chart.png"/>" alt="" width="20" height="20"><b><fmt:message key="menu.statistics.statistics"/></b><br/>
         <c:import url="/statistics.jsp" />
+        <hr>
+		&nbsp;&nbsp;<c:import url="/jsp/marketing.jsp"/>
+		<hr>
+		<b><fmt:message key="site.message" /></b>
     </td>
     <td width="80%" colspan="2" valign="top" align="left" height="100%" bgcolor="${mainBgColor}">
 		<c:import url="/jsp/showErrors.jsp" /> 

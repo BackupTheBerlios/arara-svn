@@ -5,7 +5,7 @@
 	<tr>
 		<td>
 		<p>Sistema de banco de dados de imagens e sons de aves do Brasil, versão
-		04.00</p>
+		4.1</p>
 		<hr>
 		<p>Seja bem-vindo ao <b>Sistema de Informações de Aves do Brasil</b>.
 		</p>

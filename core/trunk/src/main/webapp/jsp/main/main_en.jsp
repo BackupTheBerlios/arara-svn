@@ -4,7 +4,7 @@
 <table width="100%" border="0" cellspacing="2" height="100%">
 	<tr>
 		<td>
-		<p>Brazilian Birds Database System, version 04.00</p>
+		<p>Brazilian Birds Database System, version 4.1</p>
 		<hr>
 		<p>Welcome to the <b>Brazilian Birds System</b>.</p>
 		<p>The goal of this project is to provide an easy way for those

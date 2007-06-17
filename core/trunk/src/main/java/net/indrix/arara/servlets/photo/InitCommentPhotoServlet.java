@@ -22,6 +22,7 @@ import net.indrix.arara.vo.User;
 
 import org.apache.log4j.Logger;
 
+@SuppressWarnings("serial")
 public class InitCommentPhotoServlet extends HttpServlet {
     /**
      * Logger object used to log messages

@@ -25,6 +25,8 @@ import org.apache.log4j.Logger;
 public abstract class PaginationController {
 	protected static Logger logger = Logger.getLogger("net.indrix.aves");
 
+    private static final int PAGES_INTERVAL = 10;
+    
     /**
      * Flag to control wheter the media is for identification or not
      */
@@ -55,6 +57,11 @@ public abstract class PaginationController {
      */
     protected int id;
 
+    /**
+     * The page number, when necessary, to go
+     */
+    protected int pageToGo;
+    
     /**
      * The text, when necessary, to retrieve data from database
      */
@@ -112,7 +119,9 @@ public abstract class PaginationController {
 			reset();
 		} else if (action.equals(ServletConstants.LAST)) {
 			last();
-		}
+		} else if (action.equals(ServletConstants.GO_TO_PAGE)){
+		    goToPage();
+        }
 
 		try {
 			retrieveDataForPage();
@@ -126,7 +135,7 @@ public abstract class PaginationController {
 		return viewOfList;
 	}
 
-	/**
+    /**
 	 * Retrieve the data for the current page
 	 * 
 	 * @throws DatabaseDownException
@@ -165,7 +174,7 @@ public abstract class PaginationController {
 	}
 
 	/**
-	 * This method increments the index
+	 * This method moves to the next page
 	 */
 	public void next() throws InvalidControllerException {
 		if (listOfData == null) {
@@ -176,7 +185,7 @@ public abstract class PaginationController {
 	}
 
 	/**
-	 * This method decrements the index
+	 * This method moves to the previous page
 	 */
 	public void previous() throws InvalidControllerException {
 		if (listOfData == null) {
@@ -186,9 +195,9 @@ public abstract class PaginationController {
 		}
 	}
 
-	/**
-	 * 
-	 */
+    /**
+     * This method moves to the last page
+     */
 	private void last() throws InvalidControllerException {
 		if (listOfData == null) {
 			throw new InvalidControllerException();
@@ -201,6 +210,29 @@ public abstract class PaginationController {
 			currentIndex = page * dataPerPage;
 		}
 	}
+
+    /**
+     * This method moves to the specified page
+     *  
+     * @param stringPage The page number, as String
+     * 
+     * @throws InvalidControllerException 
+     */
+    private void goToPage() throws InvalidControllerException {
+        int currentPage = (currentIndex / dataPerPage) + 1;
+        logger.debug("Going from " + currentPage + " to page " + pageToGo);
+        if (pageToGo < currentPage){
+            for (int i = 0; i < currentPage - pageToGo; i++){
+                logger.debug("calling previous method...");
+                previous();
+            }
+        } else {
+            for (int i = 0; i < pageToGo - currentPage; i++){
+                logger.debug("calling next method...");
+                next();
+            }           
+        }
+    }
 
 	/**
 	 * This method determine if there is a previous page to be displayed
@@ -297,8 +329,37 @@ public abstract class PaginationController {
      * @return the amount of data retrieved
      */
     public PaginationBean getPaginationBean(){
-        paginationBean.setNumberOfPages((listOfData.size() / dataPerPage) + 1);
-        paginationBean.setCurrentPage((currentIndex / dataPerPage) + 1);
+        int numberOfPages = 0;
+        if (listOfData != null){            
+            if ((listOfData.size() % dataPerPage) == 0){
+                numberOfPages = (listOfData.size() / dataPerPage);
+            } else {
+                numberOfPages = (listOfData.size() / dataPerPage)+1;
+            }
+            int currentPage = (currentIndex / dataPerPage) + 1;
+            int initialPage = 0;
+            if ((currentPage - (PAGES_INTERVAL/2)) > 0){
+                initialPage = currentPage - (PAGES_INTERVAL/2);
+            } else {
+                initialPage = 1;
+            }
+            
+            int finalPage = 0;
+            if ((initialPage + PAGES_INTERVAL - 1) < numberOfPages){
+                finalPage = initialPage + PAGES_INTERVAL - 1;
+            } else {
+                finalPage = numberOfPages;
+            }
+            
+            paginationBean.setNumberOfPages(numberOfPages);
+            paginationBean.setCurrentPage(currentPage);
+            paginationBean.setInitialPageForIndex(initialPage);
+            paginationBean.setFinalPageForIndex(finalPage);
+        }
         return paginationBean;
+    }
+
+    public void setPageToGo(int pageToGo) {
+        this.pageToGo = pageToGo;
     }
 }

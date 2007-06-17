@@ -65,23 +65,41 @@
 	</function>
 
 	<function>
-		<name>numberOfFamilies</name>
-		<function-class>
-			net.indrix.arara.utils.jsp.Statistics
-		</function-class>
-		<function-signature>
-			int getNumberOfFamilies()
-		</function-signature>
+		<name>numberOfSounds</name>
+		<function-class>net.indrix.arara.utils.jsp.Statistics</function-class>
+		<function-signature>int getNumberOfSounds()</function-signature>
 	</function>
 
 	<function>
-		<name>numberOfSpecies</name>
+		<name>numberOfFamiliesWithPhoto</name>
 		<function-class>
 			net.indrix.arara.utils.jsp.Statistics
 		</function-class>
-		<function-signature>
-			int getNumberOfSpecies()
-		</function-signature>
+		<function-signature>int getNumberOfFamiliesWithPhoto()</function-signature>
+	</function>
+
+	<function>
+		<name>numberOfFamiliesWithSound</name>
+		<function-class>
+			net.indrix.arara.utils.jsp.Statistics
+		</function-class>
+		<function-signature>int getNumberOfFamiliesWithSound()</function-signature>
+	</function>
+
+	<function>
+		<name>numberOfSpeciesWithPhoto</name>
+		<function-class>
+			net.indrix.arara.utils.jsp.Statistics
+		</function-class>
+		<function-signature>int getNumberOfSpeciesWithPhoto()</function-signature>
+	</function>
+
+	<function>
+		<name>numberOfSpeciesWithSound</name>
+		<function-class>
+			net.indrix.arara.utils.jsp.Statistics
+		</function-class>
+		<function-signature>int getNumberOfSpeciesWithSound()</function-signature>
 	</function>
 
 	<function>
@@ -90,6 +108,22 @@
 			net.indrix.arara.utils.jsp.Statistics
 		</function-class>
 		<function-signature>int getNumberOfUsers()</function-signature>
+	</function>
+
+	<function>
+		<name>numberOfUsersWithPhoto</name>
+		<function-class>
+			net.indrix.arara.utils.jsp.Statistics
+		</function-class>
+		<function-signature>int getNumberOfUsersWithPhoto()</function-signature>
+	</function>
+
+	<function>
+		<name>numberOfUsersWithSound</name>
+		<function-class>
+			net.indrix.arara.utils.jsp.Statistics
+		</function-class>
+		<function-signature>int getNumberOfUsersWithSound()</function-signature>
 	</function>
 
 	<function>

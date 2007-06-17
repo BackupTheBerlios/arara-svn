@@ -24,8 +24,6 @@ import net.indrix.arara.servlets.pagination.PaginationController;
 import net.indrix.arara.servlets.pagination.exceptions.InvalidControllerException;
 import net.indrix.arara.vo.User;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Jefferson
  * 
@@ -34,8 +32,7 @@ import org.apache.log4j.Logger;
  */
 @SuppressWarnings("serial")
 public class SearchPhotosServlet extends AbstractSearchPhotosServlet {
-	private static Logger logger = Logger.getLogger("net.indrix.aves");
-
+    
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
 		doGet(req, res);
@@ -66,6 +63,8 @@ public class SearchPhotosServlet extends AbstractSearchPhotosServlet {
 
 		logger.debug("Retrieving controller ...");
 		PaginationController controller = getPaginationController(session, identification, getPaginationConstant(), action);
+		handlePageNumber(controller, req);
+        
 		List list = null;
 		if (identification) {
 			logger.debug("Retrieving photos for identification...");
@@ -115,7 +114,7 @@ public class SearchPhotosServlet extends AbstractSearchPhotosServlet {
     protected int getPaginationConstant() {
         return PAGINATION_FOR_ALL_PHOTOS;
     }  
-    
+        
 	private List getListOfPhotos(String action, PaginationController controller) {
 		List list = null;
 		try {

@@ -42,6 +42,8 @@ import org.apache.log4j.Logger;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public abstract class AbstractSearchPhotosServlet extends HttpServlet {
+    private static final String PAGE_NUMBER = "pageNumber";
+    
     public static final int PAGINATION_FOR_ALL_PHOTOS = 0;
 
     public static final int PAGINATION_FOR_FAMILY = 1;
@@ -56,8 +58,7 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
 
     protected static Logger logger = Logger.getLogger("net.indrix.aves");
 
-    protected static Logger loggerActions = Logger
-            .getLogger("net.indrix.actions");
+    protected static Logger loggerActions = Logger.getLogger("net.indrix.actions");
 
     private static String PHOTOS_BY_PAGE_KEY = "photos.per.page";
 
@@ -98,6 +99,7 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
             List list = null;
             PhotoPaginationController controller = (PhotoPaginationController) getPaginationController(
                     session, false, getPaginationConstant(), action);
+            handlePageNumber(controller, req);            
             controller.setId(id);
             controller.setText(textToSearch);           
             try {
@@ -175,6 +177,20 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
 
     protected abstract int getPaginationConstant();
 
+    protected void handlePageNumber(PaginationController controller, HttpServletRequest req){
+        String pageNumber = req.getParameter(PAGE_NUMBER);
+        if (pageNumber != null && pageNumber.trim().length() > 0){
+            int number = Integer.parseInt(pageNumber);
+            if (number <= 0){
+                number = 1;
+            }
+            logger.debug("Setting page " + number + " to controller...");
+            controller.setPageToGo(number);            
+        } else {
+            logger.debug("Could not retrieve page number");
+        }
+    }
+    
     protected PaginationController getPaginationController(HttpSession session,
             boolean ident, int target, String action) {
 

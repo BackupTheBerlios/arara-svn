@@ -60,7 +60,7 @@
 		</c:if>
 		]&nbsp;&nbsp;&nbsp;&nbsp;
 		<c:if test="${paginationBean.numberOfPages > 1}">
-			<fmt:message	key="pagination.page"/>: <input name="pageNumber" type="text" size="2" maxlength="2">
+			<fmt:message	key="pagination.page"/>: <input name="pageNumber" type="text" size="3" maxlength="3">
 		</c:if>
 	</td>
 	<td width="25%"  align="left">

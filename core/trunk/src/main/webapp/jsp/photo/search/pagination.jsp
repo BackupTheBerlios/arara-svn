@@ -9,6 +9,14 @@
         %> 
 
 <tr>
+<form name="pageForm" action="<c:url value="${servletToCall}"/>" onSubmit="return submitPageForm()">
+    <input type=hidden name="servletToCall" value="${servletToCall}">
+    <input type=hidden name="action" value="GO">
+    <input type=hidden name="identification" value="${identification}">
+    <input type=hidden name="id" value="${id}">
+    <input type=hidden name="nextPage" value="${nextPage}">
+    <input type=hidden name="pageToShow" value="${pageToShow}">
+
 	<td align="center" valign="center">
 	<table width="100%">
 	<tr>
@@ -18,8 +26,7 @@
        	%> 
        		<a href="<c:url value="${servletToCall}?identification=${identification}&action=FIRST&id=${id}&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">
 				<fmt:message key="pagination.first" var="paginagion.first"/>
-       			<b><img border="0" align="middle" title="${paginagion.first}" src="<c:url value="/images/navigate_left2.gif"/>" width="24" height="24"></b>
-       		</a>&nbsp;&nbsp;&nbsp;&nbsp; 
+       			<b><img border="0" align="middle" title="${paginagion.first}" src="<c:url value="/images/navigate_left2.gif"/>" width="24" height="24"></b></a>&nbsp;&nbsp;&nbsp;&nbsp; 
        	<%
 	   	}
         
@@ -35,7 +42,26 @@
         %> 
 	</td>
 	<td width="50%" align="center">
-		[<fmt:message	key="pagination.page"/> ${paginationBean.currentPage} <fmt:message key="pagination.page.of"/> ${paginationBean.numberOfPages}]&nbsp;&nbsp;&nbsp;&nbsp;
+		[<fmt:message	key="pagination.page"/> 
+		
+		<c:forEach var='page' begin='${paginationBean.initialPageForIndex}' end='${paginationBean.finalPageForIndex}'>
+			<c:if test="${page == paginationBean.currentPage}">
+				<c:out value='${page}'/>
+			</c:if>
+			<c:if test="${page != paginationBean.currentPage}">
+		        <a href="<c:url value="${servletToCall}?identification=${identification}&action=GO&pageNumber=${page}&id=${id}&nextPage=${nextPage}&pageToShow=${pageToShow}"/>"><c:out value='${page}'/></a>
+			</c:if>
+		    
+		</c:forEach>		
+		
+		<c:if test="${paginationBean.finalPageForIndex < paginationBean.numberOfPages}">
+			<fmt:message key="pagination.page.of"/> 
+			<a href="<c:url value="${servletToCall}?identification=${identification}&action=LAST&id=${id}&nextPage=${nextPage}&pageToShow=${pageToShow}"/>"><c:out value='${paginationBean.numberOfPages}'/></a>			
+		</c:if>
+		]&nbsp;&nbsp;&nbsp;&nbsp;
+		<c:if test="${paginationBean.numberOfPages > 1}">
+			<fmt:message	key="pagination.page"/>: <input name="pageNumber" type="text" size="2" maxlength="2">
+		</c:if>
 	</td>
 	<td width="25%"  align="left">
         <% if ((p != null) && (p.hasNext())){
@@ -65,4 +91,5 @@
 	</tr>
 	</table>
 	</td>
+</form>
 </tr>

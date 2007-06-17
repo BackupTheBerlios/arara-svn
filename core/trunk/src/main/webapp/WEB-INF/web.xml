@@ -231,9 +231,9 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>getPhoto</servlet-name>
+		<servlet-name>goToPage</servlet-name>
 		<servlet-class>
-			net.indrix.arara.servlets.photo.GetPhotoServlet
+			net.indrix.arara.servlets.photo.GoToPageServlet
 		</servlet-class>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
@@ -435,6 +435,22 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>editBirdList</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.birdlist.EditBirdListServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>deleteBirdList</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.birdlist.DeleteBirdListServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
 		<servlet-name>showUsersBirdLists</servlet-name>
 		<servlet-class>
 			net.indrix.arara.servlets.birdlist.ShowUserBirdListsServlet
@@ -475,12 +491,19 @@
 		<load-on-startup>2</load-on-startup>
 	</servlet>
 -->
+	<servlet>
+		<servlet-name>addEnglishNames</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.utils.AddEnglishNameServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
 
 	<servlet>
 		<description>city Find</description>
 		<display-name>cityFind</display-name>
 		<servlet-name>cityFind</servlet-name>
-		<servlet-class>	net.indrix.maps.servlets.CityFindServlet</servlet-class>
+		<servlet-class>net.indrix.maps.servlets.CityFindServlet</servlet-class>
 		<init-param>
 			<description>City to find</description>
 			<param-name>city</param-name>
@@ -488,6 +511,15 @@
 		</init-param>
 		<load-on-startup>2</load-on-startup>		
 	</servlet>
+
+	<!-- FILTERS -->
+    <filter>
+        <filter-name>MaintenanceFilter</filter-name>
+        <filter-class>net.indrix.arara.filters.MaintenanceFilter</filter-class>
+        <description>
+            This filter all requests, redirecting to a maintenance page
+        </description>
+    </filter>
 
 
 	<!-- ======================================================================== -->
@@ -612,8 +644,8 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>getPhoto</servlet-name>
-		<url-pattern>/servlet/getPhoto</url-pattern>
+		<servlet-name>goToPage</servlet-name>
+		<url-pattern>/servlet/goToPage</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
@@ -739,6 +771,10 @@
 		<url-pattern>/servlet/addCities</url-pattern>
 	</servlet-mapping>
 -->
+	<servlet-mapping>
+		<servlet-name>addEnglishNames</servlet-name>
+		<url-pattern>/servlet/addEnglishNames</url-pattern>
+	</servlet-mapping>
 	
 	<servlet-mapping>
 		<servlet-name>cityFind</servlet-name>
@@ -763,15 +799,30 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
+		<servlet-name>editBirdList</servlet-name>
+		<url-pattern>/servlet/editBirdList</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
 		<servlet-name>createBirdList</servlet-name>
 		<url-pattern>/servlet/createBirdList</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>deleteBirdList</servlet-name>
+		<url-pattern>/servlet/deleteBirdList</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>showUsersBirdLists</servlet-name>
 		<url-pattern>/servlet/showUsersBirdLists</url-pattern>
 	</servlet-mapping>
-
+  
+    <filter-mapping>
+        <filter-name>MaintenanceFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping> 
+      
 	<!-- The Usual Welcome File List -->
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>

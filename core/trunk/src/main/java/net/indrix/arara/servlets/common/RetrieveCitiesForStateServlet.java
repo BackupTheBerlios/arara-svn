@@ -44,6 +44,7 @@ public class RetrieveCitiesForStateServlet extends AbstractServlet {
         String nextPage = req.getParameter(ServletConstants.NEXT_PAGE_KEY);
         String pageToShow = req.getParameter(ServletConstants.PAGE_TO_SHOW_KEY);
         String servletToCall = req.getParameter(ServletConstants.SERVLET_TO_CALL_KEY);
+        String action = req.getParameter(ServletConstants.ACTION);
         
         logger.debug("VALORES>>>");
         String [] values = req.getParameterValues("selectedCities");
@@ -82,6 +83,7 @@ public class RetrieveCitiesForStateServlet extends AbstractServlet {
                         req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
                         req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);
                         req.setAttribute(ServletConstants.SERVLET_TO_CALL_KEY, servletToCall);
+                        req.setAttribute(ServletConstants.ACTION, action);
 					} else {
 						logger.debug("Cities list not found...");
 						errors.add(ServletConstants.DATABASE_ERROR);

@@ -30,25 +30,51 @@ public class SpecieDAO extends AbstractDAO {
 
 	private static final String NAME_COLUMN = "name";
 
+    private static final String ENGLISH_NAME_COLUMN = "english_name";
+
 	private static final String FAMILY_ID_COLUMN = "family_id";
 
 	private static final String FAMILY_NAME_COLUMN = "f_name";
     
     private static final String SUB_FAMILY_NAME_COLUMN = "f_subFamilyName";
 
-	private static final String INSERT = "INSERT INTO specie (name, family_id) values (?, ?)";
+	private static final String INSERT = "" +
+            "INSERT INTO specie (name, family_id) " +
+            "VALUES (?, ?)";
 
-	private static final String INSERT_COMMON_NAME = "INSERT INTO specie_has_common_name (specie_id, specie_family_id, common_name_id) "
-			+ "values (?, ?, ?)";
+	private static final String INSERT_COMMON_NAME = "" +
+            "INSERT INTO specie_has_common_name (specie_id, specie_family_id, common_name_id) " +
+            "VALUES (?, ?, ?)";
 
-	private static final String SELECT_BY_NAME = "SELECT s.id, s.name, s.family_id, f.name f_name, f.subFamilyName f_subFamilyName from specie s, family f where s.family_id=f.id and s.name like ? ORDER BY name";
+	private static final String SELECT_BY_NAME = "" +
+            "SELECT s.id, s.name, s.english_name, s.family_id, f.name f_name, f.subFamilyName f_subFamilyName " +
+            "FROM specie s, family f " +
+            "WHERE s.family_id=f.id and s.name like ? " +
+            "ORDER BY name";
 
-	private static final String SELECT_BY_ID = "SELECT s.id, s.name, s.family_id, f.name f_name, f.subFamilyName f_subFamilyName from specie s, family f where s.id=? AND s.family_id=f.id ORDER BY name";
+	private static final String SELECT_BY_ID = "" +
+            "SELECT s.id, s.name, s.english_name, s.family_id, f.name f_name, f.subFamilyName f_subFamilyName " +
+            "FROM specie s, family f " +
+            "WHERE s.id=? AND s.family_id=f.id " +
+            "ORDER BY name";
 
-	private static final String SELECT_FOR_FAMILY = "SELECT * FROM specie where family_id = ? ORDER BY name";
+	private static final String SELECT_FOR_FAMILY = "" +
+            "SELECT * " +
+            "FROM specie " +
+            "WHERE family_id = ? " +
+            "ORDER BY name";
 
-	private static final String SELECT_ALL = "SELECT s.id, s.name, s.family_id, f.name f_name, f.subFamilyName f_subFamilyName from specie s, family f where s.family_id=f.id and s.id != -1 ORDER BY name";
+	private static final String SELECT_ALL = "" +
+            "SELECT s.id, s.name, s.english_name, s.family_id, f.name f_name, f.subFamilyName f_subFamilyName " +
+            "FROM specie s, family f " +
+            "WHERE s.family_id=f.id and s.id != -1 " +
+            "ORDER BY name";
 
+    private static final String SELECT_FOR_COMMON_NAME = "" +
+            "SELECT s.id, s.name, s.english_name, s.family_id, f.name f_name, f.subFamilyName f_subFamilyName " +
+            "FROM specie s, family f, specie_has_common_name shcn, common_name cn " +
+            "WHERE s.family_id=f.id and s.id != -1 and s.id = shcn.specie_id and shcn.common_name_id = cn.id and cn.name = ?" +
+            "ORDER BY s.name";
 	/**
 	 * The list of species to be kept in memory
 	 */
@@ -111,6 +137,36 @@ public class SpecieDAO extends AbstractDAO {
 		}
 	}
 
+    /**
+     * This method inserts a new specie to the database. It inserts in two
+     * tables: <br> - SPECIE - SPECIE_HAS_COMMON_NAME
+     * 
+     * @param specie
+     */
+    public void insertEnglishName(Specie specie) throws DatabaseDownException,
+            SQLException {
+
+        // first, retrieve specie based on 
+        Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = null;
+
+        try {
+            conn.setAutoCommit(false);
+
+            stmt = conn.prepareStatement("UPDATE specie SET english_name = ? where id = ?");
+            stmt.setString(1, specie.getEnglishName());
+            stmt.setInt(2, specie.getId());
+            stmt.execute();
+
+            conn.commit();
+        } catch (SQLException e) {
+                throw e;
+        } finally {
+            closeStatement(stmt);
+            conn.close();
+        }
+    }
+    
 	/**
 	 * This method retrieves all species from database
 	 * 
@@ -206,10 +262,8 @@ public class SpecieDAO extends AbstractDAO {
 	 * 
 	 * @return a <code>Specie</code> object
 	 * 
-	 * @throws DatabaseDownException
-	 *             If the database is down
-	 * @throws SQLException
-	 *             If some SQL Exception occurs
+	 * @throws DatabaseDownException If the database is down
+	 * @throws SQLException If some SQL Exception occurs
 	 */
 	public Specie retrieve(int id) throws DatabaseDownException, SQLException {
 		Specie specie = (Specie) super.retrieveObject(id, SELECT_BY_ID);
@@ -217,6 +271,43 @@ public class SpecieDAO extends AbstractDAO {
 		commonNameDAO.retrieveForSpecie(specie);
 		return specie;
 	}
+
+    /**
+     * This method retrieves a specie, based on its common name
+     * 
+     * @param string The specie common name
+     * 
+     * @return a <code>Specie</code> object
+     * @throws DatabaseDownException If the database is down
+     */
+    public Specie retrieveForCommonName(String string) throws DatabaseDownException {
+        Specie s = null;
+        CommonNameDAO commonNameDAO = new CommonNameDAO();
+        Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            stmt = conn.prepareStatement(SELECT_FOR_COMMON_NAME);
+            stmt.setString(1, string);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                s = (Specie)createObject(rs);
+                commonNameDAO.retrieveForSpecie(s);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResultSet(rs);
+            closeStatement(stmt);
+            try {
+                conn.close();
+            } catch (SQLException e1) {
+                throw new DatabaseDownException();
+            }
+        }
+        return s;
+    }
 
 	/**
 	 * This method creates a <code>Specie</code> object with the data from
@@ -234,6 +325,7 @@ public class SpecieDAO extends AbstractDAO {
 		specie = new Specie();
 		specie.setId(rs.getInt(ID_COLUMN));
 		specie.setName(rs.getString(NAME_COLUMN));
+        specie.setEnglishName(rs.getString(ENGLISH_NAME_COLUMN));
 		Family f = new Family();
 		f.setId(rs.getInt(FAMILY_ID_COLUMN));
 		f.setName(rs.getString(FAMILY_NAME_COLUMN));
@@ -259,6 +351,7 @@ public class SpecieDAO extends AbstractDAO {
 		specie = new Specie();
 		specie.setId(rs.getInt(ID_COLUMN));
 		specie.setName(rs.getString(NAME_COLUMN));
+        specie.setEnglishName(rs.getString(ENGLISH_NAME_COLUMN));
 		specie.setFamily(family);
 		return specie;
 	}

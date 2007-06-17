@@ -51,9 +51,10 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
     /**
      * SQL to select a photo by a given ID
      */
-    private static final String SELECT_BY_ID = "SELECT p.id, p.date, p.place, p.city_id, p.camera, p.lens, p.film, "
+    private static final String SELECT_BY_ID = "" +
+            "SELECT p.id, p.date, p.place, p.city_id, p.camera, p.lens, p.film, "
             + "p.w, p.h, p.imageSize, p.sW, p.sH, p.smallImageSize, p.comment, p.post_date,"
-            + "s.id s_id, s.name s_name, "
+            + "s.id s_id, s.name s_name, s.english_name english_name, "
             + "f.id f_id, f.name f_name, f.subFamilyName f_sub_name, "
             + "p.user_id, p.age_id, p.sex_id, "
             + "c.id city_id, c.name city_name, c.state_id state_id "
@@ -64,9 +65,10 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
      * SQL to select a photo by a given ID. Only the thumbnail image is
      * retrieved
      */
-    private static final String SELECT_THUMBNAIL_BY_ID = "SELECT p.id, p.date, p.place, p.city_id, p.camera, p.lens, p.film, "
+    private static final String SELECT_THUMBNAIL_BY_ID = "" +
+            "SELECT p.id, p.date, p.place, p.city_id, p.camera, p.lens, p.film, "
             + "p.w, p.h, p.imageSize, p.sW, p.sH, p.smallImageSize, p.comment, p.post_date,"
-            + "s.id s_id, s.name s_name, "
+            + "s.id s_id, s.name s_name, s.english_name english_name, "
             + "f.id f_id, f.name f_name, f.subFamilyName f_sub_name, "
             + "p.user_id, p.age_id, p.sex_id, "
             + "c.id city_id, c.name city_name, c.state_id state_id "
@@ -76,7 +78,8 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
     /**
      * SQL to select id of all photos
      */
-    private static final String SELECT_IDS_FOR_ALL = "SELECT p.id, f.id f_id, f.name f_name, s.id s_id, s.name s_name "
+    private static final String SELECT_IDS_FOR_ALL = "" +
+            "SELECT p.id, f.id f_id, f.name f_name, s.id s_id, s.name s_name, s.english_name english_name "
             + "from photo p, family f, specie s "
             + "where p.specie_id > -1 and p.specie_id = s.id and p.specie_family_id = f.id "
             + "order by f_name, s_name";
@@ -84,17 +87,24 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
     /**
      * SQL to select id of all photos for slide show (imgWidth="150" imgHeight="115")
      */
-    private static final String SELECT_IDS_FOR_SLIDE_SHOW = "SELECT p.id from photo p where (p.sW/p.sH) BETWEEN 1.1 AND 1.5";
+    private static final String SELECT_IDS_FOR_SLIDE_SHOW = "" +
+            "SELECT p.id " +
+            "from photo p " +
+            "where (p.sW/p.sH) BETWEEN 1.1 AND 1.5";
     
     /**
      * SQL to select id of all photos, order by post date (desc)
      */
-    private static final String SELECT_IDS_FOR_ALL_BY_DATE = "SELECT p.id from photo p order by post_date desc";
+    private static final String SELECT_IDS_FOR_ALL_BY_DATE = "" +
+            "SELECT p.id " +
+            "from photo p " +
+            "order by post_date desc";
 
     /**
      * SQL to select id of photos by a given family ID
      */
-    private static final String SELECT_IDS_BY_FAMILY_ID = "SELECT p.id, s.id s_id, s.name s_name "
+    private static final String SELECT_IDS_BY_FAMILY_ID = "" +
+            "SELECT p.id, s.id s_id, s.name s_name, s.english_name english_name  "
             + "from photo p, family f, specie s "
             + "where p.specie_family_id=? and p.specie_family_id = f.id  and p.specie_id = s.id "
             + "order by s_name";
@@ -102,7 +112,8 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
     /**
      * SQL to select id of photos by a given family ID
      */
-    private static final String SELECT_IDS_BY_FAMILY_NAME = "SELECT p.id, s.id s_id, s.name s_name "
+    private static final String SELECT_IDS_BY_FAMILY_NAME = "" +
+            "SELECT p.id, s.id s_id, s.name s_name, s.english_name english_name "
             + "from photo p, family f, specie s "
             + "where p.specie_family_id = f.id  and p.specie_id = s.id and f.name like ? "
             + "order by s_name";
@@ -110,14 +121,16 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
     /**
      * SQL to select ids of photos by a given specie ID
      */
-    private static final String SELECT_IDS_BY_SPECIE_ID = "SELECT p.id, s.id s_id, s.name s_name "
+    private static final String SELECT_IDS_BY_SPECIE_ID = "" +
+            "SELECT p.id, s.id s_id, s.name s_name, s.english_name english_name  "
             + "from photo p, specie s "
             + "where p.specie_id=? and p.specie_id = s.id " + "order by s_name";
 
     /**
      * SQL to select ids of photos by a given specie ID
      */
-    private static final String SELECT_IDS_BY_SPECIE_NAME = "SELECT p.id, s.id s_id, s.name s_name "
+    private static final String SELECT_IDS_BY_SPECIE_NAME = "" +
+            "SELECT p.id, s.id s_id, s.name s_name, s.english_name english_name  "
             + "from photo p, specie s "
             + "where p.specie_id = s.id and s.name like ? order by s_name";
 
@@ -139,7 +152,8 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
     /**
      * SQL to select photo ids by a given user ID
      */
-    private static final String SELECT_IDS_BY_USER = "SELECT p.id, f.id f_id, f.name f_name, s.id s_id, s.name s_name "
+    private static final String SELECT_IDS_BY_USER = "" +
+            "SELECT p.id, f.id f_id, f.name f_name, s.id s_id, s.name s_name, s.english_name english_name "
             + "from photo p, family f, specie s "
             + "where p.specie_id > -1 and p.user_id=? and p.specie_family_id = f.id and p.specie_id = s.id "
             + "order by f_name, s_name";
@@ -616,6 +630,7 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
         Specie s = new Specie();
         s.setId(rs.getInt(SPECIE_ID_COLUMN));
         s.setName(rs.getString(SPECIE_NAME_COLUMN));
+        s.setEnglishName(rs.getString(ENGLISH_NAME_COLUMN));
         Family f = new Family();
         f.setId(rs.getInt(FAMILY_ID_COLUMN));
         f.setName(rs.getString(FAMILY_NAME_COLUMN));
@@ -627,14 +642,10 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
         try {
             dao.retrieveForSpecie(s);
         } catch (DatabaseDownException e) {
-            logger.error(
-                    "PhotoDAO.getSpecieObject : Could not retrieve city for photo "
-                            + photo, e);
+            logger.error("PhotoDAO.getSpecieObject : Could not retrieve city for photo " + photo, e);
             throw new SQLException("Error retrieving user for city " + photo);
         } catch (SQLException e) {
-            logger.error(
-                    "PhotoDAO.getSpecieObject : Could not retrieve user for city "
-                            + photo, e);
+            logger.error("PhotoDAO.getSpecieObject : Could not retrieve user for city " + photo, e);
             throw e;
         }
         
@@ -645,14 +656,10 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
         try {
             list = soundDAO.retrieveForSpecie(s.getId());
         } catch (DatabaseDownException e) {
-            logger.error(
-                    "PhotoDAO.getSpecieObject : Could not retrieve city for photo "
-                            + photo, e);
+            logger.error("PhotoDAO.getSpecieObject : Could not retrieve city for photo " + photo, e);
             throw new SQLException("Error retrieving user for city " + photo);
         } catch (SQLException e) {
-            logger.error(
-                    "PhotoDAO.getSpecieObject : Could not retrieve user for city "
-                            + photo, e);
+            logger.error("PhotoDAO.getSpecieObject : Could not retrieve user for city " + photo, e);
             throw e;
         }
         ;
@@ -667,8 +674,8 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
      * @param i
      * @return
      */
-    private City getCityObject(int cityId, String cityName, int stateId,
-            Photo photo) throws SQLException {
+    private City getCityObject(int cityId, String cityName, int stateId, Photo photo) 
+    throws SQLException {
         City city = null;
         city = new City();
         city.setId(cityId);

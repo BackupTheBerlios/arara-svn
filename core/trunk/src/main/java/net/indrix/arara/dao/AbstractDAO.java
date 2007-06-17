@@ -46,6 +46,21 @@ public abstract class AbstractDAO {
     }
 
     /**
+     * This method inserts a new photo to the database. It does not close connection
+     * 
+     * @param photo
+     *            The photo to be added
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public void insert(Object o, Connection c) throws DatabaseDownException, SQLException {
+        insertObject(o, getInsertSQL());
+    }
+    
+    /**
      * This method inserts a new object to the database.
      * 
      * @param id
@@ -55,6 +70,24 @@ public abstract class AbstractDAO {
         deleteObject(id, getDeleteSQL());
     }
 
+    /**
+     * This method inserts a new object to the database. It does not close connection
+     * 
+     * @param id The id of the object to be deleted
+     */
+    public void delete(int id, Connection c) throws DatabaseDownException, SQLException {
+        deleteObject(id, getDeleteSQL(), c);
+    }
+
+    /**
+     * This method inserts a new object to the database. It does not close connection
+     * 
+     * @param id The id of the object to be deleted
+     */
+    public void delete(int id, String sql, Connection c) throws DatabaseDownException, SQLException {
+        deleteObject(id, sql, c);
+    }
+    
     /**
      * This method saves the current object object into database
      * 
@@ -198,6 +231,32 @@ public abstract class AbstractDAO {
             throws DatabaseDownException, SQLException {
 
         Connection conn = DatabaseManager.getConnection();
+
+        try {
+            insertObject(object, sql, conn);
+        } catch (SQLException e) {
+            logger.error("AbstractDAO.insert : could not insert data");
+            logger.error("Error in SQL : " + sql, e);
+            throw e;
+        } finally {
+            closeConnection(conn);
+        }
+    }
+
+    /**
+     * This method inserts a new object into database
+     * 
+     * @param user
+     *            The new user object
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    protected void insertObject(Object object, String sql, Connection conn)
+            throws DatabaseDownException, SQLException {
+
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
@@ -222,10 +281,10 @@ public abstract class AbstractDAO {
         } finally {
             closeStatement(stmt);
             closeResultSet(rs);
-            closeConnection(conn);
         }
     }
-
+    
+    
     /**
      * This method inserts a new object into database
      * 
@@ -277,9 +336,31 @@ public abstract class AbstractDAO {
             throws DatabaseDownException, SQLException {
 
         Connection conn = DatabaseManager.getConnection();
+        try {
+            deleteObject(id, sql, conn);
+        } catch (SQLException e) {
+            logger.error("AbstractDAO.deleteObject : could not delete data");
+            logger.error("Error in SQL : " + sql, e);
+            throw e;
+        } finally {
+            closeConnection(conn);
+        }
+    }
+
+    /**
+     * This method deletes an object from database. It does not closes the connection.
+     * 
+     * @param id The object id
+     * @param sql The sql to run
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    protected void deleteObject(int id, String sql, Connection conn)
+            throws DatabaseDownException, SQLException {
+
         PreparedStatement stmt = null;
         ResultSet rs = null;
-
         try {
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
@@ -291,10 +372,9 @@ public abstract class AbstractDAO {
         } finally {
             closeStatement(stmt);
             closeResultSet(rs);
-            closeConnection(conn);
         }
     }
-
+    
     /**
      * This method retrieves all objects from database, for the give SQL
      * 

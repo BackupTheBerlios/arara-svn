@@ -40,6 +40,8 @@ public class CommentPhotoServlet extends HttpServlet {
 	 */
 	static Logger logger = Logger.getLogger("net.indrix.aves");
 
+    protected static Logger loggerActions = Logger.getLogger("net.indrix.actions");
+
 	/**
 	 * Constant for a not null comment
 	 */
@@ -88,6 +90,10 @@ public class CommentPhotoServlet extends HttpServlet {
 						model.insertComment(photo, user, comment);
 						logger.debug("Comment added to database");
 
+                        if (user != null) {
+                            loggerActions.info("User " + user.getLogin() + " has commented photo " + photo.getId());
+                        } 
+                        
 						try {
 							retrieveCommentsForPhoto(model, photo);
 						} catch (DatabaseDownException e) {

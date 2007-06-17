@@ -19,6 +19,8 @@ public class Specie {
 
 	private String name;
 
+    private String englishName;
+    
 	private Family family;
 
 	private List commonNames;
@@ -120,8 +122,7 @@ public class Specie {
 	}
 
 	public String toString() {
-		return "[" + id + " - " + name + "] , " + family
-				+ getCommonNamesString();
+		return "[" + id + " - " + name + " - " + englishName + "] , " + family + getCommonNamesString();
 	}
 
 	/**
@@ -160,4 +161,12 @@ public class Specie {
 	public void addPopularName(CommonName common) {
 		commonNames.add(common);
 	}
+
+    public String getEnglishName() {
+        return englishName;
+    }
+
+    public void setEnglishName(String englishName) {
+        this.englishName = englishName;
+    }
 }

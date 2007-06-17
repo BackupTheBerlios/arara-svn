@@ -82,7 +82,7 @@ public class InitEditBirdListServlet extends AbstractServlet {
                 req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
                 req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);
                 req.setAttribute(ServletConstants.SERVLET_TO_CALL_KEY, BirdListConstants.EDIT_SERVLET);
-                
+                req.setAttribute(ServletConstants.ACTION, ServletConstants.EDIT_ACTION);                
             } catch (DatabaseDownException e) {
                 errors.add(ServletConstants.DATABASE_ERROR);
                 pageToShow = ServletConstants.DATABASE_ERROR_PAGE;
@@ -105,4 +105,5 @@ public class InitEditBirdListServlet extends AbstractServlet {
         dispatcher.forward(req, res);
 
     }
+
 }

@@ -20,6 +20,7 @@ import net.indrix.arara.model.BirdListModel;
 import net.indrix.arara.model.CityModel;
 import net.indrix.arara.servlets.AbstractServlet;
 import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.servlets.birdlist.exception.BirdListDuplicatedNameException;
 import net.indrix.arara.servlets.common.IBean;
 import net.indrix.arara.servlets.common.IBeanManager;
 import net.indrix.arara.servlets.common.UploadBeanManagerFactory;
@@ -47,6 +48,7 @@ public class CreateBirdListServlet extends AbstractServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
+        logger.debug("Entering method...");
         String nextPage = null;
         String pageToShow = null;
         List<String> errors = new ArrayList<String>();
@@ -54,36 +56,49 @@ public class CreateBirdListServlet extends AbstractServlet {
         User user = (User) session.getAttribute(ServletConstants.USER_KEY);
         RequestDispatcher dispatcher = null;
         ServletContext context = this.getServletContext();
-
+        String servletToCall = req.getParameter(ServletConstants.SERVLET_TO_CALL_KEY); 
+        String action = req.getParameter(ServletConstants.ACTION);
         if (user == null) {
             nextPage = userNotLogged(req, res);
         } else {
             Map data = null;
             data = parseFormData(req);
-
+    
             UploadBeanManagerFactory factory = UploadBeanManagerFactory.getInstance();
             IBeanManager manager = factory.createBean(UploadBeanManagerFactory.BIRDLIST, null, session);
-            manager.updateBean(data, errors, false);
+            nextPage = ServletConstants.FRAME_PAGE;
+            boolean validate = true; 
+            logger.debug("Calling updateBean with validate = " + validate);
+            if (manager.updateBean(data, errors, validate)){
+                logger.debug("updateBean validated fields...");
+                BirdList birdList = new BirdList();
 
-            BirdList birdList = new BirdList();
-            try {
-                updateBirdList(birdList, manager.getBean(), user);
-                
-                BirdListModel model = new BirdListModel();
-                model.insert(birdList);
-                
-                nextPage = ServletConstants.FRAME_PAGE;
-                pageToShow = BirdListConstants.CREATE_SUCCESS_PAGE;
-                req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
-                req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);                
-            } catch (DatabaseDownException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                pageToShow = ServletConstants.ONE_LINE_MESSAGE_PAGE;
+                try {
+                    updateBirdList(birdList, manager.getBean(), user);
+                    
+                    doAction(birdList);
+                    
+                    req.setAttribute(ServletConstants.MESSAGE_KEY, getSuccessMessage());
+                } catch (DatabaseDownException e) {
+                    req.setAttribute(ServletConstants.MESSAGE_KEY, "database.error");
+                } catch (BirdListDuplicatedNameException e) {
+                    // list alread exists
+                    errors.add("birdlist.create.list.exists");
+                    pageToShow = BirdListConstants.CREATE_LIST_PAGE;
+                } catch (SQLException e) {
+                    req.setAttribute(ServletConstants.MESSAGE_KEY, "database.error");
+                } 
+            } else {
+                logger.debug("BirdList creation: missing fields...");
+                pageToShow = BirdListConstants.CREATE_LIST_PAGE;                
             }
         }
+        req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
+        req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);                
+        req.setAttribute(ServletConstants.SERVLET_TO_CALL_KEY, servletToCall);
+        req.setAttribute(ServletConstants.ACTION, action);
+        
         if (!errors.isEmpty()) {
             // coloca erros no request para registrar.jsp processar e
             // apresentar mensagem de erro
@@ -93,6 +108,15 @@ public class CreateBirdListServlet extends AbstractServlet {
         dispatcher = context.getRequestDispatcher(nextPage);
         dispatcher.forward(req, res);
 
+    }
+
+    protected String getSuccessMessage() {
+        return "birdlist.create.success";
+    }
+
+    protected void doAction(BirdList birdList) throws DatabaseDownException, SQLException {
+        BirdListModel model = new BirdListModel();
+        model.insert(birdList);
     }
 
     private void updateBirdList(BirdList birdList, IBean bean, User user)

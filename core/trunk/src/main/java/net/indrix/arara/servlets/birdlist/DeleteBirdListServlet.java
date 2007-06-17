@@ -1,6 +1,7 @@
 package net.indrix.arara.servlets.birdlist;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,16 +12,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.indrix.arara.bean.BirdListBean;
-import net.indrix.arara.model.StatesModel;
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.model.BirdListModel;
 import net.indrix.arara.servlets.AbstractServlet;
 import net.indrix.arara.servlets.ServletConstants;
-import net.indrix.arara.servlets.ServletUtil;
 import net.indrix.arara.vo.User;
 
 @SuppressWarnings("serial")
-public class InitBirdListCreationServlet extends AbstractServlet {
-
+public class DeleteBirdListServlet extends AbstractServlet {
+    @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
         doPost(req, res);
@@ -40,33 +40,24 @@ public class InitBirdListCreationServlet extends AbstractServlet {
         if (user == null) {
             nextPage = userNotLogged(req, res);
         } else {
-            // retrieve list of states
-            logger.debug("Retrieving list of states...");
-            List list = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
-
-            if (list == null || list.isEmpty()){
-                logger.fatal("LIST OF STATES IS NULL...");
+            int listId = Integer.parseInt(req.getParameter(BirdListConstants.BIRD_LIST_ID));
+            try {
+                BirdListModel model = new BirdListModel();
+                model.delete(listId);
+                
+                nextPage = ServletConstants.FRAME_PAGE;
+                req.setAttribute(ServletConstants.MESSAGE_KEY, "birdlist.delete.success");
+                pageToShow = ServletConstants.ONE_LINE_MESSAGE_PAGE;
+                req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
+                req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);
+            } catch (DatabaseDownException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
-            // reset upload data bean
-            BirdListBean bean = (BirdListBean) session.getAttribute(BirdListConstants.BEAN_KEY);
-            if (bean == null) {
-                logger.debug("Creating BirdListBean...");
-                bean = new BirdListBean();
-                session.setAttribute(BirdListConstants.BEAN_KEY, bean);
-            }
-
-            logger.debug("Reseting bean and setting list to the bean...");
-            bean.reset();
-            bean.setStatesList(list);
-
-            nextPage = ServletConstants.FRAME_PAGE;
-            pageToShow = BirdListConstants.CREATE_LIST_PAGE;
-            req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
-            req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);
-            req.setAttribute(ServletConstants.SERVLET_TO_CALL_KEY, BirdListConstants.CREATE_SERVLET);
-            req.setAttribute(ServletConstants.ACTION, ServletConstants.CREATE_ACTION);
         }
-
         if (!errors.isEmpty()) {
             // coloca erros no request para registrar.jsp processar e
             // apresentar mensagem de erro

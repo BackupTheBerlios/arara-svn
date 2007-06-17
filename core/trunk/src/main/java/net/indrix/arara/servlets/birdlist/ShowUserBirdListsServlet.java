@@ -47,7 +47,7 @@ public class ShowUserBirdListsServlet extends AbstractServlet {
                 BirdListModel model = new BirdListModel();
                 List birdLists = model.retrieveListsForUser(userId);
                 
-                req.setAttribute(BirdListConstants.USER_LISTS, birdLists);
+                session.setAttribute(BirdListConstants.USER_LISTS, birdLists);
                 
                 nextPage = ServletConstants.FRAME_PAGE;
                 pageToShow = BirdListConstants.SHOW_LISTs_PAGE;

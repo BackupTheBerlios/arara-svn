@@ -13,6 +13,7 @@ package net.indrix.arara.servlets.photo;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
+@SuppressWarnings("serial")
 public class SearchPhotosByFamilyServlet extends AbstractSearchPhotosServlet {
     protected String getServletToCall() {
         return "/servlet/searchPhotosByFamily";

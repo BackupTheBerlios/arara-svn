@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.indrix.arara.dao.BirdListDAO;
 import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.servlets.birdlist.exception.BirdListDuplicatedNameException;
 import net.indrix.arara.vo.BirdList;
 
 /**
@@ -27,9 +28,31 @@ public class BirdListModel {
      * @throws SQLException If some SQL Exception occurs
      */
     public void insert(BirdList list) throws DatabaseDownException, SQLException {
-        dao.insert(list);
+        try {
+            dao.insert(list);
+        } catch (DatabaseDownException e) {
+            throw e;
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 1062){
+                throw new BirdListDuplicatedNameException();
+            } else {
+                throw e;
+            }
+            
+        }            
     }
 
+    /**
+     * This method deletes a BirdList from the database
+     * 
+     * @param listId The BirdList ID to be deleted from the database
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    public void delete(int listId) throws DatabaseDownException, SQLException {
+        dao.delete(listId);
+    }    
     /**
      * This method updates a list into database
      * 
@@ -38,7 +61,7 @@ public class BirdListModel {
      * @throws DatabaseDownException If the database is down
      * @throws SQLException If some SQL Exception occurs
      */
-    public void update(BirdList list) throws DatabaseDownException, SQLException{
+    public void update(BirdList list) throws DatabaseDownException, SQLException{        
         dao.update(list);
     }
     

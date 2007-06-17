@@ -6,17 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import net.indrix.arara.bean.BirdListBean;
-import net.indrix.arara.bean.UploadBean;
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.model.CityModel;
-import net.indrix.arara.vo.City;
 import net.indrix.arara.servlets.ServletConstants;
-import net.indrix.arara.servlets.UploadConstants;
 import net.indrix.arara.servlets.birdlist.BirdListConstants;
 import net.indrix.arara.servlets.photo.upload.UploadPhotoConstants;
+import net.indrix.arara.vo.City;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.log4j.Logger;
 import org.apache.struts.util.LabelValueBean;
 
 public class BirdListBeanManager extends IBeanManagerImplementation{
@@ -26,20 +22,15 @@ public class BirdListBeanManager extends IBeanManagerImplementation{
      * @param bean
      */
     public boolean updateBean(Map data, List <String>errors, boolean validate) {
-        boolean status = false;
+        boolean status = true;
 
-        logger.debug("BirdListBeanManager.updateBean: updating data...");
+        logger.debug("BirdListBeanManager.updateBean: updating data. Validate = " + validate);
         
         String stateId = (String) data.get(ServletConstants.STATE_ID);
-        
-        if (validate) {
-            if ((stateId == null) || (stateId.trim().equals(""))) {
-                errors.add(UploadPhotoConstants.STATE_REQUIRED);
-            }
-        }
-        
+        String name = (String) data.get(BirdListConstants.NAME);
+
         BirdListBean bean = (BirdListBean)getBean();
-        bean.setName((String) data.get(BirdListConstants.NAME));
+        bean.setName(name);
         bean.setSelectedType((String) data.get(BirdListConstants.LIST_TYPE));
         bean.setSelectedStateId(stateId);       
         bean.setLocation((String) data.get(ServletConstants.LOCATION));
@@ -48,11 +39,20 @@ public class BirdListBeanManager extends IBeanManagerImplementation{
         bean.setSelectedCities(getSelectedCities(selectedCities));
 
         if (validate) {
+            if ((name == null) || name.trim().length() == 0){
+                logger.debug("BirdList creation : Missing name...");
+                errors.add(BirdListConstants.NAME_REQUIRED);
+                status = false;
+            }
             if ((stateId == null) || (stateId.trim().equals(""))) {
+                logger.debug("BirdList creation : Missing state...");
                 errors.add(UploadPhotoConstants.STATE_REQUIRED);
+                status = false;
             }
             if (selectedCities == null || selectedCities.length == 0){
+                logger.debug("BirdList creation : Missing city...");
                 errors.add(UploadPhotoConstants.CITY_REQUIRED);                
+                status = false;
             }
         }
         logger.debug("BirdListBeanManager.updateBean: bean updated " + bean);
@@ -69,12 +69,14 @@ public class BirdListBeanManager extends IBeanManagerImplementation{
      * String object 
      */
     private String[] getSelectedCities(Map data) {
-        String[] array;
-        if (data.get(BirdListConstants.SELECTED_CITIES) instanceof String[]){
-            array = (String[])data.get(BirdListConstants.SELECTED_CITIES);
-        } else {
-            array = new String[1];
-            array[0] = (String)data.get(BirdListConstants.SELECTED_CITIES);
+        String[] array = null;
+        if (data.get(BirdListConstants.SELECTED_CITIES) != null){
+            if (data.get(BirdListConstants.SELECTED_CITIES) instanceof String[]){
+                array = (String[])data.get(BirdListConstants.SELECTED_CITIES);
+            } else {
+                array = new String[1];
+                array[0] = (String)data.get(BirdListConstants.SELECTED_CITIES);
+            }            
         }
         return array ;
     }
@@ -117,7 +119,6 @@ public class BirdListBeanManager extends IBeanManagerImplementation{
      */
     public void setData(Object object, String source){
         BirdListBean bean = (BirdListBean)getBean();
-        bean.setCurrentStateCities((List)object);
-        
+        bean.setCurrentStateCities((List)object);        
     }
 }

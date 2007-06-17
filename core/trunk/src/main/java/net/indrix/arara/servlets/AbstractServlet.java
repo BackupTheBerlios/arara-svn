@@ -130,7 +130,7 @@ public class AbstractServlet extends HttpServlet {
 	 */
 	protected String userNotLogged(HttpServletRequest req,
 			HttpServletResponse res) throws ServletException, IOException {
-		List errors = new ArrayList();
+		List<String> errors = new ArrayList<String>();
 
 		logger.debug("errors is not null.");
 		errors.add(ServletConstants.USER_NOT_LOGGED);

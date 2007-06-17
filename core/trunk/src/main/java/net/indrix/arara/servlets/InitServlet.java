@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
+@SuppressWarnings("serial")
 public class InitServlet extends HttpServlet {
 	/**
 	 * Logger object to be used by this class
@@ -56,6 +57,8 @@ public class InitServlet extends HttpServlet {
 
 			String link = AbstractFileManager.getRootLink();
 			context.setAttribute("linkKey", link);
+            
+            context.setAttribute("maintenance", false);
 		} catch (Exception e) {
 			log("Setting width with default value " + WIDTH_PARAM);
 			PhotoUtil.setSmallWidth(DEFAULT_WIDTH_PARAM);

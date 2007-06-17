@@ -61,6 +61,8 @@ public class ServletConstants {
 	public static final String FIRST = "FIRST";
 
 	public static final String LAST = "LAST";
+    
+    public static final String GO_TO_PAGE = "GO";
 
 	public static final String NEXT_RESOURCE_AFTER_LOGIN = "nextResource";
     
@@ -91,6 +93,8 @@ public class ServletConstants {
 
 	public static final String ERRORS_KEY = "erros";
 
+    public static final String MESSAGE_KEY = "message";
+    
 	public static final String MESSAGES_KEY = "messages";
     
     public static final String NEXT_PAGE_KEY = "nextPage";
@@ -127,6 +131,8 @@ public class ServletConstants {
 	public static final String INITIAL_PAGE = "/index.jsp";
 
     public static final String FRAME_PAGE = "/frame.jsp";
+
+    public static final String ONE_LINE_MESSAGE_PAGE = "/jsp/common/message/doShowOneLineMessage.jsp";
 
 	public static final String REGISTER_PAGE = "/jsp/user/register.jsp";
 
@@ -236,4 +242,9 @@ public class ServletConstants {
     public static final String CITY_INFO = "city.info";
 
     public static final String SEND_EMAIL_ERROR = "send.email.general.error";
+
+    public static final String CREATE_ACTION = "CREATE";
+    
+    public static final String EDIT_ACTION = "EDIT";
+    
 }

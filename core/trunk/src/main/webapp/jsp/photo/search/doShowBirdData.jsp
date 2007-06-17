@@ -74,6 +74,19 @@
 			</td>
 		</tr>
 		</table>
+
+		<table width="100%">
+		<tr>
+			<td width="20%">
+				<font size="${fontSize}" face="Verdana">
+					<b><fmt:message key="english.name" /></b>
+				</font>
+			</td>
+			<td>
+				<font size="${fontSize}" face="Verdana">${currentPhoto.specie.englishName}</font>
+			</td>
+		</tr>
+		</table>
 	
 		<table width="100%">
 		<tr>

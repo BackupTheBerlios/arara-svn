@@ -104,6 +104,10 @@ table.comBordaSimples tr {
 									<a href="<c:url value="/servlet/searchPhotosBySpecie?id=${photo.specie.id}&action=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${photo.specie.commonNameString}
 									</a>
 								</font> 
+								<font size="1" face="Verdana"><br><fmt:message key="english.name" />: 
+									<a href="<c:url value="/servlet/searchPhotosBySpecie?id=${photo.specie.id}&action=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${photo.specie.englishName}
+									</a>
+								</font> 
 							</c:if> 
 							<c:if test="${photo.specie.id == -1}">
 								<b><font color="#FF0000" size="1" face="Verdana"><br><fmt:message key="photo.not.identified.title" /> 

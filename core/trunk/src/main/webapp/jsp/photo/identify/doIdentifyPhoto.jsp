@@ -4,7 +4,7 @@
 <SCRIPT language="JavaScript"> 
     function familySelected() { 
        document.identifyPhotoForm.method = "POST"; 
-       document.identifyPhotoForm.action = "<c:url value="/servlet/retrieveSpeciesForIdentification"/>"; 
+       document.identifyPhotoForm.action = "<c:url value="/servlet/retrieveSpeciesForIdentification?photoId=${currentPhoto.id}"/>"; 
        document.identifyPhotoForm.submit(); 
     } 
 </script>
@@ -21,6 +21,8 @@
 
 <form name="identifyPhotoForm" method="post"
 	action="<c:url value="/servlet/identifyPhoto"/>">
+
+<input type=hidden name="photoId" value="${currentPhoto.id}">
 
 <table class="formBorder" width="100%" border="0" cellspacing="2">
 	<tr>

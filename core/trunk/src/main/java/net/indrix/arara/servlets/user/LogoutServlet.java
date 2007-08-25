@@ -28,6 +28,10 @@ import org.apache.log4j.Logger;
  */
 public class LogoutServlet extends HttpServlet {
 	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+    /**
 	 * Logger object to be used by this class
 	 */
 	protected static Logger loggerActions = Logger
@@ -57,8 +61,9 @@ public class LogoutServlet extends HttpServlet {
 			// coloca usuario no request para JSP processar
 			req.setAttribute(ServletConstants.USER_KEY, user);
 
-			loggerActions.info("User " + user.getLogin() + " from IP "
-					+ req.getRemoteAddr() + " has logged out.");
+            if (user != null){
+                loggerActions.info("User " + user.getLogin() + " from IP " + req.getRemoteAddr() + " has logged out.");                
+            }
 		}
 
 		dispatcher.forward(req, res);

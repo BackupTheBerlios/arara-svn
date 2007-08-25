@@ -20,9 +20,11 @@ import javax.servlet.http.HttpSession;
 import net.indrix.arara.bean.IdentifyPhotoBean;
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.dao.SpecieDAO;
+import net.indrix.arara.model.FamilyModel;
 import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.servlets.ServletUtil;
 import net.indrix.arara.vo.Family;
+import net.indrix.arara.vo.Photo;
 import net.indrix.arara.vo.User;
 
 /**
@@ -34,7 +36,12 @@ import net.indrix.arara.vo.User;
 public class RetrieveSpeciesForFamilyForIdentificationServlet extends
 		AbstractIdentificationServlet {
 
-	public void doPost(HttpServletRequest req, HttpServletResponse res)
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
+    public void doPost(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
 
 		logger.debug("RetrieveSpeciesForFamilyForIdentificationServlet.doPost: entering method...");
@@ -56,10 +63,12 @@ public class RetrieveSpeciesForFamilyForIdentificationServlet extends
 			String familyId = req.getParameter(ServletConstants.FAMILY_ID);
 			if ((familyId == null) || (familyId.equals(""))) {
 				errors.add(ServletConstants.SELECT_FAMILY_ERROR);
-				IdentifyPhotoBean identificationBean = (IdentifyPhotoBean) session.getAttribute(IdentificationPhotoConstants.IDENTIFICATION_PHOTO_BEAN);
-				identificationBean.setSelectedFamilyId(null);
-				identificationBean.setSelectedSpecieId(null);
-				identificationBean.setSpecieList(null);
+				IdentifyPhotoBean bean = new IdentifyPhotoBean();
+				bean.setSelectedFamilyId(null);
+				bean.setSelectedSpecieId(null);
+				bean.setSpecieList(null);
+                
+                req.setAttribute(IdentificationPhotoConstants.IDENTIFICATION_PHOTO_BEAN, bean);
 			} else {
 				logger.debug("selected family id " + familyId);
 
@@ -76,6 +85,10 @@ public class RetrieveSpeciesForFamilyForIdentificationServlet extends
                         String pageToShow = "/jsp/photo/search/doShowOnePhoto.jsp";
                         req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
 
+                        // retrieve photo under identification
+                        String photoId = req.getParameter("photoId");
+                        Photo photo = (Photo) getPhotoFromDatabase(errors, photoId);
+                        req.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
 					} else {
 						logger.debug("Specie list not found...");
 						errors.add(ServletConstants.DATABASE_ERROR);
@@ -100,16 +113,19 @@ public class RetrieveSpeciesForFamilyForIdentificationServlet extends
 	 * @param list
 	 * @param dataToBeUploaded
 	 */
-	private void handleList(List list, HttpServletRequest req, List errors) {
+	private void handleList(List list, HttpServletRequest req, List <String>errors) {
 
 		HttpSession session = req.getSession();
 		IdentifyPhotoBean bean = null;
 
 		String beanKey = IdentificationPhotoConstants.IDENTIFICATION_PHOTO_BEAN;
 
-		// populate the bean with data from request
+        // populate the bean with data from request
 		bean = handleBean(req, session, beanKey, errors);
 		bean.setSpecieList(list);
+        
+        List listOfFamilies = ServletUtil.familyDataAsLabelValueBean(FamilyModel.getFamilyList());
+        bean.setFamilyList(listOfFamilies);        
 	}
 
 	private static List retrieveSpecieListForFamilyId(String familyId)
@@ -117,8 +133,7 @@ public class RetrieveSpeciesForFamilyForIdentificationServlet extends
 		SpecieDAO dao = new SpecieDAO();
 		Family family = new Family();
 		family.setId(Integer.parseInt(familyId));
-		List list = ServletUtil.specieForFamilyDataAsLabelValueBean(dao
-				.retrieveForFamily(family));
+		List list = ServletUtil.specieForFamilyDataAsLabelValueBean(dao.retrieveForFamily(family));
 		return list;
 	}
 }

@@ -43,6 +43,11 @@ import net.indrix.arara.vo.User;
 public class IdentifyPhotoServlet extends AbstractIdentificationServlet {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The constant for telling the page that we're in view mode
      */
     private static final String VIEW_MODE = "viewMode";
@@ -78,21 +83,19 @@ public class IdentifyPhotoServlet extends AbstractIdentificationServlet {
         } else {
             boolean finish;
             if (user.isAdmin()) {
-                String value = req
-                        .getParameter(ServletConstants.FINISH_IDENTIFICATION_KEY);
+                String value = req.getParameter(ServletConstants.FINISH_IDENTIFICATION_KEY);
                 finish = (ON.equals(value)) ? true : false;
-                logger.info("User is admin, retrieve finish identification: "
-                        + finish);
+                logger.info("User is admin, retrieve finish identification: " + finish);
             } else {
                 finish = false;
             }
             // retrieve photo under identification
-            Photo photo = (Photo) session
-                    .getAttribute(ServletConstants.CURRENT_PHOTO);
+            String photoId = req.getParameter("photoId");
+            Photo photo = (Photo) getPhotoFromDatabase(errors, photoId);
+            req.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
             logger.debug("Photo under identification = " + photo);
 
             String beanKey = IdentificationPhotoConstants.IDENTIFICATION_PHOTO_BEAN;
-
             IdentifyPhotoBean bean = handleBean(req, session, beanKey, errors);
 
             if (errors.isEmpty()) {
@@ -227,4 +230,24 @@ public class IdentifyPhotoServlet extends AbstractIdentificationServlet {
         return specie;
     }
 
+    /**
+     * This methods handles the data from user, populating a bean object
+     * 
+     * @param data
+     *            The data from user
+     * @param session
+     *            THe user session
+     * @param beanKey
+     *            The key to the bean
+     * 
+     * @return A new <code>IdentifyPhotoBean</code> object
+     */
+    protected IdentifyPhotoBean handleBean(HttpServletRequest req,
+            HttpSession session, String beanKey, List <String>errors) {
+        IdentifyPhotoBean bean = super.handleBean(req, session, beanKey, errors);
+        
+        setListOfFamilies(bean);
+        setListOfSpecies(bean);
+        return bean;
+    }    
 }

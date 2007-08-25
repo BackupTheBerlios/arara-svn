@@ -35,132 +35,141 @@ import org.apache.log4j.Logger;
  */
 @SuppressWarnings("serial")
 public class CommentPhotoServlet extends HttpServlet {
-	/**
-	 * Logger object
-	 */
-	static Logger logger = Logger.getLogger("net.indrix.aves");
+    /**
+     * Logger object
+     */
+    static Logger logger = Logger.getLogger("net.indrix.aves");
 
-    protected static Logger loggerActions = Logger.getLogger("net.indrix.actions");
+    protected static Logger loggerActions = Logger
+            .getLogger("net.indrix.actions");
 
-	/**
-	 * Constant for a not null comment
-	 */
-	private static String COMMENT_NOT_NULL = "Comentário não pode ser null";
+    /**
+     * Constant for a not null comment
+     */
+    private static String COMMENT_NOT_NULL = "Comentário não pode ser null";
 
-	/**
-	 * Init servlet
-	 */
-	public void init() {
-		logger.debug("Initializing CommentPhotoServlet...");
-	}
+    /**
+     * Init servlet
+     */
+    public void init() {
+        logger.debug("Initializing CommentPhotoServlet...");
+    }
 
-	/**
-	 * 
-	 */
-	public void doPost(HttpServletRequest req, HttpServletResponse res)
-			throws ServletException, IOException {
+    /**
+     * 
+     */
+    public void doPost(HttpServletRequest req, HttpServletResponse res)
+            throws ServletException, IOException {
 
-		logger.debug("CommentPhotoServlet.doPost called...");
-		RequestDispatcher dispatcher = null;
-		ServletContext context = this.getServletContext();
-		String nextPage = null;
-		List <String>errors = new ArrayList<String>();
-		HttpSession session = req.getSession();
-		User user = (User) session.getAttribute(ServletConstants.USER_KEY);
-		String identificationStr = req.getParameter(ServletConstants.IDENTIFICATION_KEY);
+        logger.debug("CommentPhotoServlet.doPost called...");
+        RequestDispatcher dispatcher = null;
+        ServletContext context = this.getServletContext();
+        String nextPage = null;
+        List<String> errors = new ArrayList<String>();
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute(ServletConstants.USER_KEY);
+        String identificationStr = req.getParameter(ServletConstants.IDENTIFICATION_KEY);
 
-		if (user == null) {
-			logger.debug("User null.");
-			errors.add(ServletConstants.USER_NOT_LOGGED);
-			// put errors in request
-			req.setAttribute(ServletConstants.ERRORS_KEY, errors);
-			nextPage = ServletConstants.LOGIN_PAGE;
-		} else {
-			String photoId = req.getParameter(ServletConstants.PHOTO_ID);
-			String comment = req.getParameter(ServletConstants.COMMENT);
-			logger.debug("PhotoId to have a comment: " + photoId);
-			logger.debug("Comment: " + comment);
-			if (validateData(comment)) {
-				// retrieve current photo
+        if (user == null) {
+            logger.debug("User null.");
+            errors.add(ServletConstants.USER_NOT_LOGGED);
+            // put errors in request
+            req.setAttribute(ServletConstants.ERRORS_KEY, errors);
+            nextPage = ServletConstants.LOGIN_PAGE;
+        } else {
+            String photoId = req.getParameter(ServletConstants.PHOTO_ID);
+            String comment = req.getParameter(ServletConstants.COMMENT);
+            logger.debug("PhotoId to have a comment: " + photoId);
+            logger.debug("Comment: " + comment);
+            if (validateData(comment)) {
+                // retrieve current photo
                 comment = formatComment(comment);
-				Photo photo = (Photo) session.getAttribute(ServletConstants.CURRENT_PHOTO);
-				if (photo != null) {
-					PhotoModel model = new PhotoModel();
-					try {
-						model.insertComment(photo, user, comment);
-						logger.debug("Comment added to database");
+                PhotoModel model = new PhotoModel();
+                try {
+                    Photo photo = model.retrieve(Integer.parseInt(photoId));
+                    if (photo != null) {
+                        req.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
+                        
+                        model.insertComment(photo, user, comment);
+                        logger.debug("Comment added to database");
 
                         if (user != null) {
                             loggerActions.info("User " + user.getLogin() + " has commented photo " + photo.getId());
-                        } 
-                        
-						try {
-							retrieveCommentsForPhoto(model, photo);
-						} catch (DatabaseDownException e) {
-							logger.debug("DatabaseDownException.....", e);
-							errors.add(ServletConstants.DATABASE_ERROR);
-						} catch (SQLException e) {
-							logger.debug("SQLException.....", e);
-							errors.add(ServletConstants.DATABASE_ERROR);
-						}
+                        }
 
-						// next page
-						nextPage = ServletConstants.FRAME_PAGE;
-                        req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, "/jsp/photo/search/doShowOnePhoto.jsp");
-					} catch (DatabaseDownException e) {
-						logger.debug("DatabaseDownException.....", e);
-						errors.add(ServletConstants.DATABASE_ERROR);
-					} catch (SQLException e) {
-						logger.debug("SQLException.....", e);
-						errors.add(ServletConstants.DATABASE_ERROR);
-					}
-				} else {
-					logger.error("Current photo does not exist");
-				}
-			} else {
-				logger.debug("Comment is invalid...");
-				errors.add(COMMENT_NOT_NULL);
-			}
-		}
+                        try {
+                            retrieveCommentsForPhoto(model, photo);
+                        } catch (DatabaseDownException e) {
+                            logger.debug("DatabaseDownException.....", e);
+                            errors.add(ServletConstants.DATABASE_ERROR);
+                        } catch (SQLException e) {
+                            logger.debug("SQLException.....", e);
+                            errors.add(ServletConstants.DATABASE_ERROR);
+                        }
 
-		if (!errors.isEmpty()) {
-			nextPage = ServletConstants.DATABASE_ERROR_PAGE;
-			// put errors in request
-			req.setAttribute(ServletConstants.ERRORS_KEY, errors);
-		}
+                        // next page
+                        nextPage = ServletConstants.FRAME_PAGE;
+                        req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY,
+                                "/jsp/photo/search/doShowOnePhoto.jsp");
+                    } else {
+                        logger.error("Current photo does not exist");
+                    }
+                } catch (DatabaseDownException e) {
+                    logger.debug("DatabaseDownException.....", e);
+                    errors.add(ServletConstants.DATABASE_ERROR);
+                } catch (SQLException e) {
+                    logger.debug("SQLException.....", e);
+                    errors.add(ServletConstants.DATABASE_ERROR);
+                }
+            } else {
+                logger.debug("Comment is invalid...");
+                errors.add(COMMENT_NOT_NULL);
+            }
+        }
 
-		req.setAttribute(ServletConstants.IDENTIFICATION_KEY, identificationStr);
-		req.setAttribute(ServletConstants.VIEW_MODE_KEY, "viewMode");
-		req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);
-		dispatcher = context.getRequestDispatcher(nextPage);
-		logger.debug("Dispatching to " + nextPage);
-		dispatcher.forward(req, res);
+        if (!errors.isEmpty()) {
+            nextPage = ServletConstants.DATABASE_ERROR_PAGE;
+            // put errors in request
+            req.setAttribute(ServletConstants.ERRORS_KEY, errors);
+        }
 
-	}
+        req.setAttribute(ServletConstants.IDENTIFICATION_KEY, identificationStr);
+        req.setAttribute(ServletConstants.VIEW_MODE_KEY, "viewMode");
+        req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);
+        dispatcher = context.getRequestDispatcher(nextPage);
+        logger.debug("Dispatching to " + nextPage);
+        dispatcher.forward(req, res);
+
+    }
 
     /**
-     * This method formats the comment, breaking lines bigger than 80 characters...
+     * This method formats the comment, breaking lines bigger than 80
+     * characters...
      * 
-     * @param comment THe comment to be formatted.
+     * @param comment
+     *            THe comment to be formatted.
      * 
      * @return THe formatted comment
      */
-	private String formatComment(String comment) {
+    private String formatComment(String comment) {
         String newComment = "";
-        if (comment.length() > 81){
+        if (comment.length() > 81) {
             boolean finished = false;
-            while (!finished){
+            while (!finished) {
                 newComment = newComment + comment.substring(0, 80);
-                comment = comment.substring(81);
+                comment = comment.substring(80);
                 int index = comment.indexOf(" ");
-                if (index > 0){
-                    newComment = newComment + comment.substring(0, index - 1) + "\n" ;
-                    comment = comment.substring(index+1);
-                    if (comment.length() < 81){
+                if (index > 0) {
+                    newComment = newComment + comment.substring(0, index)
+                            + "\n";
+                    comment = comment.substring(index + 1);
+                    if (comment.length() < 81) {
+                        newComment += comment;
                         finished = true;
                     }
                 } else {
                     finished = true;
+                    newComment += "\n" + comment;
                 }
             }
         } else {
@@ -170,24 +179,26 @@ public class CommentPhotoServlet extends HttpServlet {
     }
 
     /**
-	 * This method retrieves the comments for a given photo
-	 * 
-	 * @param model
-	 * @param photo
-	 * @throws DatabaseDownException
-	 * @throws SQLException
-	 */
-	private void retrieveCommentsForPhoto(PhotoModel model, Photo photo)
-			throws DatabaseDownException, SQLException {
-		// now retrieve the comments
-		List comments = model.retrieveCommentsForPhoto(photo);
-		photo.setComments(comments);
-		if ((comments == null) || (comments.isEmpty())) {
-			logger.debug("There is no comment for photo " + photo);
-		} else {
-			logger.debug(comments.size() + " comments found for photo " + photo);
-		}
-        
+     * This method retrieves the comments for a given photo
+     * 
+     * @param model
+     * @param photo
+     * @throws DatabaseDownException
+     * @throws SQLException
+     */
+    private void retrieveCommentsForPhoto(PhotoModel model, Photo photo)
+            throws DatabaseDownException, SQLException {
+        // now retrieve the comments
+        List comments = model.retrieveCommentsForPhoto(photo);
+        photo.setComments(comments);
+        if ((comments == null) || (comments.isEmpty())) {
+            logger.debug("There is no comment for photo " + photo);
+        } else {
+            logger
+                    .debug(comments.size() + " comments found for photo "
+                            + photo);
+        }
+
         // now retrieve the identifications
         List ident = model.retrieveIdentificationsForPhoto(photo);
         photo.setIdentifications(ident);
@@ -195,19 +206,19 @@ public class CommentPhotoServlet extends HttpServlet {
             logger.debug("There is no ident for photo " + photo);
         } else {
             logger.debug(comments.size() + " ident found for photo " + photo);
-        }        
-	}
+        }
+    }
 
-	/**
-	 * validate data
-	 * 
-	 * @param comment
-	 *            The comment send by user
-	 * 
-	 * @return true if data correct, false otherwise
-	 */
-	private boolean validateData(String comment) {
-		return (comment != null) && (!"".equals(comment.trim()));
-	}
+    /**
+     * validate data
+     * 
+     * @param comment
+     *            The comment send by user
+     * 
+     * @return true if data correct, false otherwise
+     */
+    private boolean validateData(String comment) {
+        return (comment != null) && (!"".equals(comment.trim()));
+    }
 
 }

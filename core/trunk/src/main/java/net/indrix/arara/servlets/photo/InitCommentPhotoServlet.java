@@ -55,21 +55,20 @@ public class InitCommentPhotoServlet extends HttpServlet {
             nextPage = ServletConstants.LOGIN_PAGE;
 
             String nextResourceToExecute = ServletUtil.getResource(req);
-            req.setAttribute(ServletConstants.NEXT_RESOURCE_AFTER_LOGIN,
-                    nextResourceToExecute);
+            req.setAttribute(ServletConstants.NEXT_RESOURCE_AFTER_LOGIN, nextResourceToExecute);
         } else {
             PhotoModel model = new PhotoModel();
             Photo photo = null;
             int photoId = Integer.parseInt(req.getParameter("photoId"));
             try {
                 photo = model.retrieve(photoId);
-                session.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
+                req.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
             } catch (DatabaseDownException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                logger.debug("DatabaseDownException.....");
+                errors.add(ServletConstants.DATABASE_ERROR);
             } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                logger.debug("SQLException.....", e);
+                errors.add(ServletConstants.DATABASE_ERROR);
             }
             nextPage = ServletConstants.COMMENT_PAGE;
         }

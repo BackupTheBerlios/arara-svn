@@ -15,8 +15,9 @@ table.comBordaSimples tr {
 
 <br>
 <form name="commentForm" method="post"
-	action="<c:url value="/servlet/commentPhoto"/>"><input type=hidden
-	name="photoId" value="${currentPhoto.id}">
+	action="<c:url value="/servlet/commentPhoto"/>">
+	
+<input type=hidden name="photoId" value="${currentPhoto.id}">
 
 <table align="center" class="formBorder" width="70%" border="0" cellspacing="2">
 	<tr height="10" bgcolor="#000000">

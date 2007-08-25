@@ -21,8 +21,6 @@ import javax.servlet.http.HttpSession;
 
 import net.indrix.arara.bean.IdentifyPhotoBean;
 import net.indrix.arara.dao.DatabaseDownException;
-import net.indrix.arara.dao.FamilyDAO;
-import net.indrix.arara.dao.SpecieDAO;
 import net.indrix.arara.model.PhotoModel;
 import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.servlets.ServletUtil;
@@ -39,7 +37,13 @@ import org.apache.log4j.Logger;
  */
 public class InitIdentificationPhotoServlet extends
 		AbstractIdentificationServlet {
-	static Logger logger = Logger.getLogger("net.indrix.aves");
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+    
+    
+    static Logger logger = Logger.getLogger("net.indrix.aves");
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
@@ -74,39 +78,17 @@ public class InitIdentificationPhotoServlet extends
 			list = (List) session.getAttribute(ServletConstants.PHOTOS_LIST);
 
 			// retrieve families and species
-			FamilyDAO familyDao = new FamilyDAO();
-			SpecieDAO specieDao = new SpecieDAO();
-			List listOfSpecies = null;
-			List listOfFamilies = null;
-			try {
-				logger.debug("Retrieving list of all families...");
-				listOfFamilies = familyDao.retrieve();
-				logger.debug("Converting to labelValueBean...");
-				listOfFamilies = ServletUtil.familyDataAsLabelValueBean(listOfFamilies);
-				logger.debug("Putting to session...");
-
-				logger.debug("Retrieving list of all species...");
-				listOfSpecies = specieDao.retrieve();
-				logger.debug("Converting to labelValueBean...");
-				listOfSpecies = ServletUtil.specieDataAsLabelValueBean(listOfSpecies);
-				logger.debug("Putting to session...");
-
-				IdentifyPhotoBean identificationBean = new IdentifyPhotoBean();
-				identificationBean.setFamilyList(listOfFamilies);
-				identificationBean.setSpecieList(listOfSpecies);
-				session.setAttribute(IdentificationPhotoConstants.IDENTIFICATION_PHOTO_BEAN, identificationBean);
-                
-                req.setAttribute(ServletConstants.NEXT_PAGE_KEY, ServletConstants.FRAME_PAGE);
-			} catch (DatabaseDownException e) {
-				logger.error("InitSearchPhotosBySpecieServlet.doGet : could not retrieve list of all species", e);
-			} catch (SQLException e) {
-				logger.error("InitSearchPhotosBySpecieServlet.doGet : could not retrieve list of all species", e);
-			}
+            IdentifyPhotoBean identificationBean = new IdentifyPhotoBean();                
+			setListOfFamilies(identificationBean);
+			setListOfSpecies(identificationBean);                
+			req.setAttribute(IdentificationPhotoConstants.IDENTIFICATION_PHOTO_BEAN, identificationBean);
+            
+            req.setAttribute(ServletConstants.NEXT_PAGE_KEY, ServletConstants.FRAME_PAGE);
 
 			if ((photoId == null) || (list == null)) {
 				Photo photo = getPhotoFromDatabase(errors, photoId);
 				if (photo != null) {
-					session.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
+					req.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
 					nextPage = ServletConstants.FRAME_PAGE;
                     String pageToShow = "/jsp/photo/search/doShowOnePhoto.jsp";
 					// retrieve all identifications already done for the given
@@ -131,7 +113,6 @@ public class InitIdentificationPhotoServlet extends
 				int id = Integer.parseInt(photoId);
 				boolean found = false;
 				Photo photo = null;
-				PhotoModel photoModel = new PhotoModel();
 				while (it.hasNext() && (!found)) {
 					photo = (Photo) it.next();
 					if (photo.getId() == id) {
@@ -158,10 +139,11 @@ public class InitIdentificationPhotoServlet extends
                     logger.debug("Photo does not exist in DB anymore");
                     nextPage = ServletConstants.ONE_PHOTO_PAGE_ERROR;
                 } else {
-                    session.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
+                    req.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
                     nextPage = ServletConstants.FRAME_PAGE;
                     String pageToShow = "/jsp/photo/search/doShowOnePhoto.jsp";
                     req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
+                    
                 }
 
 			}
@@ -173,29 +155,5 @@ public class InitIdentificationPhotoServlet extends
 		dispatcher = context.getRequestDispatcher(nextPage);
 		logger.debug("Dispatching to " + nextPage);
 		dispatcher.forward(req, res);
-
-	}
-
-	private Photo getPhotoFromDatabase(List errors, String photoId) {
-		// retrieve from database
-		PhotoModel model = new PhotoModel();
-		Photo photo = null;
-		try {
-			photo = model.retrieve(Integer.parseInt(photoId));
-			if (photo != null) {
-				retrieveIdentificationsForPhoto(model, photo);
-			}
-			logger.debug("Photo retrieved = " + photo);
-		} catch (NumberFormatException e) {
-			logger.error("Could not parse photoId " + photoId);
-			errors.add(ServletConstants.DATABASE_ERROR);
-		} catch (DatabaseDownException e) {
-			logger.debug("DatabaseDownException.....");
-			errors.add(ServletConstants.DATABASE_ERROR);
-		} catch (SQLException e) {
-			logger.debug("SQLException.....", e);
-			errors.add(ServletConstants.DATABASE_ERROR);
-		}
-		return photo;
 	}
 }

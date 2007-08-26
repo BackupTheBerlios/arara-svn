@@ -10,8 +10,10 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 
 import net.indrix.arara.model.AgeModel;
+import net.indrix.arara.model.FamilyModel;
 import net.indrix.arara.model.PhotoUtil;
 import net.indrix.arara.model.SexModel;
+import net.indrix.arara.model.SpecieModel;
 import net.indrix.arara.model.StatesModel;
 import net.indrix.arara.model.file.AbstractFileManager;
 
@@ -55,6 +57,12 @@ public class InitServlet extends HttpServlet {
 			StatesModel.initialize();
 			context.setAttribute(ServletConstants.STATES_KEY, StatesModel.getStates());
 
+            FamilyModel.initialize();
+            context.setAttribute(ServletConstants.FAMILY_LIST_KEY, FamilyModel.getFamilyList());
+            
+            SpecieModel.initialize();
+            context.setAttribute(ServletConstants.SPECIE_LIST_KEY, SpecieModel.getSpecieList());
+            
 			String link = AbstractFileManager.getRootLink();
 			context.setAttribute("linkKey", link);
             

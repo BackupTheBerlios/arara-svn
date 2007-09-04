@@ -1,6 +1,6 @@
 <font size="2" face="Verdana"> 
   	<li>
-		<a href="http://passarosefotos.blogspot.com/" target="_blank">Fotos e Pássaros</a>
+		<a href="http://jeffersonsilva.multiply.com/journal/" target="_blank">Fotos e Pássaros</a>
 	</li>
   	<li>
 		<a href="http://www.guainumbi.blogspot.com/" target="_blank">guainumbi</a>

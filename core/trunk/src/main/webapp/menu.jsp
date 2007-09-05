@@ -34,18 +34,22 @@
 				<c:import url="/jsp/menu/menuBirdwatching.jsp" />				      
 			</ul>
 		  </li>
-<!--
 		  <li>
 			<a href="#"><fmt:message key="menu.birdlists" /></a>
 		  	<ul>
 				<c:import url="/jsp/menu/menuBirdLists.jsp" />				      
 			</ul>
-		  </li>
--->		  
+		  </li>	  
 		  <li>
 			<a href="#"><fmt:message key="menu.blogs" /></a>
 		  	<ul>
 				<c:import url="/jsp/menu/menuBlogs.jsp" />				      
+			</ul>
+		  </li>
+		  <li>
+			<a href="#"><fmt:message key="menu.statistics.statistics" /></a>
+		  	<ul>
+				<c:import url="/jsp/menu/menuStatistics.jsp" />				      
 			</ul>
 		  </li>
 		</ul>

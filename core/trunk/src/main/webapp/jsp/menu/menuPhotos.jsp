@@ -16,6 +16,10 @@
 		<fmt:message key="menu.photos.search.recent" /></a>
 	</li>
   	<li>
+		<a href="<c:url value="/servlet/searchPhotosWithMoreComments?action=BEGIN"/>">
+		<fmt:message key="menu.photos.search.more.comments" /></a>
+	</li>
+  	<li>
 		<a href="<c:url value="/servlet/initSearchByFamily?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataByFamily.jsp&servletToCall=/servlet/searchPhotosByFamily&action=BEGIN"/>">
 		<fmt:message key="menu.photos.search.family" /></a>
 	</li>
@@ -23,6 +27,12 @@
 		<a href="<c:url value="/servlet/initSearchBySpecie?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataBySpecie.jsp&servletToCall=/servlet/searchPhotosBySpecie&action=BEGIN"/>">
 		<fmt:message key="menu.photos.search.specie" /></a>
 	</li>
+<!--
+  	<li>
+		<a href="<c:url value="/servlet/initSearchByEnglishName?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataByEnglishName.jsp&servletToCall=/servlet/searchPhotosByEnglishName&action=BEGIN"/>">
+		<fmt:message key="menu.photos.search.english.name" /></a>
+	</li>
+-->	
   	<li>
 		<a href="<c:url value="/servlet/initSearchByCommonName?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataByCommonName.jsp&servletToCall=/servlet/searchPhotosByCommonName&action=BEGIN"/>">
 		<fmt:message key="menu.photos.search.commonName" /></a>

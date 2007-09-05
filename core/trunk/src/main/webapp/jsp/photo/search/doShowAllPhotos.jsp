@@ -44,6 +44,9 @@ table.comBordaSimples tr {
 				<c:if test="${photo.specie.id == -1}">
 					<c:set var="identification" value="${true}" />
 				</c:if>
+				<c:if test="${photo.specie.id != -1}">
+					<c:set var="identification" value="${false}" />
+				</c:if>
 			
 				<c:set var="index" value="${index + 1}" />
 				<c:if test="${newLine == true}">

@@ -135,6 +135,14 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
             + "where p.specie_id = s.id and s.name like ? order by s_name";
 
     /**
+     * SQL to select ids of photos by a given english name
+     */
+    private static final String SELECT_IDS_BY_ENGLISH_NAME = "" +
+            "SELECT p.id, s.id s_id, s.name s_name, s.english_name english_name  "
+            + "from photo p, specie s "
+            + "where p.specie_id = s.id and s.english_name like ? order by s_name";
+    
+    /**
      * SQL to select photo ids by a given common name ID
      */
     private static final String SELECT_IDS_BY_COMMON_NAME_ID = "SELECT p.id "
@@ -158,6 +166,12 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
             + "where p.specie_id > -1 and p.user_id=? and p.specie_family_id = f.id and p.specie_id = s.id "
             + "order by f_name, s_name";
 
+    private static final String SELECT_IDS_BY_COMMENTS = "" +
+            "SELECT photo_id ID, count(*) comments " +
+            "FROM user_comments_photo " +
+            "GROUP by photo_id " +
+            "ORDER by comments desc";
+    
     /**
      * SQL to verify if a photo is for identification
      */
@@ -244,21 +258,6 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
 
     /**
      * This method retrieves a <code>List</code> object with
-     * <code>Integer</code> objects, of photos more recently added to database
-     * 
-     * @return a <code>List</code> object with <code>Photo</code> objects
-     * 
-     * @throws DatabaseDownException If the database is down
-     * @throws SQLException If some SQL Exception occurs
-     */
-    public List retrieveIDsForRecentPhotos() throws DatabaseDownException,
-            SQLException {
-        List list = retrieveIDs(SELECT_IDS_FOR_ALL_BY_DATE);
-        return list;
-    }
-
-    /**
-     * This method retrieves a <code>List</code> object with
      * <code>Integer</code> objects, based on the name of the family
      * 
      * @param name
@@ -277,28 +276,7 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
         List list = retrieveIDsForGivenStringField(name, getSelectIDsForFamilyNameSQL());
         return list;
     }
-    
-    /**
-     * This method retrieves a <code>List</code> object with
-     * <code>Integer</code> objects, based on the name of the specie
-     * 
-     * @param name
-     *            The name of the specie
-     * 
-     * @return a <code>List</code> object with <code>Photo</code> objects,
-     *         based on the name of the specie
-     * 
-     * @throws DatabaseDownException
-     *             If the database is down
-     * @throws SQLException
-     *             If some SQL Exception occurs
-     */
-    public List retrieveIDsForSpecieName(String name) throws DatabaseDownException,
-            SQLException {
-        List list = retrieveIDsForGivenStringField(name, getSelectIDsForSpecieNameSQL());
-        return list;
-    }    
-    
+          
     /**
      * This method retrieves a <code>List</code> object with
      * <code>Integer</code> objects, based on the name of the specie
@@ -319,6 +297,22 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
         List list = retrieveIDsForGivenStringField(name, getSelectIDsForCommonNameByNameSQL());
         return list;
     }    
+    
+    /**
+     * This method retrieves a <code>List</code> object with
+     * <code>Integer</code> objects, for photos with more comments
+     * 
+     * @return a <code>List</code> object with <code>Integer</code> objects,
+     *         for photos with more comments
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    public List retrieveIDsForMoreComments() throws DatabaseDownException,
+            SQLException {
+        List list = retrieveIDs(SELECT_IDS_BY_COMMENTS);
+        return list;
+    }
     
     /**
      * This method verifies wheter an Id exists
@@ -607,6 +601,10 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
     }    
     
     @Override
+    protected String getSelectIDsForSpecieEnglishNameSQL() {
+        return SELECT_IDS_BY_ENGLISH_NAME;
+    }     
+    @Override
     protected String getSelectIDsForCommonNameSQL() {
         return SELECT_IDS_BY_COMMON_NAME_ID;
     }
@@ -621,6 +619,10 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
         return SELECT_IDS_BY_USER;
     }
  
+    @Override
+    protected String getSelectIDsForRecentePhotosSQL() {
+        return SELECT_IDS_FOR_ALL_BY_DATE;
+    }    
     /**
      * @param rs
      * @return

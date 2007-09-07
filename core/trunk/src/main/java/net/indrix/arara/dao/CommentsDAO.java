@@ -53,7 +53,7 @@ public class CommentsDAO extends AbstractDAO {
 	 * This sql statement selects all users that had commented an specific
 	 * photo.
 	 */
-	private static final String SELECT_USERS_FOR_PHOTO = "select u.id, u.login, u.name, u.email, u.language from user_comments_photo c, user u "
+	private static final String SELECT_USERS_FOR_PHOTO = "select distinct u.id, u.login, u.name, u.email, u.language from user_comments_photo c, user u "
 			+ " where c.user_id = u.id and photo_id = ? and user_id != ?";
 
 	private Photo photo = null;

@@ -11,6 +11,21 @@ public abstract class MediaDAO extends AbstractDAO {
 
     /**
      * This method retrieves a <code>List</code> object with
+     * <code>Integer</code> objects, of photos more recently added to database
+     * 
+     * @return a <code>List</code> object with <code>Photo</code> objects
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    public List retrieveIDsForRecentPhotos() throws DatabaseDownException,
+            SQLException {
+        List list = retrieveIDs(getSelectIDsForRecentePhotosSQL());
+        return list;
+    }
+    
+    /**
+     * This method retrieves a <code>List</code> object with
      * <code>Integer</code> objects, based on the id of the family
      * 
      * @param id
@@ -136,6 +151,26 @@ public abstract class MediaDAO extends AbstractDAO {
     }
 
     /**
+     * This method retrieves a <code>List</code> object with
+     * <code>Integer</code> objects, based on the english name of the specie
+     * 
+     * @param name The english name of the specie
+     * 
+     * @return a <code>List</code> object with <code>Photo</code> objects,
+     *         based on the name of the specie
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public List retrieveIDsForSpecieEnglishName(String name) throws DatabaseDownException,
+            SQLException {
+        List list = retrieveIDsForGivenStringField(name, getSelectIDsForSpecieEnglishNameSQL());
+        return list;
+    } 
+    
+    /**
      * This method returns the SQL statement to select ids for family from
      * database
      * 
@@ -162,6 +197,13 @@ public abstract class MediaDAO extends AbstractDAO {
     }
 
     
+    /**
+     * This method returns the SQL statement to select ids for family from
+     * database
+     * 
+     * @return the SELECT_IDS_FOR_ALL_BY_DATE sql
+     */
+    abstract protected String getSelectIDsForRecentePhotosSQL();
     
     /**
      * This method returns the SQL statement to select ids for family from
@@ -178,6 +220,14 @@ public abstract class MediaDAO extends AbstractDAO {
      * @return the SELECT_IDS_BY_FAMILY_NAME sql
      */
     abstract protected String getSelectIDsForSpecieNameSQL();
+
+    /**
+     * This method returns the SQL statement to select ids for species based on their english name
+     * from database
+     * 
+     * @return the SELECT_IDS_BY_ENGLISH_NAME sql
+     */
+    abstract protected String getSelectIDsForSpecieEnglishNameSQL();
     
     /**
      * This method returns the SQL statement to select ids for family from

@@ -70,6 +70,12 @@ public class SpecieDAO extends AbstractDAO {
             "WHERE s.family_id=f.id and s.id != -1 " +
             "ORDER BY name";
 
+    private static final String SELECT_ALL_SORTED_BY_ENGLISH_NAME = "" +
+    "SELECT s.id, s.name, s.english_name, s.family_id, f.name f_name, f.subFamilyName f_subFamilyName " +
+    "FROM specie s, family f " +
+    "WHERE s.family_id=f.id and s.id != -1 " +
+    "ORDER BY english_name";
+    
     private static final String SELECT_FOR_COMMON_NAME = "" +
             "SELECT s.id, s.name, s.english_name, s.family_id, f.name f_name, f.subFamilyName f_subFamilyName " +
             "FROM specie s, family f, specie_has_common_name shcn, common_name cn " +
@@ -188,6 +194,27 @@ public class SpecieDAO extends AbstractDAO {
 		return listInMemory;
 	}
 
+    /**
+     * This method retrieves all species from database
+     * 
+     * @return a <code>List</code> object with <code>Specie</code> objects
+     *         inside.
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public List retrieveSortedByEnglishName() throws DatabaseDownException, SQLException {
+        if (listInMemory == null) {
+            logger.debug("Retrieving species for the first time...");
+            listInMemory = super.retrieveObjects(SELECT_ALL_SORTED_BY_ENGLISH_NAME);
+        } else {
+            logger.debug("Retrieving list of species from memory...");
+        }
+        return listInMemory;
+    }
+    
 	/**
 	 * This method retrieves all species for the given family object
 	 * 

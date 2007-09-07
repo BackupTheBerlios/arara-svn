@@ -91,6 +91,14 @@ public class SoundDAO extends MediaDAO implements SoundConstants {
             + "order by s_name";
 
     /**
+     * SQL to select ids of photos by a given english name
+     */
+    private static final String SELECT_IDS_BY_ENGLISH_NAME = "" +
+            "SELECT snd.id, s.id s_id, s.name s_name, s.english_name english_name  "
+            + "from sound snd, specie s "
+            + "where snd.specie_id = s.id and s.english_name like ? order by s_name";
+
+    /**
      * SQL to select sound ids by a given common name ID
      */
     private static final String SELECT_IDS_BY_COMMON_NAME_ID = "SELECT s.id "
@@ -353,5 +361,15 @@ public class SoundDAO extends MediaDAO implements SoundConstants {
     @Override
     protected String getSelectIDsForCommonNameByNameSQL() {
         return SELECT_IDS_BY_COMMON_NAME_BY_NAME;
+    }
+
+    @Override
+    protected String getSelectIDsForRecentePhotosSQL() {
+        return SELECT_IDS_FOR_ALL_BY_DATE;
+    }
+
+    @Override
+    protected String getSelectIDsForSpecieEnglishNameSQL() {
+        return SELECT_IDS_BY_ENGLISH_NAME;
     }
 }

@@ -12,6 +12,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
+
 import net.indrix.arara.bean.IdentifyPhotoBean;
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.model.FamilyModel;
@@ -29,13 +31,15 @@ import net.indrix.arara.vo.Photo;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
+@SuppressWarnings("serial")
 public class AbstractIdentificationServlet extends AbstractServlet {
-
-	/**
-     * 
+    /**
+     * Logger object to be used by this class
      */
-    private static final long serialVersionUID = 1L;
+    protected static Logger logger = Logger.getLogger("net.indrix.aves");
 
+    protected static Logger loggerActions = Logger.getLogger("net.indrix.actions");
+    
     /**
 	 * This methods handles the data from user, populating a bean object
 	 * 
@@ -74,8 +78,7 @@ public class AbstractIdentificationServlet extends AbstractServlet {
 	/**
 	 * This method resets the bean
 	 * 
-	 * @param bean
-	 *            The bean to be reseted
+	 * @param bean The bean to be reseted
 	 */
 	protected void resetBean(IdentifyPhotoBean bean) {
 		bean.setComment(null);

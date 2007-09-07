@@ -2,10 +2,10 @@ package net.indrix.arara.tools.email;
 
 import java.util.Vector;
 
+import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.SendFailedException;
-import javax.mail.Session;
 import javax.mail.Transport;
 
 import org.apache.log4j.Logger;
@@ -24,6 +24,11 @@ public class MailSender extends Thread {
 	 */
 	private static Logger logger = Logger.getLogger("net.indrix.aves");
 
+    /**
+     * The logger object
+     */
+    private static Logger loggerEmails = Logger.getLogger("net.indrix.emails");
+
 	/**
 	 * Singleton object of MailSender.
 	 */
@@ -32,14 +37,12 @@ public class MailSender extends Thread {
 	/**
 	 * Messages that will be sent
 	 */
-	private Vector messageBuffer;
+	private Vector <Message>messageBuffer;
 
 	/**
 	 * indicator of thread's execution's end.
 	 */
-	private boolean endThread;
-
-	private Session session = null;
+	private boolean endThread;	
 
 	/**
 	 * This is a private constructor. The MailSender class can not be
@@ -47,7 +50,7 @@ public class MailSender extends Thread {
 	 * the MailSender object use getInstance() method.
 	 */
 	private MailSender() {
-		messageBuffer = new Vector(1, 1);
+		messageBuffer = new Vector<Message>(1, 1);
 		endThread = false;
 		logger.info("MailSender start");
 		start();
@@ -69,14 +72,17 @@ public class MailSender extends Thread {
 	/**
 	 * Add a new message in the buffer of messages
 	 */
-	synchronized public void sendMessage(Message m, boolean sendNow) throws MessagingException{
-		logger.info("MainSender.sendMessage: entering method with flag = "
-				+ sendNow);
+	synchronized public void sendMessage(Message message, boolean sendNow) throws MessagingException{
+		logger.info("MainSender.sendMessage: entering method with flag = " + sendNow);
 		if (sendNow) {
 			try {
-				logger
-						.info("MainSender.sendMessage: calling Transport.send...");
-				Transport.send(m);
+				logger.info("MainSender.sendMessage: calling Transport.send...");
+                logger.debug(message.getSubject() + " sent to " + message.getAllRecipients());
+                
+                String recipients = getRecipients(message.getAllRecipients());
+                loggerEmails.debug("Sending email " + message.getSubject() + " to " + recipients);
+				Transport.send(message);
+                loggerEmails.debug("Email sent...");
 			} catch (SendFailedException e) {
 				logger.debug("MainSender.sendMessage: error to send email : " + e);
                 throw e;
@@ -86,11 +92,20 @@ public class MailSender extends Thread {
 			}
 		} else {
 			logger.debug("MainSender.sendMessage: adding msg to the queue");
-			messageBuffer.add(m);
+			messageBuffer.add(message);
 		}
 	}
 
-	/**
+	private String getRecipients(Address[] allRecipients) {
+        StringBuffer buffer = new StringBuffer();
+        for (int i = 0; i < allRecipients.length; i++){
+            buffer.append(allRecipients[i].toString());
+            buffer.append(";");
+        }
+        return buffer.toString();
+    }
+
+    /**
 	 * Verify the buffer of message of each 1 second and if there are messages
 	 * on it, these messages are sent and removed from the buffer.
 	 */
@@ -110,13 +125,17 @@ public class MailSender extends Thread {
 						messageBuffer.remove(message);
 					}
 					// send the message
-					Transport.send(message);
-					logger.info("MainSender.run: Mail was sent successfully.");
+                    logger.debug(message.getSubject() + " sent to " + getRecipients(message.getAllRecipients()));
+                    
+                    String recipients = getRecipients(message.getAllRecipients());
+                    loggerEmails.debug("Sending email " + message.getSubject() + " to " + recipients);
+                    Transport.send(message);
+                    loggerEmails.debug("Email sent...");
+
+                    logger.info("MainSender.run: Mail was sent successfully.");
+                    
 				} catch (MessagingException e) {
-					logger
-							.debug("MainSender.run: Error to send email 2 : "
-									+ e);
-					e.printStackTrace();
+					logger.debug("MainSender.run: Error to send email 2 : " + e);
 				}
 			}
 		}

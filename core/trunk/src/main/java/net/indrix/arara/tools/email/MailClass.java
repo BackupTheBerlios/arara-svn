@@ -407,7 +407,6 @@ public class MailClass {
 				Address[] addrList = message.getAllRecipients();
 				if (addrList != null) {
 					MailSender mSender = MailSender.getInstance();
-                    logger.info("MailClass.sendMessage: sending message with flag = " + now);
 					mSender.sendMessage(message, now);
 					logger.info("Mail sent successfully!");
 				} else {

@@ -18,18 +18,23 @@
 	</tr>
 	<tr align="center">
 		<td width="${col1}"></td>
-		<td align="left" width="${col2}">
+		<td align="right" width="${col2}">
 			<fmt:message key="user.login" />
 		</td>
 		<td align="left" width="${col3}">
-			<input type="text" name="login" value="Jefferson" size="16" maxlength="16">
+			<input type="text" name="login" value="" size="16" maxlength="16">
 		</td>
 	</tr>
 	<tr align="center">
 		<td width="${col1}"></td>
-		<td align="left" width="${col2}"><fmt:message key="user.password" /></td>
-		<td align="left" width="${col3}"><input type="password" name="password" value="jeff"
+		<td align="right" width="${col2}"><fmt:message key="user.password" /></td>
+		<td align="left" width="${col3}"><input type="password" name="password" value=""
 			size="16" maxlength="16"></td>
+	</tr>
+	<tr align="center">
+		<td width="${col1}"></td>
+		<td align="right" width="${col2}"><input type="checkbox" name="remember" value="on"></td>
+		<td align="left" width="${col3}"><fmt:message key="user.login.save.info" /></td>
 	</tr>
 	<tr align="center">
 		<td width="${col1}"></td>
@@ -40,7 +45,8 @@
 	</tr>
 	<tr align="center">
 		<td width="${col1}"></td>
-		<td align="left" colspan="2" width="90%">
+		<td align="left" width="${col2}"></td>
+		<td align="left" width="${col3}">
 			<fmt:message key="user.login.password.msg" />
 			<a href="<c:url value="/frame.jsp?pageToShow=/jsp/user/doForgotPassword.jsp"/>"><fmt:message
 			key="user.login.password.msg.link" /></a>

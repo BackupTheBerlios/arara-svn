@@ -23,16 +23,16 @@
 		</td>	 	  
 		<td width="20%" height="25">
 			<a href="<c:url value="/index.jsp"/>">
-				<img width="36" heigth="36" border="0" src="<c:url value="/images/home.gif"/>" title="<fmt:message key="menu.common.home" />"/></a>
+				<img width="36" heigth="36" border="0" src="<%= request.getContextPath()%>/images/home.gif" title="<fmt:message key="menu.common.home" />"/></a>
 
 			<c:if test="${user == null}">
-				<a href="<c:url value="/frame.jsp?pageToShow=/jsp/user/doLogin.jsp"/>"><img width="36" heigth="36" border="0" src="<c:url value="/images/login.gif"/>" title="<fmt:message key="menu.common.login" />"/></a>
-				<a href="<c:url value="/frame.jsp?pageToShow=/jsp/user/doRegister.jsp"/>"><img width="36" heigth="36" border="0" src="<c:url value="/images/users.gif"/>" title="<fmt:message key="menu.common.register" />"/></a>
+				<a href="<c:url value="/frame.jsp?pageToShow=/jsp/user/doLogin.jsp"/>"><img width="36" heigth="36" border="0" src="<%= request.getContextPath()%>/images/login.gif" title="<fmt:message key="menu.common.login" />"/></a>
+				<a href="<c:url value="/frame.jsp?pageToShow=/jsp/user/doRegister.jsp"/>"><img width="36" heigth="36" border="0" src="<%= request.getContextPath()%>/images/users.gif" title="<fmt:message key="menu.common.register" />"/></a>
 			</c:if>
 			<c:if test="${user != null}">
-				<a href="<c:url value="/servlet/logout"/>"><img width="36" heigth="36" border="0" src="<c:url value="/images/logout.gif"/>" title="<fmt:message key="menu.common.logout" />"/></a>
-				<a href="<c:url value="/frame.jsp?pageToShow=/jsp/user/doUpdateUser.jsp"/>"><img width="36" heigth="36" border="0" src="<c:url value="/images/edit.gif"/>" title="<fmt:message key="menu.common.updateUser" />"/></a>
-				<a href="<c:url value="/frame.jsp?pageToShow=/jsp/user/doChangePassword.jsp"/>"><img width="36" heigth="36" border="0" src="<c:url value="/images/key.gif"/>" title="<fmt:message key="menu.common.changePassword"/>"/></a>
+				<a href="<c:url value="/servlet/logout"/>"><img width="36" heigth="36" border="0" src="<%= request.getContextPath()%>/images/logout.gif" title="<fmt:message key="menu.common.logout" />"/></a>
+				<a href="<c:url value="/frame.jsp?pageToShow=/jsp/user/doUpdateUser.jsp"/>"><img width="36" heigth="36" border="0" src="<%= request.getContextPath()%>/images/edit.gif" title="<fmt:message key="menu.common.updateUser" />"/></a>
+				<a href="<c:url value="/frame.jsp?pageToShow=/jsp/user/doChangePassword.jsp"/>"><img width="36" heigth="36" border="0" src="<%= request.getContextPath()%>/images/key.gif" title="<fmt:message key="menu.common.changePassword"/>"/></a>
 			</c:if>
 
 

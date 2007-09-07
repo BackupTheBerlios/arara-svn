@@ -15,16 +15,10 @@ import net.indrix.arara.dao.SpecieDAO;
 import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.servlets.ServletUtil;
 
-/**
- * @author Jeff
- * 
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
 @SuppressWarnings("serial")
-public class InitSearchBySpecieServlet extends RetrieveFamiliesServlet {
+public class InitSearchByEnglishNameServlet extends RetrieveFamiliesServlet {
     public void init() {
-        logger.debug("Initializing InitSearchBySpecieServlet...");
+        logger.debug("Initializing InitSearchByEnglishNameServlet...");
     }
 
     public void doGet(HttpServletRequest req, HttpServletResponse res)
@@ -35,10 +29,13 @@ public class InitSearchBySpecieServlet extends RetrieveFamiliesServlet {
         SpecieDAO dao = new SpecieDAO();
         List list = null;
         try {
-            logger.debug("Retrieving list of all species...");
-            list = dao.retrieve();
+            logger.debug("Retrieving list of all english name...");
+            list = dao.retrieveSortedByEnglishName();
+            if (list == null || list.isEmpty()){
+                logger.debug("Empty list...");
+            }
             logger.debug("Converting to labelValueBean...");
-            list = ServletUtil.specieDataAsLabelValueBean(list);
+            list = ServletUtil.englishNameAsLabelValueBean(list);
             logger.debug("Putting to session...");
 
             ListBean listBean = (ListBean) session.getAttribute(ServletConstants.FAMILY_LIST_KEY);
@@ -52,7 +49,6 @@ public class InitSearchBySpecieServlet extends RetrieveFamiliesServlet {
             listBean = new ListBean();
             listBean.setList(list);
             session.setAttribute(ServletConstants.SPECIE_LIST_KEY, listBean);
-
         } catch (DatabaseDownException e) {
             logger.error("InitSearchBySpecieServlet.doGet : could not retrieve list of all species",e);
         } catch (SQLException e) {

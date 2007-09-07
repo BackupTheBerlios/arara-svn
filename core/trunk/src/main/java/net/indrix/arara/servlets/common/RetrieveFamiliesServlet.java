@@ -34,6 +34,7 @@ import org.apache.log4j.Logger;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
+@SuppressWarnings("serial")
 public class RetrieveFamiliesServlet extends AbstractServlet {
     static Logger logger = Logger.getLogger("net.indrix.aves");
 
@@ -56,8 +57,7 @@ public class RetrieveFamiliesServlet extends AbstractServlet {
         if (testeUser() && (user == null)) {
             logger.debug("RetrieveFamiliesServlet.doGet : user is NOT logged...");
             // The method userNotLogged takes care of user not logged trying to
-            // access options for
-            // logged users
+            // access options for logged users
             nextPage = userNotLogged(req, res);
         } else {
             logger.debug("Retrieving data...");

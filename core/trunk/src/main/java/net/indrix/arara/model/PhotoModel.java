@@ -154,7 +154,9 @@ public class PhotoModel extends MediaModel {
         logger.debug("PhotoId " + photoId);
         Photo photo = ((PhotoDAO) dao).retrieve(photoId);
 
-        updatePhotoLink(photo);
+        if (photo != null){
+            updatePhotoLink(photo);            
+        }
         return photo;
     }
 
@@ -174,11 +176,12 @@ public class PhotoModel extends MediaModel {
             SQLException {
         logger.debug("PhotoId " + photoId);
         Photo photo = ((PhotoDAO) dao).retrieveThumbnail(photoId);
-
-        updatePhotoLink(photo);
-        
-        if (photo.isSoundAvailable()) {
-            model.updateSoundLink(photo.getSound());
+        if (photo != null){
+            updatePhotoLink(photo);
+            
+            if (photo.isSoundAvailable()) {
+                model.updateSoundLink(photo.getSound());
+            }            
         }
 
         return photo;
@@ -273,13 +276,12 @@ public class PhotoModel extends MediaModel {
         c.setPhoto(photo);
         c.setUser(user);
         c.setDate(new Date());
-        logger.debug("Inserting comment to photo " + photo);
-        logger.debug("Inserting comment on" + c.getDate());
+        logger.debug("Inserting comment to photo " + photo + " on " + c.getDate());
         CommentsDAO dao = new CommentsDAO();
         dao.insertComment(c);
 
         String login = photo.getUser().getLogin();
-        logger.debug("Notifying user " + login + " about new comment.");
+        logger.debug("Notifying photo author " + login + " about new comment.");
         notifyPhotoAuthor(c, photo, user);
     }
 
@@ -288,10 +290,8 @@ public class PhotoModel extends MediaModel {
      * 
      * @return An ArrayList object with Photo objects
      * 
-     * @throws DatabaseDownException
-     *             If the database is down
-     * @throws SQLException
-     *             If some SQL Exception occurs
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
      */
     public List retrievePhotosForIdentification() throws DatabaseDownException,
             SQLException {
@@ -300,6 +300,48 @@ public class PhotoModel extends MediaModel {
         return list;
     }
 
+    /**
+     * This method retrieve all photos from database, order by the number of comments from user;
+     * 
+     * @return all numberOfPhotos photos from database, order by the number of comments from user;
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    public List<Photo> retrievePhotosIDsWithMoreComments(int numberOfPhotos) throws DatabaseDownException, SQLException {
+        logger.debug("Entering method...");
+        List listOfIDs = ((PhotoDAO)dao).retrieveIDsForMoreComments();
+        listOfIDs = listOfIDs.subList(0, numberOfPhotos);
+        
+        List <Photo>list = new ArrayList<Photo>();
+        Photo photo = null;
+        Iterator it = listOfIDs.iterator();
+        int count = 0;
+        while (it.hasNext() && count < numberOfPhotos){
+            Integer id = (Integer)it.next();
+            photo = retrieveThumbnail(id);
+            list.add(photo);
+            count++;
+        }
+        
+        return list;
+    }
+    
+    /**
+     * This method retrieve all photos from database, order by the number of comments from user;
+     * 
+     * @return all photos from database, order by the number of comments from user;
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    public List retrievePhotosIDsWithMoreComments() throws DatabaseDownException, SQLException {
+        logger.debug("Entering method...");
+        List listOfIDs = ((PhotoDAO)dao).retrieveIDsForMoreComments();
+        
+        return listOfIDs;
+    }    
+    
     /**
      * THis method adds an identification to a photo into database
      * 
@@ -436,8 +478,6 @@ public class PhotoModel extends MediaModel {
         try {
             logger.debug("Sending email...");
 
-            MailClass sender = new MailClass(server);
-
             // retrieve addresses to send photo
             CommentsDAO dao = new CommentsDAO();
             List<User> l = dao.retrieveUsersWithCommentsForPhoto(photo.getId(), user.getId());
@@ -453,6 +493,12 @@ public class PhotoModel extends MediaModel {
                 l.add(photo.getUser());
             }
 
+            dIt = l.iterator();            
+            while (dIt.hasNext()) {
+                User u = (User) dIt.next();
+                logger.debug("User = " + u);
+            }
+            
             Iterator it = l.iterator();
             while (it.hasNext()) {
                 User u = (User) it.next();
@@ -464,12 +510,16 @@ public class PhotoModel extends MediaModel {
                 body = bundle.getString("email.newComment.body", locale);
                 fromText = bundle.getString("email.newComment.fromText", locale);
 
+                MailClass sender = new MailClass(server);
                 sender.setMessageTextBody(getMessage(u, body, c, photo));
                 sender.setSubject(subject);
                 sender.setFromAddress(fromAdd, fromText);
 
                 sender.setToAddress(u.getEmail());
+
+                logger.debug("Sending email " + subject + " to " + u.getLogin() + "-" + u.getEmail());
                 sender.sendMessage(false);
+                
                 // false indicates to emailObject to not send the message right
                 // now
             }

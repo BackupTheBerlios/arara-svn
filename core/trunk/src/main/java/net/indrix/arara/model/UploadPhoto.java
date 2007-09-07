@@ -241,8 +241,8 @@ public class UploadPhoto extends AbstractUpload {
         realimage.setWidth(icon.getIconWidth());
         realimage.setHeight(icon.getIconHeight());
         float r = ((float) realimage.getWidth()) / realimage.getHeight();
-        logger.debug("Rate calculated with value = " + r);
-        int hForSmallPhoto = (int) (wForSmallPhoto / r);
+        logger.debug("Rate calculated with value = " + r);      
+        int hForSmallPhoto = Math.round(wForSmallPhoto / r);
         smallImage.setWidth(wForSmallPhoto);
         smallImage.setHeight(hForSmallPhoto);
 

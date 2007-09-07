@@ -112,6 +112,27 @@ public class MediaModel {
 
     /**
      * This method retrieves the id of all objects from database, for the given
+     * the specie name
+     * 
+     * @param name
+     *            The name of the specie
+     * 
+     * @return An ArrayList object with Integer objects
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public List retrieveIDsForSpecieEnglishName(String name)
+            throws DatabaseDownException, SQLException {
+        logger.debug("Name " + name);
+        List list = dao.retrieveIDsForSpecieEnglishName(name);
+        return list;
+    }
+    
+    /**
+     * This method retrieves the id of all objects from database, for the given
      * common name id
      * 
      * @param commonNameId

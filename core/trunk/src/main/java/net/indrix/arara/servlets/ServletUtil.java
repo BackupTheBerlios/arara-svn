@@ -34,6 +34,8 @@ public class ServletUtil {
 
 	private static List <LabelValueBean>specieListInMemory = null;
 
+    private static List <LabelValueBean>englishNameListInMemory = null;
+
 	private static List <LabelValueBean>statesListInMemory = null;
 
 	private static List <LabelValueBean>commonNamesListInMemory = null;
@@ -119,12 +121,27 @@ public class ServletUtil {
 			}
 			specieListInMemory.add(0, new LabelValueBean("", ""));
 		} else {
-			logger
-					.debug("Returning the species data as LabelValueBean without creating objects...");
+			logger.debug("Returning the species data as LabelValueBean without creating objects...");
 		}
 		return specieListInMemory;
 	}
 
+    public static List englishNameAsLabelValueBean(List list) {
+        if (englishNameListInMemory == null) {
+            englishNameListInMemory = new ArrayList<LabelValueBean>();
+            Iterator it = list.iterator();
+            while (it.hasNext()) {
+                Specie s = (Specie) it.next();
+                if (s.getEnglishName() != null && s.getEnglishName().length() > 0){
+                    LabelValueBean bean = new LabelValueBean(s.getEnglishName(), s.getId());
+                    englishNameListInMemory.add(bean);
+                }
+            }
+            englishNameListInMemory.add(0, new LabelValueBean("", ""));
+        } 
+        return englishNameListInMemory;
+    }
+    
 	/**
 	 * @param list
 	 * @return

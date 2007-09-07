@@ -23,6 +23,7 @@ import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.servlets.ServletUtil;
 import net.indrix.arara.servlets.pagination.PaginationBean;
 import net.indrix.arara.servlets.pagination.PaginationController;
+import net.indrix.arara.servlets.pagination.PhotoByCommentsPaginationController;
 import net.indrix.arara.servlets.pagination.PhotoByCommonNamePaginationController;
 import net.indrix.arara.servlets.pagination.PhotoByFamilyPaginationController;
 import net.indrix.arara.servlets.pagination.PhotoBySpeciePaginationController;
@@ -55,7 +56,11 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
     public static final int PAGINATION_FOR_USER = 4;
 
     public static final int PAGINATION_FOR_RECENT = 5;
-
+    
+    public static final int PAGINATION_FOR_ENGLISH_NAME = 6;
+    
+    public static final int PAGINATION_FOR_MORE_COMMENTS = 7;
+    
     protected static Logger logger = Logger.getLogger("net.indrix.aves");
 
     protected static Logger loggerActions = Logger.getLogger("net.indrix.actions");
@@ -220,6 +225,9 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
                 break;
             case PAGINATION_FOR_RECENT:
                 c = new PhotoRecentPaginationController(PHOTOS_PER_PAGE);
+                break;
+            case PAGINATION_FOR_MORE_COMMENTS:
+                c = new PhotoByCommentsPaginationController(PHOTOS_PER_PAGE);
                 break;
             }
             logger.debug("PaginationController just created");

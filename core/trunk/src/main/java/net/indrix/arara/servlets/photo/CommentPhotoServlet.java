@@ -40,8 +40,7 @@ public class CommentPhotoServlet extends HttpServlet {
      */
     static Logger logger = Logger.getLogger("net.indrix.aves");
 
-    protected static Logger loggerActions = Logger
-            .getLogger("net.indrix.actions");
+    protected static Logger loggerActions = Logger.getLogger("net.indrix.actions");
 
     /**
      * Constant for a not null comment

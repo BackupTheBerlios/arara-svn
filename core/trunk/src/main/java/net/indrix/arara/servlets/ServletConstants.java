@@ -16,6 +16,8 @@ public class ServletConstants {
 	/**
 	 * constants containing the names of the attributes submmited by the GUI.
 	 */
+    public static final String LOGIN_COOKIE_ID = "login";
+    
 	public static final String ID = "id";
     
     public static final String TEXT_ID = "text";
@@ -246,5 +248,7 @@ public class ServletConstants {
     public static final String CREATE_ACTION = "CREATE";
     
     public static final String EDIT_ACTION = "EDIT";
+
+    public static final String USER_PHOTOS = "userPhotos";
     
 }

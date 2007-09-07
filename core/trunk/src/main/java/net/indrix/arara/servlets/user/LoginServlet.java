@@ -15,6 +15,7 @@ import java.util.ResourceBundle;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,6 +35,7 @@ import org.apache.log4j.Logger;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
+@SuppressWarnings("serial")
 public class LoginServlet extends HttpServlet {
 	/**
 	 * Logger object to be used by this class
@@ -49,23 +51,22 @@ public class LoginServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
-		List erros = new ArrayList();
+		List<String> erros = new ArrayList<String>();
 
 		String login = req.getParameter("login");
 		String password = req.getParameter("password");
 		String nextResource = req.getParameter("nextResource");
-
+        boolean remember = "on".equals(req.getParameter("remember")) ? true : false;
+        
 		logger.debug("Locale:" + req.getLocale());
-		ResourceBundle bundle = ResourceBundle.getBundle("Resources", req
-				.getLocale());
+		ResourceBundle bundle = ResourceBundle.getBundle("Resources", req.getLocale());
 		if (bundle == null) {
 			logger.debug("BUNDLE = NULL");
 		} else {
-			logger.debug("menu.common.home = "
-					+ bundle.getString("menu.common.home"));
+			logger.debug("menu.common.home = " + bundle.getString("menu.common.home"));
 		}
 
-		logger.debug("User is trying to login with data: " + login);
+		logger.debug("User is trying to login with data: " + login + req.getParameter("remember"));
 
 		User user = null;
 		RequestDispatcher dispatcher = null;
@@ -77,14 +78,24 @@ public class LoginServlet extends HttpServlet {
 			user = l.login(login, password);
 			if (user != null) {
 				logger.debug("User validated " + user);
-				loggerActions.info("User " + login + " from IP "
-						+ req.getRemoteAddr() + " has logged in.");
+				loggerActions.info("User " + login + " from IP " + req.getRemoteAddr() + " has logged in.");
 				HttpSession session = req.getSession(true);
 				session.setAttribute(ServletConstants.USER_KEY, user);
 
 				req.setAttribute(ServletConstants.USER_KEY, user);
+                
+                // creating a cookie on user's machine
+                Cookie cookie = new Cookie("login", user.getLogin());
+                if (remember){
+                    logger.info("Creating cookie on user's machine...");
+                    cookie.setMaxAge(60 * 60 * 24 * 7);
+                } else {
+                    logger.info("Deleting cookie on user's machine...");
+                    cookie.setMaxAge(-1);
+                }
+                res.addCookie(cookie);                    
 
-				if ((nextResource != null) && (nextResource.length() > 0)) {
+                if ((nextResource != null) && (nextResource.length() > 0)) {
 					nextPage = nextResource;
 				} else {
 					nextPage = ServletConstants.INITIAL_PAGE;

@@ -756,8 +756,6 @@ public class PhotoModel extends MediaModel {
                     .retrieveUsersForIdentification(photoIdentification
                             .getPhoto().getId());
 
-            MailClass sender = new MailClass(server);
-
             Iterator it = listOfUsers.iterator();
 
             EmailResourceBundle bundle = (EmailResourceBundle) EmailResourceBundle
@@ -765,6 +763,7 @@ public class PhotoModel extends MediaModel {
 
             Map<String, Locale> map = new HashMap<String, Locale>();
             while (it.hasNext()) {
+                MailClass sender = new MailClass(server);
                 User user = (User) it.next();
                 Locale locale = (Locale) map.get(user.getLanguage());
                 if (locale == null) {

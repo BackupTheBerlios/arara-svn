@@ -7,6 +7,7 @@
 package net.indrix.arara.servlets;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -14,11 +15,16 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.model.UserModel;
+import net.indrix.arara.model.UserNotFoundException;
 import net.indrix.arara.utils.PropertiesManager;
+import net.indrix.arara.vo.User;
 
 import org.apache.commons.fileupload.DefaultFileItemFactory;
 import org.apache.commons.fileupload.FileItem;
@@ -143,4 +149,47 @@ public class AbstractServlet extends HttpServlet {
 		String nextPage = ServletConstants.LOGIN_PAGE;
 		return nextPage;
 	}
+    
+    /**
+     * This method verifies if there is a cookie in the request for the user's login
+     * 
+     * @param req The request from user
+     * 
+     * @return The user's login if it exists, or null otherwise
+     */
+    protected String userHasCookie(HttpServletRequest req) {
+        Cookie[] cookies = req.getCookies();
+        String login = null;
+        for (int i = 0; (cookies != null) && i < cookies.length; i++){
+            if (ServletConstants.LOGIN_COOKIE_ID.equals(cookies[i].getName())){
+                login = cookies[i].getValue();
+            }
+        }
+        return login;
+    }
+    
+    /**
+     * Retrieves a user from database, given his/her login
+     * 
+     * @param login The user's login
+     * 
+     * @return A user object, or null if the login is not valid.
+     */
+    protected User getUserFromDatabase(String login) {
+        logger.info("Retrieving user " + login + " from DB...");
+        UserModel model = new UserModel();
+        User user = null;
+        try {
+            user = model.retrieve(login);
+        } catch (DatabaseDownException e) {
+            logger.error("Error retrieving user [" + login + "] from DB, given login from cookie");
+        } catch (SQLException e) {
+            logger.error("Error retrieving user [" + login + "] from DB, given login from cookie");
+        } catch (UserNotFoundException e) {
+            logger.error("Error retrieving user [" + login + "] from DB, given login from cookie");
+        }
+        return user;
+    }
+    
+    
 }

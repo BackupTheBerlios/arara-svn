@@ -26,6 +26,7 @@ import net.indrix.arara.servlets.pagination.PhotoPaginationController;
 import net.indrix.arara.servlets.pagination.PhotoRecentPaginationController;
 import net.indrix.arara.servlets.pagination.exceptions.InvalidControllerException;
 import net.indrix.arara.vo.Photo;
+import net.indrix.arara.vo.User;
 
 import org.apache.log4j.Logger;
 
@@ -46,6 +47,18 @@ public class ShowOnePhotoServlet extends AbstractSearchPhotosServlet {
         ServletContext context = this.getServletContext();
         List<String> errors = new ArrayList<String>();
         HttpSession session = req.getSession();
+        
+        User user = (User) session.getAttribute(ServletConstants.USER_KEY);
+        if (user == null){
+            String login = userHasCookie(req);
+            if (login != null){
+                // load use from database and stores it on session
+                user = getUserFromDatabase(login);
+                if (user != null){
+                    session.setAttribute(ServletConstants.USER_KEY, user);
+                }                
+            }
+        }
         
         String photoId = req.getParameter("photoId");
         String identificationStr = req.getParameter(ServletConstants.IDENTIFICATION_KEY);

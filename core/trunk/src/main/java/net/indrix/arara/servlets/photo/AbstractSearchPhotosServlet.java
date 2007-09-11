@@ -14,11 +14,11 @@ import java.util.Locale;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import net.indrix.arara.servlets.AbstractServlet;
 import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.servlets.ServletUtil;
 import net.indrix.arara.servlets.pagination.PaginationBean;
@@ -34,15 +34,13 @@ import net.indrix.arara.servlets.pagination.exceptions.InvalidControllerExceptio
 import net.indrix.arara.utils.PropertiesManager;
 import net.indrix.arara.vo.User;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Jeff
  * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public abstract class AbstractSearchPhotosServlet extends HttpServlet {
+public abstract class AbstractSearchPhotosServlet extends AbstractServlet {
     private static final String PAGE_NUMBER = "pageNumber";
     
     public static final int PAGINATION_FOR_ALL_PHOTOS = 0;
@@ -61,10 +59,6 @@ public abstract class AbstractSearchPhotosServlet extends HttpServlet {
     
     public static final int PAGINATION_FOR_MORE_COMMENTS = 7;
     
-    protected static Logger logger = Logger.getLogger("net.indrix.aves");
-
-    protected static Logger loggerActions = Logger.getLogger("net.indrix.actions");
-
     private static String PHOTOS_BY_PAGE_KEY = "photos.per.page";
 
     private static int PHOTOS_PER_PAGE;

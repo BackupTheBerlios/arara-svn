@@ -54,7 +54,7 @@ public class CommentsDAO extends AbstractDAO {
 	 * photo.
 	 */
 	private static final String SELECT_USERS_FOR_PHOTO = "select distinct u.id, u.login, u.name, u.email, u.language from user_comments_photo c, user u "
-			+ " where c.user_id = u.id and photo_id = ? and user_id != ?";
+			+ " where u.emailOnNewComment = 1 and c.user_id = u.id and photo_id = ? and user_id != ?";
 
 	private Photo photo = null;
 
@@ -110,26 +110,22 @@ public class CommentsDAO extends AbstractDAO {
 	 */
 	public List<User> retrieveUsersWithCommentsForPhoto(int photoId, int userId)
 			throws DatabaseDownException {
-		logger.debug("CommentsDAO.retrieveUsersForPhoto : entering method...");
+		logger.debug("Entering method...");
 		List <User>list = new ArrayList<User>();
 		Connection conn = DatabaseManager.getConnection();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 
 		try {
-			logger.debug("CommentsDAO.retrieveUsersForPhoto : running SQL "
-					+ SELECT_USERS_FOR_PHOTO);
-			logger
-					.debug("CommentsDAO.retrieveUsersForPhoto : running SQL with "
-							+ photoId + "," + userId);
+			logger.debug("Running SQL " + SELECT_USERS_FOR_PHOTO);
+			logger.debug("Running SQL with " + photoId + "," + userId);
 			stmt = conn.prepareStatement(SELECT_USERS_FOR_PHOTO);
 			stmt.setInt(1, photoId);
 			stmt.setInt(2, userId);
 
 			rs = stmt.executeQuery();
 
-			logger
-					.debug("CommentsDAO.retrieveUsersForPhoto : adding emails to list...");
+			logger.debug("Adding emails to list...");
 			while (rs.next()) {
 				User u = (User) createUserObject(rs);
 				list.add(u);
@@ -146,7 +142,7 @@ public class CommentsDAO extends AbstractDAO {
 				throw new DatabaseDownException();
 			}
 		}
-		logger.debug("CommentsDAO.retrieveUsersForPhoto : finishing method...");
+		logger.debug("Finishing method...");
 		return list;
 	}
 

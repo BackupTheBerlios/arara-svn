@@ -27,21 +27,23 @@ public class UserDAO extends AbstractDAO {
 	public static final String EMAIL_ON_NEW_PHOTO_COLUMN = "emailOnNewPhoto";
 	public static final String EMAIL_ON_NEW_ID_PHOTO_COLUMN = "emailOnNewIdPhoto";
 	public static final String EMAIL_ON_NEW_SOUND_COLUMN = "emailOnNewSound";
+    public static final String EMAIL_ON_NEW_COMMENT_COLUMN = "emailOnNewComment";
 	public static final String ADD_PHOTO_COLUMN = "addPhoto";
 	public static final String ADD_SOUND_COLUMN = "addSound";
 	public static final String ADMIN_COLUMN = "admin";
     public static final String ACTIVE_COLUMN = "active";
     public static final String REGISTERED_ON_COLUMN = "registeredOn";
     
-	public static final String INSERT = "INSERT INTO user (name, login, password, email, language, emailOnNewPhoto, emailOnNewIdPhoto, emailOnNewSound, addPhoto, addSound, registeredOn) "
-			+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	public static final String INSERT = "INSERT INTO user " +
+            "(name, login, password, email, language, emailOnNewPhoto, emailOnNewIdPhoto, emailOnNewSound, emailOnNewComment, addPhoto, addSound, registeredOn) "
+			+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 	public static final String UPDATE = "UPDATE user "
-			+ "set name = ?, password = ?, email = ?, language = ?, emailOnNewPhoto = ?, emailOnNewIdPhoto = ?, emailOnNewSound = ? "
+			+ "set name = ?, password = ?, email = ?, language = ?, emailOnNewPhoto = ?, emailOnNewIdPhoto = ?, emailOnNewSound = ?, emailOnNewComment = ? "
 			+ "WHERE id = ?";
 
     public static final String UPDATE_USER_CANCEL_EMAIL = "UPDATE user "
-        + "set emailOnNewPhoto = ?, emailOnNewIdPhoto = ?, emailOnNewSound = ? "
+        + "set emailOnNewPhoto = ?, emailOnNewIdPhoto = ?, emailOnNewSound = ?, emailOnNewComment = ? "
         + "WHERE id = ?";
 
     public static final String UPDATE_USER_ACTIVE = "UPDATE user set active = ?, registeredOn = ? WHERE id = ?";
@@ -209,6 +211,7 @@ public class UserDAO extends AbstractDAO {
             stmt.setInt(1, 0);
             stmt.setInt(2, 0);
             stmt.setInt(3, 0);
+            stmt.setInt(4, 0);
             stmt.executeUpdate();
         } catch (SQLException e) {
             logger.error("USERDAO.cancelEmail : could not update data");
@@ -282,6 +285,7 @@ public class UserDAO extends AbstractDAO {
 		user.setEmailOnNewPhoto(rs.getInt(EMAIL_ON_NEW_PHOTO_COLUMN) == 1 ? true : false);
 		user.setEmailOnNewIdPhoto(rs.getInt(EMAIL_ON_NEW_ID_PHOTO_COLUMN) == 1 ? true : false);
 		user.setEmailOnNewSound(rs.getInt(EMAIL_ON_NEW_SOUND_COLUMN) == 1 ? true : false);
+        user.setEmailOnNewComment(rs.getInt(EMAIL_ON_NEW_COMMENT_COLUMN) == 1 ? true : false);
 		user.setAddPhoto(rs.getInt(ADD_PHOTO_COLUMN) == 1 ? true : false);
 		user.setAddSound(rs.getInt(ADD_SOUND_COLUMN) == 1 ? true : false);
 		user.setAdmin(rs.getBoolean(ADMIN_COLUMN));
@@ -334,11 +338,12 @@ public class UserDAO extends AbstractDAO {
 		stmt.setInt(6, user.isEmailOnNewPhoto() ? 1 : 0);
 		stmt.setInt(7, user.isEmailOnNewIdPhoto() ? 1 : 0);
 		stmt.setInt(8, user.isEmailOnNewSound() ? 1 : 0);
-		stmt.setInt(9, 0);
+        stmt.setInt(9, user.isEmailOnNewComment() ? 1 : 0);
 		stmt.setInt(10, 0);
+		stmt.setInt(11, 0);
         
         Timestamp stamp = getTimestamp(getSQLDate());
-        stmt.setTimestamp(11, stamp);        
+        stmt.setTimestamp(12, stamp);        
         
         Date d = new Date(stamp.getTime());
         user.setRegisteredOn(d);
@@ -381,7 +386,8 @@ public class UserDAO extends AbstractDAO {
 		stmt.setInt(5, user.isEmailOnNewPhoto() ? 1 : 0);
 		stmt.setInt(6, user.isEmailOnNewIdPhoto() ? 1 : 0);
 		stmt.setInt(7, user.isEmailOnNewSound() ? 1 : 0);
-		stmt.setInt(8, user.getId());
+        stmt.setInt(8, user.isEmailOnNewComment() ? 1 : 0);
+		stmt.setInt(9, user.getId());
 		logger.debug("UserDAO.setStatementValuesForUpdate: Exiting method");
 	}
 

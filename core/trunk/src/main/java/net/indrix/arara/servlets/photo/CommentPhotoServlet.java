@@ -45,7 +45,7 @@ public class CommentPhotoServlet extends HttpServlet {
     /**
      * Constant for a not null comment
      */
-    private static String COMMENT_NOT_NULL = "Comentário não pode ser null";
+    private static String COMMENT_NOT_NULL = "Comentário não pode ser nulo";
 
     /**
      * Init servlet
@@ -60,7 +60,7 @@ public class CommentPhotoServlet extends HttpServlet {
     public void doPost(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
 
-        logger.debug("CommentPhotoServlet.doPost called...");
+        logger.debug("Entering method...");
         RequestDispatcher dispatcher = null;
         ServletContext context = this.getServletContext();
         String nextPage = null;

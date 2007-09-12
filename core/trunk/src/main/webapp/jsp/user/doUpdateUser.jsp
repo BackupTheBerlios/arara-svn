@@ -103,6 +103,19 @@
 	<tr>
 		<td width="${col1}"></td>
 		<td align="left" width="${col2}"></td>
+		<td width="${col3}">
+			<c:if test="${user.emailOnNewComment == true}">
+				<input type="checkbox" checked name="emailOnNewComment" size="16"	maxlength="16">
+				<fmt:message key="user.emailOnNewComment" />
+			</c:if> <c:if test="${user.emailOnNewComment == false}">
+				<input type="checkbox" name="emailOnNewComment" size="16" maxlength="16">
+				<fmt:message key="user.emailOnNewComment" />
+			</c:if>
+		</td>
+	</tr>
+	<tr>
+		<td width="${col1}"></td>
+		<td align="left" width="${col2}"></td>
 		<td>
 			<div align="left">
 				<input type="SUBMIT" value="<fmt:message key="user.update.submit"/>">

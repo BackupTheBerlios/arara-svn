@@ -27,21 +27,34 @@
 			<c:if test="${user.emailOnNewPhoto == true}">
 				<br>
 				<fmt:message key="user.registered.emailOnNewPhoto" />
-			</c:if> <c:if test="${user.emailOnNewPhoto == false}">
+			</c:if> 
+			<c:if test="${user.emailOnNewPhoto == false}">
 				<br>
 				<fmt:message key="user.registered.no.emailOnNewPhoto" />
-			</c:if> <c:if test="${user.emailOnNewIdPhoto == true}">
+			</c:if> 
+			<c:if test="${user.emailOnNewIdPhoto == true}">
 				<br>
 				<fmt:message key="user.registered.emailOnNewIdPhoto" />
-			</c:if> <c:if test="${user.emailOnNewIdPhoto == false}">
+			</c:if> 
+			<c:if test="${user.emailOnNewIdPhoto == false}">
 				<br>
 				<fmt:message key="user.registered.no.emailOnNewIdPhoto" />
-			</c:if> <c:if test="${user.emailOnNewSound == true}">
+			</c:if> 
+			<c:if test="${user.emailOnNewSound == true}">
 				<br>
 				<fmt:message key="user.registered.emailOnNewSound" />
-			</c:if> <c:if test="${user.emailOnNewSound == false}">
+			</c:if> 
+			<c:if test="${user.emailOnNewSound == false}">
 				<br>
 				<fmt:message key="user.registered.no.emailOnNewSound" />
+			</c:if>
+			<c:if test="${user.emailOnNewComment == true}">
+				<br>
+				<fmt:message key="user.registered.emailOnNewComment" />
+			</c:if> 
+			<c:if test="${user.emailOnNewComment == false}">
+				<br>
+				<fmt:message key="user.registered.no.emailOnNewComment" />
 			</c:if>
 		</td>
 	</tr>

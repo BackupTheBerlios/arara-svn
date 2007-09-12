@@ -35,3 +35,12 @@
 				<br>
 				<fmt:message key="user.registered.no.emailOnNewSound" />
 			</c:if>
+			<c:if test="${user.emailOnNewComment == true}">
+				<br>
+				<fmt:message key="user.registered.emailOnNewComment" />
+			</c:if> 
+			<c:if test="${user.emailOnNewComment == false}">
+				<br>
+				<fmt:message key="user.registered.no.emailOnNewComment" />
+			</c:if>
+			

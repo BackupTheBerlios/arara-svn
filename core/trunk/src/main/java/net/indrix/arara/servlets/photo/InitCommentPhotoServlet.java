@@ -48,7 +48,7 @@ public class InitCommentPhotoServlet extends HttpServlet {
 
         User user = (User) session.getAttribute(ServletConstants.USER_KEY);
         if (user == null) {
-            logger.debug("InitIdentificationPhotoServlet: USER is not logged...");
+            logger.debug("USER is not logged...");
             errors.add(ServletConstants.USER_NOT_LOGGED);
             // put errors in request
             req.setAttribute(ServletConstants.ERRORS_KEY, errors);

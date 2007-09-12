@@ -100,6 +100,14 @@
 		<td width="${col1}"></td>
     	<td width="${col2}"></td>
 		<td width="${col3}">
+			<input type="checkbox" name="emailOnNewComment" size="16" maxlength="16" checked>
+			<fmt:message key="user.emailOnNewComment" />
+		</td>
+	</tr>
+	<tr>
+		<td width="${col1}"></td>
+    	<td width="${col2}"></td>
+		<td width="${col3}">
 			<div align="left">
 				<input type="SUBMIT" value="<fmt:message key="user.register.submit"/>">
 			</div>

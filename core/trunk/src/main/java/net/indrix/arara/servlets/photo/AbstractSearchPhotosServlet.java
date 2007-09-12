@@ -43,6 +43,8 @@ import net.indrix.arara.vo.User;
 public abstract class AbstractSearchPhotosServlet extends AbstractServlet {
     private static final String PAGE_NUMBER = "pageNumber";
     
+    protected static final String[] textForSearch = {"All", "Family", "Specie", "Common Name", "User", "More recent", "English Name", "More comments"};
+    
     public static final int PAGINATION_FOR_ALL_PHOTOS = 0;
 
     public static final int PAGINATION_FOR_FAMILY = 1;
@@ -108,10 +110,7 @@ public abstract class AbstractSearchPhotosServlet extends AbstractServlet {
                     list = controller.doAction(ServletConstants.BEGIN);
                 } catch (InvalidControllerException e1) {
                     // this should never happend
-                    logger
-                            .fatal(
-                                    "InvalidControllerException when doing BEGIN action...",
-                                    e1);
+                    logger.fatal("InvalidControllerException when doing BEGIN action...", e1);
                 }
             }
             PaginationBean bean = controller.getPaginationBean();
@@ -129,16 +128,16 @@ public abstract class AbstractSearchPhotosServlet extends AbstractServlet {
             // adding the user id to request, so it can be sent back by view
             req.setAttribute(ServletConstants.ID, idStr);
 
+            String ip = req.getRemoteAddr();
             if (user != null) {
                 loggerActions.info("User " + user.getLogin() + " from IP "
-                        + req.getRemoteAddr() + " has selected photos - "
-                        + getPaginationConstant());
+                        + ip + " has selected photos - "
+                        + textForSearch[getPaginationConstant()]);
             } else {
-                String ip = req.getRemoteAddr();
                 Locale locale = req.getLocale();
                 loggerActions.info("Anonymous " + " from IP " + ip + "("
-                        + locale + ") has selected all photos - "
-                        + getPaginationConstant());
+                        + locale + ") has selected photos - "
+                        + textForSearch[getPaginationConstant()]);
             }
 
         } else {
@@ -156,8 +155,7 @@ public abstract class AbstractSearchPhotosServlet extends AbstractServlet {
         }
         dispatcher = context.getRequestDispatcher(nextPage);
         logger.debug("Dispatching to " + nextPage);
-        logger.debug("Data on request: " + nextPage + " | " + pageToShow
-                + " | " + action);
+        logger.debug("Data on request: " + nextPage + " | " + pageToShow + " | " + action);
         dispatcher.forward(req, res);
     }
 

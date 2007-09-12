@@ -89,13 +89,18 @@ public class SearchPhotosServlet extends AbstractSearchPhotosServlet {
         req.setAttribute(ServletConstants.ACTION, action);
         req.setAttribute(ServletConstants.SERVLET_TO_CALL_KEY, getServletToCall());
         
-		if (user != null) {
-			loggerActions.info("User " + user.getLogin() + " has selected all photos.");
-		} else {
-			String ip = req.getRemoteAddr();
-			Locale locale = req.getLocale();
-			loggerActions.info("Anonymous " + " from IP " + ip + "(" + locale + ") has selected all photos.");
-		}
+        String ip = req.getRemoteAddr();
+        if (user != null) {
+            loggerActions.info("User " + user.getLogin() + " from IP "
+                    + ip + " has selected photos - "
+                    + textForSearch[getPaginationConstant()]);
+        } else {
+            Locale locale = req.getLocale();
+            loggerActions.info("Anonymous " + " from IP " + ip + "("
+                    + locale + ") has selected photos - "
+                    + textForSearch[getPaginationConstant()]);
+        }
+        
 		if (!errors.isEmpty()) {
 			logger.debug("errors is not null.");
 			// put errors in request

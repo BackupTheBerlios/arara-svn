@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
+@SuppressWarnings("serial")
 public class UpdateServlet extends HttpServlet {
 	/**
 	 * Logger object to be used by this class
@@ -42,22 +43,18 @@ public class UpdateServlet extends HttpServlet {
 			throws ServletException, IOException {
 		logger.debug("UpdateServlet.doPost called...");
 
-		List errors = new ArrayList();
+		List <String>errors = new ArrayList<String>();
 
 		// recupera dados do request
 		String name = req.getParameter("name");
 		String email = req.getParameter("email");
-		String login = req.getParameter("login");
 		String language = req.getParameter("language");
-		boolean emailOnPhoto = "on".equals(req.getParameter("emailOnNewPhoto")) ? true
-				: false;
-		boolean emailOnIdPhoto = "on".equals(req
-				.getParameter("emailOnNewIdPhoto")) ? true : false;
-		boolean emailOnSound = "on".equals(req.getParameter("emailOnNewSound")) ? true
-				: false;
+		boolean emailOnPhoto = "on".equals(req.getParameter("emailOnNewPhoto")) ? true : false;
+		boolean emailOnIdPhoto = "on".equals(req.getParameter("emailOnNewIdPhoto")) ? true : false;
+		boolean emailOnSound = "on".equals(req.getParameter("emailOnNewSound")) ? true : false;
+        boolean emailOnComment = "on".equals(req.getParameter("emailOnNewComment")) ? true : false;
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
-		String msg = null;
 		String nextPage = null;
 		// verifica se login já existe
 		UserModel userModel = new UserModel();
@@ -72,6 +69,7 @@ public class UpdateServlet extends HttpServlet {
 			user.setEmailOnNewPhoto(emailOnPhoto);
 			user.setEmailOnNewIdPhoto(emailOnIdPhoto);
 			user.setEmailOnNewSound(emailOnSound);
+            user.setEmailOnNewComment(emailOnComment);
 			logger.debug("Data validated...");
 			try {
 				userModel.update(user);

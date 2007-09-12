@@ -59,6 +59,7 @@ public class RegisterServlet extends HttpServlet {
 		boolean emailOnPhoto = "on".equals(req.getParameter("emailOnNewPhoto")) ? true : false;
 		boolean emailOnIdPhoto = "on".equals(req.getParameter("emailOnNewIdPhoto")) ? true : false;
 		boolean emailOnSound = "on".equals(req.getParameter("emailOnNewSound")) ? true : false;
+        boolean emailOnComment = "on".equals(req.getParameter("emailOnNewComment")) ? true : false;
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
 		
@@ -85,6 +86,7 @@ public class RegisterServlet extends HttpServlet {
 					user.setEmailOnNewPhoto(emailOnPhoto);
 					user.setEmailOnNewIdPhoto(emailOnIdPhoto);
 					user.setEmailOnNewSound(emailOnSound);
+                    user.setEmailOnNewComment(emailOnComment);
 					if (user.validar()) {
 						logger.debug("Data validated...");
 						try {

@@ -466,8 +466,7 @@ public class PhotoModel extends MediaModel {
      * This method notifies the photo author about a new comment added to
      * his/her photo
      * 
-     * @param photo
-     *            The photo that received a comment
+     * @param photo The photo that received a comment
      */
     private void notifyPhotoAuthor(Comment c, Photo photo, User user) {
         String server = PropertiesManager.getProperty("email.server");

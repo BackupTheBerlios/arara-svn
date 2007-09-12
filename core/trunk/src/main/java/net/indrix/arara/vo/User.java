@@ -26,6 +26,7 @@ public class User {
 	private boolean emailOnNewPhoto;
 	private boolean emailOnNewIdPhoto;
 	private boolean emailOnNewSound;
+    private boolean emailOnNewComment;
 	private boolean addPhoto;
 	private boolean addSound;
 	private boolean isAdmin;
@@ -110,6 +111,13 @@ public class User {
 		return emailOnNewSound;
 	}
 
+    /**
+     * @return
+     */
+    public boolean isEmailOnNewComment() {
+        return emailOnNewComment;
+    }
+
 	/**
 	 * Getter method for the isAdmin attribute
 	 * 
@@ -188,6 +196,13 @@ public class User {
 	public void setEmailOnNewSound(boolean b) {
 		emailOnNewSound = b;
 	}
+
+    /**
+     * @param b
+     */
+    public void setEmailOnNewComment(boolean b) {
+        emailOnNewComment = b;
+    }
 
 	/**
 	 * The setter method for the isAdmin attribute

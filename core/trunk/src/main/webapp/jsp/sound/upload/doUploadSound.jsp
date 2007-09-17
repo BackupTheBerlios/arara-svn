@@ -2,12 +2,12 @@
 <%@ taglib uri="/fmt" prefix="fmt"%>
 <SCRIPT language="JavaScript"> 
     function familySelected() { 
-       document.uploadForm.action = "<c:url value="/servlet/retrieveSpecies?nextPage=/jsp/sound/upload/uploadSound.jsp&data=SOUND&action=UPLOAD"/>"; 
+       document.uploadForm.action = "<c:url value="/servlet/retrieveSpecies?nextPage=/jsp/sound/upload/uploadSound.jsp&data=SOUND&doAction=UPLOAD"/>"; 
        document.uploadForm.submit(); 
     } 
 
     function stateSelected() { 
-       document.uploadForm.action = "<c:url value="/servlet/retrieveCitiesForState?nextPage=/jsp/sound/upload/uploadSound.jsp&data=SOUND&action=UPLOAD"/>"; 
+       document.uploadForm.action = "<c:url value="/servlet/retrieveCitiesForState?nextPage=/jsp/sound/upload/uploadSound.jsp&data=SOUND&doAction=UPLOAD"/>"; 
        document.uploadForm.submit(); 
     } 
 </script>

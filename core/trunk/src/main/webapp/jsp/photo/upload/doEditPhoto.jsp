@@ -3,12 +3,12 @@
 
 <SCRIPT language="JavaScript"> 
     function familySelected() { 
-       document.editForm.action = "<c:url value="/servlet/retrieveSpecies?nextPage=/frame.jsp&pageToShow=/jsp/photo/upload/doEditPhoto.jsp&data=PHOTO&action=EDIT"/>"; 
+       document.editForm.action = "<c:url value="/servlet/retrieveSpecies?nextPage=/frame.jsp&pageToShow=/jsp/photo/upload/doEditPhoto.jsp&data=PHOTO&doAction=EDIT"/>"; 
        document.editForm.submit(); 
     } 
 
     function stateSelected() { 
-       document.editForm.action = "<c:url value="/servlet/retrieveCitiesForState?toPage=/jsp/photo/upload/editPhoto.jsp&data=PHOTO&action=EDIT"/>"; 
+       document.editForm.action = "<c:url value="/servlet/retrieveCitiesForState?toPage=/jsp/photo/upload/editPhoto.jsp&data=PHOTO&doAction=EDIT"/>"; 
        document.editForm.submit(); 
     } 
     

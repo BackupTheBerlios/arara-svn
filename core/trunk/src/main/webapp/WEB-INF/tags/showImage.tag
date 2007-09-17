@@ -21,4 +21,5 @@
 <img src="<c:url value="${linkKey}${currentPhoto.relativePathAsLink}"/>" 
      width="${w}" 
      height="${h}" 
-     align="bottom"/>
+     align="bottom"
+     border="0"/>

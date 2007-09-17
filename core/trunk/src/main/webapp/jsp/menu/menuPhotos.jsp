@@ -8,41 +8,41 @@
   <a href="#"><b><fmt:message key="menu.photos.search" /></b></a>
 -->
   	<li>
-		<a href="<c:url value="/servlet/searchPhotos?action=BEGIN"/>">
+		<a href="<c:url value="/servlet/searchPhotos?doAction=BEGIN"/>">
 		<fmt:message key="menu.photos.search.all" /></a>
 	</li>
   	<li>
-		<a href="<c:url value="/servlet/searchRecentPhotos?action=BEGIN"/>">
+		<a href="<c:url value="/servlet/searchRecentPhotos?doAction=BEGIN"/>">
 		<fmt:message key="menu.photos.search.recent" /></a>
 	</li>
   	<li>
-		<a href="<c:url value="/servlet/searchPhotosWithMoreComments?action=BEGIN"/>">
+		<a href="<c:url value="/servlet/searchPhotosWithMoreComments?doAction=BEGIN"/>">
 		<fmt:message key="menu.photos.search.more.comments" /></a>
 	</li>
   	<li>
-		<a href="<c:url value="/servlet/initSearchByFamily?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataByFamily.jsp&servletToCall=/servlet/searchPhotosByFamily&action=BEGIN"/>">
+		<a href="<c:url value="/servlet/initSearchByFamily?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataByFamily.jsp&servletToCall=/servlet/searchPhotosByFamily&doAction=BEGIN"/>">
 		<fmt:message key="menu.photos.search.family" /></a>
 	</li>
   	<li>
-		<a href="<c:url value="/servlet/initSearchBySpecie?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataBySpecie.jsp&servletToCall=/servlet/searchPhotosBySpecie&action=BEGIN"/>">
+		<a href="<c:url value="/servlet/initSearchBySpecie?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataBySpecie.jsp&servletToCall=/servlet/searchPhotosBySpecie&doAction=BEGIN"/>">
 		<fmt:message key="menu.photos.search.specie" /></a>
 	</li>
 <!--
   	<li>
-		<a href="<c:url value="/servlet/initSearchByEnglishName?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataByEnglishName.jsp&servletToCall=/servlet/searchPhotosByEnglishName&action=BEGIN"/>">
+		<a href="<c:url value="/servlet/initSearchByEnglishName?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataByEnglishName.jsp&servletToCall=/servlet/searchPhotosByEnglishName&doAction=BEGIN"/>">
 		<fmt:message key="menu.photos.search.english.name" /></a>
 	</li>
 -->	
   	<li>
-		<a href="<c:url value="/servlet/initSearchByCommonName?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataByCommonName.jsp&servletToCall=/servlet/searchPhotosByCommonName&action=BEGIN"/>">
+		<a href="<c:url value="/servlet/initSearchByCommonName?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataByCommonName.jsp&servletToCall=/servlet/searchPhotosByCommonName&doAction=BEGIN"/>">
 		<fmt:message key="menu.photos.search.commonName" /></a>
 	</li>
   	<li>
-		<a href="<c:url value="/servlet/initSearchByUser?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataByUser.jsp&servletToCall=/servlet/searchPhotosByUser&action=BEGIN"/>">
+		<a href="<c:url value="/servlet/initSearchByUser?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataByUser.jsp&servletToCall=/servlet/searchPhotosByUser&doAction=BEGIN"/>">
 		<fmt:message key="menu.photos.search.user" /></a>
 	</li>
   	<li>
-		<a href="<c:url value="/servlet/searchPhotos?action=BEGIN&identification=true"/>">
+		<a href="<c:url value="/servlet/searchPhotos?doAction=BEGIN&identification=true"/>">
 		<fmt:message key="menu.photos.search.identification" /></a>
 	</li>
 

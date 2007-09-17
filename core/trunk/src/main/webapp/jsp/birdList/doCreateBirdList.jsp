@@ -12,7 +12,7 @@
 		for (var i = 0; i < document.birdlistCreation.selectedCities.length; i++) {
             document.birdlistCreation.selectedCities.options[i].selected = true;
 		}
-		document.birdlistCreation.action = "<c:url value="/servlet/retrieveCitiesForState?nextPage=/frame.jsp&pageToShow=${pageToShow}&servletToCall=${servletToCall}&data=BIRDLIST&action=${action}"/>"; 
+		document.birdlistCreation.action = "<c:url value="/servlet/retrieveCitiesForState?nextPage=/frame.jsp&pageToShow=${pageToShow}&servletToCall=${servletToCall}&data=BIRDLIST&doAction=${action}"/>"; 
 		document.birdlistCreation.method = "post";
 		document.birdlistCreation.submit(); 
     }    
@@ -114,7 +114,7 @@
 	      action="<c:url value="${servletToCall}"/>">
 
       <input type=hidden name="servletToCall" value="${servletToCall}">
-      <input type=hidden name="action" value="${action}">
+      <input type=hidden name="doAction" value="${action}">
       
 	  <table class="formBorder" width="80%" align="center" border="0" cellspacing="2">
 	  <tr height="10" bgcolor="${formTitleColor}">

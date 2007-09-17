@@ -151,6 +151,14 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>initSearchByEnglishName</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.common.InitSearchByEnglishNameServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
 		<servlet-name>initSearchByCommonName</servlet-name>
 		<servlet-class>
 			net.indrix.arara.servlets.common.InitSearchByCommonNameServlet
@@ -215,9 +223,25 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>searchPhotosByEnglishName</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.photo.SearchPhotosByEnglishNameServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
 		<servlet-name>searchPhotosByCommonName</servlet-name>
 		<servlet-class>
 			net.indrix.arara.servlets.photo.SearchPhotosByCommonNameServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>searchPhotosWithMoreComments</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.photo.SearchPhotosWithMoreCommentsServlet
 		</servlet-class>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
@@ -624,6 +648,11 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
+		<servlet-name>initSearchByEnglishName</servlet-name>
+		<url-pattern>/servlet/initSearchByEnglishName</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
 		<servlet-name>searchPhotosByFamily</servlet-name>
 		<url-pattern>/servlet/searchPhotosByFamily</url-pattern>
 	</servlet-mapping>
@@ -634,6 +663,11 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
+		<servlet-name>searchPhotosByEnglishName</servlet-name>
+		<url-pattern>/servlet/searchPhotosByEnglishName</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
 		<servlet-name>searchPhotosByCommonName</servlet-name>
 		<url-pattern>/servlet/searchPhotosByCommonName</url-pattern>
 	</servlet-mapping>
@@ -641,6 +675,11 @@
 	<servlet-mapping>
 		<servlet-name>searchPhotosByUser</servlet-name>
 		<url-pattern>/servlet/searchPhotosByUser</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>searchPhotosWithMoreComments</servlet-name>
+		<url-pattern>/servlet/searchPhotosWithMoreComments</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

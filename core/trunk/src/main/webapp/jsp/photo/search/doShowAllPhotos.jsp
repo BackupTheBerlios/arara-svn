@@ -73,7 +73,7 @@ table.comBordaSimples tr {
 						</c:if> 
 						</td>
 		        		<td width="${w+10}" colspan="1" rowspan="4" align="left">
-							<a href="<c:url value="/servlet/showOnePhoto?action=SHOW&nextPage=/frame.jsp&pageToShow=/jsp/photo/search/doShowOnePhoto.jsp&photoId=${photo.id}&identification=${identification}"/>">				
+							<a href="<c:url value="/servlet/showOnePhoto?doAction=SHOW&nextPage=/frame.jsp&pageToShow=/jsp/photo/search/doShowOnePhoto.jsp&photoId=${photo.id}&identification=${identification}"/>">				
 							    <!-- The linkKey below is set in the InitServlet class -->
 								<img src="<c:url value="${linkKey}${photo.thumbnailRelativePathAsLink}"/>"
 									width="${f:thumbnailWidth(w, photo.smallImage.width, photo.smallImage.height)}"
@@ -88,27 +88,27 @@ table.comBordaSimples tr {
 								<!-- INSERTING family name -->
 								<font size="1" face="Verdana"><br><fmt:message key="family" />: 
 								<c:if test="${photo.specie.family.subFamilyName == null}">
-									<a href="<c:url value="/servlet/searchPhotosByFamily?id=${photo.specie.family.id}&action=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${photo.specie.family.name}
+									<a href="<c:url value="/servlet/searchPhotosByFamily?id=${photo.specie.family.id}&doAction=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${photo.specie.family.name}
 									</a>
 								</c:if> 
 								<c:if test="${photo.specie.family.subFamilyName != null}">
-									<a href="<c:url value="/servlet/searchPhotosByFamily?id=${photo.specie.family.id}&action=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${photo.specie.family.name} (${photo.specie.family.subFamilyName}) 
+									<a href="<c:url value="/servlet/searchPhotosByFamily?id=${photo.specie.family.id}&doAction=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${photo.specie.family.name} (${photo.specie.family.subFamilyName}) 
 									</a>
 								</c:if> 
 								</font>
 								
 								<!-- INSERTING specie name -->
 								<font size="1" face="Verdana"><br><fmt:message key="specie" />: 
-									<a href="<c:url value="/servlet/searchPhotosBySpecie?id=${photo.specie.id}&action=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>"><i>${photo.specie.name}</i>
+									<a href="<c:url value="/servlet/searchPhotosBySpecie?id=${photo.specie.id}&doAction=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>"><i>${photo.specie.name}</i>
 									</a>
 								</font> 
 								<!-- INSERTING specie common name -->
 								<font size="1" face="Verdana"><br><fmt:message key="common.name" />: 
-									<a href="<c:url value="/servlet/searchPhotosBySpecie?id=${photo.specie.id}&action=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${photo.specie.commonNameString}
+									<a href="<c:url value="/servlet/searchPhotosBySpecie?id=${photo.specie.id}&doAction=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${photo.specie.commonNameString}
 									</a>
 								</font> 
 								<font size="1" face="Verdana"><br><fmt:message key="english.name" />: 
-									<a href="<c:url value="/servlet/searchPhotosBySpecie?id=${photo.specie.id}&action=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${photo.specie.englishName}
+									<a href="<c:url value="/servlet/searchPhotosBySpecie?id=${photo.specie.id}&doAction=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${photo.specie.englishName}
 									</a>
 								</font> 
 							</c:if> 
@@ -118,7 +118,7 @@ table.comBordaSimples tr {
 							</c:if> 
 							<!-- INSERTING user login -->
 							<font size="1" face="Verdana"><br><fmt:message key="user.title" />: 
-								<a href="<c:url value="/servlet/searchPhotosByUser?id=${photo.user.id}&action=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${photo.user.login}</a>
+								<a href="<c:url value="/servlet/searchPhotosByUser?id=${photo.user.id}&doAction=BEGIN&nextPage=${nextPage}&pageToShow=${pageToShow}"/>">${photo.user.login}</a>
 	
 								<c:if test="${user != null}">
 									<a  href="<c:url value="/frame.jsp?pageToShow=/jsp/email/doWriteEmail.jsp&loginTo=${photo.user.login}"/>"> 

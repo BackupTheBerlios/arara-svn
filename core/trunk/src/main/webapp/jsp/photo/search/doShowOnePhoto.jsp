@@ -26,7 +26,7 @@
 			<!-- Show photo when in View Mode -->
 			<c:if test="${viewMode == 'viewMode'}">
 		        <c:if test="${hasPrevious}">
-			        <a href="<c:url value="${servletToCall}?identification=${identification}&action=PREVIOUS&id=${id}&nextPage=${nextPage}&photoId=${currentPhoto.id}&pageToShow=${pageToShow}"/>">
+			        <a href="<c:url value="${servletToCall}?identification=${identification}&doAction=PREVIOUS&id=${id}&nextPage=${nextPage}&photoId=${currentPhoto.id}&pageToShow=${pageToShow}"/>">
 			        	<fmt:message key="pagination.previous" var="paginagion.previous"/>
 			        	<b><img border="0" align="middle" title="${paginagion.previous}" src="<%= request.getContextPath()%>/images/navigate_left.gif" width="48" height="48"></b>
 			        </a> 
@@ -37,7 +37,7 @@
 				</a>
 	        	&nbsp;&nbsp;&nbsp;&nbsp; 					
 		        <c:if test="${hasNext}">
-					<a href="<c:url value="${servletToCall}?identification=${identification}&action=NEXT&id=${id}&nextPage=${nextPage}&photoId=${currentPhoto.id}&pageToShow=${pageToShow}"/>">
+					<a href="<c:url value="${servletToCall}?identification=${identification}&doAction=NEXT&id=${id}&nextPage=${nextPage}&photoId=${currentPhoto.id}&pageToShow=${pageToShow}"/>">
 			        	<fmt:message	key="pagination.next" var="paginagion.next"/>
 			        	<b><img border="0" align="middle" title="${paginagion.next}" src="<%= request.getContextPath()%>/images/navigate_right.gif" width="48" height="48"></b>
 			        </a>

@@ -1,21 +1,21 @@
 <%@ taglib uri="/core" prefix="c"%>
 <%@ taglib uri="/fmt" prefix="fmt"%>
 
-<SCRIPT language="JavaScript"> 
-    function familySelected() { 
-       document.initShowPhotosBySpecieForm.method = "POST"; 
-       document.initShowPhotosBySpecieForm.action = "<c:url value="/servlet/retrieveSpecies?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataBySpecie.jsp&servletToCall=${servletToCall}"/>"; 
-       document.initShowPhotosBySpecieForm.submit(); 
-    } 
-</script>
-
-
 <c:set var="selectedFamilyId" value="${familyList.selectedId}" />
 <c:set var="selectedSpecieId" value="${specieList.selectedId}" />
 
+<script language="JavaScript">
+function selFamily(){
+document.photosBySpecie.method="POST";
+document.photosBySpecie.action="<c:url value="/servlet/retrieveSpecies?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataBySpecie.jsp&servletToCall=${servletToCall}"/>"; 
+document.photosBySpecie.submit();
+}
+</script>
+
 <br><br>
-<form name="initShowPhotosBySpecieForm" method="get"
-	action="<c:url value="${servletToCall}"/>"
+<form action="<c:url value="${servletToCall}"/>"
+	name="photosBySpecie" 
+	method="get"
 	enctype="multipart/form-data">
 
 <c:import url="/jsp/common/display/hiddenFields.jsp"/>
@@ -33,7 +33,7 @@
 			<b><fmt:message key="family" /></b>
 		</td>
 		<td align="left" width="${col3}%">
-			<select name="familyId" onChange="familySelected()">
+			<select name="familyId" onChange="selFamily()">
 			<c:forEach items="${familyList.list}" var="familyBean">
 				<c:if
 					test="${selectedFamilyId != null && selectedFamilyId == familyBean.value}">

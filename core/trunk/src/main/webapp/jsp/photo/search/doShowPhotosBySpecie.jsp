@@ -2,11 +2,12 @@
 <%@ taglib uri="/fmt" prefix="fmt"%>
 
 <SCRIPT language="JavaScript"> 
+
     function familySelected() { 
-       document.initShowPhotosBySpecieForm.method = "POST"; 
        document.initShowPhotosBySpecieForm.action = "<c:url value="/servlet/retrieveSpecies?toPage=/jsp/photo/search/showPhotosBySpecie.jsp&data=PHOTO"/>"; 
        document.initShowPhotosBySpecieForm.submit(); 
     } 
+    
 </script>
 
 

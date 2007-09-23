@@ -40,12 +40,8 @@ public class CommentPhotoServlet extends HttpServlet {
      */
     static Logger logger = Logger.getLogger("net.indrix.aves");
 
-    protected static Logger loggerActions = Logger.getLogger("net.indrix.actions");
-
-    /**
-     * Constant for a not null comment
-     */
-    private static String COMMENT_NOT_NULL = "Comentário não pode ser nulo";
+    protected static Logger loggerActions = Logger
+            .getLogger("net.indrix.actions");
 
     /**
      * Init servlet
@@ -78,8 +74,14 @@ public class CommentPhotoServlet extends HttpServlet {
         } else {
             String photoId = req.getParameter(ServletConstants.PHOTO_ID);
             String comment = req.getParameter(ServletConstants.COMMENT);
+            String voteStr = req.getParameter(ServletConstants.VOTE);
+            int vote = -1;
+            if (voteStr != null) {
+                vote = getVoteNumber(voteStr);
+            }
             logger.debug("PhotoId to have a comment: " + photoId);
             logger.debug("Comment: " + comment);
+            logger.debug("Vote: " + vote);
             if (validateData(comment)) {
                 // retrieve current photo
                 comment = formatComment(comment);
@@ -88,12 +90,21 @@ public class CommentPhotoServlet extends HttpServlet {
                     Photo photo = model.retrieve(Integer.parseInt(photoId));
                     if (photo != null) {
                         req.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
-                        
+
                         model.insertComment(photo, user, comment);
                         logger.debug("Comment added to database");
+                        
+                        model.insetVote(photo, user, vote);
 
                         if (user != null) {
-                            loggerActions.info("User " + user.getLogin() + " has commented photo " + photo.getId());
+                            String login = user.getLogin();
+                            String msg = "User " + login + " has commented photo " + photo.getId();
+                            loggerActions.info(msg);
+                            if (vote > 0){
+                                msg = "User " + login + " has voted photo " + photo.getId();
+                                msg += " with vote " + vote;
+                                loggerActions.info(msg);
+                            }
                         }
 
                         try {
@@ -122,23 +133,39 @@ public class CommentPhotoServlet extends HttpServlet {
                 }
             } else {
                 logger.debug("Comment is invalid...");
-                errors.add(COMMENT_NOT_NULL);
+                errors.add(ServletConstants.COMMENT_NOT_NULL);
             }
         }
 
         if (!errors.isEmpty()) {
-            nextPage = ServletConstants.DATABASE_ERROR_PAGE;
+            nextPage = ServletConstants.FRAME_PAGE;
             // put errors in request
             req.setAttribute(ServletConstants.ERRORS_KEY, errors);
         }
 
-        req.setAttribute(ServletConstants.IDENTIFICATION_KEY, identificationStr);
+        req.setAttribute(ServletConstants.IDENTIFICATION_KEY,identificationStr);
         req.setAttribute(ServletConstants.VIEW_MODE_KEY, "viewMode");
         req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);
         dispatcher = context.getRequestDispatcher(nextPage);
         logger.debug("Dispatching to " + nextPage);
         dispatcher.forward(req, res);
 
+    }
+
+    private int getVoteNumber(String voteStr) {
+        int vote = -1;
+        if ("one".equals(voteStr)) {
+            vote = 1;
+        } else if ("two".equals(voteStr)) {
+            vote = 2;
+        } else if ("three".equals(voteStr)) {
+            vote = 3;
+        } else if ("four".equals(voteStr)) {
+            vote = 4;
+        } else if ("five".equals(voteStr)) {
+            vote = 5;
+        }
+        return vote;
     }
 
     /**
@@ -152,30 +179,38 @@ public class CommentPhotoServlet extends HttpServlet {
      */
     private String formatComment(String comment) {
         String newComment = "";
-        if (comment.length() > 81) {
-            boolean finished = false;
-            while (!finished) {
-                newComment = newComment + comment.substring(0, 80);
-                comment = comment.substring(80);
-                int index = comment.indexOf(" ");
-                if (index > 0) {
-                    newComment = newComment + comment.substring(0, index)
-                            + "\n";
-                    comment = comment.substring(index + 1);
-                    if (comment.length() < 81) {
-                        newComment += comment;
+        
+        String [] lines = comment.split("\r\n");
+        
+        for (int i = 0; i < lines.length; i++){
+            comment = lines[i];
+            if (comment.length() > 81) {
+                boolean finished = false;
+                String newLines = "";
+                while (!finished) {
+                    newLines = newLines + comment.substring(0, 80);
+                    comment = comment.substring(80);
+                    int index = comment.indexOf(" ");
+                    if (index > 0) {
+                        newLines = newLines + comment.substring(0, index) + "\r\n";
+                        comment = comment.substring(index + 1);
+                        if (comment.length() < 81) {
+                            newLines += comment;
+                            finished = true;
+                        }
+                    } else {
                         finished = true;
+                        newLines += "\r\n" + comment.trim() + "\r\n";
                     }
-                } else {
-                    finished = true;
-                    newComment += "\n" + comment;
                 }
+                newComment += newLines;
+            } else {
+                newComment += comment + "\r\n";
             }
-        } else {
-            newComment = comment;
         }
         return newComment;
-    }
+    }   
+
 
     /**
      * This method retrieves the comments for a given photo
@@ -221,3 +256,4 @@ public class CommentPhotoServlet extends HttpServlet {
     }
 
 }
+

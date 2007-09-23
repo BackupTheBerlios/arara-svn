@@ -94,7 +94,7 @@ public class CommentPhotoServlet extends HttpServlet {
                         model.insertComment(photo, user, comment);
                         logger.debug("Comment added to database");
                         
-                        model.insetVote(photo, user, vote);
+                        //model.insetVote(photo, user, vote);
 
                         if (user != null) {
                             String login = user.getLogin();
@@ -195,7 +195,7 @@ public class CommentPhotoServlet extends HttpServlet {
                         newLines = newLines + comment.substring(0, index) + "\r\n";
                         comment = comment.substring(index + 1);
                         if (comment.length() < 81) {
-                            newLines += comment;
+                            newLines += comment + "\r\n";
                             finished = true;
                         }
                     } else {

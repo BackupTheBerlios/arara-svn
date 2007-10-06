@@ -11,6 +11,16 @@
 	<uri>functions</uri>
 
 	<function>
+		<name>scaledWidth</name>
+		<function-class>
+			net.indrix.arara.utils.jsp.Thumbnail
+		</function-class>
+		<function-signature>
+			int getScaledWidth(int, int ,int)
+		</function-signature>
+	</function>
+
+	<function>
 		<name>scaledHeight</name>
 		<function-class>
 			net.indrix.arara.utils.jsp.Thumbnail

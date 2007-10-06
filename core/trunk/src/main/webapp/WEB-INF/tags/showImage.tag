@@ -9,8 +9,8 @@
 
 <c:set var="w" value="${currentPhoto.realImage.width}"/>
 <c:if test="${currentPhoto.realImage.width > width}">
-	<c:set var="w" value="${width}"/>
-	<c:set var="h" value="${f:scaledHeight(w, currentPhoto.realImage.width, currentPhoto.realImage.height)}"/>	
+	<c:set var="w" value="${f:scaledWidth(width, currentPhoto.realImage.width, currentPhoto.realImage.height)}"/>	
+	<c:set var="h" value="${f:scaledHeight(width, currentPhoto.realImage.width, currentPhoto.realImage.height)}"/>	
 </c:if>
 
 <c:if test="${currentPhoto.realImage.width <= width}">

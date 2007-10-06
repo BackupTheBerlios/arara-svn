@@ -29,8 +29,9 @@ public class Thumbnail {
 	public static int getScaledHeight(int thumbnailTargetWidth, int imageWidth,
 			int imageHeight) {
 
-		float rate = ((float) imageWidth) / imageHeight;
-		int hForSmallPhoto = (int) (thumbnailTargetWidth / rate);
+		float rate = ((float) imageWidth) / imageHeight;       
+        float f = (thumbnailTargetWidth / (float)rate);
+        int hForSmallPhoto = (int) Math.round(f);
 
 		return hForSmallPhoto;
 	}
@@ -75,7 +76,8 @@ public class Thumbnail {
 	public static int getHeight(int thumbnailTargetWidth, int imageWidth,
 			int imageHeight) {
 		float rate = ((float) imageWidth) / imageHeight;
-		int hForSmallPhoto = (int) (thumbnailTargetWidth / rate);
+        float f = (thumbnailTargetWidth / (float)rate);
+		int hForSmallPhoto = (int) Math.round(f);
 
 		if (hForSmallPhoto > thumbnailTargetWidth) {
 			int temp = thumbnailTargetWidth;
@@ -85,4 +87,9 @@ public class Thumbnail {
 
 		return hForSmallPhoto;
 	}
+    
+    public static void main(String args[]){
+        int h = getHeight(600, 800, 533);
+        System.out.println(h);
+    }
 }

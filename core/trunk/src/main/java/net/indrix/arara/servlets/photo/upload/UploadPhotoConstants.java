@@ -33,4 +33,6 @@ public class UploadPhotoConstants extends UploadConstants {
 
 	public static final String CITY_REQUIRED = "city.required.error";
 
+    public static final String DATE_REQUIRED = "date.required.error";
+
 }

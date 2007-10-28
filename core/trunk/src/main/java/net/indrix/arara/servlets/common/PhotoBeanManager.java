@@ -11,6 +11,7 @@ import java.util.Map;
 
 import net.indrix.arara.bean.UploadPhotoBean;
 import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.servlets.photo.upload.UploadPhotoConstants;
 
 /**
  * @author Jeff
@@ -35,7 +36,15 @@ public class PhotoBeanManager extends BeanManager {
 		bean.setCamera((String) data.get(ServletConstants.CAMERA));
 		bean.setLens((String) data.get(ServletConstants.LENS));
 		bean.setFilm((String) data.get(ServletConstants.FILM));
-		bean.setDate((String) data.get(ServletConstants.DATE));
+		
+        String date = (String) data.get(ServletConstants.DATE); 
+        
+        if (validate) {
+            if ((date == null) || (date.trim().equals(""))) {
+                errors.add(UploadPhotoConstants.DATE_REQUIRED);
+            }
+        }        
+        bean.setDate(date);
 	}
 
 }

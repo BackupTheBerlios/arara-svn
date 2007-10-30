@@ -129,6 +129,8 @@ public class PhotoEmailSender extends AbstractPhotoEmailSender {
 		list.add(family);
 		String specie = photo.getSpecie().getName();
 		list.add(specie);
+        String popularName = photo.getSpecie().getCommonNamesString();
+        list.add(popularName);
 		String url = "http://www.aves.brasil.nom.br/servlet/showOnePhoto?photoId=" + photo.getId();
 		list.add(url);
 

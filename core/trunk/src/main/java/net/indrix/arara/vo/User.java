@@ -252,16 +252,21 @@ public class User {
 				|| (login == null || login.trim().length() == 0)
 				|| (password == null || password.trim().length() == 0)) {
 			valid = false;
-		}
-
-		if (isPasswordValid(password)) {
-			String newPass = Cryptography.cryptPassword(password);
-			if (newPass == "") {
-				valid = false;
-			}
 		} else {
-			valid = false;
-		}
+            if (name.contains(" ")){
+                valid = false;
+            } else {
+                if (isPasswordValid(password)) {
+                    String newPass = Cryptography.cryptPassword(password);
+                    if (newPass == "") {
+                        valid = false;
+                    }
+                } else {
+                    valid = false;
+                }                           
+            }
+        }
+
 
 		return valid;
 	}

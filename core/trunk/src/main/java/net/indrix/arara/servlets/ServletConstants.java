@@ -50,9 +50,11 @@ public class ServletConstants {
 
 	public static final String COMMENT = "comment";
 
+    public static final String VOTE = "vote";
+
 	public static final String PHOTO_ID = "photoId";
 
-	public static final String ACTION = "action";
+	public static final String ACTION = "doAction";
 
 	public static final String BEGIN = "BEGIN";
 
@@ -229,6 +231,8 @@ public class ServletConstants {
     
 	public static final String PASSWORD_FORMAT = "password.format.error";
 
+    public static final String USERNAME_FORMAT = "username.format.error";
+    
 	public static final String PHOTO_ALREADY_IDENTIFIED = "photo.already.identified";
 
 	public static final String END_OF_IDENTIFICATION_MSG = "end.of.identification.msg";
@@ -250,5 +254,10 @@ public class ServletConstants {
     public static final String EDIT_ACTION = "EDIT";
 
     public static final String USER_PHOTOS = "userPhotos";
-    
+
+    /**
+     * Constant for a not null comment
+     */
+    public static String COMMENT_NOT_NULL = "comment.null.error";
+
 }

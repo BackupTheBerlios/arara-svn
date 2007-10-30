@@ -107,6 +107,7 @@ public class RegisterServlet extends HttpServlet {
 					} else {
 						errors.add(ServletConstants.FIELDS_REQUIRED);
 						errors.add(ServletConstants.PASSWORD_FORMAT);
+                        errors.add(ServletConstants.USERNAME_FORMAT);
 					}
 				}
 			} catch (DatabaseDownException e) {

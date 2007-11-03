@@ -253,7 +253,7 @@ public class User {
 				|| (password == null || password.trim().length() == 0)) {
 			valid = false;
 		} else {
-            if (name.contains(" ")){
+            if (login.contains(" ")){
                 valid = false;
             } else {
                 if (isPasswordValid(password)) {

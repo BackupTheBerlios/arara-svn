@@ -77,8 +77,10 @@ public class EditPhotoServlet extends AbstractUploadPhotoServlet {
 			try {
 				data = parseMultiPartFormData(req);
 				try {
-					Photo photo = (Photo) session
-							.getAttribute(ServletConstants.CURRENT_PHOTO);
+                    PhotoModel model = new PhotoModel();
+                    String photoId = (String)data.get(ServletConstants.PHOTO_ID);
+                    Photo photo = model.retrieve(Integer.parseInt(photoId));
+                    
 					updatePhoto(data, photo, identification);
 					logger.debug("Calling updatePhotoIntoDatabase " + photo);
 					updatePhotoIntoDatabase(photo);

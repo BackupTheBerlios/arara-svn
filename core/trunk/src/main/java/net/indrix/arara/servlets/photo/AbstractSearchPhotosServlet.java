@@ -68,7 +68,7 @@ public abstract class AbstractSearchPhotosServlet extends AbstractServlet {
         PHOTOS_PER_PAGE = Integer.parseInt(PropertiesManager
                 .getProperty(PHOTOS_BY_PAGE_KEY));
     }
-
+  
     /**
      * 
      */

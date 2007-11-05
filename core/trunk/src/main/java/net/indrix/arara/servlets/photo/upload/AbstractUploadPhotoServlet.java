@@ -10,16 +10,12 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 
-import net.indrix.arara.bean.UploadPhotoBean;
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.model.exceptions.ImageProcessingException;
 import net.indrix.arara.servlets.AbstractServlet;
-import net.indrix.arara.servlets.UploadConstants;
 import net.indrix.arara.servlets.common.IBeanManager;
 import net.indrix.arara.servlets.common.PhotoBeanManager;
 import net.indrix.arara.servlets.common.UploadBeanManagerFactory;
@@ -46,27 +42,6 @@ public abstract class AbstractUploadPhotoServlet extends AbstractServlet {
             .getLogger("net.indrix.actions");
 
     /**
-     * @param data
-     * @param bean
-     */
-    protected boolean updateBean(Map data, UploadPhotoBean bean, List<String> errors, HttpSession session) {
-        boolean status = false;
-
-        PhotoBeanManager manager = getBeanManager(
-                getDataToBeUploaded(), 
-                UploadConstants.UPLOAD_ACTION,
-                session);
-        manager.updateBean(data, errors, true);
-
-        if (!errors.isEmpty()) {
-            status = false;
-        } else {
-            status = true;
-        }
-        return status;
-    }
-
-    /**
      * Each sub-class needs to implement this method, to specify the data to be uploaded
      * 
      * @return A String representing the data to be uploaded
@@ -78,10 +53,10 @@ public abstract class AbstractUploadPhotoServlet extends AbstractServlet {
      * 
      * @return a new BeanManager instance
      */
-    protected PhotoBeanManager getBeanManager(String source, String action, HttpSession session) {
+    protected PhotoBeanManager getBeanManager(String source, String action, HttpServletRequest req) {
 
         UploadBeanManagerFactory factory = UploadBeanManagerFactory.getInstance();
-        IBeanManager manager = factory.createBean(source, action, session);
+        IBeanManager manager = factory.createBean(source, action, req);
 
         return (PhotoBeanManager)manager;
     }
@@ -122,4 +97,6 @@ public abstract class AbstractUploadPhotoServlet extends AbstractServlet {
         }
         return date;
     }
+
+
 }

@@ -15,10 +15,12 @@ package net.indrix.arara.servlets.photo;
  */
 @SuppressWarnings("serial")
 public class SearchPhotosBySpecieServlet extends AbstractSearchPhotosServlet {
+
     protected String getServletToCall() {
         return "/servlet/searchPhotosBySpecie";
     }
+
     protected int getPaginationConstant() {
         return PAGINATION_FOR_SPECIE;
-    }    
+    }
 }

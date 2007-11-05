@@ -16,6 +16,7 @@ import java.util.Map;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -24,13 +25,18 @@ import net.indrix.arara.bean.UploadPhotoBean;
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.model.AgeModel;
 import net.indrix.arara.model.CityModel;
+import net.indrix.arara.model.FamilyModel;
 import net.indrix.arara.model.SexModel;
+import net.indrix.arara.model.StatesModel;
 import net.indrix.arara.model.UploadPhoto;
 import net.indrix.arara.model.exceptions.ImageProcessingException;
+import net.indrix.arara.servlets.AbstractServlet;
 import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.servlets.ServletUtil;
 import net.indrix.arara.servlets.UploadConstants;
+import net.indrix.arara.servlets.common.PhotoBeanManager;
 import net.indrix.arara.servlets.common.UploadBeanManagerFactory;
-import net.indrix.arara.servlets.photo.exceptions.InvalidFileException;
+import net.indrix.arara.servlets.exceptions.InvalidFileException;
 import net.indrix.arara.vo.Photo;
 import net.indrix.arara.vo.User;
 
@@ -73,46 +79,59 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 			Map data = null;
 			try {
 				data = parseMultiPartFormData(req);
-				UploadPhotoBean photoBean = (UploadPhotoBean) session.getAttribute(UploadConstants.UPLOAD_PHOTO_BEAN);
+				UploadPhotoBean photoBean = null;
 
-				logger.debug("Calling updateBean");
-				if (updateBean(data, photoBean, errors, session)) {
+                String dataToBeUploaded = getDataToBeUploaded();
+                String action = UploadConstants.UPLOAD_ACTION;
+                PhotoBeanManager manager = getBeanManager(dataToBeUploaded, action, req);
+                manager.updateBean(data, errors, true);
+                photoBean = (UploadPhotoBean)manager.getBean();
+                req.setAttribute(UploadConstants.UPLOAD_PHOTO_BEAN, photoBean);
+                
+                if (errors.isEmpty()) {                
 					logger.debug("bean updated " + photoBean);
 					try {
+                        AbstractServlet.updateCitiesListForState(photoBean);
 						Photo photo = createPhoto(photoBean, user);
 						if (photo.getRealImage().getImageSize() > MAX_PHOTO_SIZE) {
 							logger.debug("photo with size = " + photo.getRealImage().getImageSize());
 							errors.add(UploadConstants.INVALID_FILE_SIZE);
 						} else {
 							logger.debug("Calling addPhotoToDatabase " + photo);
-							addPhotoToDatabase(photo);
+                            UploadPhoto dao = new UploadPhoto();
+                            dao.uploadPhoto(photo);
 							logger.debug("Photo added to database");
 
+							createCookies(photoBean, res);
+                            
 							// next page
 							nextPage = getSuccessPage();
 
-							session.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
+							req.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
                             session.setAttribute(ServletConstants.PHOTOS_LIST, null);
 
-							loggerActions.info("User " + user.getLogin() + " from IP " + req.getRemoteAddr() + " has uploaded one photo.");
+                            logInfo(user, req);
 						}
 					} catch (ParseException e1) {
 						logger.debug("ParseException.....");
 						errors.add(UploadPhotoConstants.INVALID_DATE);
+                        updatePhotoBean(photoBean);                    
 					} catch (InvalidFileException e1) {
 						logger.debug("InvalidFileException.....");
 						errors.add(UploadConstants.INVALID_FILE);
-					} catch (DatabaseDownException e) {
-						logger.debug("DatabaseDownException.....");
-						errors.add(ServletConstants.DATABASE_ERROR);
+                        updatePhotoBean(photoBean);                    
 					} catch (SQLException e) {
 						logger.debug("SQLException.....", e);
 						errors.add(ServletConstants.DATABASE_ERROR);
+                        updatePhotoBean(photoBean);                    
 					} catch (ImageProcessingException e) {
 						logger.debug("ImageProcessingException .....", e);
 						errors.add(UploadConstants.INVALID_FILE);
+                        updatePhotoBean(photoBean);                    
 					}
-				}
+				} else {
+                    updatePhotoBean(photoBean);                    
+                }
 			} catch (ServletException e) {
 				logger.debug("ServletException.....");
 			} catch (IOException e) {
@@ -120,7 +139,10 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 			} catch (FileUploadException e) {
 				logger.debug("FileUploadException.....", e);
 				errors.add(UploadConstants.INVALID_FILE);
-			}
+			} catch (DatabaseDownException e) {
+                logger.debug("DatabaseDownException.....");
+                errors.add(ServletConstants.DATABASE_ERROR);
+            }
 			if (!errors.isEmpty()) {
 				nextPage = getNextPage();
 			}
@@ -136,6 +158,41 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 		dispatcher.forward(req, res);
 
 	}
+
+    private void updatePhotoBean(UploadPhotoBean photoBean) throws DatabaseDownException {
+        // 2. now, update the lists of family and states
+        // put family list on bean
+        List familyList = ServletUtil.familyDataAsLabelValueBean(FamilyModel.getFamilyList());
+        photoBean.setFamilyList(familyList);
+
+        // put states on bean
+        List statesList = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
+        photoBean.setStatesList(statesList);
+
+        // 3. retrieve list of species for the selected family
+        AbstractServlet.updateSpeciesListForFamily(photoBean);
+        AbstractServlet.updateCitiesListForState(photoBean);
+    }
+
+    private void logInfo(User user, HttpServletRequest req) {
+        loggerActions.info("User " + user.getLogin() + " from IP " + req.getRemoteAddr() + " has uploaded one photo.");
+    }
+
+    private void createCookies(UploadPhotoBean bean, HttpServletResponse res) {
+        // creating a cookie on user's machine
+        logger.info("Creating cookie on user's machine...");
+        Cookie cameraCookie = new Cookie("camera", bean.getCamera());
+        cameraCookie.setMaxAge(60 * 60 * 24 * 7);
+        res.addCookie(cameraCookie);
+        
+        Cookie lensCookie = new Cookie("lens", bean.getLens());
+        lensCookie.setMaxAge(60 * 60 * 24 * 7);
+        res.addCookie(lensCookie);
+        
+        Cookie filmCookie = new Cookie("film", bean.getFilm());
+        filmCookie.setMaxAge(60 * 60 * 24 * 7);
+        res.addCookie(filmCookie);
+    }
 
     @Override
     protected String getDataToBeUploaded() {
@@ -153,14 +210,6 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 
 	protected String getSuccessPage() {
 		return ServletConstants.UPLOAD_SUCCESS_PAGE;
-	}
-
-	/**
-	 * @param photo
-	 */
-	protected void addPhotoToDatabase(Photo photo) throws DatabaseDownException, SQLException, ImageProcessingException {
-		UploadPhoto dao = new UploadPhoto();
-		dao.uploadPhoto(photo);
 	}
 
 	/**

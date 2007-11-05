@@ -41,6 +41,7 @@ import org.apache.log4j.Logger;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
+@SuppressWarnings("serial")
 public class InitEditPhotoServlet extends HttpServlet {
 	/**
 	 * Logger object used to log messages
@@ -56,8 +57,7 @@ public class InitEditPhotoServlet extends HttpServlet {
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
 		String nextPage = null;
-		HttpSession session = req.getSession();
-
+        
         int photoId; 
         String photoIdStr = req.getParameter("photoId");
         Photo photo = null;
@@ -66,7 +66,7 @@ public class InitEditPhotoServlet extends HttpServlet {
             PhotoModel model = new PhotoModel();
             try {
                 photo = model.retrieve(photoId);
-                session.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
+                req.setAttribute(ServletConstants.PHOTO_ID, photo.getId());
             } catch (DatabaseDownException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -74,26 +74,26 @@ public class InitEditPhotoServlet extends HttpServlet {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-        } else {
-            photo = (Photo) session.getAttribute(ServletConstants.CURRENT_PHOTO);            
-        }
 
-        logger.debug("InitEditPhotoServlet.doGet: photo found..." + photo);
-        UploadPhotoBean bean = new UploadPhotoBean();
-        logger.debug("InitEditPhotoServlet.doGet: calling updateBean method...");
-        updateBean(bean, photo, req);
-        logger.debug("InitEditPhotoServlet.doGet: bean updated: " + bean);
-        logger.debug("InitEditPhotoServlet.doGet: setting bean (EDIT_BEAN key) in session...");
-        session.setAttribute(UploadPhotoConstants.EDIT_BEAN, bean);
-        nextPage = ServletConstants.EDIT_PAGE;
+            logger.debug("Photo found..." + photo);
+            UploadPhotoBean bean = new UploadPhotoBean();
+            logger.debug("Calling updateBean method...");
+            updateBean(bean, photo, req);
+            logger.debug("Bean updated: " + bean);
+            logger.debug("Setting bean (EDIT_BEAN key) in req...");
+            req.setAttribute(UploadPhotoConstants.UPLOAD_PHOTO_BEAN, bean);
+            nextPage = ServletConstants.EDIT_PAGE;
 
-        // put states on request
-        List list = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
-        logger.debug("InitEditPhotoServlet.doGet: setting states in bean");
-        bean.setStatesList(list);
+            // put states on request
+            List list = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
+            logger.debug("Setting states in bean");
+            bean.setStatesList(list);
 
-        String identStr = req.getParameter(ServletConstants.IDENTIFICATION_KEY);
-        req.setAttribute(ServletConstants.IDENTIFICATION_KEY, identStr);
+            String identStr = req.getParameter(ServletConstants.IDENTIFICATION_KEY);
+            req.setAttribute(ServletConstants.IDENTIFICATION_KEY, identStr);
+
+        } 
+
         
 		dispatcher = context.getRequestDispatcher(nextPage);
 		logger.debug("Dispatching to " + nextPage);

@@ -13,11 +13,11 @@ import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.indrix.arara.bean.UploadBean;
 import net.indrix.arara.bean.UploadPhotoBean;
 import net.indrix.arara.model.StatesModel;
 import net.indrix.arara.servlets.ServletConstants;
@@ -34,6 +34,7 @@ import org.apache.log4j.Logger;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
+@SuppressWarnings("serial")
 public class InitUploadPhotoServlet extends RetrieveFamiliesServlet {
 	static Logger logger = Logger.getLogger("net.indrix.aves");
 
@@ -56,24 +57,10 @@ public class InitUploadPhotoServlet extends RetrieveFamiliesServlet {
 			dispatcher.forward(req, res);
 
 		} else {
-			// put states on request
-			List list = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
-
 			// reset upload data bean
-			UploadBean uploadBean = (UploadPhotoBean) session.getAttribute(UploadPhotoConstants.UPLOAD_PHOTO_BEAN);
-			if (uploadBean == null) {
-				uploadBean = new UploadPhotoBean();
-				session.setAttribute(UploadPhotoConstants.UPLOAD_PHOTO_BEAN, uploadBean);
-			}
-			uploadBean.setStatesList(list);
-			uploadBean.setCitiesList(null);
-			uploadBean.setSelectedAgeId(null);
-			uploadBean.setSelectedCityId(null);
-			uploadBean.setSelectedSexId(null);
-			uploadBean.setSelectedStateId(null);
-			uploadBean.setSelectedFamilyId(null);
-			uploadBean.setSelectedSpecieId(null);
-			uploadBean.setSpecieList(null);
+            UploadPhotoBean uploadBean = new UploadPhotoBean();
+			req.setAttribute(UploadPhotoConstants.UPLOAD_PHOTO_BEAN, uploadBean);
+            InitUploadPhotoServlet.updateBeanWithCookies(uploadBean, req);
             
 			super.doGet(req, res);
 		}
@@ -98,16 +85,35 @@ public class InitUploadPhotoServlet extends RetrieveFamiliesServlet {
      * @param session Session to store the bean
      * @param list The list retrieved from database
      */
-    protected void handleListOfFamilies(HttpSession session, List list) {
-        UploadPhotoBean uploadBean = (UploadPhotoBean) session.getAttribute(UploadConstants.UPLOAD_PHOTO_BEAN);
+    protected void handleListOfFamilies(HttpServletRequest req, List list) {
+        UploadPhotoBean uploadBean = (UploadPhotoBean) req.getAttribute(UploadConstants.UPLOAD_PHOTO_BEAN);
         if (uploadBean == null) {
             uploadBean = new UploadPhotoBean();
         }
         uploadBean.setFamilyList(list);
 
+        // put states on request
+        List statesList = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
+        uploadBean.setStatesList(statesList);
+        
         // add bean to session
-        session.setAttribute(UploadConstants.UPLOAD_PHOTO_BEAN, uploadBean);
+        req.setAttribute(UploadConstants.UPLOAD_PHOTO_BEAN, uploadBean);
     }
 
-    
+    protected static void updateBeanWithCookies(UploadPhotoBean uploadBean, HttpServletRequest req) {
+        Cookie[] cookies = req.getCookies();
+        for (int i = 0; (cookies != null) && i < cookies.length; i++){
+            if (ServletConstants.CAMERA.equals(cookies[i].getName())){
+                uploadBean.setCamera(cookies[i].getValue());
+            } else {
+                if (ServletConstants.LENS.equals(cookies[i].getName())){
+                    uploadBean.setLens(cookies[i].getValue());
+                } else {
+                    if (ServletConstants.FILM.equals(cookies[i].getName())){
+                        uploadBean.setFilm(cookies[i].getValue());
+                    } 
+                } 
+            }
+        }    
+     }    
 }

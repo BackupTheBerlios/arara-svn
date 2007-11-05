@@ -15,7 +15,6 @@ import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import net.indrix.arara.bean.UploadPhotoBean;
 import net.indrix.arara.dao.DatabaseDownException;
@@ -23,9 +22,8 @@ import net.indrix.arara.model.CityModel;
 import net.indrix.arara.model.UploadPhoto;
 import net.indrix.arara.model.exceptions.ImageProcessingException;
 import net.indrix.arara.servlets.ServletConstants;
-import net.indrix.arara.servlets.UploadConstants;
 import net.indrix.arara.servlets.common.UploadBeanManagerFactory;
-import net.indrix.arara.servlets.photo.exceptions.InvalidFileException;
+import net.indrix.arara.servlets.exceptions.InvalidFileException;
 import net.indrix.arara.vo.Age;
 import net.indrix.arara.vo.Photo;
 import net.indrix.arara.vo.Sex;
@@ -49,14 +47,7 @@ public class UploadPhotoIdentifyServlet extends UploadPhotoServlet {
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
-		HttpSession session = req.getSession();
-		UploadPhotoBean uploadBean;
-        uploadBean = (UploadPhotoBean) session.getAttribute(UploadConstants.UPLOAD_PHOTO_BEAN);
-		if (uploadBean == null) {
-			uploadBean = new UploadPhotoBean();
-			// add bean to session
-			session.setAttribute(UploadConstants.UPLOAD_PHOTO_BEAN, uploadBean);
-		}
+
 		super.doPost(req, res);
 	}
 

@@ -35,6 +35,7 @@ import org.apache.log4j.Logger;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
+@SuppressWarnings("serial")
 public class InitUploadSoundServlet extends RetrieveFamiliesServlet {
 	static Logger logger = Logger.getLogger("net.indrix.aves");
 
@@ -58,21 +59,9 @@ public class InitUploadSoundServlet extends RetrieveFamiliesServlet {
 			dispatcher.forward(req, res);
 
 		} else {
-			// put states on request
-			List list = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
-
 			// reset upload data bean
-			UploadBean uploadBean = (UploadSoundBean) session.getAttribute(UploadPhotoConstants.UPLOAD_SOUND_BEAN);
-			if (uploadBean == null) {
-				uploadBean = new UploadSoundBean();
-				session.setAttribute(UploadPhotoConstants.UPLOAD_SOUND_BEAN, uploadBean);
-			}
-			uploadBean.setStatesList(list);
-			uploadBean.setCitiesList(null);
-			uploadBean.setSelectedAgeId(null);
-			uploadBean.setSelectedCityId(null);
-			uploadBean.setSelectedSexId(null);
-			uploadBean.setSelectedStateId(null);
+			UploadBean uploadBean = new UploadSoundBean();
+			req.setAttribute(UploadPhotoConstants.UPLOAD_SOUND_BEAN, uploadBean);
 
 			super.doGet(req, res);
 		}
@@ -103,16 +92,19 @@ public class InitUploadSoundServlet extends RetrieveFamiliesServlet {
 	 * @param list
 	 *            The list retrieved from database
 	 */
-	protected void handleListOfFamilies(HttpSession session, List list) {
-		UploadSoundBean uploadBean = (UploadSoundBean) session
-				.getAttribute(UploadSoundConstants.UPLOAD_SOUND_BEAN);
+	protected void handleListOfFamilies(HttpServletRequest req, List list) {
+		UploadSoundBean uploadBean = (UploadSoundBean) req.getAttribute(UploadSoundConstants.UPLOAD_SOUND_BEAN);
 		if (uploadBean == null) {
 			uploadBean = new UploadSoundBean();
 		}
 		uploadBean.setFamilyList(list);
 
+        // put states on request
+        List statesList = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
+        uploadBean.setStatesList(statesList);
+        
 		// add bean to session
-		session.setAttribute(UploadConstants.UPLOAD_SOUND_BEAN, uploadBean);
+		req.setAttribute(UploadConstants.UPLOAD_SOUND_BEAN, uploadBean);
 	}
 
 }

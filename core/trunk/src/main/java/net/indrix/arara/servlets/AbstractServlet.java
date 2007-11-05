@@ -20,10 +20,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.indrix.arara.bean.UploadBean;
 import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.dao.SpecieDAO;
+import net.indrix.arara.model.CityModel;
 import net.indrix.arara.model.UserModel;
 import net.indrix.arara.model.UserNotFoundException;
 import net.indrix.arara.utils.PropertiesManager;
+import net.indrix.arara.vo.Family;
 import net.indrix.arara.vo.User;
 
 import org.apache.commons.fileupload.DefaultFileItemFactory;
@@ -48,6 +52,7 @@ public class AbstractServlet extends HttpServlet {
 
     protected static Logger loggerActions = Logger.getLogger("net.indrix.actions");
     
+    @SuppressWarnings("unchecked")
     protected HashMap parseFormData(HttpServletRequest request) {
         HashMap aData = new HashMap();
         Enumeration<String> it = request.getParameterNames();
@@ -65,9 +70,10 @@ public class AbstractServlet extends HttpServlet {
         return aData;
     }
     
-	protected HashMap parseMultiPartFormData(HttpServletRequest request)
+	@SuppressWarnings("unchecked")
+    protected HashMap parseMultiPartFormData(HttpServletRequest request)
 			throws ServletException, IOException, FileUploadException {
-		logger.debug(" - Entering parseMultiPartFormData(HttpServletRequest)");
+		logger.debug("Entering parseMultiPartFormData(HttpServletRequest)");
         HashMap aData = null;
         if (request.getContentType().contains("multipart/form-data")){
             aData = new HashMap();
@@ -191,5 +197,26 @@ public class AbstractServlet extends HttpServlet {
         return user;
     }
     
+    public static void updateCitiesListForState(UploadBean uploadBean)
+    throws DatabaseDownException {
+        String stateIdAsStr = uploadBean.getSelectedStateId();
+        if (stateIdAsStr != null && stateIdAsStr.length() > 0) {
+            CityModel model = new CityModel();
+            List list = model.retrieveCitiesForState(Integer.parseInt(stateIdAsStr));
+            uploadBean.setCitiesList(list);
+        }
+    }
+
+    public static void updateSpeciesListForFamily(UploadBean uploadBean)
+    throws DatabaseDownException {
+        String familyIdAsStr = uploadBean.getSelectedFamilyId();
+        if (familyIdAsStr != null && familyIdAsStr.length() > 0) {
+            SpecieDAO dao = new SpecieDAO();
+            Family family = new Family();
+            family.setId(Integer.parseInt(familyIdAsStr));
+            List list = ServletUtil.specieForFamilyDataAsLabelValueBean(dao.retrieveForFamily(family));
+            uploadBean.setSpecieList(list);
+        }
+    }    
     
 }

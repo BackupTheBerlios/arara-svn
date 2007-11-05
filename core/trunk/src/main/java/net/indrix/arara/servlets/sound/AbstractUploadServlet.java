@@ -13,15 +13,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
-import net.indrix.arara.bean.UploadSoundBean;
 import net.indrix.arara.servlets.UploadConstants;
+import net.indrix.arara.servlets.common.IBeanManager;
 import net.indrix.arara.servlets.common.SoundBeanManager;
+import net.indrix.arara.servlets.common.UploadBeanManagerFactory;
 import net.indrix.arara.utils.PropertiesManager;
 import net.indrix.arara.vo.Family;
 import net.indrix.arara.vo.Specie;
@@ -38,6 +38,7 @@ import org.apache.log4j.Logger;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
+@SuppressWarnings("serial")
 public class AbstractUploadServlet extends HttpServlet {
 
 	/**
@@ -97,33 +98,18 @@ public class AbstractUploadServlet extends HttpServlet {
 		return aData;
 	}
 
-	/**
-	 * @param data
-	 * @param bean
-	 */
-	protected boolean updateBean(Map data, UploadSoundBean bean, List <String>errors) {
-		boolean status = false;
+    /**
+     * Return the bean manager to be used
+     * 
+     * @return a new BeanManager instance
+     */
+    protected SoundBeanManager getBeanManager(String source, String action, HttpServletRequest req) {
 
-		SoundBeanManager manager = getBeanManager();
-        manager.setBean(bean);
-		manager.updateBean(data, errors, true);
+        UploadBeanManagerFactory factory = UploadBeanManagerFactory.getInstance();
+        IBeanManager manager = factory.createBean(source, action, req);
 
-		if (!errors.isEmpty()) {
-			status = false;
-		} else {
-			status = true;
-		}
-		return status;
-	}
-
-	/**
-	 * Return the bean manager to be used
-	 * 
-	 * @return a new BeanManager instance
-	 */
-	protected SoundBeanManager getBeanManager() {
-		return new SoundBeanManager();
-	}
+        return (SoundBeanManager)manager;
+    }
 
 	/**
 	 * @param string

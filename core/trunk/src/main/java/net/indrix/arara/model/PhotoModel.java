@@ -25,6 +25,7 @@ import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.dao.PhotoDAO;
 import net.indrix.arara.dao.PhotoIdentificationDAO;
 import net.indrix.arara.dao.SpecieDAO;
+import net.indrix.arara.dao.VoteDAO;
 import net.indrix.arara.model.exceptions.PhotoAlreadyIdentifiedException;
 import net.indrix.arara.model.file.PhotoFileManager;
 import net.indrix.arara.tools.email.MailClass;
@@ -38,6 +39,7 @@ import net.indrix.arara.vo.Photo;
 import net.indrix.arara.vo.PhotoIdentification;
 import net.indrix.arara.vo.Specie;
 import net.indrix.arara.vo.User;
+import net.indrix.arara.vo.Vote;
 
 /**
  * @author Jeff
@@ -285,6 +287,28 @@ public class PhotoModel extends MediaModel {
         notifyPhotoAuthor(c, photo, user);
     }
 
+    /**
+     * This method inserts a vote to a photo
+     * 
+     * @param photo The photo that received a vote
+     * @param user The user that has voted on the photo
+     * @param vote THe user's vote
+     * @throws SQLException 
+     * @throws DatabaseDownException 
+     */
+    public void insetVote(Photo photo, User user, int vote) throws DatabaseDownException, SQLException {
+        Vote v = new Vote();
+        v.setDate(new Date());
+        v.setPhoto(photo);
+        v.setUser(user);
+        v.setVote(vote);
+        
+        VoteDAO dao = new VoteDAO();
+        dao.insertVote(v);
+        
+    }
+    
+    
     /**
      * This method retrieves all photos from database
      * 
@@ -824,6 +848,6 @@ public class PhotoModel extends MediaModel {
             logger.fatal("Could not undo the copy of files: " + currentPath);
         }
     }
-    
+
 
 }

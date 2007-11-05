@@ -15,6 +15,7 @@ import net.indrix.arara.dao.SpecieDAO;
 import net.indrix.arara.model.email.SoundEmailSender;
 import net.indrix.arara.model.exceptions.SoundProcessingException;
 import net.indrix.arara.model.file.SoundFileManager;
+import net.indrix.arara.servlets.exceptions.InvalidFileException;
 import net.indrix.arara.vo.Sound;
 import net.indrix.arara.vo.Specie;
 
@@ -25,16 +26,17 @@ import net.indrix.arara.vo.Specie;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class UploadSound extends AbstractUpload {
-	private static final String validExtensions[] = { "mp3" };
+	private static final String validExtensions[] = { "mp3", "MP3" };
 
 	/**
 	 * @param sound
+	 * @throws InvalidFileException 
 	 */
 	public void uploadSound(Sound sound) throws DatabaseDownException,
-			SQLException, SoundProcessingException {
+			SQLException, SoundProcessingException, InvalidFileException {
 		String filename = sound.getSound().getFilename();
 		if (!checkExtension(filename)) {
-			throw new SoundProcessingException("Invalid file extension");
+			throw new InvalidFileException();
 		}
 
 		SoundDAO dao = new SoundDAO();

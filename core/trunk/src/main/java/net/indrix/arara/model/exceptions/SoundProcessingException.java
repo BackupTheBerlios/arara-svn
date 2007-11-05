@@ -12,6 +12,7 @@ package net.indrix.arara.model.exceptions;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
+@SuppressWarnings("serial")
 public class SoundProcessingException extends Exception {
 	public SoundProcessingException() {
 		super();

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import net.indrix.arara.bean.ListBean;
 import net.indrix.arara.dao.DatabaseDownException;
+import net.indrix.arara.dao.FamilyDAO;
 import net.indrix.arara.dao.SpecieDAO;
 import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.servlets.ServletUtil;
@@ -33,24 +34,20 @@ public class InitSearchBySpecieServlet extends RetrieveFamiliesServlet {
         HttpSession session = req.getSession();
 
         SpecieDAO dao = new SpecieDAO();
-        List list = null;
         try {
-            logger.debug("Retrieving list of all species...");
-            list = dao.retrieve();
-            logger.debug("Converting to labelValueBean...");
-            list = ServletUtil.specieDataAsLabelValueBean(list);
-            logger.debug("Putting to session...");
-
-            ListBean listBean = (ListBean) session.getAttribute(ServletConstants.FAMILY_LIST_KEY);
-            if (listBean == null) {
-                listBean = new ListBean();
-                session.setAttribute(ServletConstants.FAMILY_LIST_KEY, listBean);
-            }
+            logger.debug("Retrieving list of all families...");
+            FamilyDAO familyDao = new FamilyDAO();
+            List familyList = ServletUtil.familyDataAsLabelValueBean(familyDao.retrieve());
+            ListBean listBean = new ListBean();
             listBean.setSelectedId(null);
-            listBean.setList(list);
+            listBean.setList(familyList);
+            session.setAttribute(ServletConstants.FAMILY_LIST_KEY, listBean);
             
+            logger.debug("Retrieving list of all species...");
+            List speciesList = ServletUtil.specieDataAsLabelValueBean(dao.retrieve());
+            logger.debug("Putting to session...");
             listBean = new ListBean();
-            listBean.setList(list);
+            listBean.setList(speciesList);
             session.setAttribute(ServletConstants.SPECIE_LIST_KEY, listBean);
 
         } catch (DatabaseDownException e) {

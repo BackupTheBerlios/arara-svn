@@ -15,7 +15,6 @@ import net.indrix.arara.servlets.UploadConstants;
 import net.indrix.arara.servlets.photo.upload.UploadPhotoConstants;
 
 import org.apache.commons.fileupload.FileItem;
-import org.apache.log4j.Logger;
 
 /**
  * @author Jeff
@@ -53,7 +52,7 @@ public class BeanManager extends IBeanManagerImplementation{
 	 * @param errors
 	 */
 	protected void updateBirdData(Map data, List <String>errors, boolean validate) {
-		logger.debug("BeanManager.updateBirdData: updating bird data...");
+		logger.debug("Updating bird data...");
 		String familyId = (String) data.get(ServletConstants.FAMILY_ID);
 		String specieId = (String) data.get(ServletConstants.SPECIE_ID);
 		String stateId = (String) data.get(ServletConstants.STATE_ID);
@@ -95,8 +94,8 @@ public class BeanManager extends IBeanManagerImplementation{
 	 * @param bean
 	 * @param errors
 	 */
-	protected void updateMediaData(Map data, List errors, boolean validate) {
-		logger.debug("BeanManager.updateMediaData: updating media data...");
+	protected void updateMediaData(Map data, List <String>errors, boolean validate) {
+		logger.debug("Updating media data...");
 	}
 
     /**
@@ -117,6 +116,11 @@ public class BeanManager extends IBeanManagerImplementation{
         } else if (source.equals("Specie List")){
             logger.debug("BeanManager.setData: setting Specie list...");
             bean.setSpecieList((List)object);
+        } else if (source.equals("Family List")){
+            bean.setFamilyList((List)object);
+        } else if (source.equals("States List")){
+            bean.setStatesList((List)object);
         }
+        
     }
 }

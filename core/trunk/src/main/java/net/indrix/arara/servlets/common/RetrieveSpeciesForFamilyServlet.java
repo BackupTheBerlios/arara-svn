@@ -42,6 +42,11 @@ public class RetrieveSpeciesForFamilyServlet extends AbstractServlet {
 	 */
 	private static Logger logger = Logger.getLogger("net.indrix.aves");
 
+    public void doGet(HttpServletRequest req, HttpServletResponse res)
+            throws ServletException, IOException {
+        doPost(req, res);
+    }
+
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
 		List <String>errors = new ArrayList<String>();
@@ -52,7 +57,7 @@ public class RetrieveSpeciesForFamilyServlet extends AbstractServlet {
         String servletToCall = req.getParameter(ServletConstants.SERVLET_TO_CALL_KEY);
         String action = req.getParameter(ServletConstants.ACTION);
 
-        logger.debug("RetrieveSpeciesForFamilyServlet:entering doPost method...");
+        logger.debug("Entering doPost method...");
 		HttpSession session = req.getSession();
 		Map data = null;
 		try {
@@ -114,28 +119,16 @@ public class RetrieveSpeciesForFamilyServlet extends AbstractServlet {
 	private void handleList(List list, Map data, HttpServletRequest req, List <String>errors) {
 
 		HttpSession session = req.getSession();
-		String dataToBeUploaded = req.getParameter("data");
-		String action = req.getParameter("action");
 
-        logger.debug("Calling factory with " + dataToBeUploaded);
-        UploadBeanManagerFactory factory = UploadBeanManagerFactory.getInstance();
-        IBeanManager manager = factory.createBean(dataToBeUploaded, action, session);
-        if (manager != null){
-            manager.updateBean(data, errors, false);
-            
-            String familyId = (String) data.get(ServletConstants.FAMILY_ID);
-            manager.setData(familyId, "Family ID");
-            manager.setData(list, "Specie List");
-        } else {
-            // just searching data... no data to be uploaded
-            ListBean bean = new ListBean();
-            bean.setList(list);
-            bean.setSelectedId(null);
-            session.setAttribute(ServletConstants.SPECIE_LIST_KEY, bean);
-            ListBean listBean = (ListBean) session.getAttribute(ServletConstants.FAMILY_LIST_KEY);
-            String familyId = (String) data.get(ServletConstants.FAMILY_ID);
-            listBean.setSelectedId(familyId);            
-        }
+        // just searching data... no data to be uploaded
+        ListBean bean = new ListBean();
+        bean.setList(list);
+        bean.setSelectedId(null);
+        session.setAttribute(ServletConstants.SPECIE_LIST_KEY, bean);
+        
+        ListBean listBean = (ListBean) session.getAttribute(ServletConstants.FAMILY_LIST_KEY);
+        String familyId = (String) data.get(ServletConstants.FAMILY_ID);
+        listBean.setSelectedId(familyId);            
 	}
 
 	private static List retrieveSpecieListForFamilyId(String familyId)

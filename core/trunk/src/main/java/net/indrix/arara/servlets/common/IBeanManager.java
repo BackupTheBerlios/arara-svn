@@ -28,12 +28,4 @@ public interface IBeanManager {
      */
     public IBean getBean();
 
-    /**
-     * This method allows the manager to set an object in the correct bean. The source specifies the 
-     * data type, such as a City.
-     * 
-     * @param object The object to be updated into the bean
-     * @param source The type of the data
-     */
-    public void setData(Object object, String source);
 }

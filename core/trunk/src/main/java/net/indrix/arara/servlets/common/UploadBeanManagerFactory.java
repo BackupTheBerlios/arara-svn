@@ -1,13 +1,12 @@
 package net.indrix.arara.servlets.common;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 
 import net.indrix.arara.bean.BirdListBean;
 import net.indrix.arara.bean.UploadPhotoBean;
 import net.indrix.arara.bean.UploadSoundBean;
 import net.indrix.arara.servlets.UploadConstants;
 import net.indrix.arara.servlets.birdlist.BirdListConstants;
-import net.indrix.arara.servlets.photo.upload.UploadPhotoConstants;
 
 import org.apache.log4j.Logger;
 
@@ -35,7 +34,7 @@ public class UploadBeanManagerFactory {
      */
     protected static Logger logger = Logger.getLogger("net.indrix.aves");
 
-    public IBeanManager createBean(String source, String action, HttpSession session){
+    public IBeanManager createBean(String source, String action, HttpServletRequest req){
         IBean bean = null;
         IBeanManager manager = null;
         
@@ -45,58 +44,48 @@ public class UploadBeanManagerFactory {
             if (action == null || UploadConstants.UPLOAD_ACTION.equals(action)) {
                 beanKey = UploadConstants.UPLOAD_PHOTO_BEAN;
             } else if (UploadConstants.EDIT_ACTION.equals(action)) {
-                beanKey = UploadPhotoConstants.EDIT_BEAN;
+                beanKey = UploadConstants.UPLOAD_PHOTO_BEAN;
             }
+            logger.debug("creating an UploadPhotoBean...");
+            bean = new UploadPhotoBean();
 
-            bean = (UploadPhotoBean) session.getAttribute(beanKey);
-            if (bean == null) {
-                logger.debug("UploadUploadBeanManagerFactory.createBean : creating an UploadPhotoBean...");
-                bean = new UploadPhotoBean();
-                session.setAttribute(beanKey, bean);
-            }
-            logger.debug("UploadUploadBeanManagerFactory.createBean : creating an PhotoBeanManager...");
+            logger.debug("creating an PhotoBeanManager...");
             manager = new PhotoBeanManager();
         } else if (PHOTO_FOR_IDENTIFICATION.equals(source)) {
             beanKey = UploadConstants.UPLOAD_PHOTO_BEAN;
-            bean = (UploadPhotoBean) session.getAttribute(beanKey);
-            if (bean == null) {
-                logger.debug("UploadUploadBeanManagerFactory.createBean : creating an UploadPhotoBean...");
-                bean = new UploadPhotoBean();
-                session.setAttribute(beanKey, bean);
-            }
 
-            logger.debug("UploadUploadBeanManagerFactory.createBean : creating an PhotoForIdentificationBeanManager...");
+            logger.debug("creating an UploadPhotoBean...");
+            bean = new UploadPhotoBean();
+
+            logger.debug("creating an PhotoForIdentificationBeanManager...");
             manager = new PhotoForIdentificationBeanManager();
         } else if (SOUND.equals(source)) {
             if (UploadConstants.UPLOAD_ACTION.equals(action)) {
-                logger.debug("UploadBeanManagerFactory.createBean : uploading sound");
+                logger.debug("uploading sound");
                 beanKey = UploadConstants.UPLOAD_SOUND_BEAN;
             }
 
-            bean = (UploadSoundBean) session.getAttribute(beanKey);
-            if (bean == null) {
-                logger.debug("UploadUploadBeanManagerFactory.createBean : creating an UploadSoundBean...");
-                bean = new UploadSoundBean();
-                session.setAttribute(beanKey, bean);
-            }
-            logger.debug("UploadUploadBeanManagerFactory.createBean : creating an SoundBeanManager...");
+            logger.debug("creating an UploadSoundBean...");
+            bean = new UploadSoundBean();
+
+            logger.debug("creating an SoundBeanManager...");
             manager = new SoundBeanManager();
         } else if (BIRDLIST.equals(source)) {
             beanKey = BirdListConstants.BEAN_KEY;
 
-            bean = (BirdListBean) session.getAttribute(beanKey);
-            if (bean == null) {
-                logger.debug("UploadUploadBeanManagerFactory.createBean : creating an BirdListBean...");
-                bean = new BirdListBean();
-                session.setAttribute(beanKey, bean);
-            }
-            logger.debug("UploadUploadBeanManagerFactory.createBean : creating an BirdListBeanManager...");
+            logger.debug("creating an BirdListBean...");
+            bean = new BirdListBean();
+
+            logger.debug("creating an BirdListBeanManager...");
             manager = new BirdListBeanManager();
         }       
         if (manager != null){
-            logger.debug("UploadUploadBeanManagerFactory.createBean : setting bean in manager...");
+            logger.debug("setting bean in manager...");
             manager.setBean(bean);           
         }
+        
+        req.setAttribute(beanKey, bean);
+
         return manager;
     }
 }

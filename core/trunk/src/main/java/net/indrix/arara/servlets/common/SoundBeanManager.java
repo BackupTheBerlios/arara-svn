@@ -9,8 +9,6 @@ package net.indrix.arara.servlets.common;
 import java.util.List;
 import java.util.Map;
 
-import net.indrix.arara.bean.UploadBean;
-
 /**
  * @author Jeff
  * 
@@ -19,7 +17,7 @@ import net.indrix.arara.bean.UploadBean;
  */
 public class SoundBeanManager extends BeanManager {
 	protected void updateMediaData(Map data, List errors, boolean validate) {
-		logger.debug("SoundBeanManager.updateMediaData: do nothing...");
+		logger.debug("Do nothing...");
 	}
 
 }

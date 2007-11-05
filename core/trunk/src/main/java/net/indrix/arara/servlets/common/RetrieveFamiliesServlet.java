@@ -45,7 +45,7 @@ public class RetrieveFamiliesServlet extends AbstractServlet {
 
     public void doGet(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
-        List<String> erros = new ArrayList<String>();
+        List<String> errors = new ArrayList<String>();
         RequestDispatcher dispatcher = null;
         ServletContext context = this.getServletContext();
         String nextPage = getNextPage(req);
@@ -69,30 +69,30 @@ public class RetrieveFamiliesServlet extends AbstractServlet {
                     logger.debug("Setting data in request");
 
                     // handle the list, creating a bean and adding it to session
-                    handleListOfFamilies(session, list);
-
+                    handleListOfFamilies(req, list);
+                    
                     req.setAttribute(ServletConstants.SERVLET_TO_CALL_KEY, servletToCall);
                     req.setAttribute(ServletConstants.ACTION, action);
                     req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
                     req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);
-                    logger.debug("RetrieveFamiliesServlet.doGet " + servletToCall + " | " + action + " | " + pageToShow);
+                    logger.debug(servletToCall + " | " + action + " | " + pageToShow);
                 } else {
                     logger.debug("Data not found...");
-                    erros.add(ServletConstants.DATABASE_ERROR);
+                    errors.add(ServletConstants.DATABASE_ERROR);
                     nextPage = ServletConstants.INITIAL_PAGE;
                 }
             } catch (DatabaseDownException e) {
-                erros.add(ServletConstants.DATABASE_ERROR);
+                errors.add(ServletConstants.DATABASE_ERROR);
                 nextPage = ServletConstants.INITIAL_PAGE;
             } catch (SQLException e) {
-                erros.add(ServletConstants.DATABASE_ERROR);
+                errors.add(ServletConstants.DATABASE_ERROR);
                 nextPage = ServletConstants.INITIAL_PAGE;
             }
 
-            if (!erros.isEmpty()) {
+            if (!errors.isEmpty()) {
                 // coloca erros no request para registrar.jsp processar e
                 // apresentar mensagem de erro
-                req.setAttribute(ServletConstants.ERRORS_KEY, erros);
+                req.setAttribute(ServletConstants.ERRORS_KEY, errors);
 
                 // direciona usuário para página de registro novamente
                 nextPage = ServletConstants.INITIAL_PAGE;
@@ -124,11 +124,11 @@ public class RetrieveFamiliesServlet extends AbstractServlet {
      * @param list
      *            The list retrieved from database
      */
-    protected void handleListOfFamilies(HttpSession session, List list) {
-        ListBean listBean = (ListBean) session.getAttribute(ServletConstants.FAMILY_LIST_KEY);
+    protected void handleListOfFamilies(HttpServletRequest req, List list) {
+        ListBean listBean = (ListBean) req.getAttribute(ServletConstants.FAMILY_LIST_KEY);
         if (listBean == null) {
             listBean = new ListBean();
-            session.setAttribute(ServletConstants.FAMILY_LIST_KEY, listBean);
+            req.setAttribute(ServletConstants.FAMILY_LIST_KEY, listBean);
         }
         listBean.setList(list);
     }

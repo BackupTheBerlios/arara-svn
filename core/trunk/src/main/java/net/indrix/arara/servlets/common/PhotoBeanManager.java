@@ -20,14 +20,15 @@ import net.indrix.arara.servlets.photo.upload.UploadPhotoConstants;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class PhotoBeanManager extends BeanManager {
-	/**
+
+    /**
 	 * This method updates in the bean data related to the photo
 	 * 
 	 * @param data
 	 * @param bean
 	 * @param errors
 	 */
-	protected void updateMediaData(Map data, List errors, boolean validate) {
+	protected void updateMediaData(Map data, List<String> errors, boolean validate) {
 		logger.debug("PhotoBeanManager.updateMediaData: updating media data...");
         
         UploadPhotoBean bean = (UploadPhotoBean)getBean();

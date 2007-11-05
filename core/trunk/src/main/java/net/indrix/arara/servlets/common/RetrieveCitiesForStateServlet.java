@@ -21,8 +21,11 @@ import javax.servlet.http.HttpSession;
 import net.indrix.arara.bean.UploadPhotoBean;
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.model.CityModel;
+import net.indrix.arara.model.FamilyModel;
+import net.indrix.arara.model.StatesModel;
 import net.indrix.arara.servlets.AbstractServlet;
 import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.servlets.ServletUtil;
 import net.indrix.arara.servlets.UploadConstants;
 
 import org.apache.commons.fileupload.FileUploadException;
@@ -76,7 +79,6 @@ public class RetrieveCitiesForStateServlet extends AbstractServlet {
 					List list = retrieveCityListForStateId(stateId);
 
 					if ((list != null) && (!list.isEmpty())) {
-						logger.debug("Setting city list in request");
 						logger.debug("Setting data in request");
 						handleList(list, data, req, errors);
                         
@@ -120,13 +122,10 @@ public class RetrieveCitiesForStateServlet extends AbstractServlet {
 
 		String dataToBeUploaded = req.getParameter("data");
 		String action = req.getParameter("action");
-		HttpSession session = req.getSession();
 
         UploadBeanManagerFactory factory = UploadBeanManagerFactory.getInstance();
-        IBeanManager manager = factory.createBean(dataToBeUploaded, action, session);
+        IBeanManager manager = factory.createBean(dataToBeUploaded, action, req);
         manager.updateBean(data, errors, false);
-        manager.setData(list, "City List");
-
 	}
 
 	/**

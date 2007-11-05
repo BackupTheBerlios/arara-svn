@@ -13,6 +13,9 @@ package net.indrix.arara.vo;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class Age {
+	/**
+	 * 
+	 */
 	private int id;
 
 	private String age;

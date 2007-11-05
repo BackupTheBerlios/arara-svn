@@ -65,7 +65,7 @@ public class CreateBirdListServlet extends AbstractServlet {
             data = parseFormData(req);
     
             UploadBeanManagerFactory factory = UploadBeanManagerFactory.getInstance();
-            IBeanManager manager = factory.createBean(UploadBeanManagerFactory.BIRDLIST, null, session);
+            IBeanManager manager = factory.createBean(UploadBeanManagerFactory.BIRDLIST, null, req);
             nextPage = ServletConstants.FRAME_PAGE;
             boolean validate = true; 
             logger.debug("Calling updateBean with validate = " + validate);

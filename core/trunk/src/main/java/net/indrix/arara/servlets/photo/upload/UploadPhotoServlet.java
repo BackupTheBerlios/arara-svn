@@ -96,6 +96,7 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 						if (photo.getRealImage().getImageSize() > MAX_PHOTO_SIZE) {
 							logger.debug("photo with size = " + photo.getRealImage().getImageSize());
 							errors.add(UploadConstants.INVALID_FILE_SIZE);
+                            updatePhotoBean(photoBean);
 						} else {
 							logger.debug("Calling addPhotoToDatabase " + photo);
                             UploadPhoto dao = new UploadPhoto();

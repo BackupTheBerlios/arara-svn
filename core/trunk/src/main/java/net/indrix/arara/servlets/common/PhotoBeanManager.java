@@ -11,6 +11,7 @@ import java.util.Map;
 
 import net.indrix.arara.bean.UploadPhotoBean;
 import net.indrix.arara.servlets.ServletConstants;
+import net.indrix.arara.servlets.UploadConstants;
 import net.indrix.arara.servlets.photo.upload.UploadPhotoConstants;
 
 /**
@@ -20,6 +21,7 @@ import net.indrix.arara.servlets.photo.upload.UploadPhotoConstants;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class PhotoBeanManager extends BeanManager {
+    private static final String validExtensions[] = { "jpg", "JPG" };
 
     /**
 	 * This method updates in the bean data related to the photo
@@ -44,8 +46,36 @@ public class PhotoBeanManager extends BeanManager {
             if ((date == null) || (date.trim().equals(""))) {
                 errors.add(UploadPhotoConstants.DATE_REQUIRED);
             }
+            if (!checkExtension(bean.getFilename())) {
+                errors.add(UploadConstants.INVALID_FILE);
+            }
+
         }        
         bean.setDate(date);
 	}
+    /**
+     * This method verifies if the given file is valid
+     * 
+     * @param filename
+     *            The file uploaded by user
+     * 
+     * @return true if file extension is valid, false otherwise
+     */
+    private boolean checkExtension(String filename) {
+        boolean valid = false;
+        int index = filename.lastIndexOf(".");
+        if (index > 0) {
+            String extension = filename.substring(index + 1);
+
+            for (int i = 0; i < (validExtensions.length) && (valid); i++) {
+                if (validExtensions[i].equals(extension)) {
+                    valid = true;
+                }
+            }
+        } else {
+            valid = false;
+        }
+        return valid;
+    }
 
 }

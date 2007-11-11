@@ -71,14 +71,14 @@ public class UploadSound extends AbstractUpload {
 	 * @return true if file extension is valid, false otherwise
 	 */
 	private boolean checkExtension(String filename) {
-		boolean valid = true;
+		boolean valid = false;
 		int index = filename.lastIndexOf(".");
 		if (index > 0) {
 			String extension = filename.substring(index + 1);
 
 			for (int i = 0; i < (validExtensions.length) && (valid); i++) {
-				if (!validExtensions[i].equals(extension)) {
-					valid = false;
+				if (validExtensions[i].equals(extension)) {
+					valid = true;
 				}
 			}
 		} else {

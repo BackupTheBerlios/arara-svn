@@ -104,8 +104,8 @@ public class UploadSoundServlet extends AbstractUploadServlet {
 
                             logInfo(user, req);
 						}
-					} catch (InvalidFileException e1) {
-						logger.debug("InvalidFileException.....");
+					} catch (InvalidFileException e) {
+						logger.debug("InvalidFileException.....", e);
 						errors.add(UploadSoundConstants.INVALID_FILE);
                         updateSoundBean(soundBean);                                    
 					} catch (SQLException e) {
@@ -121,9 +121,9 @@ public class UploadSoundServlet extends AbstractUploadServlet {
                     updateSoundBean(soundBean);                    
                 }
 			} catch (ServletException e) {
-				logger.debug("ServletException.....");
+				logger.debug("ServletException.....", e);
 			} catch (IOException e) {
-				logger.debug("IOException.....");
+				logger.debug("IOException.....", e);
 			} catch (FileUploadException e) {
 				logger.debug("FileUploadException.....", e);
 				errors.add(UploadConstants.INVALID_FILE);

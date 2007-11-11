@@ -179,34 +179,26 @@ public class CommentPhotoServlet extends HttpServlet {
      */
     private String formatComment(String comment) {
         String newComment = "";
-        
-        String [] lines = comment.split("\r\n");
-        
-        for (int i = 0; i < lines.length; i++){
-            comment = lines[i];
-            if (comment.length() > 81) {
-                boolean finished = false;
-                String newLines = "";
-                while (!finished) {
-                    newLines = newLines + comment.substring(0, 80);
-                    comment = comment.substring(80);
-                    int index = comment.indexOf(" ");
-                    if (index > 0) {
-                        newLines = newLines + comment.substring(0, index) + "\r\n";
-                        comment = comment.substring(index + 1);
-                        if (comment.length() < 81) {
-                            newLines += comment + "\r\n";
-                            finished = true;
-                        }
-                    } else {
+        if (comment.length() > 81){
+            boolean finished = false;
+            while (!finished){
+                newComment = newComment + comment.substring(0, 80);
+                comment = comment.substring(80);
+                int index = comment.indexOf(" ");
+                if (index >= 0){
+                    newComment = newComment + comment.substring(0, index) + "\n" ;
+                    comment = comment.substring(index+1);
+                    if (comment.length() < 81){
+                        newComment += comment;
                         finished = true;
-                        newLines += "\r\n" + comment.trim() + "\r\n";
                     }
+                } else {
+                    finished = true;
+                    newComment += "\n" + comment;
                 }
-                newComment += newLines;
-            } else {
-                newComment += comment + "\r\n";
             }
+        } else {
+            newComment = comment;
         }
         return newComment;
     }   

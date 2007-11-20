@@ -194,7 +194,7 @@ public class CommentPhotoServlet extends HttpServlet {
                     }
                 } else {
                     finished = true;
-                    newComment += "\n" + comment;
+                    newComment += comment;
                 }
             }
         } else {

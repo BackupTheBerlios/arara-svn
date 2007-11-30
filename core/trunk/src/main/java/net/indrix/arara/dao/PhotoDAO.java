@@ -167,11 +167,12 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
             + "order by f_name, s_name";
 
     private static final String SELECT_IDS_BY_COMMENTS = "" +
-            "SELECT photo_id ID, count(*) comments " +
-            "FROM user_comments_photo " +
+            "SELECT photo_id ID, count(photo_id) comments " +
+            "FROM (select distinct user_id, photo_id from user_comments_photo) view " +
             "GROUP by photo_id " +
             "ORDER by comments desc";
     
+    //select photo_id p, count(photo_id) c from (select distinct user_id, photo_id from user_comments_photo) t group by photo_id order by c desc;
     /**
      * SQL to verify if a photo is for identification
      */

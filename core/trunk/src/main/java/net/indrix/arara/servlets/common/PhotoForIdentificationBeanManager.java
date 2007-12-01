@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.indrix.arara.bean.UploadBean;
-import net.indrix.arara.bean.UploadPhotoBean;
 import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.servlets.UploadConstants;
 import net.indrix.arara.servlets.photo.upload.UploadPhotoConstants;
@@ -58,23 +57,20 @@ public class PhotoForIdentificationBeanManager extends PhotoBeanManager {
 
 		bean.setFileItem(fileItem);
 	}
-
-	/**
-	 * This method updates in the bean data related to the photo
-	 * 
-	 * @param data
-	 * @param errors
-     * @param validate
-	 */
-	protected void updateMediaData(Map data, List errors, boolean validate) {
-        UploadPhotoBean bean = (UploadPhotoBean)getBean();
-        logger.debug("PhotoForIdentificationBeanManager.updateMediaData: updating media data...");
-		logger.debug(bean);
-		logger.debug(data);
-		bean.setCamera((String) data.get(ServletConstants.CAMERA));
-		bean.setLens((String) data.get(ServletConstants.LENS));
-		bean.setFilm((String) data.get(ServletConstants.FILM));
-		bean.setDate((String) data.get(ServletConstants.DATE));
-	}
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

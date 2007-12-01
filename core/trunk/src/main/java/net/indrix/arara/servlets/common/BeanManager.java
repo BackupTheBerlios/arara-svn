@@ -60,12 +60,15 @@ public class BeanManager extends IBeanManagerImplementation{
 		if (validate) {
 			if ((specieId == null) || (specieId.trim().equals(""))) {
 				errors.add(UploadPhotoConstants.SPECIE_REQUIRED);
+                logger.debug("SPECIE_REQUIRED...");
 			}
 			if ((stateId == null) || (stateId.trim().equals(""))) {
 				errors.add(UploadPhotoConstants.STATE_REQUIRED);
+                logger.debug("STATE_REQUIRED...");
 			}
 			if ((cityId == null) || (cityId.trim().equals(""))) {
 				errors.add(UploadPhotoConstants.CITY_REQUIRED);
+                logger.debug("CITY_REQUIRED...");
 			}
 		}
         UploadBean bean = (UploadBean)getBean();
@@ -83,6 +86,7 @@ public class BeanManager extends IBeanManagerImplementation{
 		FileItem fileItem = (FileItem) data.get(UploadConstants.FILE_ITEM);
 		if (validate && (fileItem == null)) {
 			errors.add(UploadConstants.FILE_REQUIRED);
+            logger.debug("FILE_REQUIRED...");
 		}
 		bean.setFileItem(fileItem);
 	}

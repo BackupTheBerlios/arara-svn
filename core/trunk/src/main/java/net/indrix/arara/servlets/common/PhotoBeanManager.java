@@ -31,7 +31,7 @@ public class PhotoBeanManager extends BeanManager {
 	 * @param errors
 	 */
 	protected void updateMediaData(Map data, List<String> errors, boolean validate) {
-		logger.debug("PhotoBeanManager.updateMediaData: updating media data...");
+		logger.debug("Updating media data...");
         
         UploadPhotoBean bean = (UploadPhotoBean)getBean();
 		logger.debug(bean);
@@ -45,9 +45,11 @@ public class PhotoBeanManager extends BeanManager {
         if (validate) {
             if ((date == null) || (date.trim().equals(""))) {
                 errors.add(UploadPhotoConstants.DATE_REQUIRED);
+                logger.debug("DATE_REQUIRED...");
             }
-            if (!checkExtension(bean.getFilename())) {
+            if (errors.isEmpty() && !checkExtension(bean.getFilename())) {
                 errors.add(UploadConstants.INVALID_FILE);
+                logger.debug("INVALID_FILE...");
             }
 
         }        
@@ -61,19 +63,21 @@ public class PhotoBeanManager extends BeanManager {
      * 
      * @return true if file extension is valid, false otherwise
      */
-    private boolean checkExtension(String filename) {
+    protected boolean checkExtension(String filename) {
         boolean valid = false;
-        int index = filename.lastIndexOf(".");
-        if (index > 0) {
-            String extension = filename.substring(index + 1);
-
-            for (int i = 0; i < (validExtensions.length) && (valid); i++) {
-                if (validExtensions[i].equals(extension)) {
-                    valid = true;
+        if (filename != null){
+            int index = filename.lastIndexOf(".");
+            if (index > 0) {
+                String extension = filename.substring(index + 1);
+                logger.debug("Extension : " + extension);
+                for (int i = 0; i < (validExtensions.length) && (!valid); i++) {
+                    if (validExtensions[i].equals(extension)) {
+                        valid = true;
+                    }
                 }
-            }
-        } else {
-            valid = false;
+            } else {
+                valid = false;
+            }            
         }
         return valid;
     }

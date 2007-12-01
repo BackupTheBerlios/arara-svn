@@ -16,6 +16,7 @@ import net.indrix.arara.model.email.SoundEmailSender;
 import net.indrix.arara.model.exceptions.SoundProcessingException;
 import net.indrix.arara.model.file.SoundFileManager;
 import net.indrix.arara.servlets.exceptions.InvalidFileException;
+import net.indrix.arara.utils.FileUtils;
 import net.indrix.arara.vo.Sound;
 import net.indrix.arara.vo.Specie;
 
@@ -35,7 +36,7 @@ public class UploadSound extends AbstractUpload {
 	public void uploadSound(Sound sound) throws DatabaseDownException,
 			SQLException, SoundProcessingException, InvalidFileException {
 		String filename = sound.getSound().getFilename();
-		if (!checkExtension(filename)) {
+		if (!FileUtils.checkExtension(filename, validExtensions)) {
 			throw new InvalidFileException();
 		}
 
@@ -60,30 +61,5 @@ public class UploadSound extends AbstractUpload {
 			dao.delete(sound.getId());
 			throw new SoundProcessingException("Could not write sound file...");
 		}
-	}
-
-	/**
-	 * This method verifies if the given file is valid
-	 * 
-	 * @param filename
-	 *            The file uploaded by user
-	 * 
-	 * @return true if file extension is valid, false otherwise
-	 */
-	private boolean checkExtension(String filename) {
-		boolean valid = false;
-		int index = filename.lastIndexOf(".");
-		if (index > 0) {
-			String extension = filename.substring(index + 1);
-
-			for (int i = 0; i < (validExtensions.length) && (valid); i++) {
-				if (validExtensions[i].equals(extension)) {
-					valid = true;
-				}
-			}
-		} else {
-			valid = false;
-		}
-		return valid;
 	}
 }

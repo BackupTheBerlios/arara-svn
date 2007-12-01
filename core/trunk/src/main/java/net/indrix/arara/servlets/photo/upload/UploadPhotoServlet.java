@@ -78,18 +78,21 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 		} else {
 			Map data = null;
 			try {
+                logger.debug("Parsing user data...");
 				data = parseMultiPartFormData(req);
 				UploadPhotoBean photoBean = null;
 
                 String dataToBeUploaded = getDataToBeUploaded();
                 String action = UploadConstants.UPLOAD_ACTION;
                 PhotoBeanManager manager = getBeanManager(dataToBeUploaded, action, req);
+                
+                logger.debug("Updating bean...");
                 manager.updateBean(data, errors, true);
                 photoBean = (UploadPhotoBean)manager.getBean();
                 req.setAttribute(UploadConstants.UPLOAD_PHOTO_BEAN, photoBean);
-                
+
                 if (errors.isEmpty()) {                
-					logger.debug("bean updated " + photoBean);
+					logger.debug("Bean updated " + photoBean);
 					try {
                         AbstractServlet.updateCitiesListForState(photoBean);
 						Photo photo = createPhoto(photoBean, user);
@@ -131,17 +134,18 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
                         updatePhotoBean(photoBean);                    
 					}
 				} else {
+                    logger.debug("Error updating bean...");
                     updatePhotoBean(photoBean);                    
                 }
 			} catch (ServletException e) {
-				logger.debug("ServletException.....");
+				logger.debug("ServletException.....", e);
 			} catch (IOException e) {
-				logger.debug("IOException.....");
+				logger.debug("IOException.....", e);
 			} catch (FileUploadException e) {
 				logger.debug("FileUploadException.....", e);
 				errors.add(UploadConstants.INVALID_FILE);
 			} catch (DatabaseDownException e) {
-                logger.debug("DatabaseDownException.....");
+                logger.debug("DatabaseDownException.....", e);
                 errors.add(ServletConstants.DATABASE_ERROR);
             }
 			if (!errors.isEmpty()) {

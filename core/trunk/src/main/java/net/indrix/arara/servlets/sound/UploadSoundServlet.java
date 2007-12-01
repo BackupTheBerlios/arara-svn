@@ -80,6 +80,7 @@ public class UploadSoundServlet extends AbstractUploadServlet {
                 String dataToBeUploaded = UploadBeanManagerFactory.SOUND;
                 String action = UploadConstants.UPLOAD_ACTION;
 
+                logger.debug("Updating sound bean...");
                 SoundBeanManager manager = getBeanManager(dataToBeUploaded, action, req);
                 manager.updateBean(data, errors, true);
                 soundBean = (UploadSoundBean)manager.getBean();
@@ -118,6 +119,7 @@ public class UploadSoundServlet extends AbstractUploadServlet {
                         updateSoundBean(soundBean);                                    
 					} 
 				} else {
+                    logger.debug("Error updating sound bean...");
                     updateSoundBean(soundBean);                    
                 }
 			} catch (ServletException e) {

@@ -102,29 +102,4 @@ public class BeanManager extends IBeanManagerImplementation{
 		logger.debug("Updating media data...");
 	}
 
-    /**
-     * This method allows the manager to set an object in the correct bean. The source specifies the 
-     * data type, such as a City.
-     * 
-     * @param object The object to be updated into the bean
-     * @param source The type of the data
-     */
-    public void setData(Object object, String source){
-        UploadBean bean = (UploadBean)getBean();
-        if (source.equals("City List")){
-            logger.debug("BeanManager.setData: setting City list...");
-            bean.setCitiesList((List)object);            
-        } else if (source.equals("Family ID")){
-            logger.debug("BeanManager.setData: setting Family ID...");
-            bean.setSelectedFamilyId((String)object);
-        } else if (source.equals("Specie List")){
-            logger.debug("BeanManager.setData: setting Specie list...");
-            bean.setSpecieList((List)object);
-        } else if (source.equals("Family List")){
-            bean.setFamilyList((List)object);
-        } else if (source.equals("States List")){
-            bean.setStatesList((List)object);
-        }
-        
-    }
 }

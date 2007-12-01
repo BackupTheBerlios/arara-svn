@@ -3,12 +3,12 @@
 
 <SCRIPT language="JavaScript"> 
     function familySelected() { 
-       document.editForm.action = "<c:url value="/servlet/filterUploadPhoto?nextPage=/frame.jsp&pageToShow=/jsp/photo/upload/doEditPhoto.jsp&data=PHOTO&doAction=EDIT"/>"; 
+       document.editForm.action = "<c:url value="/servlet/filterMediaServlet?nextPage=/jsp/photo/upload/editPhoto.jsp&data=PHOTO&doAction=EDIT"/>"; 
        document.editForm.submit(); 
     } 
 
     function stateSelected() { 
-       document.editForm.action = "<c:url value="/servlet/filterUploadPhoto?nextPage=/jsp/photo/upload/editPhoto.jsp&data=PHOTO&doAction=EDIT"/>"; 
+       document.editForm.action = "<c:url value="/servlet/filterMediaServlet?nextPage=/jsp/photo/upload/editPhoto.jsp&data=PHOTO&doAction=EDIT"/>"; 
        document.editForm.submit(); 
     } 
     

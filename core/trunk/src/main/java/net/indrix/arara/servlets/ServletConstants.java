@@ -217,9 +217,13 @@ public class ServletConstants {
 
 	public static final String FIELDS_REQUIRED = "fields.required";
 
-	public static final String INVALID_PASSWORD = "invalid.password";
+	public static final String ACCESS_DENIED = "access.denied";
+    
+    public static final String INVALID_PASSWORD = "invalid.password";
 
 	public static final String INVALID_USER = "user.not.registered";
+    
+    public static final String USER_NOT_VALIDATED_ERROR = "user.not.validated";
 
 	public static final String USER_NOT_LOGGED = "user.not.logged";
 

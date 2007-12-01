@@ -95,7 +95,8 @@ public class RegisterServlet extends HttpServlet {
 							logger.debug("User saved in database " + user);
 							// cria sessão e coloca usuário
 							HttpSession session = req.getSession(true);
-							session.setAttribute(ServletConstants.USER_KEY,user);
+                            session.invalidate();
+							req.setAttribute(ServletConstants.USER_KEY,user);
 
 							// direciona usuário para página inicial
 							dispatcher = context.getRequestDispatcher(ServletConstants.REGISTERED_PAGE);

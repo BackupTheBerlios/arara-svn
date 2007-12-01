@@ -24,6 +24,7 @@ import javax.servlet.http.HttpSession;
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.model.UserModel;
 import net.indrix.arara.model.UserNotFoundException;
+import net.indrix.arara.model.exceptions.UserNotValidatedException;
 import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.vo.User;
 
@@ -104,19 +105,23 @@ public class LoginServlet extends HttpServlet {
 			} else {
 				logger.debug("User NOT validated");
 				nextPage = ServletConstants.LOGIN_PAGE;
-				erros.add(ServletConstants.INVALID_PASSWORD);
+				erros.add(ServletConstants.ACCESS_DENIED);
 			}
 		} catch (UserNotFoundException e) {
 			logger.error("UserNotFoundException");
 			nextPage = ServletConstants.LOGIN_PAGE;
-			erros.add(ServletConstants.INVALID_USER);
+			erros.add(ServletConstants.ACCESS_DENIED);
 		} catch (DatabaseDownException e) {
 			logger.error("DatabaseDownException", e);
 			nextPage = ServletConstants.DATABASE_ERROR_PAGE;
 		} catch (SQLException e) {
 			logger.error("SQLException", e);
 			nextPage = ServletConstants.DATABASE_ERROR_PAGE;
-		}
+		} catch (UserNotValidatedException e) {
+            logger.error("UserNotFoundException");
+            nextPage = ServletConstants.LOGIN_PAGE;
+            erros.add(ServletConstants.USER_NOT_VALIDATED_ERROR);           
+        }
 
 		if (!erros.isEmpty()) {
 			// coloca erros no request para registrar.jsp processar e apresentar

@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
+@SuppressWarnings("serial")
 public class ChangePasswordServlet extends HttpServlet {
 	/**
 	 * The logger object to log messages

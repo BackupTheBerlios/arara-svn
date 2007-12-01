@@ -2,21 +2,19 @@
 <%@ taglib uri="/fmt" prefix="fmt"%>
 <SCRIPT language="JavaScript"> 
     function familySelected() { 
-       document.uploadForm.action = "<c:url value="/servlet/retrieveSpecies?nextPage=/jsp/sound/upload/uploadSound.jsp&data=SOUND&doAction=UPLOAD"/>"; 
+       document.uploadForm.action = "<c:url value="/servlet/filterMediaServlet?nextPage=/jsp/sound/upload/uploadSound.jsp&data=SOUND&doAction=UPLOAD"/>"; 
        document.uploadForm.submit(); 
     } 
 
     function stateSelected() { 
-       document.uploadForm.action = "<c:url value="/servlet/retrieveCitiesForState?nextPage=/jsp/sound/upload/uploadSound.jsp&data=SOUND&doAction=UPLOAD"/>"; 
+       document.uploadForm.action = "<c:url value="/servlet/filterMediaServlet?nextPage=/jsp/sound/upload/uploadSound.jsp&data=SOUND&doAction=UPLOAD"/>"; 
        document.uploadForm.submit(); 
     } 
 </script>
 
 
-<c:set var="selectedFamilyId"
-	value="${uploadSoundBean.selectedFamilyId}" />
-<c:set var="selectedSpecieId"
-	value="${uploadSoundBean.selectedSpecieId}" />
+<c:set var="selectedFamilyId" value="${uploadSoundBean.selectedFamilyId}" />
+<c:set var="selectedSpecieId" value="${uploadSoundBean.selectedSpecieId}" />
 <c:set var="selectedStateId" value="${uploadSoundBean.selectedStateId}" />
 <c:set var="selectedCityId" value="${uploadSoundBean.selectedCityId}" />
 <c:set var="selectedAgeId" value="${uploadSoundBean.selectedAgeId}" />
@@ -103,8 +101,9 @@
 	<tr>
 		<td width="${col1}"></td>
 		<td width="${col2}"><b><fmt:message key="sound.location" /></b></td>
-		<td width="${col3}"><input type="text" name="location"
-			value="${lastUploadSoundBean.location}" size="64" maxlength="64"></td>
+		<td width="${col3}">
+			<input type="text" name="location" value="${uploadSoundBean.location}" size="64" maxlength="64">
+			</td>
 	</tr>
 
 	<tr>
@@ -136,23 +135,28 @@
 
 	<tr>
 		<td width="${col1}"></td>
-		<td width="${col2}"><b><fmt:message key="sound.author.comment" /></b></td>
-		<td width="${col3}"><textarea rows="5" cols="60" name="comment" /></textarea>
+		<td width="${col2}">
+			<b><fmt:message key="sound.author.comment" /></b>
+		</td>
+		<td width="${col3}">
+			<textarea rows="5" cols="60" name="comment" />${uploadSoundBean.comment}</textarea>
 		</td>
 	</tr>
 
 	<tr>
 		<td width="${col1}"></td>
-		<td width="${col2}"><b><fmt:message key="sound.file" /></b></td>
-		<td width="${col3}"><input type="file" name="fileName"> <font
-			color="#FF000">Max 500Kb</font></td>
+		<td width="${col2}">
+			<b><fmt:message key="sound.file" /></b>
+		</td>
+		<td width="${col3}">
+			<input type="file" name="fileName"> <font color="#FF000">Max 500Kb</font>
+		</td>
 	</tr>
 	<tr>
 		<td width="${col1}"></td>
 		<td width="${col2}"></td>
 		<td>
-		<div align="left"><input type="SUBMIT"
-			value="<fmt:message key="sound.submit"/>"></div>
+		<div align="left"><input type="SUBMIT" value="<fmt:message key="sound.submit"/>"></div>
 		</td>
 	</tr>
     <tr height="5">

@@ -19,6 +19,7 @@ import javax.mail.internet.AddressException;
 import net.indrix.arara.EmailResourceBundle;
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.dao.UserDAO;
+import net.indrix.arara.model.exceptions.UserNotValidatedException;
 import net.indrix.arara.tools.email.MailClass;
 import net.indrix.arara.tools.email.MessageComposer;
 import net.indrix.arara.tools.email.MessageFormatException;
@@ -70,9 +71,10 @@ public class UserModel extends AbstractModel {
 	 *             If some SQL Exception occurs
 	 * @throws UserNotFoundException
 	 *             If the user is not in database
+	 * @throws UserNotValidatedException 
 	 */
 	public User login(String login, String password)
-			throws DatabaseDownException, SQLException, UserNotFoundException {
+			throws DatabaseDownException, SQLException, UserNotFoundException, UserNotValidatedException {
 		User dbUser = userDAO.retrieve(login);
 		if (dbUser == null) {
 			throw new UserNotFoundException();
@@ -80,7 +82,11 @@ public class UserModel extends AbstractModel {
 			String encryptedPassword = Cryptography.cryptPassword(password);
 			if (!encryptedPassword.equals(dbUser.getPassword())) {
 				dbUser = null;
-			}
+			} else {
+                if (!dbUser.isActive()){
+                    throw new UserNotValidatedException();
+                }
+            }
 		}
 		return dbUser;
 	}

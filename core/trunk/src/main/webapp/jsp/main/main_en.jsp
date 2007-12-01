@@ -48,6 +48,22 @@ table.comBordaSimples {
 						<a href="http://www.ecorotas.com.br"  target="_blanck">
 							<img src="<c:url value="/jsp/images/ecorotas.jpg"/>"	align="bottom"/> 
 						</a> 
+						&nbsp;&nbsp; 
+						<a href="http://www.itamambuca.com.br"  target="_blanck">
+							<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+							codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="200"
+							height="100">
+							<param name="movie" value="itamambuca.swf">
+							<param name="quality" value="high">
+							<embed src="itamambuca.swf" quality="high"
+							pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="200"
+							height="100"></embed>
+							</object>
+						</a> 
+						&nbsp;&nbsp; 
+						<a href="http://www.aquasuper.com"  target="_blanck">
+							<img border="0" width="200" height="100" src="<c:url value="/jsp/images/aqua.jpg"/>"	align="bottom"/> 
+						</a>
 					</td>
 				</tr>
 				<tr>

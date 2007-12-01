@@ -2,8 +2,7 @@
 <%@ taglib uri="/fmt" prefix="fmt"%>
 
 <c:set var="col1" value="${5}%"/>
-<c:set var="col2" value="${15}%"/>
-<c:set var="col3" value="${80}%"/>
+<c:set var="col2" value="${95}%"/>
 
 <br><br>
 <table class="formBorder" width="90%" align="center" border="0" cellspacing="2" bgcolor="${mainBgColor}">
@@ -15,7 +14,7 @@
 	</tr>
 	<tr>
 		<td width="${col1}"></td>
-    	<td width="${col2}">
+    	<td colspan="2" width="${col2}">
 			<c:import url="/jsp/user/registrationData.jsp"/>
 			<br><br>
 			<b><fmt:message key="user.registered.confirmation.email" /></b>

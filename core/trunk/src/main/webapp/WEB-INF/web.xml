@@ -129,6 +129,14 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>filterMediaServlet</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.common.MediaFilterServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
 		<servlet-name>initUploadPhotosForIdentification</servlet-name>
 		<servlet-class>
 			net.indrix.arara.servlets.photo.upload.InitUploadPhotoForIdentificationServlet
@@ -594,6 +602,11 @@
 	<servlet-mapping>
 		<servlet-name>initUploadPhotos</servlet-name>
 		<url-pattern>/servlet/initUploadPhotos</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>filterMediaServlet</servlet-name>
+		<url-pattern>/servlet/filterMediaServlet</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

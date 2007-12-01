@@ -129,10 +129,10 @@
 	    	<b><fmt:message key="birdlist.list.name.label"/></b>
 	    </td>
 	    <td width="${col3}%"> 
-	      <c:if test="${action == 'CREATE'}">
+	      <c:if test="${doAction == 'CREATE'}">
 	        <input type="text" name="name" value="${birdListBean.name}" size="64" maxlength="64">
 	      </c:if>
-	      <c:if test="${action == 'EDIT'}">
+	      <c:if test="${doAction == 'EDIT'}">
 	        <input type="text" name="name" readonly value="${birdListBean.name}" size="64" maxlength="64">
 	      </c:if>
 	    </td>

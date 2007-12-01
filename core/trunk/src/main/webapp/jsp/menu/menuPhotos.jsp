@@ -45,24 +45,6 @@
 		<a href="<c:url value="/servlet/searchPhotos?doAction=BEGIN&identification=true"/>">
 		<fmt:message key="menu.photos.search.identification" /></a>
 	</li>
-
-
-
-<c:if test="${user != null}">
-  <c:if test="${user.addPhoto == true}">
-<!--
-    	<a href="#"><b><fmt:message key="menu.photos.send" /></b></a>
--->
-			<li>
-				<a href="<c:url value="/servlet/initUploadPhotos"/>"><fmt:message key="menu.photos.send" /> </a>
-			</li>
-			<li>
-				<a href="<c:url value="/servlet/initUploadPhotosForIdentification"/>"><fmt:message key="menu.photos.send.identification" /> </a>
-			</li>
-
-
-  </c:if>
-</c:if>
 </font>
 
 <!--

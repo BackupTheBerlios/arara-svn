@@ -1,5 +1,6 @@
 <%@ taglib uri="/core" prefix="c"%>
 <%@ taglib uri="/fmt" prefix="fmt"%>
+<%@ page import="net.indrix.arara.vo.User"%>
 
 <b><fmt:message key="menu.title" /></b>
 <table>
@@ -16,12 +17,28 @@
 				<c:import url="/jsp/menu/menuPhotos.jsp" />		 
 			</ul>
 		  </li>
+<c:if test="${user != null && user.addPhoto == true}">
+		  <li>
+		  	<a href="#"><fmt:message key="menu.photos.photos.send" /></a>
+		  	<ul>
+				<c:import url="/jsp/menu/menuPhotosSend.jsp" />		 
+			</ul>
+		  </li> 
+</c:if>
 		  <li>
 			<a href="#"><fmt:message key="menu.sounds.sounds" /></a>
 		  	<ul>
 				<c:import url="/jsp/menu/menuSounds.jsp" />				      
 			</ul>
 		  </li>
+<c:if test="${user != null && user.addSound == true}">
+		  <li>
+		  	<a href="#"><fmt:message key="menu.sounds.sounds.send" /></a>
+		  	<ul>
+				<c:import url="/jsp/menu/menuSoundsSend.jsp" />		 
+			</ul>
+		  </li> 
+</c:if>
 		  <li>
 			<a href="#"><fmt:message key="menu.videos.videos" /></a>
 		  	<ul>

@@ -19,12 +19,14 @@ import net.indrix.arara.EmailResourceBundle;
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.model.UserModel;
 import net.indrix.arara.model.UserNotFoundException;
+import net.indrix.arara.model.file.AbstractFileManager;
 import net.indrix.arara.tools.email.MailClass;
 import net.indrix.arara.tools.email.MessageComposer;
 import net.indrix.arara.tools.email.MessageFormatException;
 import net.indrix.arara.tools.email.NoRecipientException;
 import net.indrix.arara.tools.email.WrongNumberOfValuesException;
 import net.indrix.arara.utils.PropertiesManager;
+import net.indrix.arara.utils.jsp.Thumbnail;
 import net.indrix.arara.vo.LightUser;
 import net.indrix.arara.vo.Photo;
 
@@ -36,7 +38,9 @@ import net.indrix.arara.vo.Photo;
  */
 public class PhotoEmailSender extends AbstractPhotoEmailSender {
 
-	/**
+	private static final int PHOTO_WIDTH = 240;
+
+    /**
 	 * @param photo
 	 */
 	public PhotoEmailSender(Photo photo) {
@@ -92,10 +96,10 @@ public class PhotoEmailSender extends AbstractPhotoEmailSender {
 			MailClass sender = new MailClass(server);
 			sender.setBCCAddress(user.getEmail());
 			sender.setSubject(subject);
-			sender.setMessageTextBody(getMessage(body, user, photo));
+            sender.setMessageTextHTML(getMessage(body, user, photo));
 			sender.setFromAddress(fromAdd, fromText);
 			sender.sendMessage(false);
-			// true indicates to emailObject to send the message right now
+			// false indicates to emailObject to not send the message right now
 		} catch (MessageFormatException e) {
 			logger.error("exception -> MessageFormatException in sendEmail "
 					+ e);
@@ -121,6 +125,14 @@ public class PhotoEmailSender extends AbstractPhotoEmailSender {
 	 * @return A string message with the content of the email
 	 */
 	private String getMessage(String body, LightUser user, Photo photo) {
+        logger.debug("Body: " + body);
+
+        String link = AbstractFileManager.getRootLink();        
+        link += photo.getThumbnailRelativePathAsLink();
+
+        int w = Thumbnail.getWidth(PHOTO_WIDTH, photo.getSmallImage().getWidth(), photo.getSmallImage().getHeight());
+        int h = Thumbnail.getHeight(PHOTO_WIDTH, photo.getSmallImage().getWidth(), photo.getSmallImage().getHeight());
+
 		String bodyFormatted = "";
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(user.getName());
@@ -133,11 +145,13 @@ public class PhotoEmailSender extends AbstractPhotoEmailSender {
         list.add(popularName);
 		String url = "http://www.aves.brasil.nom.br/servlet/showOnePhoto?photoId=" + photo.getId();
 		list.add(url);
-
-		logger.debug(family + " | " + specie + " | " + url);
+		list.add(link);
+		list.add(""+w);
+        list.add(""+h);
 
 		try {
 			bodyFormatted = MessageComposer.formatMessage(body, list);
+            logger.debug("Message: " + bodyFormatted);
 		} catch (WrongNumberOfValuesException e) {
 			logger.error("PhotoEmailSender.getMessage : Exception", e);
 		}

@@ -8,13 +8,17 @@ import java.util.Properties;
 import java.util.Vector;
 
 import javax.mail.Address;
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 import org.apache.log4j.Logger;
 
@@ -319,7 +323,27 @@ public class MailClass {
 	public void setMessageTextHTML(Object b) throws MessageFormatException {
 		body = b;
 		try {
-			message.setContent(body, "html/plain");
+			//message.setContent(body, "html/plain");
+            
+			// Create a multi-part to combine the parts
+            Multipart multipart = new MimeMultipart();
+
+            // Create your text message part
+            BodyPart messageBodyPart = new MimeBodyPart();
+            messageBodyPart.setText((String)body);
+
+            // Add the text part to the multipart
+            multipart.addBodyPart(messageBodyPart);
+
+            // Create the html part
+            messageBodyPart = new MimeBodyPart();
+            messageBodyPart.setContent(body, "text/html");
+
+            // Add html part to multi part
+            multipart.addBodyPart(messageBodyPart);
+
+            // Associate multi-part with message
+            message.setContent(multipart);
 		} catch (MessagingException e) {
 			throw new MessageFormatException("There is some problem with the body(HTML) of the message.");
 		}

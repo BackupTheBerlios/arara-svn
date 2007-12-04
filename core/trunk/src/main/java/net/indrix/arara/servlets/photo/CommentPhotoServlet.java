@@ -181,10 +181,24 @@ public class CommentPhotoServlet extends HttpServlet {
         String newComment = "";
         if (comment.length() > 81){
             boolean finished = false;
+            String line;
             while (!finished){
-                newComment = newComment + comment.substring(0, 80);
-                comment = comment.substring(80);
-                int index = comment.indexOf(" ");
+                boolean process = true;
+                int index;
+                while (process){
+                    int limit = comment.length() > 80 ? 80 : comment.length();
+                    line = comment.substring(0, limit);
+                    index = line.indexOf("\n"); 
+                    if (index < 0){
+                        newComment = newComment + line;
+                        comment = comment.substring(limit);
+                        process = false;
+                    } else {
+                        newComment = newComment + comment.substring(0, index+1);
+                        comment = comment.substring(index+1);
+                    }                    
+                }
+                index = comment.indexOf(" ");
                 if (index >= 0){
                     newComment = newComment + comment.substring(0, index) + "\n" ;
                     comment = comment.substring(index+1);

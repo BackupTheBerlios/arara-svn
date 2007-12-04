@@ -326,7 +326,7 @@ public class MailClass {
 			//message.setContent(body, "html/plain");
             
 			// Create a multi-part to combine the parts
-            Multipart multipart = new MimeMultipart();
+            Multipart multipart = new MimeMultipart("alternative");
 
             // Create your text message part
             BodyPart messageBodyPart = new MimeBodyPart();

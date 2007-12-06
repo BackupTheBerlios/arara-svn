@@ -8,8 +8,6 @@ package net.indrix.arara.model.email;
 
 import net.indrix.arara.vo.Photo;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Jeff
  * 
@@ -17,6 +15,9 @@ import org.apache.log4j.Logger;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public abstract class AbstractPhotoEmailSender extends AbstractEmailSender {
+    
+    protected static final int PHOTO_WIDTH = 240;
+    
 	/**
 	 * The photo added to database
 	 */

@@ -38,8 +38,6 @@ import net.indrix.arara.vo.Photo;
  */
 public class PhotoEmailSender extends AbstractPhotoEmailSender {
 
-	private static final int PHOTO_WIDTH = 240;
-
     /**
 	 * @param photo
 	 */

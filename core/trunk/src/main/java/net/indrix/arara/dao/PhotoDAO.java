@@ -101,6 +101,14 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
             "order by post_date desc";
 
     /**
+     * SQL to select id of all photos, order by post date (desc), for current week
+     */
+    private static final String SELECT_IDS_FOR_ALL_BY_CURRENT_DATE = "" +
+            "SELECT p.id " +
+            "from photo p " +
+            "where post_date >= ?" +
+            "order by post_date desc";    
+    /**
      * SQL to select id of photos by a given family ID
      */
     private static final String SELECT_IDS_BY_FAMILY_ID = "" +

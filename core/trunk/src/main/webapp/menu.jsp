@@ -51,13 +51,14 @@
 				<c:import url="/jsp/menu/menuBirdwatching.jsp" />				      
 			</ul>
 		  </li>
+<!--
 		  <li>
 			<a href="#"><fmt:message key="menu.birdlists" /></a>
 		  	<ul>
 				<c:import url="/jsp/menu/menuBirdLists.jsp" />				      
 			</ul>
 		  </li>	  
- 		 
+--> 		 
 		  <li>
 			<a href="#"><fmt:message key="menu.blogs" /></a>
 		  	<ul>

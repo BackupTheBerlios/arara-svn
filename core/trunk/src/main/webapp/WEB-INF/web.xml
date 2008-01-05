@@ -45,6 +45,7 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
+
 	<!-- Servlet for User actions -->
 	<servlet>
 		<servlet-name>login</servlet-name>
@@ -250,6 +251,14 @@
 		<servlet-name>searchPhotosWithMoreComments</servlet-name>
 		<servlet-class>
 			net.indrix.arara.servlets.photo.SearchPhotosWithMoreCommentsServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>searchPhotosWithMoreCommentsOfWeek</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.photo.SearchPhotosWithMoreCommentsOfWeekServlet
 		</servlet-class>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
@@ -693,6 +702,11 @@
 	<servlet-mapping>
 		<servlet-name>searchPhotosWithMoreComments</servlet-name>
 		<url-pattern>/servlet/searchPhotosWithMoreComments</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>searchPhotosWithMoreCommentsOfWeek</servlet-name>
+		<url-pattern>/servlet/searchPhotosWithMoreCommentsOfWeek</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

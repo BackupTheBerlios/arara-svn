@@ -61,7 +61,7 @@ public abstract class AbstractDAO {
     }
     
     /**
-     * This method inserts a new object to the database.
+     * This method deletes an object from the database.
      * 
      * @param id
      *            The id of the object to be deleted

@@ -28,8 +28,16 @@ table.comBordaSimples {
 	</tr>
 	<tr>
 		<td>
-			<!-- <c:import url="/jsp/main/main_pt_text.jsp" /> -->
 			<c:import url="/jsp/photo/search/doShowPhotosWithMoreComments.jsp" /> 
+		</td>
+	</tr>
+	<tr height="10">
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<c:import url="/jsp/photo/search/doShowPhotosWithMoreCommentsOfWeek.jsp" /> 
 		</td>
 	</tr>
 	<tr height="10">

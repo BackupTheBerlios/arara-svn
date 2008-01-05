@@ -6,9 +6,13 @@
  */
 package net.indrix.arara.dao;
 
+import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import net.indrix.arara.dao.constants.PhotoConstants;
@@ -101,14 +105,6 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
             "order by post_date desc";
 
     /**
-     * SQL to select id of all photos, order by post date (desc), for current week
-     */
-    private static final String SELECT_IDS_FOR_ALL_BY_CURRENT_DATE = "" +
-            "SELECT p.id " +
-            "from photo p " +
-            "where post_date >= ?" +
-            "order by post_date desc";    
-    /**
      * SQL to select id of photos by a given family ID
      */
     private static final String SELECT_IDS_BY_FAMILY_ID = "" +
@@ -180,6 +176,18 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
             "GROUP by photo_id " +
             "ORDER by comments desc";
     
+
+    /**
+     * SQL to select id of all photos, order by post date (desc), for current week
+     */
+    private static final String SELECT_IDS_BY_COMMENTS_FOR_CURRENT_WEEK = "" +
+            "SELECT photo_id ID, count(photo_id) comments, date " +
+            "FROM (select distinct user_id, photo_id, date from user_comments_photo) view " +
+            "WHERE date > ?" +
+            "GROUP by photo_id " +
+            "ORDER by comments desc";
+    
+    
     //select photo_id p, count(photo_id) c from (select distinct user_id, photo_id from user_comments_photo) t group by photo_id order by c desc;
     /**
      * SQL to verify if a photo is for identification
@@ -195,6 +203,18 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
      */
     UserDAO userDao = new UserDAO();
 
+    /**
+     * This method deletes a photo from the database, and all its comments .
+     * 
+     * @param id
+     *            The id of the object to be deleted
+     */
+    public void delete(int id) throws DatabaseDownException, SQLException {
+        deleteObject(id, getDeleteSQL());
+        CommentsDAO dao = new CommentsDAO();
+        dao.delete(id);
+    }    
+    
     /**
      * This method retrieves all photos from database.
      * 
@@ -322,6 +342,44 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
         List list = retrieveIDs(SELECT_IDS_BY_COMMENTS);
         return list;
     }
+    
+    /**
+     * This method retrieves a <code>List</code> object with
+     * <code>Integer</code> objects, for photos with more comments of current week
+     * 
+     * @return a <code>List</code> object with <code>Integer</code> objects,
+     *         for photos with more comments  of current week
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    public List retrieveIDsForMoreCommentsOfWeek() throws DatabaseDownException,
+            SQLException {
+        List<Object> list = new ArrayList<Object>();
+        Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            stmt = conn.prepareStatement(SELECT_IDS_BY_COMMENTS_FOR_CURRENT_WEEK);
+            stmt.setDate(1, getBeginOfWeek());
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("ID");
+                list.add(new Integer(id));
+            }
+        } catch (SQLException e) {
+            logger.error("AbstractDAO.retrieve : could not retrieve data ");
+            logger.error("Error in SQL : " + SELECT_IDS_BY_COMMENTS_FOR_CURRENT_WEEK, e);
+            throw e;
+        } finally {
+            closeResultSet(rs);
+            closeStatement(stmt);
+            closeConnection(conn);
+        }
+        return list;
+    }    
     
     /**
      * This method verifies wheter an Id exists
@@ -712,4 +770,30 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
         }
         return user;
     }
+
+    /**
+     * This method retrieves a Date object, with the value of first day of current week
+     * 
+     * @return a Date object, with the value of first day of current week
+     */
+    private Date getBeginOfWeek() {
+        Calendar today = Calendar.getInstance();
+        int day = today.get(Calendar.DAY_OF_WEEK);
+        today.set(Calendar.HOUR, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.SECOND, 0);
+        
+        Calendar beginOfWeek = Calendar.getInstance();
+        beginOfWeek.setFirstDayOfWeek(Calendar.MONDAY);
+        long t = (day-2) * 24 * 60 * 60 * 1000;
+        long tt = beginOfWeek.getTimeInMillis();
+        beginOfWeek.setTimeInMillis(tt - t);
+        beginOfWeek.set(Calendar.HOUR, 0);
+        beginOfWeek.set(Calendar.MINUTE, 0);
+        beginOfWeek.set(Calendar.SECOND, 0);
+                
+        Date sqlDate = new Date(beginOfWeek.getTimeInMillis());
+        return sqlDate;
+    }
+
 }

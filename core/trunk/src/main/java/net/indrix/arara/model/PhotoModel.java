@@ -369,6 +369,52 @@ public class PhotoModel extends MediaModel {
         
         return listOfIDs;
     }    
+
+    /**
+     * This method retrieve all photos from database, order by the number of comments 
+     * (for the current week) from user;
+     * 
+     * @return all numberOfPhotos photos from database, order by the number of comments 
+     * (for the current week)from user;
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    public List<Photo> retrievePhotosIDsWithMoreCommentsOfWeek(int numberOfPhotos) throws DatabaseDownException, SQLException {
+        logger.debug("Entering method...");
+        List listOfIDs = ((PhotoDAO)dao).retrieveIDsForMoreCommentsOfWeek();
+        listOfIDs = listOfIDs.subList(0, numberOfPhotos);
+        
+        List <Photo>list = new ArrayList<Photo>();
+        Photo photo = null;
+        Iterator it = listOfIDs.iterator();
+        int count = 0;
+        while (it.hasNext() && count < numberOfPhotos){
+            Integer id = (Integer)it.next();
+            photo = retrieveThumbnail(id);
+            list.add(photo);
+            count++;
+        }
+        
+        return list;
+    }    
+    /**
+     * This method retrieve all photos from database, order by the number of comments 
+     * (for the current week) from user, 
+     * 
+     * 
+     * @return all photos from database, order by the number of comments (for the current week) 
+     * from user;
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    public List retrievePhotosIDsWithMoreCommentsOfWeek() throws DatabaseDownException, SQLException {
+        logger.debug("Entering method...");
+        List listOfIDs = ((PhotoDAO)dao).retrieveIDsForMoreCommentsOfWeek();
+        
+        return listOfIDs;
+    }    
     
     /**
      * THis method adds an identification to a photo into database

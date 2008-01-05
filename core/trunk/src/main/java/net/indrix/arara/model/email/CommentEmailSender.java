@@ -125,9 +125,21 @@ public class CommentEmailSender extends AbstractPhotoEmailSender {
      * @return A formatted message to be sent to the photo author about a new
      *         identification that has been done to his/her photo
      */
-    private String getMessage(User user, String body, Comment comment,
-            Photo photo) {
-
+    private String getMessage(User user, String body, Comment comment, Photo photo) {
+        /*
+         * 
+         * Oi _$$$_!<br>
+         * Um novo comentário foi adicionado a uma foto!<br><br>
+         * 
+         * Autor do comentário:_$$$_<br>
+         * Comentário:_$$$_<br>
+         * Autor da foto:_$$$_<br><br>
+         * 
+         * Veja a foto <a href=_$$$_>aqui</a> <br><br> 
+         * <img src=\"_$$$_\" width=\"_$$$_\" height=\"_$$$_"\" align=\"bottom\" border=\"0\"/>
+         * 
+         * 
+         */
         
         String bodyFormatted = "";
         ArrayList<String> list = new ArrayList<String>();
@@ -142,6 +154,7 @@ public class CommentEmailSender extends AbstractPhotoEmailSender {
         list.add(user.getName());
         list.add(comment.getUser().getName());
         list.add(comment.getComment());
+        list.add(photo.getUser().getLogin() + " | " + photo.getUser().getName());
         list.add(url);
         list.add(link);
         list.add(""+w);

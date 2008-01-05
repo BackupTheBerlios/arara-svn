@@ -44,6 +44,11 @@ public class CommentsDAO extends AbstractDAO {
 	 */
 	private static final String INSERT = "INSERT INTO user_comments_photo (user_id, photo_id, comment, date) values (?, ?, ?, ?)";
 
+    /**
+     * SQL for deleting comments of a given photo 
+     */
+    private static final String DELETE_BY_PHOTO_ID = "DELETE FROM user_comments_photo WHERE photo_id = ?";
+
 	/**
 	 * This sql statement selects all comments for a given photo
 	 */
@@ -240,4 +245,8 @@ public class CommentsDAO extends AbstractDAO {
 		// no implementation for this class is needed
 	}
 
+    @Override
+    protected String getDeleteSQL() {
+        return DELETE_BY_PHOTO_ID;
+    }    
 }

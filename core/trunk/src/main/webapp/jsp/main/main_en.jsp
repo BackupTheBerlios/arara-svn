@@ -37,6 +37,15 @@ table.comBordaSimples {
 	</tr>
 	<tr>
 		<td>
+			<c:import url="/jsp/photo/search/doShowPhotosWithMoreCommentsOfWeek.jsp" /> 
+		</td>
+	</tr>
+	<tr height="15">
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td>
 			<table class="comBordaSimples"  width="100%" cellspacing="2" height="100%" border="0">
 				<tr>
 					<td>

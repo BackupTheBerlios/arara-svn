@@ -772,13 +772,15 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
     }
 
     /**
-     * This method retrieves a Date object, with the value of first day of current week
+     * This method retrieves a Date object, with the value of first day of current week.
+     * The week starts on monday.
      * 
      * @return a Date object, with the value of first day of current week
      */
     private Date getBeginOfWeek() {
         Calendar today = Calendar.getInstance();
         int day = today.get(Calendar.DAY_OF_WEEK);
+        day = (day == 1)? 9 : day;
         today.set(Calendar.HOUR, 0);
         today.set(Calendar.MINUTE, 0);
         today.set(Calendar.SECOND, 0);

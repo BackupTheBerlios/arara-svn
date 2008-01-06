@@ -57,7 +57,10 @@
 			<div id="sp" class="tabset_content">
 				<h2 class="tabset_label">SP</h2>
 					<ul>
-					  <li><a href="http://www.ib.usp.br/ceo/">Centro de Estudos Ornitológicos</a></li>
+					  <li><a href="http://goac.multiply.com/" target="_blank">Grupo de Observadores de Aves de Campinas</a></li>
+					</ul>
+					<ul>
+					  <li><a href="http://www.ib.usp.br/ceo/" target="_blank">Centro de Estudos Ornitológicos</a></li>
 					</ul>
 			</div>
 			</font>

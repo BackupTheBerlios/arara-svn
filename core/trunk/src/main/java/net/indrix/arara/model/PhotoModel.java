@@ -383,17 +383,19 @@ public class PhotoModel extends MediaModel {
     public List<Photo> retrievePhotosIDsWithMoreCommentsOfWeek(int numberOfPhotos) throws DatabaseDownException, SQLException {
         logger.debug("Entering method...");
         List listOfIDs = ((PhotoDAO)dao).retrieveIDsForMoreCommentsOfWeek();
-        listOfIDs = listOfIDs.subList(0, numberOfPhotos);
-        
         List <Photo>list = new ArrayList<Photo>();
-        Photo photo = null;
-        Iterator it = listOfIDs.iterator();
-        int count = 0;
-        while (it.hasNext() && count < numberOfPhotos){
-            Integer id = (Integer)it.next();
-            photo = retrieveThumbnail(id);
-            list.add(photo);
-            count++;
+        if (listOfIDs != null){
+            listOfIDs = listOfIDs.subList(0, numberOfPhotos);
+            
+            Photo photo = null;
+            Iterator it = listOfIDs.iterator();
+            int count = 0;
+            while (it.hasNext() && count < numberOfPhotos){
+                Integer id = (Integer)it.next();
+                photo = retrieveThumbnail(id);
+                list.add(photo);
+                count++;
+            }            
         }
         
         return list;

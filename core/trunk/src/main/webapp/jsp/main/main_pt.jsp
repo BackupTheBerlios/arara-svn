@@ -16,7 +16,7 @@ table.comBordaSimples {
 			<table class="comBordaSimples"  width="100%" cellspacing="2" height="100%" border="0">
 				<tr>
 					<td>
-						<c:import url="/jsp/main/main_pt_text.jsp" /> 
+						<c:import url="/jsp/main/main_pt_text.jsp" />
 					</td>
 				</tr>
 			</table>

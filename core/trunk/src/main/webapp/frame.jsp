@@ -569,6 +569,9 @@ window.onload = initSlideDownMenu;
 
 </head>
 <body bgcolor="#333300">
+<!--
+onload="javascript:initSlideDownMenu();javascript:window.open('/jsp/maintenance/maintenance.jsp','nenWin','resizable=yes,toolbar=no,status=no,menubar=no,scrollbars=no, personalbar=no,width=800,height=400, top=50, left=50')">
+-->
 
 <c:set var="col1" value="${10}" scope="application"/>
 <c:set var="col2" value="${15}" scope="application"/>
@@ -581,6 +584,7 @@ window.onload = initSlideDownMenu;
 
 <c:set var="mainBgColor" value="#669900" scope="application" />
 <c:set var="formTitleColor" value="#000000" scope="application" />
+<c:set var="home" value="${false}"/>
 
 <c:if test="${pageToShow != null && pageToShow != ''}">
 	<c:set var="page" value="${pageToShow}" />
@@ -591,6 +595,7 @@ window.onload = initSlideDownMenu;
 			<c:if test="${pageToShow == null || pageToShow == ''}">
 				<fmt:message key="main.page" var="mainPage" />
 				<c:set var="page" value="${mainPage}" />
+				<c:set var="home" value="${true}"/>
 			</c:if>
 			<c:if test="${pageToShow != null}">
 				<c:set var="page" value="${pageToShow}" />
@@ -600,6 +605,7 @@ window.onload = initSlideDownMenu;
 			<c:if test="${param.pageToShow == 'main.page'}">
 				<fmt:message key="main.page" var="mainPage" />
 				<c:set var="page" value="${mainPage}" />
+				<c:set var="home" value="${true}"/>
 			</c:if>
 			<c:if test="${param.pageToShow != 'main.page'}">
 				<c:set var="page" value="${param.pageToShow}" />
@@ -630,9 +636,11 @@ window.onload = initSlideDownMenu;
 		<img src="<c:url value="/images/chart.png"/>" alt="" width="20" height="20"><b><fmt:message key="menu.statistics.statistics"/></b><br/>
         <c:import url="/statistics.jsp" />
         -->
-        <hr>
-        <b><fmt:message key="site.sponsor" /></b>
-		&nbsp;&nbsp;<c:import url="/jsp/marketing.jsp"/>
+        <c:if test="${!home}">
+	        <hr>
+	        <b><fmt:message key="site.sponsor" /></b>
+			&nbsp;&nbsp;<c:import url="/jsp/marketing.jsp"/>
+		</c:if>
 		<hr>
 		<br><b><fmt:message key="site.message" /></b><br>
 		<hr>

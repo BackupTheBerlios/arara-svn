@@ -9,7 +9,7 @@
 <%@ taglib uri="/core" prefix="c"%>
 <%@ taglib uri="/fmt" prefix="fmt"%>
 
-<table bgcolor="#a6d2d2" border="0" cellspacing="2" height="50%"
+<table bgcolor="#669900" border="0" cellspacing="2" height="50%"
 	width="100%">
 	<tbody>
 		<tr style="font-weight: bold;" bgcolor="#005500">
@@ -22,8 +22,8 @@
 				<br style="font-weight: bold;">
 				<div style="text-align: left;">
 					<span style="font-weight: bold;">
-						O site encontra-se em manuten&ccedil;&atilde;o para atualiza&ccedil;&atilde;o e
-						integra&ccedil;&atilde;o de novas funcionalidades.
+						O site entrará em manuten&ccedil;&atilde;o para atualiza&ccedil;&atilde;o e
+						integra&ccedil;&atilde;o de novas funcionalidades, às 10:30h do dia 06/01.
 					</span>
 					<br	style="font-weight: bold;">
 					<br style="font-weight: bold;">
@@ -32,7 +32,7 @@
 					</span>
 					<br style="font-weight: bold;">
 					<span style="font-weight: bold;">
-						Previs&atilde;o de retorno: 30 minutos.
+						Previs&atilde;o de retorno: 11:00.
 					</span>
 					<br	style="font-weight: bold;">
 					<br style="font-weight: bold;">
@@ -60,11 +60,11 @@
 				<br style="font-weight: bold;">
 				<div style="text-align: left;">
 					<span style="font-weight: bold;">
-						The system is in maintainance for updates.
+						The system will be in maintainance for updates at 10:30am, Jan 06.
 					</span>
 					<br	style="font-weight: bold;">
 					<span style="font-weight: bold;">
-						System return prevision: 30 minutes.
+						System shall return at 11:00am.
 					</span>
 					<br style="font-weight: bold;">
 					<span style="font-weight: bold;">

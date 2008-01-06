@@ -8,7 +8,7 @@
 		<fmt:message key="menu.birdwatching.concept" /></a>
 	</li>
   	<li>
-		<fmt:message key="birdwatching.page.equipments" var="equipmentsPage" />
+		<fmt:message key="birdwatching.page.equipment" var="equipmentsPage" />
 		<a href="<c:url value="/frame.jsp?pageToShow=${equipmentsPage}"/>">
 		<fmt:message key="menu.birdwatching.equipments" /></a>
 	</li>

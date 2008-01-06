@@ -92,9 +92,10 @@
 						<li>Câmeras compactas</li>Essas câmeras normalmente têm 10x ou 12x de zoom ótico, o que é fundamental para conseguir uma boa aproximação 
 					  	da ave a ser fotografada. Várias marcas dispõe de modelos com tal capacidade de zoom, como:
 							<ul>
-								<li>Canon</li>Modelos S2 e S3 de 5 e 6 Mp respectivamente, ambas com estabilizador de imagem e 12x de zoom, equivalente a 432mm.
+								<li>Canon</li>S5 de 8 Mp, com estabilizador de imagem e 12x de zoom, equivalente a 432mm.
 							  	<li>Fuji</li>Modelos S5200, de 5.1Mp e lente equivalente a 380mm, e S9100 de 9.1Mp e lente equivalente a 300mm.
-							  	<li>Sony</li>DSC-H2 e DSC-H5, de 6 e 7.2 Mp respectivamente, ambas com 12x de zoom, equivalente a 432mm.
+							  	<li>Sony</li>DSC-H9, de 8 Mp, com estabilizador de imagem e com 15x de zoom, equivalente a 465mm.
+							  	<li>Panasonic</li>FZ18 e FZ50, de 8.1 e 10 Mp respectivamente. A primeira com 18x de zoom (equivalente a 504mm), a segunda com 12x de zoom (equivalente a 432mm). Ambas com estabilizador de imagem.
 							</ul>
 						<li>Câmeras com lentes intercambiáveis</li>Essas câmeras permitem que a objetiva seja trocada, possibilitando assim o uso de objetivas com diferentes capacidade de zoom. 
 						Normalmente, uma objetiva utilizada para fotografia de aves é no mínimo de 300mm.

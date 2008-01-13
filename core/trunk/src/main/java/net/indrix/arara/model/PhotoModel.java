@@ -384,7 +384,8 @@ public class PhotoModel extends MediaModel {
         logger.debug("Entering method...");
         List listOfIDs = ((PhotoDAO)dao).retrieveIDsForMoreCommentsOfWeek();
         List <Photo>list = new ArrayList<Photo>();
-        if (listOfIDs != null){
+        if (listOfIDs != null && !listOfIDs.isEmpty()){
+            numberOfPhotos = listOfIDs.size() >= numberOfPhotos? numberOfPhotos : listOfIDs.size();
             listOfIDs = listOfIDs.subList(0, numberOfPhotos);
             
             Photo photo = null;

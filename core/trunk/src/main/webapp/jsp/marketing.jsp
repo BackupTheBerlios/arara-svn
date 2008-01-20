@@ -6,7 +6,7 @@
 <c:if test="${marketingCounter == null}">
 	<c:set var="marketingCounter" value="${1}" scope="session"/>
 </c:if>
-<c:if test="${marketingCounter > 3}">
+<c:if test="${marketingCounter > 4}">
 	<c:set var="marketingCounter" value="${1}" scope="session"/>
 </c:if>
 	<c:choose>
@@ -31,6 +31,11 @@
 		<c:when test="${marketingCounter == 3}">
 			<a href="http://www.aquasuper.com" target="_blank"> 
 				<img width="200" height="100" hspace ="5" src="<%= request.getContextPath()%>/jsp/images/aqua.jpg"	align="center">
+			</a> 
+		</c:when>
+		<c:when test="${marketingCounter == 4}">
+			<a href="http://http://www.avistarbrasil.com.br/concurso/" target="_blank"> 
+				<img border="0" width="200" height="100" hspace ="5" src="<%= request.getContextPath()%>/jsp/images/avistar.jpg"	align="center">
 			</a> 
 		</c:when>
 	</c:choose>

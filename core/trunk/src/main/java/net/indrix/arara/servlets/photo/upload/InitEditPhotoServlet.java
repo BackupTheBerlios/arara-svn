@@ -119,9 +119,15 @@ public class InitEditPhotoServlet extends HttpServlet {
 		bean.setFilm(photo.getFilm());
 		bean.setDate(Date.getDate(photo.getDate()));
 		bean.setComment(photo.getComment());
-		bean.setSelectedStateId(getId(photo.getCity().getState().getId()));
-		bean.setSelectedCityId(getId(photo.getCity().getId()));
-        bean.setCitiesList(getCitiesList(photo.getCity().getState().getId()));
+        if (photo.getCity().getState() != null){
+            bean.setSelectedStateId(getId(photo.getCity().getState().getId()));            
+        }
+        if (photo.getCity() != null) {
+            bean.setSelectedCityId(getId(photo.getCity().getId()));            
+        }
+        if (photo.getCity() != null && photo.getCity().getState() != null) {
+            bean.setCitiesList(getCitiesList(photo.getCity().getState().getId()));
+        }        
         
         if (!identification){
             bean.setSelectedAgeId(getId(photo.getAge().getId()));

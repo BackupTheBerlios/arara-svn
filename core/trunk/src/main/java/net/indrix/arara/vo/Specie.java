@@ -133,12 +133,16 @@ public class Specie {
 		Iterator it = commonNames.iterator();
 		while (it.hasNext()) {
 			CommonName common = (CommonName) it.next();
-			buffer.append(common.getName());
-			buffer.append(", ");
+            if (common != null){
+                buffer.append(common.getName());
+                buffer.append(", ");                
+            }
 		}
 		if (buffer.length() > 1) {
 			buffer.replace(buffer.length() - 2, buffer.length() - 1, "]");
-		}
+		} else {
+		    buffer.append(" ]");
+        }
 		return buffer.toString();
 	}
 

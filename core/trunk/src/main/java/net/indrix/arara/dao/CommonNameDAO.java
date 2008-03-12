@@ -132,31 +132,39 @@ public class CommonNameDAO extends AbstractDAO {
 	 */
 	public void retrieveForSpecie(Specie specie) throws SQLException,
 			DatabaseDownException {
-		Connection conn = DatabaseManager.getConnection();
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		CommonName commonName = null;
+        
+        if (specie.getId() != -1){
+            Connection conn = DatabaseManager.getConnection();
+            
+            if (conn == null){
+                throw new DatabaseDownException();
+            }
 
-		try {
-			stmt = conn.prepareStatement(SELECT_FOR_SPECIE);
-			stmt.setInt(1, specie.getId());
-			rs = stmt.executeQuery();
+            PreparedStatement stmt = null;
+            ResultSet rs = null;
+            CommonName commonName = null;
 
-			while (rs.next()) {
-				commonName = (CommonName) createObject(rs);
-				specie.addPopularName(commonName);
-			}
-		} catch (SQLException e) {
-			logger
-					.error(
-							"CommonNameDAO.addCommonNamesForSpecie : Could not retrive data",
-							e);
-			throw e;
-		} finally {
-			closeResultSet(rs);
-			closeStatement(stmt);
-			conn.close();
-		}
+            try {
+                stmt = conn.prepareStatement(SELECT_FOR_SPECIE);
+                stmt.setInt(1, specie.getId());
+                rs = stmt.executeQuery();
+
+                while (rs.next()) {
+                    commonName = (CommonName) createObject(rs);
+                    specie.addPopularName(commonName);
+                }
+            } catch (SQLException e) {
+                logger.error("CommonNameDAO.addCommonNamesForSpecie : Could not retrive data", e);
+                throw e;
+            } finally {
+                closeResultSet(rs);
+                closeStatement(stmt);
+                conn.close();
+            }            
+        } else {
+            specie.addPopularName(null);
+        }
+        
 	}
 
 	/**

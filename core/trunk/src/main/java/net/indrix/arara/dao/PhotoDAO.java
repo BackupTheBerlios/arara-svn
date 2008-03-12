@@ -181,12 +181,16 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
      * SQL to select id of all photos, order by post date (desc), for current week
      */
     private static final String SELECT_IDS_BY_COMMENTS_FOR_CURRENT_WEEK = "" +
+            "SELECT photo_id ID, count( DISTINCT user_id ) comments " +
+            "FROM user_comments_photo WHERE date > ? GROUP BY photo_id " +
+            "ORDER BY comments DESC";             
+/*    
             "SELECT photo_id ID, count(photo_id) comments, date " +
             "FROM (select distinct user_id, photo_id, date from user_comments_photo) view " +
             "WHERE date > ?" +
             "GROUP by photo_id " +
             "ORDER by comments desc";
-    
+*/    
     
     //select photo_id p, count(photo_id) c from (select distinct user_id, photo_id from user_comments_photo) t group by photo_id order by c desc;
     /**
@@ -357,6 +361,11 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
             SQLException {
         List<Object> list = new ArrayList<Object>();
         Connection conn = DatabaseManager.getConnection();
+        
+        if (conn == null){
+            throw new DatabaseDownException();
+        }
+        
         PreparedStatement stmt = null;
         ResultSet rs = null;
 

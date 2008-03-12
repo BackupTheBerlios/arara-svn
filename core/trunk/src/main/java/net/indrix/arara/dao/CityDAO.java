@@ -62,6 +62,11 @@ public class CityDAO {
 	public void insert(City city) throws DatabaseDownException {
 		logger.debug("CityDAO.insert : entering method...");
 		Connection conn = DatabaseManager.getConnection();
+        
+        if (conn == null){
+            throw new DatabaseDownException();
+        }
+
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 
@@ -156,6 +161,11 @@ public class CityDAO {
 	 */
 	public City retrieve(int id) throws DatabaseDownException, SQLException {
 		Connection conn = DatabaseManager.getConnection();
+        
+        if (conn == null){
+            throw new DatabaseDownException();
+        }
+
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		City city = null;
@@ -199,6 +209,11 @@ public class CityDAO {
 		logger.debug("CityDAO.retrieveForState : entering method...");
 		List <City>list = new ArrayList<City>();
 		Connection conn = DatabaseManager.getConnection();
+        
+        if (conn == null){
+            throw new DatabaseDownException();
+        }
+
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 

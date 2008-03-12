@@ -232,6 +232,10 @@ public abstract class AbstractDAO {
 
         Connection conn = DatabaseManager.getConnection();
 
+        if (conn == null){
+            throw new DatabaseDownException();
+        }
+        
         try {
             insertObject(object, sql, conn);
         } catch (SQLException e) {
@@ -300,6 +304,11 @@ public abstract class AbstractDAO {
             throws DatabaseDownException, SQLException {
 
         Connection conn = DatabaseManager.getConnection();
+        
+        if (conn == null){
+            throw new DatabaseDownException();
+        }
+        
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
@@ -336,6 +345,10 @@ public abstract class AbstractDAO {
             throws DatabaseDownException, SQLException {
 
         Connection conn = DatabaseManager.getConnection();
+        if (conn == null){
+            throw new DatabaseDownException();
+        }
+        
         try {
             deleteObject(id, sql, conn);
         } catch (SQLException e) {
@@ -403,6 +416,11 @@ public abstract class AbstractDAO {
     protected List retrieveObjects(String sql, boolean light) throws DatabaseDownException, SQLException {       
         List<Object> list = new ArrayList<Object>();
         Connection conn = DatabaseManager.getConnection();
+
+        if (conn == null){
+            throw new DatabaseDownException();
+        }
+        
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
@@ -445,6 +463,10 @@ public abstract class AbstractDAO {
             SQLException {
         List<Object> list = new ArrayList<Object>();
         Connection conn = DatabaseManager.getConnection();
+        
+        if (conn == null){
+            throw new DatabaseDownException();
+        }        
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
@@ -482,6 +504,9 @@ public abstract class AbstractDAO {
             throws DatabaseDownException, SQLException {
         List<Integer> list = new ArrayList<Integer>();
         Connection conn = DatabaseManager.getConnection();
+        if (conn == null){
+            throw new DatabaseDownException();
+        }        
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
@@ -520,6 +545,11 @@ public abstract class AbstractDAO {
             throws DatabaseDownException, SQLException {
         List<Integer> list = new ArrayList<Integer>();
         Connection conn = DatabaseManager.getConnection();
+        
+        if (conn == null){
+            throw new DatabaseDownException();
+        }
+        
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
@@ -564,6 +594,11 @@ public abstract class AbstractDAO {
     protected Object retrieveObject(int id, String sql)
             throws DatabaseDownException, SQLException {
         Connection conn = DatabaseManager.getConnection();
+        
+        if (conn == null){
+            throw new DatabaseDownException();
+        }
+        
         PreparedStatement stmt = null;
         ResultSet rs = null;
         Object object = null;
@@ -606,6 +641,11 @@ public abstract class AbstractDAO {
     protected Object retrieveFullObject(int id, String sql)
             throws DatabaseDownException, SQLException {
         Connection conn = DatabaseManager.getConnection();
+        
+        if (conn == null){
+            throw new DatabaseDownException();
+        }
+        
         PreparedStatement stmt = null;
         ResultSet rs = null;
         Object object = null;
@@ -647,11 +687,14 @@ public abstract class AbstractDAO {
      */
     protected List retrieveObjects(int id, String sql)
             throws DatabaseDownException, SQLException {
-        Connection conn = DatabaseManager.getConnection();
         PreparedStatement stmt = null;
         ResultSet rs = null;
         Object object = null;
         List<Object> list = new ArrayList<Object>();
+        Connection conn = DatabaseManager.getConnection();
+        if (conn == null){
+            throw new DatabaseDownException();
+        }
         try {
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
@@ -690,6 +733,11 @@ public abstract class AbstractDAO {
     protected List retrieveObjects(String id, String sql)
             throws DatabaseDownException, SQLException {
         Connection conn = DatabaseManager.getConnection();
+        
+        if (conn == null){
+            throw new DatabaseDownException();
+        }
+        
         PreparedStatement stmt = null;
         ResultSet rs = null;
         Object object = null;
@@ -730,6 +778,11 @@ public abstract class AbstractDAO {
     protected Object retrieveObject(String name, String sql)
             throws DatabaseDownException, SQLException {
         Connection conn = DatabaseManager.getConnection();
+        
+        if (conn == null){
+            throw new DatabaseDownException();
+        }
+        
         PreparedStatement stmt = null;
         ResultSet rs = null;
         Object object = null;
@@ -771,6 +824,11 @@ public abstract class AbstractDAO {
 
         boolean idFound = false;
         Connection conn = DatabaseManager.getConnection();
+        
+        if (conn == null){
+            throw new DatabaseDownException();
+        }
+        
         PreparedStatement stmt = null;
         ResultSet rs = null;
 

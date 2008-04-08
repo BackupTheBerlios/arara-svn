@@ -58,7 +58,7 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
     private static final String SELECT_BY_ID = "" +
             "SELECT p.id, p.date, p.place, p.city_id, p.camera, p.lens, p.film, "
             + "p.w, p.h, p.imageSize, p.sW, p.sH, p.smallImageSize, p.comment, p.post_date,"
-            + "s.id s_id, s.name s_name, s.english_name english_name, "
+            + "s.id s_id, s.name s_name, s.english_name english_name, s.minimumSize, s.maximumSize, "
             + "f.id f_id, f.name f_name, f.subFamilyName f_sub_name, "
             + "p.user_id, p.age_id, p.sex_id, "
             + "c.id city_id, c.name city_name, c.state_id state_id "
@@ -72,7 +72,7 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
     private static final String SELECT_THUMBNAIL_BY_ID = "" +
             "SELECT p.id, p.date, p.place, p.city_id, p.camera, p.lens, p.film, "
             + "p.w, p.h, p.imageSize, p.sW, p.sH, p.smallImageSize, p.comment, p.post_date,"
-            + "s.id s_id, s.name s_name, s.english_name english_name, "
+            + "s.id s_id, s.name s_name, s.english_name english_name, s.minimumSize, s.maximumSize, "
             + "f.id f_id, f.name f_name, f.subFamilyName f_sub_name, "
             + "p.user_id, p.age_id, p.sex_id, "
             + "c.id city_id, c.name city_name, c.state_id state_id "
@@ -83,7 +83,7 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
      * SQL to select id of all photos
      */
     private static final String SELECT_IDS_FOR_ALL = "" +
-            "SELECT p.id, f.id f_id, f.name f_name, s.id s_id, s.name s_name, s.english_name english_name "
+            "SELECT p.id, f.id f_id, f.name f_name, s.id s_id, s.name s_name, s.english_name english_name, s.minimumSize, s.maximumSize "
             + "from photo p, family f, specie s "
             + "where p.specie_id > -1 and p.specie_id = s.id and p.specie_family_id = f.id "
             + "order by f_name, s_name";
@@ -108,7 +108,7 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
      * SQL to select id of photos by a given family ID
      */
     private static final String SELECT_IDS_BY_FAMILY_ID = "" +
-            "SELECT p.id, s.id s_id, s.name s_name, s.english_name english_name  "
+            "SELECT p.id, s.id s_id, s.name s_name, s.english_name english_name, s.minimumSize, s.maximumSize  "
             + "from photo p, family f, specie s "
             + "where p.specie_family_id=? and p.specie_family_id = f.id  and p.specie_id = s.id "
             + "order by s_name";
@@ -117,7 +117,7 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
      * SQL to select id of photos by a given family ID
      */
     private static final String SELECT_IDS_BY_FAMILY_NAME = "" +
-            "SELECT p.id, s.id s_id, s.name s_name, s.english_name english_name "
+            "SELECT p.id, s.id s_id, s.name s_name, s.english_name english_name, s.minimumSize, s.maximumSize "
             + "from photo p, family f, specie s "
             + "where p.specie_family_id = f.id  and p.specie_id = s.id and f.name like ? "
             + "order by s_name";
@@ -126,7 +126,7 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
      * SQL to select ids of photos by a given specie ID
      */
     private static final String SELECT_IDS_BY_SPECIE_ID = "" +
-            "SELECT p.id, s.id s_id, s.name s_name, s.english_name english_name  "
+            "SELECT p.id, s.id s_id, s.name s_name, s.english_name english_name, s.minimumSize, s.maximumSize  "
             + "from photo p, specie s "
             + "where p.specie_id=? and p.specie_id = s.id " + "order by s_name";
 
@@ -134,7 +134,7 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
      * SQL to select ids of photos by a given specie ID
      */
     private static final String SELECT_IDS_BY_SPECIE_NAME = "" +
-            "SELECT p.id, s.id s_id, s.name s_name, s.english_name english_name  "
+            "SELECT p.id, s.id s_id, s.name s_name, s.english_name english_name, s.minimumSize, s.maximumSize  "
             + "from photo p, specie s "
             + "where p.specie_id = s.id and s.name like ? order by s_name";
 
@@ -142,7 +142,7 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
      * SQL to select ids of photos by a given english name
      */
     private static final String SELECT_IDS_BY_ENGLISH_NAME = "" +
-            "SELECT p.id, s.id s_id, s.name s_name, s.english_name english_name  "
+            "SELECT p.id, s.id s_id, s.name s_name, s.english_name english_name, s.minimumSize, s.maximumSize  "
             + "from photo p, specie s "
             + "where p.specie_id = s.id and s.english_name like ? order by s_name";
     
@@ -165,7 +165,7 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
      * SQL to select photo ids by a given user ID
      */
     private static final String SELECT_IDS_BY_USER = "" +
-            "SELECT p.id, f.id f_id, f.name f_name, s.id s_id, s.name s_name, s.english_name english_name "
+            "SELECT p.id, f.id f_id, f.name f_name, s.id s_id, s.name s_name, s.english_name english_name, s.minimumSize, s.maximumSize "
             + "from photo p, family f, specie s "
             + "where p.specie_id > -1 and p.user_id=? and p.specie_family_id = f.id and p.specie_id = s.id "
             + "order by f_name, s_name";
@@ -709,6 +709,8 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
         s.setId(rs.getInt(SPECIE_ID_COLUMN));
         s.setName(rs.getString(SPECIE_NAME_COLUMN));
         s.setEnglishName(rs.getString(ENGLISH_NAME_COLUMN));
+        s.setMinimumSize(rs.getString(MINIMUM_SIZE_COLUMN));
+        s.setMaximumSize(rs.getString(MAXIMUM_SIZE_COLUMN));
         Family f = new Family();
         f.setId(rs.getInt(FAMILY_ID_COLUMN));
         f.setName(rs.getString(FAMILY_NAME_COLUMN));

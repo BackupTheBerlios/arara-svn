@@ -38,6 +38,10 @@ public class SpecieDAO extends AbstractDAO {
     
     private static final String SUB_FAMILY_NAME_COLUMN = "f_subFamilyName";
 
+    private static final String MINIMUM_SIZE_COLUMN = "minimumSize";
+    
+    private static final String MAXIMUM_SIZE_COLUMN = "maximumSize";
+    
 	private static final String INSERT = "" +
             "INSERT INTO specie (name, family_id) " +
             "VALUES (?, ?)";
@@ -47,13 +51,13 @@ public class SpecieDAO extends AbstractDAO {
             "VALUES (?, ?, ?)";
 
 	private static final String SELECT_BY_NAME = "" +
-            "SELECT s.id, s.name, s.english_name, s.family_id, f.name f_name, f.subFamilyName f_subFamilyName " +
+            "SELECT s.id, s.name, s.english_name, s.family_id, s.minimumSize, s.maximumSize, f.name f_name, f.subFamilyName f_subFamilyName " +
             "FROM specie s, family f " +
             "WHERE s.family_id=f.id and s.name like ? " +
             "ORDER BY name";
 
 	private static final String SELECT_BY_ID = "" +
-            "SELECT s.id, s.name, s.english_name, s.family_id, f.name f_name, f.subFamilyName f_subFamilyName " +
+            "SELECT s.id, s.name, s.english_name, s.family_id, s.minimumSize, s.maximumSize, f.name f_name, f.subFamilyName f_subFamilyName " +
             "FROM specie s, family f " +
             "WHERE s.id=? AND s.family_id=f.id " +
             "ORDER BY name";
@@ -65,19 +69,19 @@ public class SpecieDAO extends AbstractDAO {
             "ORDER BY name";
 
 	private static final String SELECT_ALL = "" +
-            "SELECT s.id, s.name, s.english_name, s.family_id, f.name f_name, f.subFamilyName f_subFamilyName " +
+            "SELECT s.id, s.name, s.english_name, s.family_id, s.minimumSize, s.maximumSize, f.name f_name, f.subFamilyName f_subFamilyName " +
             "FROM specie s, family f " +
             "WHERE s.family_id=f.id and s.id != -1 " +
             "ORDER BY name";
 
     private static final String SELECT_ALL_SORTED_BY_ENGLISH_NAME = "" +
-    "SELECT s.id, s.name, s.english_name, s.family_id, f.name f_name, f.subFamilyName f_subFamilyName " +
+    "SELECT s.id, s.name, s.english_name, s.family_id, s.minimumSize, s.maximumSize, f.name f_name, f.subFamilyName f_subFamilyName " +
     "FROM specie s, family f " +
     "WHERE s.family_id=f.id and s.id != -1 " +
     "ORDER BY english_name";
     
     private static final String SELECT_FOR_COMMON_NAME = "" +
-            "SELECT s.id, s.name, s.english_name, s.family_id, f.name f_name, f.subFamilyName f_subFamilyName " +
+            "SELECT s.id, s.name, s.english_name, s.family_id, s.minimumSize, s.maximumSize, f.name f_name, f.subFamilyName f_subFamilyName " +
             "FROM specie s, family f, specie_has_common_name shcn, common_name cn " +
             "WHERE s.family_id=f.id and s.id != -1 and s.id = shcn.specie_id and shcn.common_name_id = cn.id and cn.name = ?" +
             "ORDER BY s.name";
@@ -353,6 +357,8 @@ public class SpecieDAO extends AbstractDAO {
 		specie.setId(rs.getInt(ID_COLUMN));
 		specie.setName(rs.getString(NAME_COLUMN));
         specie.setEnglishName(rs.getString(ENGLISH_NAME_COLUMN));
+        specie.setMinimumSize(rs.getString(MINIMUM_SIZE_COLUMN));
+        specie.setMaximumSize(rs.getString(MAXIMUM_SIZE_COLUMN));
 		Family f = new Family();
 		f.setId(rs.getInt(FAMILY_ID_COLUMN));
 		f.setName(rs.getString(FAMILY_NAME_COLUMN));
@@ -379,6 +385,8 @@ public class SpecieDAO extends AbstractDAO {
 		specie.setId(rs.getInt(ID_COLUMN));
 		specie.setName(rs.getString(NAME_COLUMN));
         specie.setEnglishName(rs.getString(ENGLISH_NAME_COLUMN));
+        specie.setMinimumSize(rs.getString(MINIMUM_SIZE_COLUMN));
+        specie.setMaximumSize(rs.getString(MAXIMUM_SIZE_COLUMN));
 		specie.setFamily(family);
 		return specie;
 	}

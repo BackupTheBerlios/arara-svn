@@ -28,6 +28,9 @@ public class Specie {
 	private boolean soundAvailable;
 
 	private List sounds;
+    
+    private String minimumSize;
+    private String maximumSize;
 
 	/** Creates a new instance of Specie */
 	public Specie() {
@@ -172,5 +175,21 @@ public class Specie {
 
     public void setEnglishName(String englishName) {
         this.englishName = englishName;
+    }
+
+    public String getMaximumSize() {
+        return maximumSize;
+    }
+
+    public void setMaximumSize(String maximumSize) {
+        this.maximumSize = maximumSize;
+    }
+
+    public String getMinimumSize() {
+        return minimumSize;
+    }
+
+    public void setMinimumSize(String minimumSize) {
+        this.minimumSize = minimumSize;
     }
 }

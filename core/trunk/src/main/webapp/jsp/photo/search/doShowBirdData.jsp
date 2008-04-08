@@ -110,11 +110,31 @@
 			</td>
 			
 			<td>
-				<font size="${fontSize}" face="Verdana">${currentPhoto.sex.sex}</font>
+				<font size="${fontSize}" face="Verdana">${currentPhoto.sex.sex}${currentPhoto.specie.minimumSize}</font>
 			</td>
 		</tr>
 		</table>
-	
+
+		<c:if test="${currentPhoto.specie.minimumSize != null}">
+			<table width="100%">
+			<tr>
+				<td width="20%">
+					<font size="${fontSize}" face="Verdana">
+						<b><fmt:message key="specie.size" /></b>
+					</font>
+				</td>
+				
+				<td>
+					<c:if test="${currentPhoto.specie.minimumSize != currentPhoto.specie.maximumSize}">
+						<font size="${fontSize}" face="Verdana">${currentPhoto.specie.minimumSize}-${currentPhoto.specie.maximumSize}&nbsp;<fmt:message key="specie.size.unit" /></font>
+					</c:if> 	
+					<c:if test="${currentPhoto.specie.minimumSize == currentPhoto.specie.maximumSize}">
+						<font size="${fontSize}" face="Verdana">${currentPhoto.specie.minimumSize}&nbsp;<fmt:message key="specie.size.unit" /></font>
+					</c:if> 	
+				</td>
+			</tr>
+			</table>
+		</c:if> 	
 		</td>
 	</tr>
 </table>

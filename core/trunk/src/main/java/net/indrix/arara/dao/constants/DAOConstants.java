@@ -21,6 +21,10 @@ public interface DAOConstants {
     
     public static final String ENGLISH_NAME_COLUMN = "english_name";
 
+    public static final String MINIMUM_SIZE_COLUMN = "minimumSize";
+    
+    public static final String MAXIMUM_SIZE_COLUMN = "maximumSize";
+    
 	public static final String FAMILY_ID_COLUMN = "f_id";
 
 	public static final String FAMILY_NAME_COLUMN = "f_name";

@@ -3,7 +3,12 @@
 <SCRIPT language="JavaScript"> 
 
     function familySelected() { 
-       document.uploadForm.action = "<c:url value="/servlet/filterMediaServlet?nextPage=/jsp/photo/upload/uploadPhoto.jsp&data=PHOTO&doAction=UPLOAD"/>"; 
+       document.uploadForm.action = "<c:url value="/servlet/filterPhotoServlet?nextPage=/jsp/photo/upload/uploadPhoto.jsp&data=PHOTO&doAction=UPLOAD"/>"; 
+       document.uploadForm.submit(); 
+    } 
+
+    function specieSelected() { 
+       document.uploadForm.action = "<c:url value="/servlet/filterPhotoServlet?nextPage=/jsp/photo/upload/uploadPhoto.jsp&data=PHOTO&doAction=UPLOAD"/>"; 
        document.uploadForm.submit(); 
     } 
     
@@ -13,6 +18,8 @@
     }    
 </script> 
 
+<c:set var="maximumNumberOfPhotos" value="${2}"/>
+
 
 <c:set var="selectedFamilyId" value="${uploadPhotoBean.selectedFamilyId}"/>
 <c:set var="selectedSpecieId" value="${uploadPhotoBean.selectedSpecieId}"/>
@@ -20,6 +27,7 @@
 <c:set var="selectedCityId" value="${uploadPhotoBean.selectedCityId}"/>
 <c:set var="selectedAgeId" value="${uploadPhotoBean.selectedAgeId}"/>
 <c:set var="selectedSexId" value="${uploadPhotoBean.selectedSexId}"/>
+<c:set var="numberOfPhotos" value="${numberOfPhotosFromUser}"/>
 
 <c:set var="col1" value="${5}"/>
 <c:set var="col2" value="${15}"/>
@@ -61,7 +69,7 @@
     	<b><fmt:message key="specie"/></b>
     </td>
     <td width="${col3}%"> 
-        <select name="specieId">
+        <select name="specieId" onChange="specieSelected()">
         <c:forEach items="${uploadPhotoBean.specieList}" var="specieBean">
 			<c:if test="${selectedSpecieId != null && selectedSpecieId == specieBean.value}">
 		      <option selected value="${specieBean.value}">${specieBean.label}</option>
@@ -208,15 +216,28 @@
         <font color="#FF0000" size="2" face="Verdana">Max 400Kb</font>
     </td>
   </tr>
-  <tr>
-	<td width="${col1}%"></td>
-    <td width="${col2}%"></td>
-    <td> 
-        <div align="left">
-            <input type="SUBMIT" value="<fmt:message key="photo.submit"/>">
-        </div>
-    </td>
-  </tr>
+  <c:if test="${numberOfPhotos != null && numberOfPhotos <= maximumNumberOfPhotos}">
+	  <tr>
+		<td width="${col1}%"></td>
+	    <td width="${col2}%"></td>
+	    <td> 
+	        <div align="left">
+	            <input type="SUBMIT" value="<fmt:message key="photo.submit"/>">
+	        </div>
+	    </td>
+	  </tr>
+  </c:if>	  
+  <c:if test="${numberOfPhotos != null && numberOfPhotos > maximumNumberOfPhotos}">
+	  <tr>
+		<td width="${col1}%"></td>
+	    <td width="${col2}%"></td>
+	    <td> 
+        	<font color="#FF0000" size="2" face="Verdana">
+				<fmt:message key="maximum.number.photos1"/>${maximumNumberOfPhotos}<fmt:message key="maximum.number.photos2"/>
+			</font>
+	    </td>
+	  </tr>
+  </c:if>	  
   <tr height="5">
 	<td colspan="2"></td>
   </tr>

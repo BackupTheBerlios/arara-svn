@@ -80,7 +80,13 @@ table.comBordaSimples {
 					</td>
 				</tr>
 				<tr>
-					<td align="right" colspan="4">
+					<td align="left" >
+						<a href="http://www.aves.brasil.nom.br/jsp/images/mailmkt1.jpg"  target="_blanck"> 
+							<img width="200" height="100" src="<c:url value="/jsp/images/quental.jpg"/>" align="bottom"/> 
+						</a> 
+					</td>
+				
+					<td align="right" colspan="3">
 						<a href="mailto:webmaster@aves.brasil.nom.br?subject=Patrocinio"> 
 							<img src="<c:url value="/jsp/images/Propaganda.jpg"/>"	align="bottom"/> 
 						</a> 

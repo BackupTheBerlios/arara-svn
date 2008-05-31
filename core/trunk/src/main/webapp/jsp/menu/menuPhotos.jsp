@@ -38,6 +38,10 @@
 		<fmt:message key="menu.photos.search.commonName" /></a>
 	</li>
   	<li>
+		<a href="<c:url value="/servlet/initSearchByPlace?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataByPlace.jsp&servletToCall=/servlet/searchPhotosByPlace&doAction=BEGIN"/>">
+		<fmt:message key="menu.photos.search.place" /></a>
+	</li>
+  	<li>
 		<a href="<c:url value="/servlet/initSearchByUser?nextPage=/frame.jsp&pageToShow=/jsp/common/display/doShowDataByUser.jsp&servletToCall=/servlet/searchPhotosByUser&doAction=BEGIN"/>">
 		<fmt:message key="menu.photos.search.user" /></a>
 	</li>

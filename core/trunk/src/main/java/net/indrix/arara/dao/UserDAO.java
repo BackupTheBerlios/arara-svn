@@ -33,6 +33,7 @@ public class UserDAO extends AbstractDAO {
 	public static final String ADMIN_COLUMN = "admin";
     public static final String ACTIVE_COLUMN = "active";
     public static final String REGISTERED_ON_COLUMN = "registeredOn";
+    public static final String IDENTIFY_PHOTO_ACCESS = "identifyPhoto";
     
 	public static final String INSERT = "INSERT INTO user " +
             "(name, login, password, email, language, emailOnNewPhoto, emailOnNewIdPhoto, emailOnNewSound, emailOnNewComment, addPhoto, addSound, registeredOn) "
@@ -61,6 +62,8 @@ public class UserDAO extends AbstractDAO {
 	private static final String SELECT_FOR_EMAIL_ON_NEW_ID_PHOTO = "SELECT * FROM user where emailOnNewIdPhoto = 1 and active = 1";
 
     private static final String SELECT_FOR_EMAIL_ON_NEW_SOUND = "SELECT * FROM user where emailOnNewSound = 1 and active = 1";
+    
+    private static final String SELECT_USER_MODERATION_DATA = "SELECT * FROM admin WHERE user_id = ?";
 
     /**
      * Temp code
@@ -188,6 +191,8 @@ public class UserDAO extends AbstractDAO {
 	public User retrieve(String login) throws DatabaseDownException,
 			SQLException {
 		User user = (User) super.retrieveObject(login, SELECT_BY_LOGIN);
+        
+        updateUserWithModerationData(user);
 		return user;
 	}
 
@@ -288,7 +293,6 @@ public class UserDAO extends AbstractDAO {
         user.setEmailOnNewComment(rs.getInt(EMAIL_ON_NEW_COMMENT_COLUMN) == 1 ? true : false);
 		user.setAddPhoto(rs.getInt(ADD_PHOTO_COLUMN) == 1 ? true : false);
 		user.setAddSound(rs.getInt(ADD_SOUND_COLUMN) == 1 ? true : false);
-		user.setAdmin(rs.getBoolean(ADMIN_COLUMN));
         user.setActive(rs.getBoolean(ACTIVE_COLUMN));
         user.setRegisteredOn(getDate(rs, REGISTERED_ON_COLUMN));
 		return user;
@@ -409,4 +413,42 @@ public class UserDAO extends AbstractDAO {
 	protected String getUpdateSQL() {
 		return UPDATE;
 	}
+    
+	/**
+     * This method retrives data related to the given user. THe data defines level of access for 
+     * some features
+     *   
+     * @param user The user to have the data retrieved
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+	 */
+    private void updateUserWithModerationData(User user) throws DatabaseDownException, SQLException {
+
+        Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            stmt = conn.prepareStatement(SELECT_USER_MODERATION_DATA);
+            stmt.setInt(1, user.getId());
+            rs = stmt.executeQuery();
+            
+            if (rs.next()){
+                user.setPhotoModerator(rs.getBoolean(IDENTIFY_PHOTO_ACCESS));
+                user.setAdmin(rs.getBoolean(ADMIN_COLUMN));
+            }
+        } catch (SQLException e) {
+            logger.error("USERDAO.cancelEmail : could not update data");
+            logger.error("Error in SQL : " + SELECT_USER_MODERATION_DATA, e);
+            logger.error(stmt.toString());
+            throw e;
+        } finally {
+            closeStatement(stmt);
+            closeResultSet(rs);
+            closeConnection(conn);
+        }
+    }
+
+
 }

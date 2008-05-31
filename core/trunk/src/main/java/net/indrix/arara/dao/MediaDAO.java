@@ -66,6 +66,29 @@ public abstract class MediaDAO extends AbstractDAO {
         return list;
     }
     
+    /**
+     * This method retrieves a <code>List</code> object with
+     * <code>Photo</code> objects, based on the id of the specie and the user
+     * 
+     * @param specieId The id of the specie
+     * @param userId The id of the user
+     *                      
+     * 
+     * @return a <code>List</code> object with <code>Photo</code> objects,
+     *         based on the id of the specie and the user
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public List retrieveIDsForSpecieOfUser(int specieId, int userId) throws DatabaseDownException,
+            SQLException {
+        int ids[] = {specieId, userId};
+        
+        List list = retrieveIDsForGivenIDs(ids, getSelectIDsForSpecieOfUserSQL());
+        return list;
+    }
     
     /**
      * This method retrieves a <code>List</code> object with
@@ -171,6 +194,27 @@ public abstract class MediaDAO extends AbstractDAO {
     } 
     
     /**
+     * This method retrieves a <code>List</code> object with
+     * <code>Photo</code> objects, based on the id of the city
+     * 
+     * @param id
+     *            The id of the <code>City</code>
+     * 
+     * @return a <code>List</code> object with <code>Photo</code> objects,
+     *         based on the id of the city
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public List retrieveIDsForPlace(int id) throws DatabaseDownException,
+            SQLException {
+        List list = retrieveIDsForGivenID(id, getSelectIDsForPlaceSQL());
+        return list;
+    }
+    
+    /**
      * This method returns the SQL statement to select ids for family from
      * database
      * 
@@ -236,4 +280,22 @@ public abstract class MediaDAO extends AbstractDAO {
      * @return the SELECT_IDS_BY_FAMILY_NAME sql
      */
     abstract protected String getSelectIDsForCommonNameByNameSQL();    
+
+    /**
+     * This method returns the SQL statement to select ids for city from
+     * database
+     * 
+     * @return the SELECT_IDS_BY_CITY_ID sql
+     */
+    abstract protected String getSelectIDsForPlaceSQL();
+    
+    /**
+     * This method returns the SQL statement to select ids for a given specie id, of a specific user
+     * database
+     * 
+     * @return the SELECT_IDS_BY_SPECIE_ID_FOR_USER sql
+     */
+    abstract protected String getSelectIDsForSpecieOfUserSQL();
+
+
 }

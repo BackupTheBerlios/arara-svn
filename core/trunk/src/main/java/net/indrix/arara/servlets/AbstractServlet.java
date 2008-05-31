@@ -75,7 +75,7 @@ public class AbstractServlet extends HttpServlet {
 			throws ServletException, IOException, FileUploadException {
 		logger.debug("Entering parseMultiPartFormData(HttpServletRequest)");
         HashMap aData = null;
-        if (request.getContentType().contains("multipart/form-data")){
+        if (request != null && request.getContentType() != null && request.getContentType().contains("multipart/form-data")){
             aData = new HashMap();
             String localRepository = PropertiesManager.getProperty(PropertiesManager.TEMP_FOLDER);
             

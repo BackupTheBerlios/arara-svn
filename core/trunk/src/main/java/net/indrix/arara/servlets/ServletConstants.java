@@ -84,6 +84,9 @@ public class ServletConstants {
 	public static final String SEX_KEY = "sexList";
 
 	public static final String STATES_KEY = "stateList";
+    
+    public static final String SELECTED_STATE_KEY = "selectedStateId";
+
 
 	public static final String CITIES_KEY = "citiesList";
 
@@ -259,6 +262,8 @@ public class ServletConstants {
 
     public static final String USER_PHOTOS = "userPhotos";
 
+    public static final String MAX_NUM_PHOTOS_FOR_SPECIE = "maximum.number.photos";
+    
     /**
      * Constant for a not null comment
      */

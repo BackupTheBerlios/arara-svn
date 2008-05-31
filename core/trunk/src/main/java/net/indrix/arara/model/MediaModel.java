@@ -193,4 +193,25 @@ public class MediaModel {
         List list = dao.retrieveIDsForUser(userId);
         return list;
     }
+
+    /**
+     * This method retrieves the id of all photos from database, for the given
+     * city id
+     * 
+     * @param placeId
+     *            The id of the City
+     * 
+     * @return An ArrayList object with Photo objects
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public List retrieveIDsForPlace(int placeId) throws DatabaseDownException,
+            SQLException {
+        logger.debug("MediaModel.retrieveIDsForPlace | placeId " + placeId);
+        List list = dao.retrieveIDsForPlace(placeId);
+        return list;
+    }
 }

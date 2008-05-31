@@ -18,6 +18,7 @@ import java.util.List;
 import net.indrix.arara.vo.CommonName;
 import net.indrix.arara.vo.Family;
 import net.indrix.arara.vo.Specie;
+import net.indrix.arara.vo.SpecieHasPhoto;
 
 /**
  * @author Jefferson_Angelica
@@ -85,6 +86,31 @@ public class SpecieDAO extends AbstractDAO {
             "FROM specie s, family f, specie_has_common_name shcn, common_name cn " +
             "WHERE s.family_id=f.id and s.id != -1 and s.id = shcn.specie_id and shcn.common_name_id = cn.id and cn.name = ?" +
             "ORDER BY s.name";
+    
+
+    
+    private static final String SELECT_SPECIES_WITH_PHOTO = "" +
+            "SELECT s.id, f.name f_name, s.name, s.family_id, s.english_name, s.family_id, s.minimumSize, s.maximumSize, f.subFamilyName f_subFamilyName " +
+            "FROM photo p, specie s, family f " +
+            "WHERE p.specie_id = s.id AND p.specie_id != -1 and s.family_id = f.id " +
+            "GROUP BY s.name " +
+            "ORDER BY f.name, s.name";
+
+    private static final String SELECT_SPECIES_WITHOUT_PHOTO = "" +
+            "SELECT s.id, f.name f_name, s.name, s.family_id, s.english_name, s.family_id, s.minimumSize, s.maximumSize, f.subFamilyName f_subFamilyName " +
+            "FROM specie s, family f " +
+            "WHERE s.family_id = f.id and s.id not in (select p.specie_id from photo p)" +
+            "ORDER BY f.name, s.name";
+
+    private static final String SELECT_ALL_SPECIES_PHOTO_FLAG = "" +
+            "SELECT s.id, f.name f_name, s.name, s.family_id, s.english_name, s.family_id, s.minimumSize, s.maximumSize, f.subFamilyName f_subFamilyName " +
+            "FROM specie s, family f " +
+            "WHERE s.family_id = f.id " +
+            "ORDER BY f.name, s.name";
+    
+    private static final String VERIFY_SPECIE_HAS_PHOTO = "" +
+            "SELECT count(id) NUM FROM photo WHERE specie_id = ?";
+        
 	/**
 	 * The list of species to be kept in memory
 	 */
@@ -340,6 +366,165 @@ public class SpecieDAO extends AbstractDAO {
         return s;
     }
 
+    /**
+     * This method retrieves all species that has a photo
+     * 
+     * 
+     * @return a <code>List</code> object with <code>Specie</code> objects inside.
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException 
+     */
+    public List retrieveSpeciesWithPhoto() throws DatabaseDownException, SQLException {
+        List <Specie>list = new ArrayList<Specie>();
+        CommonNameDAO commonNameDAO = new CommonNameDAO();
+        Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            stmt = conn.prepareStatement(SELECT_SPECIES_WITH_PHOTO);
+            rs = stmt.executeQuery();
+            Specie specie = null;
+
+            while (rs.next()) {
+                specie = (Specie)createObject(rs);
+                commonNameDAO.retrieveForSpecie(specie);
+                list.add(specie);
+            }
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            closeResultSet(rs);
+            closeStatement(stmt);
+            try {
+                conn.close();
+            } catch (SQLException e1) {
+                throw new DatabaseDownException();
+            }
+        }
+        return list;
+    }
+
+    /**
+     * This method retrieves all species that has a photo
+     * 
+     * 
+     * @return a <code>List</code> object with <code>Specie</code> objects inside.
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException 
+     */
+    public List retrieveSpeciesWithoutPhoto() throws DatabaseDownException, SQLException {
+        List <Specie>list = new ArrayList<Specie>();
+        CommonNameDAO commonNameDAO = new CommonNameDAO();
+        Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            stmt = conn.prepareStatement(SELECT_SPECIES_WITHOUT_PHOTO);
+            rs = stmt.executeQuery();
+            Specie specie = null;
+
+            while (rs.next()) {
+                specie = (Specie)createObject(rs);
+                commonNameDAO.retrieveForSpecie(specie);
+                list.add(specie);
+            }
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            closeResultSet(rs);
+            closeStatement(stmt);
+            try {
+                conn.close();
+            } catch (SQLException e1) {
+                throw new DatabaseDownException();
+            }
+        }
+        return list;
+     }
+    
+    /**
+     * This method retrieves all species that has a photo
+     * 
+     * 
+     * @return a <code>List</code> object with <code>Specie</code> objects inside.
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException 
+     */
+    public List retrieveSpeciesWithPhotoFlag() throws DatabaseDownException, SQLException {
+        List <SpecieHasPhoto>list = new ArrayList<SpecieHasPhoto>();
+        CommonNameDAO commonNameDAO = new CommonNameDAO();
+        Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            stmt = conn.prepareStatement(SELECT_ALL_SPECIES_PHOTO_FLAG);
+            rs = stmt.executeQuery();
+            Specie specie = null;
+
+            while (rs.next()) {
+                specie = (Specie)createObject(rs);
+                commonNameDAO.retrieveForSpecie(specie);
+                boolean hasPhoto = verifySpecieHasPhoto(specie);
+                list.add(new SpecieHasPhoto(specie, hasPhoto));
+            }
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            closeResultSet(rs);
+            closeStatement(stmt);
+            try {
+                conn.close();
+            } catch (SQLException e1) {
+                throw new DatabaseDownException();
+            }
+        }
+        return list;
+     }
+    
+    /**
+     * This method verifies whether the given specie has photo
+     * 
+     * 
+     * @return a <code>List</code> object with <code>Specie</code> objects inside.
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException 
+     */
+    public boolean verifySpecieHasPhoto(Specie specie) throws DatabaseDownException, SQLException {
+        Connection conn = DatabaseManager.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        boolean hasPhoto = false;
+        try {
+            stmt = conn.prepareStatement(VERIFY_SPECIE_HAS_PHOTO);
+            stmt.setInt(1, specie.getId());
+            rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                int count = rs.getInt("NUM");
+                hasPhoto = count > 0;
+            }
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            closeResultSet(rs);
+            closeStatement(stmt);
+            try {
+                conn.close();
+            } catch (SQLException e1) {
+                throw new DatabaseDownException();
+            }
+        }
+        return hasPhoto;
+    }
+    
+    
 	/**
 	 * This method creates a <code>Specie</code> object with the data from
 	 * database

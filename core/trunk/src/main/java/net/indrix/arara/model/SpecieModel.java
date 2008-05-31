@@ -1,12 +1,14 @@
 package net.indrix.arara.model;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.dao.SpecieDAO;
 import net.indrix.arara.vo.Specie;
+import net.indrix.arara.vo.SpecieHasPhoto;
 
 public class SpecieModel {
     /**
@@ -19,9 +21,9 @@ public class SpecieModel {
      */
     public static void initialize() {
         // retrieve families
-        SpecieDAO familyDAO = new SpecieDAO();
+        SpecieDAO specieDAO = new SpecieDAO();
         try {
-            specieList = familyDAO.retrieve();
+            specieList = specieDAO.retrieve();
         } catch (DatabaseDownException e) {
             specieList = null;
         } catch (SQLException e) {
@@ -68,6 +70,72 @@ public class SpecieModel {
      */
     public static void setSpecieList(List list) {
         specieList = list;
+    }
+
+    /**
+     * This method retrieves all species that has a photo
+     * 
+     * 
+     * @return a <code>List</code> object with <code>Specie</code> objects inside.
+     * 
+     * @throws DatabaseDownException If the database is down
+     */
+    public List retrieveSpeciesWithPhoto() throws DatabaseDownException {
+        // retrieve species
+        List specieList;
+        SpecieDAO specieDAO = new SpecieDAO();
+        try {
+            specieList = specieDAO.retrieveSpeciesWithPhoto();
+        } catch (DatabaseDownException e) {
+            specieList = null;
+        } catch (SQLException e) {
+            specieList = null;
+        } 
+        return specieList;
+    }
+
+    /**
+     * This method retrieves all species that has a photo
+     * 
+     * 
+     * @return a <code>List</code> object with <code>Specie</code> objects inside.
+     * 
+     * @throws DatabaseDownException If the database is down
+     */
+    public List retrieveSpeciesWithoutPhoto() throws DatabaseDownException {
+        // retrieve species
+        List specieList;
+        SpecieDAO specieDAO = new SpecieDAO();
+        try {
+            specieList = specieDAO.retrieveSpeciesWithoutPhoto();
+        } catch (DatabaseDownException e) {
+            specieList = null;
+        } catch (SQLException e) {
+            specieList = null;
+        } 
+        return specieList;
+    }
+    
+    /**
+     * This method retrieves all species, and a flag whether the specie has a photo or not
+     * 
+     * 
+     * @return a <code>List</code> object with <code>Specie</code> objects inside.
+     * 
+     * @throws DatabaseDownException If the database is down
+     */
+    public List retrieveAllSpeciesWithPhoto() throws DatabaseDownException {
+        // retrieve species
+        List specieList;
+        SpecieDAO specieDAO = new SpecieDAO();
+        try {
+            specieList = specieDAO.retrieveSpeciesWithPhotoFlag();
+        } catch (DatabaseDownException e) {
+            specieList = null;
+        } catch (SQLException e) {
+            specieList = null;
+        } 
+        return specieList;
     }
 
 

@@ -30,6 +30,7 @@ public class User {
 	private boolean addPhoto;
 	private boolean addSound;
 	private boolean isAdmin;
+    private boolean photoModerator;
     private boolean active;    
     private Date registeredOn;
 
@@ -321,4 +322,11 @@ public class User {
         this.registeredOn = registeredOn;
     }
 
+    public boolean isPhotoModerator() {
+        return photoModerator;
+    }
+
+    public void setPhotoModerator(boolean photoModerator) {
+        this.photoModerator = photoModerator;
+    }
 }

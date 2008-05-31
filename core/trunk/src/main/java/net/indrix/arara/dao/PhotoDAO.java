@@ -19,6 +19,7 @@ import net.indrix.arara.dao.constants.PhotoConstants;
 import net.indrix.arara.model.AgeModel;
 import net.indrix.arara.model.SexModel;
 import net.indrix.arara.model.StatesModel;
+
 import net.indrix.arara.vo.City;
 import net.indrix.arara.vo.Family;
 import net.indrix.arara.vo.ImageFile;
@@ -131,6 +132,15 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
             + "where p.specie_id=? and p.specie_id = s.id " + "order by s_name";
 
     /**
+     * SQL to select ids of photos by a given specie ID, for the given user
+     */
+    private static final String SELECT_IDS_BY_SPECIE_ID_FOR_USER = "" +
+            "SELECT p.id, s.id s_id, s.name s_name, s.english_name english_name, s.minimumSize, s.maximumSize  "
+            + "from photo p, specie s "
+            + "where p.specie_id=? and p.user_id = ? and p.specie_id = s.id " + "order by s_name";
+
+    
+    /**
      * SQL to select ids of photos by a given specie ID
      */
     private static final String SELECT_IDS_BY_SPECIE_NAME = "" +
@@ -184,15 +194,21 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
             "SELECT photo_id ID, count( DISTINCT user_id ) comments " +
             "FROM user_comments_photo WHERE date > ? GROUP BY photo_id " +
             "ORDER BY comments DESC";             
-/*    
-            "SELECT photo_id ID, count(photo_id) comments, date " +
-            "FROM (select distinct user_id, photo_id, date from user_comments_photo) view " +
-            "WHERE date > ?" +
-            "GROUP by photo_id " +
-            "ORDER by comments desc";
-*/    
+
+    /**
+     * SQL to select all species that has a photo
+     */
+    private static final String SELECT_IDS_BY_CITY_ID = "" +
+            "SELECT p.id, f.id f_id, f.name f_name, s.id s_id, s.name s_name, s.english_name english_name, s.minimumSize, s.maximumSize "
+            + "from photo p, family f, specie s "
+            + "where p.city_id = ? and p.specie_id = s.id and p.specie_family_id = f.id "
+            + "order by f_name, s_name";
     
-    //select photo_id p, count(photo_id) c from (select distinct user_id, photo_id from user_comments_photo) t group by photo_id order by c desc;
+    /**
+     * SQL to select ids of photos by a given city ID
+     */
+    private static final String VERIFY_NUMBER_OF_PHOTOS_BY_SPECIE_OF_USER = "" +
+            "SELECT count(id) NUM from photo where specie_id = ? and user_id = ?";
     /**
      * SQL to verify if a photo is for identification
      */
@@ -202,6 +218,8 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
     private static final String VERIFY_IF_SPECIE_HAS_PHOTO = "SELECT p.id "
         + "from photo p " + "where p.specie_id = ?";
     
+
+            
     /**
      * Object to retrieve user data from database
      */
@@ -389,6 +407,51 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
         }
         return list;
     }    
+    
+    /**
+     * This method retrieves the number of photos of a given specie the given user has
+     * 
+     * @param specieId the id of the specie
+     * @param userId the id of the user
+     * 
+     * @return a number of photos of a given specie the given user has
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    public int retrieveNumberOfPhotosForUserOfGivenSpecieId(int specieId, int userId) 
+        throws DatabaseDownException, SQLException {
+        int numberOfPhotos = 0;
+        
+        Connection conn = DatabaseManager.getConnection();
+        
+        if (conn == null){
+            throw new DatabaseDownException();
+        }
+        
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            stmt = conn.prepareStatement(VERIFY_NUMBER_OF_PHOTOS_BY_SPECIE_OF_USER);
+            stmt.setInt(1, specieId);
+            stmt.setInt(2, userId);
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                numberOfPhotos = rs.getInt("NUM");
+            }
+        } catch (SQLException e) {
+            logger.error("AbstractDAO.retrieve : could not retrieve data ");
+            logger.error("Error in SQL : " + SELECT_IDS_BY_COMMENTS_FOR_CURRENT_WEEK, e);
+            throw e;
+        } finally {
+            closeResultSet(rs);
+            closeStatement(stmt);
+            closeConnection(conn);
+        }
+        return numberOfPhotos;
+    }
     
     /**
      * This method verifies wheter an Id exists
@@ -698,7 +761,18 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
     @Override
     protected String getSelectIDsForRecentePhotosSQL() {
         return SELECT_IDS_FOR_ALL_BY_DATE;
-    }    
+    }   
+    
+    @Override
+    protected String getSelectIDsForPlaceSQL() {
+        return SELECT_IDS_BY_CITY_ID;
+    }
+
+    @Override
+    protected String getSelectIDsForSpecieOfUserSQL() {
+        return SELECT_IDS_BY_SPECIE_ID_FOR_USER;
+    }
+
     /**
      * @param rs
      * @return

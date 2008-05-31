@@ -16,17 +16,11 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import net.indrix.arara.bean.UploadPhotoBean;
 import net.indrix.arara.dao.DatabaseDownException;
 import net.indrix.arara.model.CityModel;
-import net.indrix.arara.model.FamilyModel;
-import net.indrix.arara.model.StatesModel;
 import net.indrix.arara.servlets.AbstractServlet;
 import net.indrix.arara.servlets.ServletConstants;
-import net.indrix.arara.servlets.ServletUtil;
-import net.indrix.arara.servlets.UploadConstants;
 
 import org.apache.commons.fileupload.FileUploadException;
 
@@ -38,7 +32,12 @@ import org.apache.commons.fileupload.FileUploadException;
  */
 @SuppressWarnings("serial")
 public class RetrieveCitiesForStateServlet extends AbstractServlet {
-
+    
+    public void doGet(HttpServletRequest req, HttpServletResponse res)
+    throws ServletException, IOException {
+        doPost(req, res);
+    }
+    
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
 		List <String>errors = new ArrayList<String>();
@@ -49,29 +48,15 @@ public class RetrieveCitiesForStateServlet extends AbstractServlet {
         String servletToCall = req.getParameter(ServletConstants.SERVLET_TO_CALL_KEY);
         String action = req.getParameter(ServletConstants.ACTION);
         
-        logger.debug("VALORES>>>");
-        String [] values = req.getParameterValues("selectedCities");
-        for (int i = 0; values != null && i < values.length; i++){
-            logger.debug(values[i]);
-        }
+        logger.debug("servletToCall" +servletToCall);
+        logger.debug("action" +action);
 
-        values = req.getParameterValues("cityId");
-        for (int i = 0; values != null && i < values.length; i++){
-            logger.debug(values[i]);
-        }
-
-		HttpSession session = req.getSession();
 		Map data = null;
 		try {
 			data = parseMultiPartFormData(req);
 			String stateId = (String) data.get(ServletConstants.STATE_ID);
 			if ((stateId == null) || (stateId.equals(""))) {
 				errors.add(ServletConstants.SELECT_FAMILY_ERROR);
-                String key = UploadConstants.UPLOAD_PHOTO_BEAN;
-				UploadPhotoBean uploadBean = (UploadPhotoBean) session.getAttribute(key);
-				uploadBean.setSelectedFamilyId(null);
-				uploadBean.setSelectedSpecieId(null);
-				uploadBean.setSpecieList(null);
 			} else {
 				logger.debug("selected state id " + stateId);
 
@@ -80,12 +65,13 @@ public class RetrieveCitiesForStateServlet extends AbstractServlet {
 
 					if ((list != null) && (!list.isEmpty())) {
 						logger.debug("Setting data in request");
-						handleList(list, data, req, errors);
                         
                         req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
                         req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);
                         req.setAttribute(ServletConstants.SERVLET_TO_CALL_KEY, servletToCall);
                         req.setAttribute(ServletConstants.ACTION, action);
+                        req.setAttribute(ServletConstants.CITIES_KEY, list);
+                        req.setAttribute(ServletConstants.SELECTED_STATE_KEY, stateId);
 					} else {
 						logger.debug("Cities list not found...");
 						errors.add(ServletConstants.DATABASE_ERROR);
@@ -111,21 +97,6 @@ public class RetrieveCitiesForStateServlet extends AbstractServlet {
         logger.debug("Forwarding to page " + nextPage);
 		dispatcher = context.getRequestDispatcher(nextPage);
 		dispatcher.forward(req, res);
-	}
-
-	/**
-	 * @param list
-	 * @param dataToBeUploaded
-	 */
-	@SuppressWarnings("unchecked")
-    private void handleList(List list, Map data, HttpServletRequest req, List <String>errors) {
-
-		String dataToBeUploaded = req.getParameter("data");
-		String action = req.getParameter("action");
-
-        UploadBeanManagerFactory factory = UploadBeanManagerFactory.getInstance();
-        IBeanManager manager = factory.createBean(dataToBeUploaded, action, req);
-        manager.updateBean(data, errors, false);
 	}
 
 	/**

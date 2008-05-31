@@ -541,6 +541,50 @@ public abstract class AbstractDAO {
      * @throws SQLException
      *             If some SQL Exception occurs
      */
+    public List retrieveIDsForGivenIDs(int ids[], String sql)
+            throws DatabaseDownException, SQLException {
+        List<Integer> list = new ArrayList<Integer>();
+        Connection conn = DatabaseManager.getConnection();
+        if (conn == null){
+            throw new DatabaseDownException();
+        }        
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        int id;
+        try {
+            stmt = conn.prepareStatement(sql);
+            for (int i = 0; i < ids.length; i++){
+                stmt.setInt(i+1, ids[i]);                
+            }
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                id = rs.getInt("ID");
+                list.add(new Integer(id));
+            }
+        } catch (SQLException e) {
+            logger.error("AbstractDAO.retrieveIDsForGivenID : could not retrieve data ");
+            logger.error("Error in SQL : " + sql, e);
+            throw e;
+        } finally {
+            closeResultSet(rs);
+            closeStatement(stmt);
+            closeConnection(conn);
+        }
+        return list;
+    }
+
+    /**
+     * This method retrieves all IDS from database.
+     * 
+     * @return A list of <code>Integer</code> objects
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
     public List retrieveIDsForGivenStringField(String text, String sql)
             throws DatabaseDownException, SQLException {
         List<Integer> list = new ArrayList<Integer>();

@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
+
 /**
  * 
  * @author Jefferson_Angelica
@@ -192,4 +194,16 @@ public class Specie {
     public void setMinimumSize(String minimumSize) {
         this.minimumSize = minimumSize;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        boolean isEqual = false;
+        if (obj != null && obj instanceof Specie) {
+            Specie specie = (Specie) obj;
+            isEqual = this.id == specie.id;
+        }
+        return isEqual;
+    }
+    
+    
 }

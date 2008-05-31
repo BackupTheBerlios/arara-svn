@@ -28,6 +28,7 @@ import net.indrix.arara.dao.SpecieDAO;
 import net.indrix.arara.dao.VoteDAO;
 import net.indrix.arara.model.email.AbstractPhotoEmailSender;
 import net.indrix.arara.model.email.CommentEmailSender;
+import net.indrix.arara.model.exceptions.NumberOfPhotosPerSpecieException;
 import net.indrix.arara.model.exceptions.PhotoAlreadyIdentifiedException;
 import net.indrix.arara.model.file.PhotoFileManager;
 import net.indrix.arara.tools.email.MailClass;
@@ -50,7 +51,13 @@ import net.indrix.arara.vo.Vote;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class PhotoModel extends MediaModel {
+    private static int MAXIMUM_NUMBER_OF_PHOTOS_PER_SPECIE_PER_USER;
+    static {
+        MAXIMUM_NUMBER_OF_PHOTOS_PER_SPECIE_PER_USER = Integer.parseInt(PropertiesManager
+                .getProperty("photos.per.specie"));
+    }
 
+    
     public PhotoModel() {
         super();
         dao = new PhotoDAO();
@@ -432,64 +439,79 @@ public class PhotoModel extends MediaModel {
      *             If some SQL Exception occurs
      * @throws PhotoAlreadyIdentifiedException
      *             If the photo has been identified already
-     * @throws  
+     * @throws NumberOfPhotosPerSpecieException 
+     *              If user can not finish identification because he/she has uploaded already the
+     *              maximum number of photos for the specie
      * 
      */
     public boolean identifyPhoto(PhotoIdentification identification,
             boolean finishIdentification) throws DatabaseDownException,
-            SQLException, PhotoAlreadyIdentifiedException {
+            SQLException, PhotoAlreadyIdentifiedException, NumberOfPhotosPerSpecieException {
         logger.debug("Entering method...");
 
         boolean finishedIdentification = false;
 
         Photo photo = identification.getPhoto();
         if (daoIdentification.isPhotoForIdentification(photo.getId())) {
-            logger.debug("Identification : " + identification);
-            daoIdentification.insert(identification);
-
             // verifying if the phot author has finished the identification
             User photoAuthor = photo.getUser();
             User photoIdentifier = identification.getUser();
             if ((photoAuthor.getId() == photoIdentifier.getId())
                     || finishIdentification) {
 
-                PhotoFileManager manager = new PhotoFileManager(photo);
+                // check if the user has achieved the number of photos for the specie
+                int specieId = identification.getSpecie().getId();
+                int userId = identification.getUser().getId();                
+                int numberOfPhotos = retrieveNumberOfPhotosForUserOfSpecieId(specieId, userId);
                 
-                // retrieve current path for the photo
-                String currentPath = photo.getRelativePath();
-                String currentPathForThumbnail = photo.getThumbnailRelativePath();
-                
-                // photo author has identified photo or admin has finish
-                // identification Set the specie to it
-                logger.debug("Setting specie, age and sex to photo.");
-                photo.setSpecie(identification.getSpecie());
-                photo.setAge(identification.getAge());
-                photo.setSex(identification.getSex());
-                logger.debug("Photo author has identified his/her photo " + photo);
-                
-                // move the photo from old path to the new one
-                try {
-                    logger.info("Moving photo " + photo.getId() + " in file system...");
-                    manager.updatePhotoAndMoveInFileSystem(currentPath, currentPathForThumbnail);
+                if (numberOfPhotos < MAXIMUM_NUMBER_OF_PHOTOS_PER_SPECIE_PER_USER){
+                    logger.debug("Identification : " + identification);
+                    daoIdentification.insert(identification);
 
-                    logger.info("updating link of photo " + photo.getId() + " ...");
-                    updatePhotoLink(photo);
+                    PhotoFileManager manager = new PhotoFileManager(photo);
+                    
+                    // retrieve current path for the photo
+                    String currentPath = photo.getRelativePath();
+                    String currentPathForThumbnail = photo.getThumbnailRelativePath();
+                    
+                    // photo author has identified photo or admin has finish
+                    // identification Set the specie to it
+                    logger.debug("Setting specie, age and sex to photo.");
+                    photo.setSpecie(identification.getSpecie());
+                    photo.setAge(identification.getAge());
+                    photo.setSex(identification.getSex());
+                    logger.debug("Photo author has identified his/her photo " + photo);
+                    
+                    // move the photo from old path to the new one
+                    try {
+                        logger.info("Moving photo " + photo.getId() + " in file system...");
+                        manager.updatePhotoAndMoveInFileSystem(currentPath, currentPathForThumbnail);
 
-                    logger.info("Updating photo " + photo.getId() + " into database...");
-                    dao.update(photo);
+                        logger.info("updating link of photo " + photo.getId() + " ...");
+                        updatePhotoLink(photo);
 
-                    // send an email to everyone that identified the photo that the
-                    // identification has
-                    // finished
-                    logger.info("Sending emails to identifiers about photo " + photo.getId() + "...");
-                    sendFinalEmailToIdentifiers(photoAuthor, identification, finishIdentification);
+                        logger.info("Updating photo " + photo.getId() + " into database...");
+                        dao.update(photo);
 
-                    finishedIdentification = true;
-                } catch (IOException e) {
-                    logger.error("Error in updating photo in file system...", e);
+                        // send an email to everyone that identified the photo that the
+                        // identification has
+                        // finished
+                        logger.info("Sending emails to identifiers about photo " + photo.getId() + "...");
+                        sendFinalEmailToIdentifiers(photoAuthor, identification, finishIdentification);
+
+                        finishedIdentification = true;
+                    } catch (IOException e) {
+                        logger.error("Error in updating photo in file system...", e);
+                    }                    
+                } else {
+                    // user has alread uploaded the maximum number of photos for the specie
+                    // do not allow the user to finish identification without removing one photo
+                    throw new NumberOfPhotosPerSpecieException(null);
                 }
-                
             } else {
+                logger.debug("Identification : " + identification);
+                daoIdentification.insert(identification);
+                
                 // send an email to everyone that identified the photo that the
                 // a new photo
                 // identification has been done
@@ -526,6 +548,27 @@ public class PhotoModel extends MediaModel {
         return list;
     }
 
+    /**
+     * This method retrieves the number of photos of a given specie the given user has
+     * 
+     * @param specieId the id of the specie
+     * @param userId the id of the user
+     * 
+     * @return a number of photos of a given specie the given user has
+     * 
+     * @throws DatabaseDownException If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    public int retrieveNumberOfPhotosForUserOfSpecieId(int specieId, int userId){
+        int number = 0;
+        try {
+            number = ((PhotoDAO)dao).retrieveNumberOfPhotosForUserOfGivenSpecieId(specieId, userId);
+        } catch (DatabaseDownException e) {
+        } catch (SQLException e) {
+        }
+        return number;
+    }
+    
     /**
      * This method updates the photo link, to the given photo
      * 

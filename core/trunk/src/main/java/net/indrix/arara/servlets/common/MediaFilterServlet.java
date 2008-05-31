@@ -89,6 +89,7 @@ public class MediaFilterServlet extends AbstractServlet {
                     req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
                     req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);
 
+                    doSpecificTreatment(uploadBean, req, user);
                 }
             } catch (FileUploadException e) {
                 errors.add(ServletConstants.DATABASE_ERROR);
@@ -103,6 +104,9 @@ public class MediaFilterServlet extends AbstractServlet {
         ServletContext context = this.getServletContext();
         dispatcher = context.getRequestDispatcher(nextPage);
         dispatcher.forward(req, res);
+    }
+
+    protected void doSpecificTreatment(UploadBean uploadBean, HttpServletRequest res, User user) {
     }
 
 }

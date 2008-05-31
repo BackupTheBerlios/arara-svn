@@ -27,6 +27,7 @@ import net.indrix.arara.servlets.pagination.PhotoByCommentsOfWeekPaginationContr
 import net.indrix.arara.servlets.pagination.PhotoByCommentsPaginationController;
 import net.indrix.arara.servlets.pagination.PhotoByCommonNamePaginationController;
 import net.indrix.arara.servlets.pagination.PhotoByFamilyPaginationController;
+import net.indrix.arara.servlets.pagination.PhotoByPlacePaginationController;
 import net.indrix.arara.servlets.pagination.PhotoBySpeciePaginationController;
 import net.indrix.arara.servlets.pagination.PhotoByUserPaginationController;
 import net.indrix.arara.servlets.pagination.PhotoPaginationController;
@@ -44,7 +45,7 @@ import net.indrix.arara.vo.User;
 public abstract class AbstractSearchPhotosServlet extends AbstractServlet {
     private static final String PAGE_NUMBER = "pageNumber";
     
-    protected static final String[] textForSearch = {"All", "Family", "Specie", "Common Name", "User", "More recent", "English Name", "More comments", "More comments of Week"};
+    protected static final String[] textForSearch = {"All", "Family", "Specie", "Common Name", "User", "More recent", "English Name", "More comments", "More comments of Week", "Cidade"};
     
     public static final int PAGINATION_FOR_ALL_PHOTOS = 0;
 
@@ -63,7 +64,9 @@ public abstract class AbstractSearchPhotosServlet extends AbstractServlet {
     public static final int PAGINATION_FOR_MORE_COMMENTS = 7;
     
     public static final int PAGINATION_FOR_MORE_COMMENTS_OF_WEEK = 8;
-    
+
+    public static final int PAGINATION_FOR_PLACE = 9;
+
     private static String PHOTOS_BY_PAGE_KEY = "photos.per.page";
 
     private static int PHOTOS_PER_PAGE;
@@ -227,6 +230,10 @@ public abstract class AbstractSearchPhotosServlet extends AbstractServlet {
             case PAGINATION_FOR_MORE_COMMENTS_OF_WEEK:
                 c = new PhotoByCommentsOfWeekPaginationController(PHOTOS_PER_PAGE);
                 break;
+            case PAGINATION_FOR_PLACE:
+                c = new PhotoByPlacePaginationController(PHOTOS_PER_PAGE);
+                break;
+                
             }
             logger.debug("PaginationController just created");
         } else {

@@ -42,5 +42,4 @@ public interface PhotoConstants extends DAOConstants {
 	public static final String SMALL_IMAGE_SIZE = "smallImageSize";
 
 	public static final String LOCATION_COLUMN = "place";
-
 }

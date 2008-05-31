@@ -24,6 +24,7 @@ import net.indrix.arara.dao.SpecieDAO;
 import net.indrix.arara.model.AgeModel;
 import net.indrix.arara.model.PhotoModel;
 import net.indrix.arara.model.SexModel;
+import net.indrix.arara.model.exceptions.NumberOfPhotosPerSpecieException;
 import net.indrix.arara.model.exceptions.PhotoAlreadyIdentifiedException;
 import net.indrix.arara.servlets.ServletConstants;
 import net.indrix.arara.vo.Photo;
@@ -82,7 +83,7 @@ public class IdentifyPhotoServlet extends AbstractIdentificationServlet {
             nextPage = ServletConstants.LOGIN_PAGE;
         } else {
             boolean finish;
-            if (user.isAdmin()) {
+            if (user.isAdmin() || user.isPhotoModerator()) {
                 String value = req.getParameter(ServletConstants.FINISH_IDENTIFICATION_KEY);
                 finish = (ON.equals(value)) ? true : false;
                 logger.info("User is admin, retrieve finish identification: " + finish);
@@ -144,6 +145,13 @@ public class IdentifyPhotoServlet extends AbstractIdentificationServlet {
                     } catch (SQLException e) {
                         logger.debug("SQLException.....", e);
                         errors.add(ServletConstants.DATABASE_ERROR);
+                    } catch (NumberOfPhotosPerSpecieException e) {
+                        logger.debug("NumberOfPhotosPerSpecieException.....", e);
+                        errors.add(ServletConstants.MAX_NUM_PHOTOS_FOR_SPECIE);
+                        
+                        req.setAttribute(ServletConstants.IDENTIFICATION_KEY, "true");
+                        req.setAttribute(ServletConstants.VIEW_MODE_KEY, IDENTIFICATION_MODE);
+                        
                     }
                 } else {
                     logger.debug("IdentifyPhotoServlet.doPost : COULD NOT create object...");

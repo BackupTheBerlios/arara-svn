@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class StatesDAO {
+public class StatesDAO extends AbstractDAO{
 	/**
 	 * SQL statement to retrieve all states
 	 */
@@ -112,5 +112,29 @@ public class StatesDAO {
 			}
 		}
 	}
+
+    @Override
+    protected Object createObject(ResultSet rs) throws SQLException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected void setObjectId(int id, Object object) throws SQLException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    protected void setStatementValues(PreparedStatement stmt, Object object) throws SQLException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    protected void setStatementValuesForUpdate(PreparedStatement stmt, Object object) throws SQLException {
+        // TODO Auto-generated method stub
+        
+    }
 
 }

@@ -5,6 +5,13 @@
 <table width="100%">
 	<tr>
 		<td width="5%"></td>
+		<td width="95%">
+			<a href="<c:url value="/servlet/showListOfSpeciesWithPhoto?doAction=ONLY"/>">
+			<fmt:message key="stat.species.with.photo" /></a>
+		</td>
+	</tr>
+	<tr>
+		<td width="5%"></td>
 		<td width="95%"><fmt:message key="stat.users" />:${f:numberOfUsers()}</td>
 	</tr>
 	<tr>

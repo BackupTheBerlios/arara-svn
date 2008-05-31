@@ -138,6 +138,14 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>filterPhotoServlet</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.photo.PhotoFilterServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
 		<servlet-name>initUploadPhotosForIdentification</servlet-name>
 		<servlet-class>
 			net.indrix.arara.servlets.photo.upload.InitUploadPhotoForIdentificationServlet
@@ -183,6 +191,22 @@
 		<load-on-startup>2</load-on-startup>
 	</servlet>
 
+	<servlet>
+		<servlet-name>initSearchByPlace</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.common.InitSearchByPlaceServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>showListOfSpeciesWithPhoto</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.photo.ShowListOfSpeciesWithPhotoServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	
 	<servlet>
 		<servlet-name>uploadPhoto</servlet-name>
 		<servlet-class>
@@ -267,6 +291,14 @@
 		<servlet-name>searchPhotosByUser</servlet-name>
 		<servlet-class>
 			net.indrix.arara.servlets.photo.SearchPhotosByUserServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>searchPhotosByPlace</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.photo.SearchPhotosByPlaceServlet
 		</servlet-class>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
@@ -619,6 +651,11 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
+		<servlet-name>filterPhotoServlet</servlet-name>
+		<url-pattern>/servlet/filterPhotoServlet</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
 		<servlet-name>initUploadPhotosForIdentification</servlet-name>
 		<url-pattern>/servlet/initUploadPhotosForIdentification</url-pattern>
 	</servlet-mapping>
@@ -656,6 +693,11 @@
 	<servlet-mapping>
 		<servlet-name>initSearchByUser</servlet-name>
 		<url-pattern>/servlet/initSearchByUser</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>initSearchByPlace</servlet-name>
+		<url-pattern>/servlet/initSearchByPlace</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
@@ -700,6 +742,11 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
+		<servlet-name>searchPhotosByPlace</servlet-name>
+		<url-pattern>/servlet/searchPhotosByPlace</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
 		<servlet-name>searchPhotosWithMoreComments</servlet-name>
 		<url-pattern>/servlet/searchPhotosWithMoreComments</url-pattern>
 	</servlet-mapping>
@@ -709,6 +756,11 @@
 		<url-pattern>/servlet/searchPhotosWithMoreCommentsOfWeek</url-pattern>
 	</servlet-mapping>
 
+	<servlet-mapping>
+		<servlet-name>showListOfSpeciesWithPhoto</servlet-name>
+		<url-pattern>/servlet/showListOfSpeciesWithPhoto</url-pattern>
+	</servlet-mapping>
+	
 	<servlet-mapping>
 		<servlet-name>goToPage</servlet-name>
 		<url-pattern>/servlet/goToPage</url-pattern>

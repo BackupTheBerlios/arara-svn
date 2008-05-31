@@ -37,8 +37,7 @@
 		<tr>
 			<td valign="top" width="83%"><br style="font-weight: bold;">
 			<div style="text-align: left;"><span style="font-weight: bold;">O
-			site encontra-se em manuten&ccedil;&atilde;o at&eacute; domingo,
-			14 de janeiro de 2007, 20:00h, para atualiza&ccedil;&atilde;o e
+			site encontra-se em manuten&ccedil;&atilde;o para atualiza&ccedil;&atilde;o e
 			integra&ccedil;&atilde;o de novas funcionalidades.</span><br
 				style="font-weight: bold;">
 			<br style="font-weight: bold;">
@@ -47,7 +46,19 @@
 			<br style="font-weight: bold;">
 			<span style="font-weight: bold;">Grato,</span><br
 				style="font-weight: bold;">
-			<span style="font-weight: bold;">Webmaster - 14 de janeiro de 2007</span></div>
+			<span style="font-weight: bold;">Webmaster</span></div>
+			</td>
+		</tr>
+		<tr>
+			<th>
+			<td valign="top" width="83%"><br style="font-weight: bold;">
+			<div style="text-align: left;"><span style="font-weight: bold;">The system
+			is in maintainance for updates.</span><br
+				style="font-weight: bold;">
+			<br style="font-weight: bold;">
+			<span style="font-weight: bold;">Thanks,</span><br
+				style="font-weight: bold;">
+			<span style="font-weight: bold;">Webmaster</span></div>
 			</td>
 		</tr>
 		<tr bgcolor="#005500">

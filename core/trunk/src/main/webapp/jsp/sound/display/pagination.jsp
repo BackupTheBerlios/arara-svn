@@ -16,7 +16,7 @@
         <% 
         if ((p != null) && (p.hasPrevious())){
      	%>        
-			<a href="<c:url value="${servletToCall}?action=FIRST"/>">
+			<a href="<c:url value="${servletToCall}?doAction=FIRST"/>">
 		       	<fmt:message key="pagination.first" var="paginationFirst"/>
 		        <b><img border="0" align="middle" title="${paginationFirst}" src="<c:url value="/images/navigate_left2.gif"/>" width="24" height="24"></b>
 			</a>
@@ -28,7 +28,7 @@
         if ((p != null) && (p.hasPrevious())){
              previous = true;
        	%> 
-	       	<a href="<c:url value="${servletToCall}?action=PREVIOUS"/>">
+	       	<a href="<c:url value="${servletToCall}?doAction=PREVIOUS"/>">
 	       		<fmt:message key="pagination.previous" var="paginationPrevious"/>
 	       		<b><img border="0" align="middle" title="${paginationPrevious}" src="<c:url value="/images/navigate_left.gif"/>" width="24" height="24"></b>
 	       	</a> 
@@ -48,7 +48,7 @@
        	<%
              }
        	%> 
-	       	<a href="<c:url value="${servletToCall}?action=NEXT"/>">
+	       	<a href="<c:url value="${servletToCall}?doAction=NEXT"/>">
 	       		<fmt:message key="pagination.next" var="paginationNext"/>
 	        	<b><img border="0" align="middle" title="${paginationNext}" src="<c:url value="/images/navigate_right.gif"/>" width="24" height="24"></b></a>
 			&nbsp;&nbsp;&nbsp;&nbsp; 
@@ -58,7 +58,7 @@
        	<% 
 		if ((p != null) && (p.hasNext())){
 		%> 
-	       	<a href="<c:url value="${servletToCall}?action=LAST"/>">
+	       	<a href="<c:url value="${servletToCall}?doAction=LAST"/>">
 	       		<fmt:message key="pagination.last" var="paginationLast"/>
 				<b><img border="0" align="middle" title="${paginationLast}" src="<c:url value="/images/navigate_right2.gif"/>" width="24" height="24"></b>	       		
 	       	</a> 

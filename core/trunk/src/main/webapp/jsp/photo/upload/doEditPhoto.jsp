@@ -117,12 +117,20 @@
 		</td>
 	</tr>
   </c:if>
+  <c:if test="${(uploadPhotoBean.user.id == user.id) or (user.admin)}">
+	  <c:set var="editar" value="enabled"/>
+  </c:if> 
+  <c:if test="${(uploadPhotoBean.user.id != user.id) and (!user.admin)}">
+	  <c:set var="editar" value="disabled"/>
+  </c:if> 
+  
 	<tr>
 		<td width="${col1}%"></td>
 	    <td width="${col2}%">
 			<b><fmt:message key="photo.camera" /></b>
 		</td>
-		<td width="${col3}%"><input type="text" name="camera"
+		<td width="${col3}%">
+			<input ${editar} type="text" name="camera"
 			value="${uploadPhotoBean.camera}" size="64" maxlength="64"></td>
 	</tr>
 	<tr>
@@ -130,7 +138,8 @@
 	    <td width="${col2}%">
 	    	<b><fmt:message key="photo.len" /></b>
 	    </td>
-		<td width="${col3}%"><input type="text" name="lens"
+		<td width="${col3}%">
+			<input ${editar} type="text" name="lens"
 			value="${uploadPhotoBean.lens}" size="64" maxlength="64"></td>
 	</tr>
 	<tr>
@@ -138,7 +147,8 @@
 	    <td width="${col2}%">
 	    	<b><fmt:message key="photo.film" /></b>
 	    </td>
-		<td width="${col3}%"><input type="text" name="film"
+		<td width="${col3}%">
+			<input ${editar} type="text" name="film"
 			value="${uploadPhotoBean.film}" size="64" maxlength="64"></td>
 	</tr>
 	<tr>
@@ -147,7 +157,7 @@
 	    	<b><fmt:message key="photo.location" /></b>
 	    </td>
 		<td width="${col3}%">
-			<input type="text" name="location"
+			<input ${editar} type="text" name="location"
 			value="${uploadPhotoBean.location}" size="64" maxlength="64">
 		</td>
 	</tr>
@@ -157,7 +167,8 @@
 	    <td width="${col2}%">
 	    	<b><fmt:message key="state" /></b>
 	    </td>
-		<td width="${col3}%"><select name="stateId" onChange="stateSelected()">
+		<td width="${col3}%">
+			<select ${editar} name="stateId" onChange="stateSelected()">
 			<c:forEach items="${uploadPhotoBean.statesList}" var="stateBean">
 				<c:if test="${selectedStateId != null && selectedStateId == stateBean.value}">
 					<option selected value="${stateBean.value}">${stateBean.label}</option>
@@ -167,7 +178,9 @@
 					<option value="${stateBean.value}">${stateBean.label}</option>
 				</c:if>
 			</c:forEach>
-		</select> <b><fmt:message key="city" /></b> <select name="cityId">
+		</select> 
+		<b><fmt:message key="city" /></b> 
+			<select ${editar} name="cityId">
 			<c:forEach items="${uploadPhotoBean.citiesList}" var="city">
 				<c:if test="${selectedCityId != null && selectedCityId == city.id}">
 					<option selected value="${city.id}">${city.name}</option>
@@ -185,7 +198,8 @@
 	    <td width="${col2}%">
 	    	<b><fmt:message key="photo.date" /></b>
 	    </td>
-		<td width="${col3}%"><input type="text" name="date"
+		<td width="${col3}%">
+			<input ${editar} type="text" name="date"
 			value="${uploadPhotoBean.date}" size="16" maxlength="16"></td>
 	</tr>
 	<tr>
@@ -193,15 +207,16 @@
 	    <td width="${col2}%">
 	    	<b><fmt:message key="photo.author.comment" /></b>
 	    </td>
-		<td width="${col3}%"><textarea rows="5" cols="70" name="comment">${uploadPhotoBean.comment}</textarea>
+		<td width="${col3}%">
+			<textarea ${editar} rows="5" cols="70" name="comment">${uploadPhotoBean.comment}</textarea>
 		</td>
 	</tr>
 	<tr>
 		<td width="${col1}%"></td>
 	    <td width="${col2}%">
 		<td>
-		<div align="left"><input type="SUBMIT"
-			value="<fmt:message key="photo.submit"/>"></div>
+		<div align="left">
+			<input type="SUBMIT" value="<fmt:message key="photo.submit"/>"></div>
 		</td>
 	</tr>
 	<tr height="5">

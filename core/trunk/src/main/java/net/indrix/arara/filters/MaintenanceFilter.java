@@ -29,7 +29,9 @@ public class MaintenanceFilter implements Filter {
             HttpSession session = ((HttpServletRequest) request).getSession(true);
 
             User user = (User) session.getAttribute(ServletConstants.USER_KEY);
-            if (user != null && user.getLogin().equals("jefferson")){
+            String ip = request.getRemoteAddr();
+            
+            if ((user != null && user.getLogin().equals("jefferson")) || "201.82.136.125".equals(ip)){
                 chain.doFilter(request, response);
                 return;
             } else {
@@ -39,15 +41,20 @@ public class MaintenanceFilter implements Filter {
                     return;                    
                 } else {                    
                     ServletContext context = session.getServletContext();
-                    maintenance = (Boolean) context.getAttribute(FilterConstants.MAINTENANCE);
+                    if (context != null){
+                        maintenance = (Boolean) context.getAttribute(FilterConstants.MAINTENANCE);
 
-                    if (!maintenance) {
+                        if (!maintenance) {
+                            chain.doFilter(request, response);
+                            return;
+                        } else {
+                            context.getRequestDispatcher(FilterConstants.MAINTENANCE_PAGE).forward(request, response);
+                            return;
+                        }                                        
+                    } else {
                         chain.doFilter(request, response);
                         return;
-                    } else {
-                        context.getRequestDispatcher(FilterConstants.MAINTENANCE_PAGE).forward(request, response);
-                        return;
-                    }                
+                    }
                 }
                               
             }

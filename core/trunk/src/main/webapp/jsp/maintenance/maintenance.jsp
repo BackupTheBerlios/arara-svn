@@ -22,8 +22,8 @@
 				<br style="font-weight: bold;">
 				<div style="text-align: left;">
 					<span style="font-weight: bold;">
-						O site entrará em manuten&ccedil;&atilde;o para atualiza&ccedil;&atilde;o e
-						integra&ccedil;&atilde;o de novas funcionalidades, às 10:30h do dia 06/01.
+						O site está em manuten&ccedil;&atilde;o para atualiza&ccedil;&atilde;o e
+						integra&ccedil;&atilde;o de novas funcionalidades.
 					</span>
 					<br	style="font-weight: bold;">
 					<br style="font-weight: bold;">
@@ -32,7 +32,7 @@
 					</span>
 					<br style="font-weight: bold;">
 					<span style="font-weight: bold;">
-						Previs&atilde;o de retorno: 11:00.
+						Previs&atilde;o de retorno: 00:00 do dia 23/06.
 					</span>
 					<br	style="font-weight: bold;">
 					<br style="font-weight: bold;">
@@ -60,11 +60,11 @@
 				<br style="font-weight: bold;">
 				<div style="text-align: left;">
 					<span style="font-weight: bold;">
-						The system will be in maintainance for updates at 10:30am, Jan 06.
+						The system is in maintainance for updates.
 					</span>
 					<br	style="font-weight: bold;">
 					<span style="font-weight: bold;">
-						System shall return at 11:00am.
+						System shall return at 12:00am, 06/22.
 					</span>
 					<br style="font-weight: bold;">
 					<span style="font-weight: bold;">

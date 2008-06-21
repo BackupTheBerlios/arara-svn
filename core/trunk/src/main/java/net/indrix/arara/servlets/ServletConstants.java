@@ -231,6 +231,8 @@ public class ServletConstants {
 	public static final String USER_NOT_LOGGED = "user.not.logged";
 
 	public static final String USER_NOT_FOUND = "user.not.found";
+    
+    public static final String OPERATION_DENIED = "operation.denied";
 
 	public static final String SELECT_FAMILY_ERROR = "select.family.error";
     

@@ -43,7 +43,7 @@
 			</tr>
 			<tr bgcolor="#005500">
 				<td align="center"><a
-					href="<c:url value="/servlet/deletePhoto?photoId=${photo.id}"/>"><font
+					href="<c:url value="/servlet/deletePhoto?photoId=${photo.id}&userId=${photo.user.id}"/>"><font
 					color="#ffffff"><fmt:message key="delete.confirm" /></font></a> <a
 					href="<c:url value="/index.jsp"/>"><font color="#ffffff"><fmt:message
 					key="delete.cancel" /></font></a></td>

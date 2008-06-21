@@ -9,6 +9,7 @@ package net.indrix.arara.bean;
 import java.util.List;
 
 import net.indrix.arara.servlets.common.IBean;
+import net.indrix.arara.vo.User;
 
 import org.apache.commons.fileupload.FileItem;
 
@@ -54,6 +55,8 @@ public class UploadBean implements IBean{
 
 	protected String comment;
 
+    protected User user;
+    
 	/**
 	 * @return
 	 */
@@ -304,4 +307,12 @@ public class UploadBean implements IBean{
 		buffer.append("]");
 		return buffer.toString();
 	}
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

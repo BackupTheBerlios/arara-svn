@@ -55,7 +55,7 @@ public class Statistics {
         }
         return n;
     }
-
+    
 	public static int getNumberOfFamiliesWithPhoto() {
 		int n = 0;
 		try {
@@ -81,6 +81,20 @@ public class Statistics {
         }
         return n;
     }
+
+    public static int getTotalNumberOfSpecies() {
+        int n = 0;
+        try {
+            net.indrix.arara.vo.Statistics s = StatisticsModel.retrieveStatistics();
+            n = s.getNumberOfSpecies();
+        } catch (DatabaseDownException e) {
+            logger.error("Statistics.getNumberOfFamiliesWithPhoto: DatabaseDownException ", e);
+        } catch (SQLException e) {
+            logger.error("Statistics.getNumberOfFamiliesWithPhoto: SQLException ", e);
+        }
+        return n;
+    }
+
 
 	public static int getNumberOfSpeciesWithPhoto() {
 		int n = 0;

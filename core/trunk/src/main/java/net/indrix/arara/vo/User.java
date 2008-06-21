@@ -30,7 +30,8 @@ public class User {
 	private boolean addPhoto;
 	private boolean addSound;
 	private boolean isAdmin;
-    private boolean photoModerator;
+    private boolean photoIdModerator;
+    private boolean photoEditModerator;
     private boolean active;    
     private Date registeredOn;
 
@@ -322,11 +323,19 @@ public class User {
         this.registeredOn = registeredOn;
     }
 
-    public boolean isPhotoModerator() {
-        return photoModerator;
+    public boolean isPhotoIdModerator() {
+        return photoIdModerator;
     }
 
-    public void setPhotoModerator(boolean photoModerator) {
-        this.photoModerator = photoModerator;
+    public void setPhotoIdModerator(boolean photoModerator) {
+        this.photoIdModerator = photoModerator;
+    }
+
+    public boolean isPhotoEditModerator() {
+        return photoEditModerator;
+    }
+
+    public void setPhotoEditModerator(boolean photoModerator) {
+        this.photoEditModerator = photoModerator;
     }
 }

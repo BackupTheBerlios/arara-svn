@@ -34,6 +34,7 @@ public class UserDAO extends AbstractDAO {
     public static final String ACTIVE_COLUMN = "active";
     public static final String REGISTERED_ON_COLUMN = "registeredOn";
     public static final String IDENTIFY_PHOTO_ACCESS = "identifyPhoto";
+    public static final String EDIT_PHOTO_ACCESS = "editPhoto";
     
 	public static final String INSERT = "INSERT INTO user " +
             "(name, login, password, email, language, emailOnNewPhoto, emailOnNewIdPhoto, emailOnNewSound, emailOnNewComment, addPhoto, addSound, registeredOn) "
@@ -435,7 +436,8 @@ public class UserDAO extends AbstractDAO {
             rs = stmt.executeQuery();
             
             if (rs.next()){
-                user.setPhotoModerator(rs.getBoolean(IDENTIFY_PHOTO_ACCESS));
+                user.setPhotoIdModerator(rs.getBoolean(IDENTIFY_PHOTO_ACCESS));
+                user.setPhotoEditModerator(rs.getBoolean(EDIT_PHOTO_ACCESS));
                 user.setAdmin(rs.getBoolean(ADMIN_COLUMN));
             }
         } catch (SQLException e) {

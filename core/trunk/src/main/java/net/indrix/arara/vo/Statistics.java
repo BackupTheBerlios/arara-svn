@@ -18,6 +18,7 @@ public class Statistics {
     private int numberOfSounds;
 	private int numberOfFamiliesWithPhoto;
     private int numberOfFamiliesWithSound;
+    private int numberOfSpecies;
     private int numberOfSpeciesWithPhoto;
 	private int numberOfSpeciesWithSound;
 	private int numberOfUsers;
@@ -48,12 +49,21 @@ public class Statistics {
     public void setNumberOfSounds(int numberOfSounds) {
         this.numberOfSounds = numberOfSounds;
     }
+
+    public int getNumberOfSpecies() {
+        return numberOfSpecies;
+    }
+    public void setNumberOfSpecies(int numberOfSpecies) {
+        this.numberOfSpecies = numberOfSpecies;
+    }
+
     public int getNumberOfSpeciesWithPhoto() {
         return numberOfSpeciesWithPhoto;
     }
     public void setNumberOfSpeciesWithPhoto(int numberOfSpeciesWithPhoto) {
         this.numberOfSpeciesWithPhoto = numberOfSpeciesWithPhoto;
     }
+
     public int getNumberOfSpeciesWithSound() {
         return numberOfSpeciesWithSound;
     }

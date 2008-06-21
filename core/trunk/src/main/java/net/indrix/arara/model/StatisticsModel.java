@@ -46,6 +46,7 @@ public class StatisticsModel {
         s.setNumberOfSounds(dao.numberOfSounds());
         s.setNumberOfFamiliesWithPhoto(dao.numberOfFamiliesWithPhoto());
         s.setNumberOfFamiliesWithSound(dao.numberOfFamiliesWithSound());
+        s.setNumberOfSpecies(dao.numberOfSpecies());
         s.setNumberOfSpeciesWithPhoto(dao.numberOfSpeciesWithPhoto());
         s.setNumberOfSpeciesWithSound(dao.numberOfSpeciesWithSound());
 

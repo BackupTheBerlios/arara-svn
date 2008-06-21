@@ -94,12 +94,12 @@
 			</font>
 		</td>
 		<td width="80%">
-			<c:if test="${user.admin == true || user.photoModerator == true}">
+			<c:if test="${user.admin == true || user.photoIdModerator == true}">
 				<input type="text" name="comment"
 					value="${identificationPhotoBean.comment}" size="60" maxlength="256">
 				<input type="checkbox" name="finishIdentification"><fmt:message	key="photo.identify.finish" />					
 			</c:if>
-			<c:if test="${user.admin != true  && user.photoModerator != true}">
+			<c:if test="${user.admin != true  && user.photoIdModerator != true}">
 				<input type="text" name="comment"
 					value="${identificationPhotoBean.comment}" size="100" maxlength="256">
 			</c:if>

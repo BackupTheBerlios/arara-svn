@@ -70,10 +70,6 @@ table.comBordaSimples {
 							<img border="0" width="200" height="100" src="<c:url value="/jsp/images/aqua.jpg"/>" align="bottom"/> 
 						</a>
 						&nbsp;&nbsp; 
-						<a href="http://www.avistarbrasil.com.br/concurso/" target="_blank"> 
-							<img border="0" width="200" height="100" hspace ="5" src="<%= request.getContextPath()%>/jsp/images/avistar.jpg" align="bottom">
-						</a> 
-						&nbsp;&nbsp; 
 						<a href="http://www.ecorotas.com.br"  target="_blanck">
 							<img border="0" width="200" height="100" src="<c:url value="/jsp/images/ecorotas.jpg"/>"	align="bottom"/> 
 						</a>
@@ -81,9 +77,6 @@ table.comBordaSimples {
 				</tr>
 				<tr>
 					<td align="left" >
-						<a href="http://www.aves.brasil.nom.br/jsp/images/mailmkt1.jpg"  target="_blanck"> 
-							<img width="200" height="100" src="<c:url value="/jsp/images/quental.jpg"/>" align="bottom"/> 
-						</a> 
 					</td>
 				
 					<td align="right" colspan="3">

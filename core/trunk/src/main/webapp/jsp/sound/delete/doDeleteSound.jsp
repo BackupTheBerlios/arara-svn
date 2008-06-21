@@ -24,7 +24,7 @@
 			<tr>
 				<td align="center">
 					<font color="#000000">
-						<a href="<c:url value="/servlet/deleteSound?soundId=${sound.id}"/>"><fmt:message key="delete.confirm" /></a> 
+						<a href="<c:url value="/servlet/deleteSound?soundId=${sound.id}&userId=${sound.user.id}"/>"><fmt:message key="delete.confirm" /></a> 
 						<a href="<c:url value="/index.jsp"/>"><fmt:message key="delete.cancel" /></a>
 					</font>
 				</td>

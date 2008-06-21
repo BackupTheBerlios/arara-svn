@@ -59,6 +59,8 @@ public class StatisticsDAO {
             "FROM user " +
             "WHERE active = 1 and addSound = 1 and name not like 'Teste%'";
 
+    private static final String SELECT_TOTAL_NUM_OF_SPECIES = "SELECT count(*) from specie";
+    
 	/**
 	 * This method returns the amount of photos in database
 	 * 
@@ -84,7 +86,7 @@ public class StatisticsDAO {
     public int numberOfSounds() throws DatabaseDownException, SQLException {
         return numberOfRows(SELECT_NUM_SOUNDS);
     }
-    
+  
 	/**
 	 * This method returns the amount of families with photos in database
 	 * 
@@ -109,6 +111,18 @@ public class StatisticsDAO {
         return numberOfRowsByCounting(SELECT_NUM_FAMILIES_WITH_SOUND);
     }
 
+    /**
+     * This method returns the amount of species in database
+     * 
+     * @return the amount of species in database
+     * 
+     * @throws DatabaseDownException  If the database is down
+     * @throws SQLException If some SQL Exception occurs
+     */
+    public int numberOfSpecies() throws DatabaseDownException, SQLException {
+        return numberOfRows(SELECT_TOTAL_NUM_OF_SPECIES);
+    }
+    
 	/**
 	 * This method returns the amount of species with photos in database
 	 * 

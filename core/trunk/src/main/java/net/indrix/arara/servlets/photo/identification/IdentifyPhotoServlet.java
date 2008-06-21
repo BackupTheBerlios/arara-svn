@@ -64,9 +64,13 @@ public class IdentifyPhotoServlet extends AbstractIdentificationServlet {
      */
     private static final String ON = "on";
 
+    public void init() {
+        logger.debug("Initializing IdentifyPhotoServlet ...");
+    }
+    
     public void doPost(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
-        logger.info("Entering method...");
+        logger.info("Entering method....");
         List<String> errors = new ArrayList<String>();
         List<String> messages = new ArrayList<String>();
         RequestDispatcher dispatcher = null;
@@ -82,8 +86,8 @@ public class IdentifyPhotoServlet extends AbstractIdentificationServlet {
             req.setAttribute(ServletConstants.ERRORS_KEY, errors);
             nextPage = ServletConstants.LOGIN_PAGE;
         } else {
-            boolean finish;
-            if (user.isAdmin() || user.isPhotoModerator()) {
+            boolean finish = false;
+            if (user.isAdmin() || user.isPhotoIdModerator()) {
                 String value = req.getParameter(ServletConstants.FINISH_IDENTIFICATION_KEY);
                 finish = (ON.equals(value)) ? true : false;
                 logger.info("User is admin, retrieve finish identification: " + finish);

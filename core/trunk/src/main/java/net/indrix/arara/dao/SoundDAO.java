@@ -380,6 +380,12 @@ public class SoundDAO extends MediaDAO implements SoundConstants {
     }
 
     @Override
+    protected String getSelectIDsForStateSQL() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
     protected String getSelectIDsForSpecieOfUserSQL() {
         // TODO Auto-generated method stub
         return null;

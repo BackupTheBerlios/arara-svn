@@ -29,6 +29,7 @@ import net.indrix.arara.servlets.pagination.PhotoByCommonNamePaginationControlle
 import net.indrix.arara.servlets.pagination.PhotoByFamilyPaginationController;
 import net.indrix.arara.servlets.pagination.PhotoByPlacePaginationController;
 import net.indrix.arara.servlets.pagination.PhotoBySpeciePaginationController;
+import net.indrix.arara.servlets.pagination.PhotoByStatePaginationController;
 import net.indrix.arara.servlets.pagination.PhotoByUserPaginationController;
 import net.indrix.arara.servlets.pagination.PhotoPaginationController;
 import net.indrix.arara.servlets.pagination.PhotoRecentPaginationController;
@@ -45,7 +46,7 @@ import net.indrix.arara.vo.User;
 public abstract class AbstractSearchPhotosServlet extends AbstractServlet {
     private static final String PAGE_NUMBER = "pageNumber";
     
-    protected static final String[] textForSearch = {"All", "Family", "Specie", "Common Name", "User", "More recent", "English Name", "More comments", "More comments of Week", "Cidade"};
+    protected static final String[] textForSearch = {"All", "Family", "Specie", "Common Name", "User", "More recent", "English Name", "More comments", "More comments of Week", "Cidade", "Estado"};
     
     public static final int PAGINATION_FOR_ALL_PHOTOS = 0;
 
@@ -66,6 +67,8 @@ public abstract class AbstractSearchPhotosServlet extends AbstractServlet {
     public static final int PAGINATION_FOR_MORE_COMMENTS_OF_WEEK = 8;
 
     public static final int PAGINATION_FOR_PLACE = 9;
+    
+    public static final int PAGINATION_FOR_STATE = 10;
 
     private static String PHOTOS_BY_PAGE_KEY = "photos.per.page";
 
@@ -232,6 +235,9 @@ public abstract class AbstractSearchPhotosServlet extends AbstractServlet {
                 break;
             case PAGINATION_FOR_PLACE:
                 c = new PhotoByPlacePaginationController(PHOTOS_PER_PAGE);
+                break;
+            case PAGINATION_FOR_STATE:
+                c = new PhotoByStatePaginationController(PHOTOS_PER_PAGE);
                 break;
                 
             }

@@ -215,6 +215,27 @@ public abstract class MediaDAO extends AbstractDAO {
     }
     
     /**
+     * This method retrieves a <code>List</code> object with
+     * <code>Photo</code> objects, based on the id of the state
+     * 
+     * @param id
+     *            The id of the <code>State</code>
+     * 
+     * @return a <code>List</code> object with <code>Photo</code> objects,
+     *         based on the id of the state
+     * 
+     * @throws DatabaseDownException
+     *             If the database is down
+     * @throws SQLException
+     *             If some SQL Exception occurs
+     */
+    public List retrieveIDsForState(int id) throws DatabaseDownException,
+            SQLException {
+        List list = retrieveIDsForGivenID(id, getSelectIDsForStateSQL());
+        return list;
+    }    
+    
+    /**
      * This method returns the SQL statement to select ids for family from
      * database
      * 
@@ -288,7 +309,15 @@ public abstract class MediaDAO extends AbstractDAO {
      * @return the SELECT_IDS_BY_CITY_ID sql
      */
     abstract protected String getSelectIDsForPlaceSQL();
-    
+
+    /**
+     * This method returns the SQL statement to select ids for state from
+     * database
+     * 
+     * @return the SELECT_IDS_BY_STATE_ID sql
+     */
+    abstract protected String getSelectIDsForStateSQL();
+
     /**
      * This method returns the SQL statement to select ids for a given specie id, of a specific user
      * database

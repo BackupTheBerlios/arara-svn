@@ -196,14 +196,23 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
             "ORDER BY comments DESC";             
 
     /**
-     * SQL to select all species that has a photo
+     * SQL to select all photos by a given city id
      */
     private static final String SELECT_IDS_BY_CITY_ID = "" +
             "SELECT p.id, f.id f_id, f.name f_name, s.id s_id, s.name s_name, s.english_name english_name, s.minimumSize, s.maximumSize "
             + "from photo p, family f, specie s "
             + "where p.city_id = ? and p.specie_id = s.id and p.specie_family_id = f.id "
             + "order by f_name, s_name";
-    
+
+    /**
+     * SQL to select all photos by a given state id
+     */
+    private static final String SELECT_IDS_BY_STATE_ID = "" +
+            "SELECT p.id, f.id f_id, f.name f_name, s.id s_id, s.name s_name, s.english_name english_name, s.minimumSize, s.maximumSize "
+            + "from photo p, family f, specie s "
+            + "where p.specie_id = s.id and p.specie_family_id = f.id and p.city_id in (select id city_id from city where state_id = ?)"
+            + "order by f_name, s_name";
+
     /**
      * SQL to select ids of photos by a given city ID
      */
@@ -769,10 +778,16 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
     }
 
     @Override
+    protected String getSelectIDsForStateSQL() {
+        return SELECT_IDS_BY_STATE_ID;
+    }
+
+    @Override
     protected String getSelectIDsForSpecieOfUserSQL() {
         return SELECT_IDS_BY_SPECIE_ID_FOR_USER;
     }
 
+    
     /**
      * @param rs
      * @return

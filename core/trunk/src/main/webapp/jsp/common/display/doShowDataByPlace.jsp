@@ -13,7 +13,7 @@
 
 <br><br>
 
-<table align="center" class="formBorder"  width="50%" border="0" cellspacing="2" bgcolor="${mainBgColor}">
+<table align="center" class="formBorder"  width="60%" border="0" cellspacing="2" bgcolor="${mainBgColor}">
 	<tr height="10" bgcolor="${formTitleColor}">
 		<td></td>
 	</tr>

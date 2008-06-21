@@ -81,6 +81,14 @@
 	</function>
 
 	<function>
+		<name>numberOfSpecies</name>
+		<function-class>
+			net.indrix.arara.utils.jsp.Statistics
+		</function-class>
+		<function-signature>int getTotalNumberOfSpecies()</function-signature>
+	</function>
+
+	<function>
 		<name>numberOfFamiliesWithPhoto</name>
 		<function-class>
 			net.indrix.arara.utils.jsp.Statistics

@@ -147,7 +147,7 @@ table.comBordaSimples tr {
 					</td>
 					</tr>
 					<!-- EDIT and DELETE -->
-					<c:if test="${(photo.user.id == user.id) or (user.admin == true) or (user.photoEditModerator == true and photo.specie.id != -1)}">
+					<c:if test="${(photo.user.id == user.id) or (user.admin) or (user.photoEditModerator && photo.specie.id != -1)}">
 						<tr>
 						<td align="right">
 							<a href="<c:url value="/servlet/initEditPhoto?photoId=${photo.id}&identification=${identification}"/>"> 
@@ -159,7 +159,7 @@ table.comBordaSimples tr {
 						</td>
 						</tr>
 					</c:if> 
-					<c:if test="${(photo.user.id == user.id) or (user.admin == true)}">
+					<c:if test="${(photo.user.id == user.id) or (user.admin)}">
 						<tr>
 						<td align="right">
 							<a href="<c:url value="/jsp/photo/search/deletePhoto.jsp?photoId=${photo.id}"/>"> 
@@ -171,7 +171,7 @@ table.comBordaSimples tr {
 						</td>
 						</tr>
 					</c:if> 
-					<c:if test="${(user == null) or ((photo.user.id != user.id) and (user.admin == false) and (user.photoEditModerator == false or photo.specie.id == -1))}">
+					<c:if test="${(user == null) || ((photo.user.id != user.id) && (!user.admin) && (!user.photoEditModerator || photo.specie.id == -1))}">
 						<tr>
 						<td align="right">
 							<font size="1" face="Verdana"> 

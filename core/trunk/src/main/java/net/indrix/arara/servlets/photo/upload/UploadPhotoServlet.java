@@ -231,6 +231,11 @@ public class UploadPhotoServlet extends AbstractUploadPhotoServlet {
 		photo.setCamera(bean.getCamera());
 		photo.setLens(bean.getLens());
 		photo.setFilm(bean.getFilm());
+        photo.setFstop(bean.getFstop());
+        photo.setShutterSpeed(bean.getShutterSpeed());
+        photo.setIso(bean.getIso());
+        photo.setZoom(bean.getZoom());
+        photo.setFlash(bean.isFlash());
 		photo.setLocation(bean.getLocation());
 		photo.setCity(CityModel.getCity(bean.getCitiesList(), bean.getSelectedCityId()));
 		photo.setDate(createDate(bean.getDate()));

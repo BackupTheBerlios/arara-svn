@@ -51,11 +51,6 @@
 			<font size="${fontSize}" face="Verdana">
 				${currentPhoto.city.name} - ${currentPhoto.city.state.acronym}
 			</font>
-<!-- 
-			<FORM> 
-			<INPUT type="button" value="<fmt:message key="map" />" onClick="window.open('<%= request.getContextPath()%>/servlet/cityFind?city=${currentPhoto.city.name}/${currentPhoto.city.state.acronym}','Map','height=600,width=600,status=yes,scrollbars=yes')"> 
-			</FORM> 
- -->		
 		</td>
 	</tr>
 	<tr>
@@ -83,6 +78,46 @@
 			</font>
 		</td>
 		<td><font size="${fontSize}" face="Verdana">${currentPhoto.film}</font></td>
+	</tr>
+	<tr>
+		<td width="20%">
+			<font size="${fontSize}" face="Verdana">
+				<b><fmt:message	key="photo.f_stop" /></b>
+			</font>
+		</td>
+		<td><font size="${fontSize}" face="Verdana">${currentPhoto.fstop}</font></td>
+	</tr>
+	<tr>
+		<td width="20%">
+			<font size="${fontSize}" face="Verdana">
+				<b><fmt:message	key="photo.shutter_speed" /></b>
+			</font>
+		</td>
+		<td><font size="${fontSize}" face="Verdana">${currentPhoto.shutterSpeed}</font></td>
+	</tr>
+	<tr>
+		<td width="20%">
+			<font size="${fontSize}" face="Verdana">
+				<b><fmt:message	key="photo.iso" /></b>
+			</font>
+		</td>
+		<td><font size="${fontSize}" face="Verdana">${currentPhoto.iso}</font></td>
+	</tr>
+	<tr>
+		<td width="20%">
+			<font size="${fontSize}" face="Verdana">
+				<b><fmt:message	key="photo.zoom" /></b>
+			</font>
+		</td>
+		<td><font size="${fontSize}" face="Verdana">${currentPhoto.zoom}</font></td>
+	</tr>
+	<tr>
+		<td width="20%">
+			<font size="${fontSize}" face="Verdana">
+				<b><fmt:message	key="photo.flash" /></b>
+			</font>
+		</td>
+		<td><font size="${fontSize}" face="Verdana"><fmt:message key="${currentPhoto.flash}" /></font></td>
 	</tr>
 	<tr>
 		<td width="20%">

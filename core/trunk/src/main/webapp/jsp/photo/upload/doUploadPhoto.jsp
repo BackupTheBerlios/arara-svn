@@ -18,7 +18,7 @@
     }    
 </script> 
 
-<c:set var="maximumNumberOfPhotos" value="${2}"/>
+<c:set var="maximumNumberOfPhotos" value="${6}"/>
 
 
 <c:set var="selectedFamilyId" value="${uploadPhotoBean.selectedFamilyId}"/>
@@ -109,15 +109,7 @@
 		    </c:if>
           </c:forEach>
         </select>
-    </td>
-  </tr>
-
-  <tr> 
-	<td width="${col1}%"></td>
-    <td width="${col2}%">
-    	<b><fmt:message key="specie.sex"/></b>
-    </td>
-    <td width="${col3}%"> 
+    	&nbsp;&nbsp;&nbsp;<b><fmt:message key="specie.sex"/></b>
         <select ${editar} name="sexId">
           <c:forEach items="${sexList}" var="sex">
             <fmt:message key="${sex.sex}" var="sexI18N"/>
@@ -137,16 +129,9 @@
     	<b><fmt:message key="photo.camera"/></b>
     </td>
     <td width="${col3}%"> 
-        <input ${editar} type="text" name="camera" value="${uploadPhotoBean.camera}" size="64" maxlength="64">
-    </td>
-  </tr>
-  <tr> 
-	<td width="${col1}%"></td>
-    <td width="${col2}%">
-    	<b><fmt:message key="photo.len"/></b>
-    </td>
-    <td width="${col3}%"> 
-        <input ${editar} type="text" name="lens" value="${uploadPhotoBean.lens}" size="64" maxlength="64">
+        <input ${editar} type="text" name="camera" value="${uploadPhotoBean.camera}" size="32" maxlength="64">
+    	&nbsp;&nbsp;&nbsp;<b><fmt:message key="photo.len"/></b>
+        <input ${editar} type="text" name="lens" value="${uploadPhotoBean.lens}" size="32" maxlength="64">
     </td>
   </tr>
   <tr> 
@@ -155,7 +140,36 @@
     	<b><fmt:message key="photo.film"/></b>
     </td>
     <td width="${col3}%"> 
-        <input ${editar} type="text" name="film" value="${uploadPhotoBean.film}" size="64" maxlength="64">
+        <input ${editar} type="text" name="film" value="${uploadPhotoBean.film}" size="16" maxlength="64">
+    </td>
+  </tr>
+
+  <tr> 
+	<td width="${col1}%"></td>
+    <td width="${col2}%">
+    	<b><fmt:message key="photo.f_stop"/></b>
+    </td>
+    <td width="${col3}%"> 
+        <input ${editar} type="text" name="f_stop" value="${uploadPhotoBean.fstop}" size="10" maxlength="10">
+    	&nbsp;&nbsp;&nbsp;<b><fmt:message key="photo.shutter_speed"/></b>
+        <input ${editar} type="text" name="shutter_speed" value="${uploadPhotoBean.shutterSpeed}" size="10" maxlength="10">
+    </td>
+  </tr>
+
+  <tr> 
+	<td width="${col1}%"></td>
+    <td width="${col2}%">
+    	<b><fmt:message key="photo.iso"/></b>
+    </td>
+    <td width="${col3}%"> 
+        <input ${editar} type="text" name="iso" value="${uploadPhotoBean.iso}" size="10" maxlength="10">
+    	&nbsp;&nbsp;&nbsp;<b><fmt:message key="photo.zoom"/></b>
+        <input ${editar} type="text" name="zoom" value="${uploadPhotoBean.zoom}" size="10" maxlength="10">
+    	&nbsp;&nbsp;&nbsp;<b><fmt:message key="photo.flash"/></b>
+    	<c:if test="${uploadPhotoBean.flash}">
+			<c:set var="checked" value="checked"/>
+        </c:if>
+        <input ${checked} type="checkbox" name="flash" value="${uploadPhotoBean.flash}" size="10" maxlength="10">
     </td>
   </tr>
 
@@ -185,7 +199,7 @@
 		    </c:if>		      
           </c:forEach>
         </select>  
-		<b><fmt:message key="city"/></b>
+		&nbsp;&nbsp;&nbsp;<b><fmt:message key="city"/></b>
         <select ${editar} name="cityId">
           <c:forEach items="${uploadPhotoBean.citiesList}" var="city">
 			<c:if test="${selectedCityId != null && selectedCityId == city.id}">

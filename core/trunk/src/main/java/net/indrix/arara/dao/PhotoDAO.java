@@ -39,13 +39,16 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
      */
     private static final String INSERT = "INSERT INTO photo "
             + "(user_id, date, place, city_id, camera, lens, film, "
-            + "w, h, sW, sH, specie_id, specie_family_id, post_date, comment, imageSize, smallImageSize, age_id, sex_id) "
-            + "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "w, h, sW, sH, specie_id, specie_family_id, post_date, comment, imageSize, smallImageSize, age_id, sex_id, f_stop, shutter_speed, iso, zoom, flash) "
+            + "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     /**
      * SQL for updating a photo
      */
-    public static final String UPDATE = "UPDATE photo set camera = ?, lens = ?, film = ?, date = ?, place = ?, city_id = ?, comment = ?, specie_id = ?, specie_family_id = ?, sex_id = ?, age_id = ? "
+    public static final String UPDATE = 
+        "UPDATE photo set camera = ?, lens = ?, film = ?, f_stop = ?, shutter_speed = ?, " +
+        "iso = ?, zoom = ?, flash = ?, date = ?, place = ?, city_id = ?, comment = ?, " +
+        "specie_id = ?, specie_family_id = ?, sex_id = ?, age_id = ? "
             + "WHERE id = ?";
 
     /**
@@ -58,6 +61,7 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
      */
     private static final String SELECT_BY_ID = "" +
             "SELECT p.id, p.date, p.place, p.city_id, p.camera, p.lens, p.film, "
+            + "p.f_stop, p.shutter_speed, p.iso, p.zoom, p.flash, "
             + "p.w, p.h, p.imageSize, p.sW, p.sH, p.smallImageSize, p.comment, p.post_date,"
             + "s.id s_id, s.name s_name, s.english_name english_name, s.minimumSize, s.maximumSize, "
             + "f.id f_id, f.name f_name, f.subFamilyName f_sub_name, "
@@ -72,6 +76,7 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
      */
     private static final String SELECT_THUMBNAIL_BY_ID = "" +
             "SELECT p.id, p.date, p.place, p.city_id, p.camera, p.lens, p.film, "
+            + "p.f_stop, p.shutter_speed, p.iso, p.zoom, p.flash, "
             + "p.w, p.h, p.imageSize, p.sW, p.sH, p.smallImageSize, p.comment, p.post_date,"
             + "s.id s_id, s.name s_name, s.english_name english_name, s.minimumSize, s.maximumSize, "
             + "f.id f_id, f.name f_name, f.subFamilyName f_sub_name, "
@@ -523,6 +528,11 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
         photo.setCamera(rs.getString(CAMERA_COLUMN));
         photo.setLens(rs.getString(LENS_COLUMN));
         photo.setFilm(rs.getString(FILM_COLUMN));
+        photo.setFstop(rs.getString(F_STOP_COLUMN));
+        photo.setShutterSpeed(rs.getString(SHUTTER_SPEED_COLUMN));
+        photo.setIso(rs.getString(ISO_COLUMN));
+        photo.setZoom(rs.getString(ZOOM_COLUMN));
+        photo.setFlash(rs.getBoolean(FLASH_COLUMN));
         image.setWidth(rs.getInt(IMAGE_W));
         image.setHeight(rs.getInt(IMAGE_H));
         smallImage.setWidth(rs.getInt(SMALL_IMAGE_W));
@@ -574,6 +584,11 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
         photo.setCamera(rs.getString(CAMERA_COLUMN));
         photo.setLens(rs.getString(LENS_COLUMN));
         photo.setFilm(rs.getString(FILM_COLUMN));
+        photo.setFstop(rs.getString(F_STOP_COLUMN));
+        photo.setShutterSpeed(rs.getString(SHUTTER_SPEED_COLUMN));
+        photo.setIso(rs.getString(ISO_COLUMN));
+        photo.setZoom(rs.getString(ZOOM_COLUMN));
+        photo.setFlash(rs.getBoolean(FLASH_COLUMN));       
         image.setWidth(rs.getInt(IMAGE_W));
         image.setHeight(rs.getInt(IMAGE_H));
         image.setImageSize(rs.getInt(IMAGE_SIZE));
@@ -666,6 +681,11 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
         stmt.setInt(17, photo.getSmallImage().getImageSize());
         stmt.setInt(18, photo.getAge().getId());
         stmt.setInt(19, photo.getSex().getId());
+        stmt.setString(20, photo.getFstop());
+        stmt.setString(21, photo.getShutterSpeed());
+        stmt.setString(22, photo.getIso());
+        stmt.setString(23, photo.getZoom());
+        stmt.setBoolean(24, photo.isFlash());
     }
 
     /**
@@ -685,18 +705,23 @@ public class PhotoDAO extends MediaDAO implements PhotoConstants {
         logger.debug("PhotoDAO.setStatementValuesForUpdate: Entering method");
         Photo photo = (Photo) object;
         logger.debug("Photo = " + photo);
-        stmt.setString(1, photo.getCamera());
-        stmt.setString(2, photo.getLens());
-        stmt.setString(3, photo.getFilm());
-        stmt.setDate(4, getSQLDate(photo.getDate()));
-        stmt.setString(5, photo.getLocation());
-        stmt.setInt(6, photo.getCity().getId());
-        stmt.setString(7, photo.getComment());
-        stmt.setInt(8, photo.getSpecie().getId());
-        stmt.setInt(9, photo.getSpecie().getFamily().getId());
-        stmt.setInt(10, photo.getSex().getId());
-        stmt.setInt(11, photo.getAge().getId());
-        stmt.setInt(12, photo.getId());
+        stmt.setString (1, photo.getCamera());
+        stmt.setString (2, photo.getLens());
+        stmt.setString (3, photo.getFilm());
+        stmt.setString (4, photo.getFstop());
+        stmt.setString (5, photo.getShutterSpeed());
+        stmt.setString (6, photo.getIso());
+        stmt.setString (7, photo.getZoom());
+        stmt.setBoolean(8, photo.isFlash());       
+        stmt.setDate   (9, getSQLDate(photo.getDate()));
+        stmt.setString (10, photo.getLocation());
+        stmt.setInt    (11, photo.getCity().getId());
+        stmt.setString (12, photo.getComment());
+        stmt.setInt    (13, photo.getSpecie().getId());
+        stmt.setInt    (14, photo.getSpecie().getFamily().getId());
+        stmt.setInt    (15, photo.getSex().getId());
+        stmt.setInt    (16, photo.getAge().getId());
+        stmt.setInt    (17, photo.getId());
         logger.debug("PhotoDAO.setStatementValuesForUpdate: Exiting method");
     }
 

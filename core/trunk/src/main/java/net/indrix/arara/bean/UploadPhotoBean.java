@@ -21,7 +21,57 @@ public class UploadPhotoBean extends UploadBean {
 
 	private String date;
 
-	/**
+    private String fstop;
+    
+    private String shutterSpeed;
+    
+    private String iso;
+    
+    private String zoom;
+    
+    private boolean flash;
+
+	public boolean isFlash() {
+        return flash;
+    }
+
+    public void setFlash(boolean flash) {
+        this.flash = flash;
+    }
+
+    public String getFstop() {
+        return fstop;
+    }
+
+    public void setFstop(String fstop) {
+        this.fstop = fstop;
+    }
+
+    public String getIso() {
+        return iso;
+    }
+
+    public void setIso(String iso) {
+        this.iso = iso;
+    }
+
+    public String getShutterSpeed() {
+        return shutterSpeed;
+    }
+
+    public void setShutterSpeed(String shutterSpeed) {
+        this.shutterSpeed = shutterSpeed;
+    }
+
+    public String getZoom() {
+        return zoom;
+    }
+
+    public void setZoom(String zoom) {
+        this.zoom = zoom;
+    }
+
+    /**
 	 * @return
 	 */
 	public String getCamera() {

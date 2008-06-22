@@ -110,7 +110,7 @@
 			</td>
 			
 			<td>
-				<font size="${fontSize}" face="Verdana">${currentPhoto.sex.sex}${currentPhoto.specie.minimumSize}</font>
+				<font size="${fontSize}" face="Verdana">${currentPhoto.sex.sex}</font>
 			</td>
 		</tr>
 		</table>

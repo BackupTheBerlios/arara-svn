@@ -25,7 +25,17 @@ public interface PhotoConstants extends DAOConstants {
 
 	public static final String FILM_COLUMN = "film";
 
-	public static final String IMAGE_COLUMN = "image";
+    public static final String F_STOP_COLUMN = "f_stop";
+
+    public static final String SHUTTER_SPEED_COLUMN = "shutter_speed";
+
+    public static final String ISO_COLUMN = "iso";
+
+    public static final String ZOOM_COLUMN = "zoom";
+
+    public static final String FLASH_COLUMN = "flash";
+    
+    public static final String IMAGE_COLUMN = "image";
 
 	public static final String IMAGE_W = "w";
 

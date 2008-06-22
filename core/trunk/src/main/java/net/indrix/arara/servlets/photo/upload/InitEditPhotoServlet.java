@@ -8,6 +8,7 @@ package net.indrix.arara.servlets.photo.upload;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -32,6 +33,7 @@ import net.indrix.arara.servlets.UploadConstants;
 import net.indrix.arara.utils.jsp.Date;
 import net.indrix.arara.vo.Family;
 import net.indrix.arara.vo.Photo;
+import net.indrix.arara.vo.User;
 
 import org.apache.log4j.Logger;
 
@@ -57,43 +59,76 @@ public class InitEditPhotoServlet extends HttpServlet {
 		RequestDispatcher dispatcher = null;
 		ServletContext context = this.getServletContext();
 		String nextPage = null;
-        
-        int photoId; 
-        String photoIdStr = req.getParameter("photoId");
-        Photo photo = null;
-        if (photoIdStr != null){
-            photoId = Integer.parseInt(photoIdStr);           
-            PhotoModel model = new PhotoModel();
-            try {
-                photo = model.retrieve(photoId);
-                req.setAttribute(ServletConstants.PHOTO_ID, photo.getId());
-            } catch (DatabaseDownException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+        List <String>errors = new ArrayList<String>();
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute(ServletConstants.USER_KEY);
+        if (user == null) {
+            logger.debug("errors is not null.");
+            errors.add(ServletConstants.USER_NOT_LOGGED);
+            // put errors in request
+            req.setAttribute(ServletConstants.ERRORS_KEY, errors);
+            nextPage = ServletConstants.LOGIN_PAGE;
+        } else {
+            int photoId; 
+            String photoIdStr = req.getParameter("photoId");
+            Photo photo = null;
+            if (photoIdStr != null){
+                photoId = Integer.parseInt(photoIdStr);           
+                PhotoModel model = new PhotoModel();
+                try {
+                    photo = model.retrieve(photoId);
+                    
+                    if (photo != null){
+                        if ((user.getId() == photo.getUser().getId()) || user.isAdmin() || user.isPhotoEditModerator()){
+                            req.setAttribute(ServletConstants.PHOTO_ID, photo.getId());
 
-            logger.debug("Photo found..." + photo);
-            UploadPhotoBean bean = new UploadPhotoBean();
-            logger.debug("Calling updateBean method...");
-            updateBean(bean, photo, req);
-            logger.debug("Bean updated: " + bean);
-            logger.debug("Setting bean (EDIT_BEAN key) in req...");
-            req.setAttribute(UploadPhotoConstants.UPLOAD_PHOTO_BEAN, bean);
-            nextPage = ServletConstants.EDIT_PAGE;
+                            logger.debug("Photo found..." + photo);
+                            UploadPhotoBean bean = new UploadPhotoBean();
+                            logger.debug("Calling updateBean method...");
+                            updateBean(bean, photo, req);
+                            logger.debug("Bean updated: " + bean);
+                            logger.debug("Setting bean (EDIT_BEAN key) in req...");
+                            req.setAttribute(UploadPhotoConstants.UPLOAD_PHOTO_BEAN, bean);
+                            nextPage = ServletConstants.EDIT_PAGE;
 
-            // put states on request
-            List list = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
-            logger.debug("Setting states in bean");
-            bean.setStatesList(list);
+                            // put states on request
+                            List list = ServletUtil.statesDataAsLabelValueBean(StatesModel.getStates());
+                            logger.debug("Setting states in bean");
+                            bean.setStatesList(list);
 
-            String identStr = req.getParameter(ServletConstants.IDENTIFICATION_KEY);
-            req.setAttribute(ServletConstants.IDENTIFICATION_KEY, identStr);
+                            String identStr = req.getParameter(ServletConstants.IDENTIFICATION_KEY);
+                            req.setAttribute(ServletConstants.IDENTIFICATION_KEY, identStr);                                          
+                        } else {
+                            // user do not have the right to delete the photo
+                            nextPage = ServletConstants.FRAME_PAGE;
+                            String pageToShow = ServletConstants.SHOW_MESSAGE_PAGE;
+                            String messageKey = "operation.denied";
+                            req.setAttribute(ServletConstants.STRING_MESSAGE_KEY, messageKey);
+                            req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
+                        }
+                    } else {
+                        // Photo does not exist
+                        nextPage = ServletConstants.FRAME_PAGE;
+                        String pageToShow = ServletConstants.SHOW_MESSAGE_PAGE;
+                        String messageKey = "photo.not.found";
+                        req.setAttribute(ServletConstants.STRING_MESSAGE_KEY, messageKey);
+                        req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);                        
+                    }
+                } catch (DatabaseDownException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (SQLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
 
-        } 
 
+            } 
+        }                
+        if (!errors.isEmpty()) {
+            // put errors in request
+            req.setAttribute(ServletConstants.ERRORS_KEY, errors);
+        }
         
 		dispatcher = context.getRequestDispatcher(nextPage);
 		logger.debug("Dispatching to " + nextPage);
@@ -117,6 +152,11 @@ public class InitEditPhotoServlet extends HttpServlet {
 		bean.setLens(photo.getLens());
 		bean.setLocation(photo.getLocation());
 		bean.setFilm(photo.getFilm());
+        bean.setFstop(photo.getFstop());
+        bean.setShutterSpeed(photo.getShutterSpeed());
+        bean.setIso(photo.getIso());
+        bean.setZoom(photo.getZoom());
+        bean.setFlash(photo.isFlash());
 		bean.setDate(Date.getDate(photo.getDate()));
 		bean.setComment(photo.getComment());
         bean.setUser(photo.getUser());

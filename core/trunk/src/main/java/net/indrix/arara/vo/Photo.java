@@ -15,6 +15,7 @@ import java.util.List;
  * @author Jefferson
  * 
  */
+@SuppressWarnings("serial")
 public class Photo extends Media implements Serializable {
 	private Date date;
     
@@ -24,7 +25,17 @@ public class Photo extends Media implements Serializable {
 
 	private String film;
 
-	private ImageFile realImage;
+	private String fstop;
+    
+    private String shutterSpeed;
+    
+    private String iso;
+    
+    private String zoom;
+    
+    private boolean flash;
+    
+    private ImageFile realImage;
 
 	private ImageFile smallImage;
 
@@ -273,55 +284,106 @@ public class Photo extends Media implements Serializable {
 		return is;
 	}
 
-	/**
-	 * the overwritten toString method, with a string representing the photo
-	 */
-	public String toString() {
-		StringBuffer buffer = new StringBuffer("[");
-		buffer.append(getId());
-		buffer.append(",");
-		buffer.append(date);
+    public boolean isFlash() {
+        return flash;
+    }
+
+    public void setFlash(boolean flash) {
+        this.flash = flash;
+    }
+
+    public String getFstop() {
+        return fstop;
+    }
+
+    public void setFstop(String stop) {
+        fstop = stop;
+    }
+
+    public String getIso() {
+        return iso;
+    }
+
+    public void setIso(String iso) {
+        this.iso = iso;
+    }
+
+    public String getShutterSpeed() {
+        return shutterSpeed;
+    }
+
+    public void setShutterSpeed(String shutterSpeed) {
+        this.shutterSpeed = shutterSpeed;
+    }
+
+    public String getZoom() {
+        return zoom;
+    }
+
+    public void setZoom(String zoom) {
+        this.zoom = zoom;
+    }
+
+    /**
+     * the overwritten toString method, with a string representing the photo
+     */
+    public String toString() {
+        StringBuffer buffer = new StringBuffer("[");
+        buffer.append(getId());
+        buffer.append(",");
+        buffer.append(date);
         buffer.append(",");
         buffer.append(getPostDate());
-		buffer.append(",");
+        buffer.append(",");
 
         User user = getUser();
-		if (user != null) {
-			buffer.append(user.getLogin());
-			buffer.append(" (");
-			buffer.append(user.getEmail());
-			buffer.append("),");
-		}
+        if (user != null) {
+            buffer.append(user.getLogin());
+            buffer.append(" (");
+            buffer.append(user.getEmail());
+            buffer.append("),");
+        }
 
         Specie specie = getSpecie();
-		if (specie != null) {
-			buffer.append(specie.getId());
-			buffer.append(",");
-			buffer.append(specie.getName());
-			buffer.append(",");
+        if (specie != null) {
+            buffer.append(specie.getId());
+            buffer.append(",");
+            buffer.append(specie.getName());
+            buffer.append(",");
 
-			if (specie.getFamily() != null) {
-				buffer.append(specie.getFamily().getId());
-				buffer.append(",");
-				buffer.append(specie.getFamily().getName());
-				buffer.append(",");
-			}
+            if (specie.getFamily() != null) {
+                buffer.append(specie.getFamily().getId());
+                buffer.append(",");
+                buffer.append(specie.getFamily().getName());
+                buffer.append(",");
+            }
 
-			buffer.append(specie.getCommonNamesString());
-			buffer.append(",");
-		}
+            buffer.append(specie.getCommonNamesString());
+            buffer.append(",");
+        }
 
-		buffer.append(camera);
-		buffer.append(",");
-		buffer.append(lens);
-		buffer.append(",");
-		buffer.append(film);
-		buffer.append(",");
-		buffer.append(getLocation());
-		buffer.append(",");
-		buffer.append(getCity());
-		buffer.append("]");
+        buffer.append(camera);
+        buffer.append(",");
+        buffer.append(lens);
+        buffer.append(",");
+        buffer.append(film);
+        buffer.append(",");
+        buffer.append(fstop);
+        buffer.append(",");
+        buffer.append(shutterSpeed);
+        buffer.append(",");
+        buffer.append(iso);
+        buffer.append(",");
+        buffer.append(zoom);
+        buffer.append(",");
+        buffer.append(flash);
+        buffer.append(",");
+        buffer.append(getLocation());
+        buffer.append(",");
+        buffer.append(getCity());
+        buffer.append("]");
 
-		return buffer.toString();
-	}
+        return buffer.toString();
+    }
+
 }

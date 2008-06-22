@@ -88,7 +88,7 @@ public class DeletePhotoServlet extends HttpServlet {
                 nextPage = ServletConstants.FRAME_PAGE;
                 String pageToShow = ServletConstants.SHOW_MESSAGE_PAGE;
                 String messageKey = "operation.denied";
-                req.setAttribute(ServletConstants.SEND_EMAIL_MESSAGE_KEY, messageKey);
+                req.setAttribute(ServletConstants.STRING_MESSAGE_KEY, messageKey);
                 req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
             }
         }

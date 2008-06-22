@@ -81,7 +81,7 @@ public class EditPhotoServlet extends AbstractUploadPhotoServlet {
                     String photoId = (String)data.get(ServletConstants.PHOTO_ID);
                     Photo photo = model.retrieve(Integer.parseInt(photoId));
                     
-					updatePhoto(data, photo, identification);
+					updatePhoto(data, photo, user, identification);
 					logger.debug("Calling updatePhotoIntoDatabase " + photo);
 					updatePhotoIntoDatabase(photo);
 					logger.debug("Photo updated into database");
@@ -147,7 +147,7 @@ public class EditPhotoServlet extends AbstractUploadPhotoServlet {
 	 * 
 	 * @return A new Photo object
 	 */
-	private void updatePhoto(Map data, Photo photo, boolean identification)
+	private void updatePhoto(Map data, Photo photo, User user, boolean identification)
 			throws ParseException, NumberFormatException,
 			DatabaseDownException, SQLException {
 
@@ -161,17 +161,32 @@ public class EditPhotoServlet extends AbstractUploadPhotoServlet {
 			photo.setSex(SexModel.getSex(Integer.parseInt((String) data
 					.get(ServletConstants.SEX_ID))));
 		} else {
-			photo.setSpecie(new Specie());
-			photo.setAge(new Age());
-			photo.setSex(new Sex());
+            // while user was editing photo, one moderator might have finished the identification.
+            // Verify if the specie data in the photo is valid.
+            if (photo.getSpecie() == null){
+                photo.setSpecie(new Specie());
+                photo.setAge(new Age());
+                photo.setSex(new Sex());                
+            }
 		}
-		photo.setCamera((String) data.get(ServletConstants.CAMERA));
-		photo.setLens((String) data.get(ServletConstants.LENS));
-		photo.setFilm((String) data.get(ServletConstants.FILM));
-		photo.setLocation((String) data.get(ServletConstants.LOCATION));
-		photo.setCity(getCity((String) data.get(ServletConstants.CITY_ID)));
-		photo.setDate(createDate((String) data.get(ServletConstants.DATE)));
-		photo.setComment((String) data.get(ServletConstants.COMMENT));
+
+        // verify whether the editing is being performed by the photo author or a moderator 
+        if (user.getId() == photo.getUser().getId()){
+            photo.setCamera((String) data.get(ServletConstants.CAMERA));
+            photo.setLens((String) data.get(ServletConstants.LENS));
+            photo.setFilm((String) data.get(ServletConstants.FILM));
+            photo.setFstop((String) data.get(ServletConstants.F_STOP));
+            photo.setShutterSpeed((String) data.get(ServletConstants.SHUTTER_SPEED));
+            photo.setIso((String) data.get(ServletConstants.ISO));
+            photo.setZoom((String) data.get(ServletConstants.ZOOM));
+
+            photo.setFlash(data.get(ServletConstants.FLASH) != null ? true : false);            
+
+            photo.setLocation((String) data.get(ServletConstants.LOCATION));
+            photo.setCity(getCity((String) data.get(ServletConstants.CITY_ID)));
+            photo.setDate(createDate((String) data.get(ServletConstants.DATE)));
+            photo.setComment((String) data.get(ServletConstants.COMMENT));            
+        }
 	}
 
 	/**

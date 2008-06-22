@@ -164,6 +164,7 @@ public class PhotoModel extends MediaModel {
             SQLException {
         logger.debug("PhotoId " + photoId);
         Photo photo = ((PhotoDAO) dao).retrieve(photoId);
+        logger.debug("Photo " + photo);
 
         if (photo != null){
             updatePhotoLink(photo);            

@@ -44,6 +44,17 @@ public class ServletConstants {
 
 	public static final String FILM = "film";
 
+    public static final String F_STOP = "f_stop";
+
+    public static final String SHUTTER_SPEED = "shutter_speed";
+
+    public static final String ISO = "iso";
+
+    public static final String ZOOM = "zoom";
+
+    public static final String FLASH = "flash";
+    
+    
 	public static final String LOCATION = "location";
 
 	public static final String DATE = "date";
@@ -132,7 +143,7 @@ public class ServletConstants {
 
 	public static final String USERS_ON_LINE = "usersOnLine";
     
-    public static final String SEND_EMAIL_MESSAGE_KEY = "messageKey";
+    public static final String STRING_MESSAGE_KEY = "messageKey";
 
 	// Pages
 	public static final String INITIAL_PAGE = "/index.jsp";

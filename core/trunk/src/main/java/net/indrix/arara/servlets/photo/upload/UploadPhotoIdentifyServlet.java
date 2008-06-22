@@ -90,6 +90,12 @@ public class UploadPhotoIdentifyServlet extends UploadPhotoServlet {
 		photo.setCamera(bean.getCamera());
 		photo.setLens(bean.getLens());
 		photo.setFilm(bean.getFilm());
+        photo.setFstop(bean.getFstop());
+        photo.setShutterSpeed(bean.getShutterSpeed());
+        photo.setIso(bean.getIso());
+        photo.setZoom(bean.getZoom());
+        photo.setFlash(bean.isFlash());
+        
 		photo.setLocation(bean.getLocation());
 		List list = bean.getCitiesList();
 		String id = bean.getSelectedCityId();

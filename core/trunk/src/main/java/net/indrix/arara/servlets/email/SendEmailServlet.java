@@ -61,7 +61,7 @@ public class SendEmailServlet extends AbstractServlet {
             
             req.setAttribute(ServletConstants.NEXT_PAGE_KEY, nextPage);
             req.setAttribute(ServletConstants.PAGE_TO_SHOW_KEY, pageToShow);
-            req.setAttribute(ServletConstants.SEND_EMAIL_MESSAGE_KEY, messageKey);
+            req.setAttribute(ServletConstants.STRING_MESSAGE_KEY, messageKey);
         }
         
         if (!errors.isEmpty()) {

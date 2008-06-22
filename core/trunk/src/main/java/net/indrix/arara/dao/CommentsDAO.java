@@ -52,7 +52,7 @@ public class CommentsDAO extends AbstractDAO {
 	/**
 	 * This sql statement selects all comments for a given photo
 	 */
-	private static final String SELECT_COMMENTS = "SELECT * FROM user_comments_photo where photo_id = ?";
+	private static final String SELECT_COMMENTS = "SELECT * FROM user_comments_photo where photo_id = ? order by date";
 
 	/**
 	 * This sql statement selects all users that had commented an specific

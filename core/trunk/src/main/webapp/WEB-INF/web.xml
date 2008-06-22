@@ -296,6 +296,14 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>searchPhotosByState</servlet-name>
+		<servlet-class>
+			net.indrix.arara.servlets.photo.SearchPhotosByStateServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
 		<servlet-name>searchPhotosByPlace</servlet-name>
 		<servlet-class>
 			net.indrix.arara.servlets.photo.SearchPhotosByPlaceServlet
@@ -739,6 +747,11 @@
 	<servlet-mapping>
 		<servlet-name>searchPhotosByUser</servlet-name>
 		<url-pattern>/servlet/searchPhotosByUser</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>searchPhotosByState</servlet-name>
+		<url-pattern>/servlet/searchPhotosByState</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

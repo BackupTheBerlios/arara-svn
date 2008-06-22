@@ -131,16 +131,11 @@
 		</td>
 		<td width="${col3}%">
 			<input ${editar} type="text" name="camera"
-			value="${uploadPhotoBean.camera}" size="64" maxlength="64"></td>
-	</tr>
-	<tr>
-		<td width="${col1}%"></td>
-	    <td width="${col2}%">
-	    	<b><fmt:message key="photo.len" /></b>
-	    </td>
-		<td width="${col3}%">
+			value="${uploadPhotoBean.camera}" size="32" maxlength="64">
+	    	&nbsp;&nbsp;&nbsp;<b><fmt:message key="photo.len" /></b>
 			<input ${editar} type="text" name="lens"
-			value="${uploadPhotoBean.lens}" size="64" maxlength="64"></td>
+			value="${uploadPhotoBean.lens}" size="32" maxlength="64">
+		</td>
 	</tr>
 	<tr>
 		<td width="${col1}%"></td>
@@ -149,8 +144,38 @@
 	    </td>
 		<td width="${col3}%">
 			<input ${editar} type="text" name="film"
-			value="${uploadPhotoBean.film}" size="64" maxlength="64"></td>
+			value="${uploadPhotoBean.film}" size="16" maxlength="64"></td>
 	</tr>
+	
+	<tr> 
+		<td width="${col1}%"></td>
+	    <td width="${col2}%">
+	    	<b><fmt:message key="photo.f_stop"/></b>
+	    </td>
+	    <td width="${col3}%"> 
+	        <input ${editar} type="text" name="f_stop" value="${uploadPhotoBean.fstop}" size="10" maxlength="10">
+	    	&nbsp;&nbsp;&nbsp;<b><fmt:message key="photo.shutter_speed"/></b>
+	        <input ${editar} type="text" name="shutter_speed" value="${uploadPhotoBean.shutterSpeed}" size="10" maxlength="10">
+	    </td>
+	</tr>
+	
+	<tr> 
+		<td width="${col1}%"></td>
+	    <td width="${col2}%">
+	    	<b><fmt:message key="photo.iso"/></b>
+	    </td>
+	    <td width="${col3}%"> 
+	        <input ${editar} type="text" name="iso" value="${uploadPhotoBean.iso}" size="10" maxlength="10">
+	    	&nbsp;&nbsp;&nbsp;<b><fmt:message key="photo.zoom"/></b>
+	        <input ${editar} type="text" name="zoom" value="${uploadPhotoBean.zoom}" size="10" maxlength="10">
+	    	&nbsp;&nbsp;&nbsp;<b><fmt:message key="photo.flash"/></b>
+	    	<c:if test="${uploadPhotoBean.flash}">
+				<c:set var="checked" value="checked"/>
+	        </c:if>
+	        <input ${editar} ${checked} type="checkbox" name="flash" value="${uploadPhotoBean.flash}" size="10" maxlength="10">
+	    </td>
+	</tr>
+
 	<tr>
 		<td width="${col1}%"></td>
 	    <td width="${col2}%">

@@ -40,7 +40,12 @@ public class PhotoBeanManager extends BeanManager {
 		bean.setCamera((String) data.get(ServletConstants.CAMERA));
 		bean.setLens((String) data.get(ServletConstants.LENS));
 		bean.setFilm((String) data.get(ServletConstants.FILM));
-		
+		bean.setFstop((String) data.get(ServletConstants.F_STOP));
+        bean.setShutterSpeed((String) data.get(ServletConstants.SHUTTER_SPEED));
+        bean.setIso((String) data.get(ServletConstants.ISO));
+        bean.setZoom((String) data.get(ServletConstants.ZOOM));
+        bean.setFlash(data.get(ServletConstants.FLASH) != null ? true : false);            
+
         String date = (String) data.get(ServletConstants.DATE); 
         
         if (validate) {

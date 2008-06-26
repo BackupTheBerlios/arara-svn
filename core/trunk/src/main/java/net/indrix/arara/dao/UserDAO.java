@@ -192,8 +192,10 @@ public class UserDAO extends AbstractDAO {
 	public User retrieve(String login) throws DatabaseDownException,
 			SQLException {
 		User user = (User) super.retrieveObject(login, SELECT_BY_LOGIN);
-        
-        updateUserWithModerationData(user);
+
+        if (user != null){
+            updateUserWithModerationData(user);            
+        }
 		return user;
 	}
 

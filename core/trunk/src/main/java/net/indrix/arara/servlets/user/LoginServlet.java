@@ -57,7 +57,8 @@ public class LoginServlet extends HttpServlet {
 		String login = req.getParameter("login");
 		String password = req.getParameter("password");
 		String nextResource = req.getParameter("nextResource");
-        boolean remember = "on".equals(req.getParameter("remember")) ? true : false;
+        String rememberParameter = req.getParameter("remember");
+        boolean remember = !"on".equals(rememberParameter) || rememberParameter == null ? false : true;
         
 		logger.debug("Locale:" + req.getLocale());
 		ResourceBundle bundle = ResourceBundle.getBundle("Resources", req.getLocale());
@@ -67,7 +68,7 @@ public class LoginServlet extends HttpServlet {
 			logger.debug("menu.common.home = " + bundle.getString("menu.common.home"));
 		}
 
-		logger.debug("User is trying to login with data: " + login + req.getParameter("remember"));
+		logger.debug("User is trying to login with data: " + login + " | Remember:" + remember);
 
 		User user = null;
 		RequestDispatcher dispatcher = null;
@@ -92,7 +93,8 @@ public class LoginServlet extends HttpServlet {
                     cookie.setMaxAge(60 * 60 * 24 * 7);
                 } else {
                     logger.info("Deleting cookie on user's machine...");
-                    cookie.setMaxAge(-1);
+                    cookie.setMaxAge(0);
+                    cookie.setPath("null");
                 }
                 res.addCookie(cookie);                    
 

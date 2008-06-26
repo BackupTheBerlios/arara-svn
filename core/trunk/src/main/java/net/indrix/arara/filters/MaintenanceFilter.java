@@ -31,7 +31,7 @@ public class MaintenanceFilter implements Filter {
             User user = (User) session.getAttribute(ServletConstants.USER_KEY);
             String ip = request.getRemoteAddr();
             
-            if ((user != null && user.getLogin().equals("jefferson")) || "201.82.136.125".equals(ip)){
+            if ((user != null && user.getLogin().equals("jefferson")) || "201.82.133.188".equals(ip)){
                 chain.doFilter(request, response);
                 return;
             } else {

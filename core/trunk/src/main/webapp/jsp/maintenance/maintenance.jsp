@@ -32,7 +32,7 @@
 					</span>
 					<br style="font-weight: bold;">
 					<span style="font-weight: bold;">
-						Previs&atilde;o de retorno: 00:00 do dia 23/06.
+						Previs&atilde;o de retorno: 20:30.
 					</span>
 					<br	style="font-weight: bold;">
 					<br style="font-weight: bold;">
@@ -64,7 +64,7 @@
 					</span>
 					<br	style="font-weight: bold;">
 					<span style="font-weight: bold;">
-						System shall return at 12:00am, 06/22.
+						System shall return at 8:30pm.
 					</span>
 					<br style="font-weight: bold;">
 					<span style="font-weight: bold;">

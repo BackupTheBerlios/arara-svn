@@ -90,7 +90,7 @@ public class EditPhotoServlet extends AbstractUploadPhotoServlet {
 
 					session.setAttribute(ServletConstants.CURRENT_PHOTO, photo);
                     
-                    session.setAttribute(ServletConstants.PHOTOS_LIST, null);                    
+                    //session.setAttribute(ServletConstants.PHOTOS_LIST, null);                    
 				} catch (ParseException e1) {
 					logger.debug("ParseException.....");
 					errors.add(UploadPhotoConstants.INVALID_DATE);
@@ -167,6 +167,13 @@ public class EditPhotoServlet extends AbstractUploadPhotoServlet {
                 photo.setSpecie(new Specie());
                 photo.setAge(new Age());
                 photo.setSex(new Sex());                
+            } else {
+                if (photo.getAge() == null){
+                    photo.setAge(new Age());
+                }
+                if (photo.getSex() == null){
+                    photo.setSex(new Sex());
+                }
             }
 		}
 
